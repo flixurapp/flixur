@@ -6,6 +6,8 @@ Name: Flixur
 
 Theme Color: #3366DE
 
+![](https://img.shields.io/badge/PREVIEW-3366DE)
+
 ## Frontend
 
 Tools: esbuild, svelte, typescript, flowbite
