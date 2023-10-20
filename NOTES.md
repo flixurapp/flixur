@@ -55,6 +55,10 @@ Examples: spotify, soundcloud, musicbrainz
 `GetAlbum(artistID: string, id: string): Album` Gets an album from the artist by ID.
 `GetTrack(artistID: string, albumID: string, id: string): Track` Gets a track from the artist/album by ID.
 
+#### Ideas
+
+Spotify, SoundCloud, KONAMI (remywiki), BandLab, MusicBrainz
+
 ### Sound Providers
 
 `Search(query: string): Downloadable[]` Searches the provider for media by name.
@@ -62,6 +66,10 @@ Examples: spotify, soundcloud, musicbrainz
 `Get(id: string): Downloadable` Gets media from the provider by ID.
 
 `Download(id: string): string` Downloads the media ID from the provider. Returns the path to the FLAC file.
+
+#### Ideas
+
+YouTube, SoundCloud, Torrent Indexer/Downloader, NZB Indexer/Downloader
 
 ### Client Plugins
 
