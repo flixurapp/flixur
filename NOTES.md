@@ -27,7 +27,13 @@ The binary creates a config directory. It downloads the latest (but specific, no
 *Regarding Providers: 
 Data from the Search functions may be incomplete. Data from the Get functions should be full.*
 
-All plugins have a `Start()` function that gets run whenever the plugin is loaded. Plugins cannot be unloaded without restarting the server.
+All plugins have a `Load(): PluginMetadata` function that gets called whenever the plugin is loaded. Plugins cannot be unloaded without restarting the server. The load function returns the plugin name, type, and other info. Load should not be used for anything besides metadata as this is called even if the plugin is disabled.
+
+This data should include plugin name, description, author, version, type, dependencies, and unique ID.
+
+Dependencies are other plugin IDs (usually server plugins) that will be loaded before this plugin. If a dependency does not load properly or is disabled, the plugin won't load.
+
+Actually initializing the plugin is done with the `Start()` function. Z This function is called when the plugin is enabled and the server is ready to initialize it.
 
 ### Metadata Providers
 
@@ -58,3 +64,5 @@ These are mostly TBD but the general idea is the plugin registers some javascrip
 ### Server Plugins
 
 Also TBD, general idea is they run when the server runs and maybe get access (somehow) to some server functions like manipulating data.
+
+These also function as libraries that other plugins can require as a dependency. An example of this is a server plugin registering a yt-dlp binary for use in a sound provider. This makes it so that the binary is only downloaded once (on starting the server plugin) and can be used by other plugins.
