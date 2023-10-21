@@ -147,13 +147,17 @@ These also function as libraries that other plugins can require as a dependency.
 #### ffmpeg
 
 ID: ffmpeg
+
 Name: ffmpeg
+
 Description: Allows for media conversion using ffmpeg.
 
 #### yt-dlp
 
 ID: yt-dlp
+
 Name: yt-dlp
+
 Description: Allows for media downloading via yt-dlp.
 
 This plugin downloads the (hardcoded) version of yt-dlp to the build directory and compiles it to a binary for the host arch. It then embeds the binary in the plugin for use. When the plugin is ran, it executes the binary "in-memory".
