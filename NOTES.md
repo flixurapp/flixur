@@ -22,6 +22,8 @@ The server compiles into a single binary, all other tools should be either downl
 
 The server creates a config directory. It creates a default config.yaml file inside.
 
+The server should download and extract a specific version of go to the `go` directory for use building plugins.
+
 Plugins can have their own config. which is stored in the config.yaml file. Example:
 ```yaml
 # ...
