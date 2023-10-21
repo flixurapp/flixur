@@ -71,9 +71,7 @@ Starting the plugin is done with the `Start()` function. This function is called
 *Regarding Providers: 
 Data from the Search functions may be incomplete. Data from the Get functions should be full.*
 
-### Metadata Providers
-
-Examples: spotify, soundcloud, musicbrainz
+### Sound Providers
 
 `SearchArtists(query: string): Artist[]` Search the provider for the artist by name.
 
@@ -88,6 +86,23 @@ Examples: spotify, soundcloud, musicbrainz
 #### Ideas
 
 Spotify, SoundCloud, KONAMI (remywiki), BandLab, MusicBrainz
+
+### Video Providers
+
+`SearchShows(query: string): Show[]` Search the provider for a tv show by name.
+`SearchEpisodes(query: string, showID: string, seasonID?: string): Episode[]` Search for episodes from a specified tv show and optionally season.
+
+`SearchMovies(query: string): Movie[]` Search the provider for a movie by name.
+
+`GetShow(id: string): Show` Gets a show from the provider by ID.
+`GetSeason(showID: string, seasonID: string): Season` Gets a season from a show by ID.
+`GetEpisode(showID: string, seasonID: string, id: string): Episode` Gets an episode from a show/season by ID.
+
+`GetMovie(id: string): Movie` Gets a movie from the provider by ID.
+
+#### Ideas
+
+IMDb, TheTVDB
 
 ### Downloaders
 
