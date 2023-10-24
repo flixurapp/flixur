@@ -7,8 +7,8 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "frontend",
-    "version": "0.0.0"
+    "productName": "flixur-frontend",
+    "version": "0.0.1"
   },
   "tauri": {
     "allowlist": {
@@ -21,7 +21,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "identifier": "app.flixur.frontend",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -37,9 +37,10 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "frontend",
+        "title": "Flixur",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "maximized": true
       }
     ]
   }
