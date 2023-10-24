@@ -29,7 +29,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "app.flixur.client",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -59,7 +59,8 @@
         "height": 600,
         "resizable": true,
         "title": "Flixur",
-        "width": 800
+        "width": 800,
+        "maximized": true
       }
     ]
   }
