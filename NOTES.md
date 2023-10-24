@@ -25,6 +25,7 @@ The server creates a config directory. It creates a default config.yaml file ins
 The server should download and extract a specific version of go to the `go` directory for use building plugins.
 
 Plugins can have their own config. which is stored in the config.yaml file. Example:
+
 ```yaml
 # ...
 plugins:
@@ -39,6 +40,7 @@ The server creates an empty `plugins` directory. The server does not look for pl
 There is a plugin manager on the client that lets you add plugin "sources" via git url, it'll clone the repo to a sources directory and allow you to install the plugins inside it.
 
 A source repo must have a `flixur_plugins.yaml` file at the root describing its contents:
+
 ```yaml
 # Name of the repo.
 name: "Official Flixur Plugins"
@@ -53,6 +55,7 @@ When loading a repo, if the icon is a local path, the server should change the i
 Sources can be "refreshed" which just runs git reset (to avoid any conflicts) and git pull in the directory.
 
 Plugins should have a go.mod and any other necessary files for building. The `plugin.go` is the entry point for the plugin. Each plugin should also have a `plugin.yaml` inside:
+
 ```yaml
 # A name for the plugin.
 name: "My Plugin"
@@ -75,6 +78,7 @@ Dependencies are other plugin IDs (usually server plugins) that will be loaded b
 Dependencies can be the ID ("yt-dlp") or include a "safe" version ("yt-dlp@1.0.0"). The safe version will log a warning if the dependency version is newer, as a newer dep version could cause issues.
 
 When a plugin is installed, the server will run the build script written in `build.go`. The output file path is specified with the `out` flag. (ex. `go run build.go -out /home/flixur/plugins/plugin.so`) The server then copies the config file to the plugins directory named `plugin-id.yaml`: (any not-allowed chars such as / will be replaced with a -)
+
 ```yaml
 ## Inherit from the above YAML file. Additions are below:
 
@@ -84,12 +88,12 @@ enabled: yes
 source: /path/to/plugin.so
 ```
 
-Plugins cannot be unloaded without restarting the server. 
+Plugins cannot be unloaded without restarting the server.
 
 Starting the plugin is done with the `Start()` function. This function is called when the plugin is enabled and the server is ready to initialize it.
 
-*Regarding Providers: 
-Data from the Search functions may be incomplete. Data from the Get functions should be full.*
+_Regarding Providers:
+Data from the Search functions may be incomplete. Data from the Get functions should be full._
 
 ### Sound Providers
 
