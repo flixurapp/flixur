@@ -10,15 +10,17 @@ Theme Color: #3366DE
 
 ## Frontend
 
-Tools: esbuild, svelte, typescript, flowbite
+Tools: sveltekit, svelte, typescript, skeleton
 
 ## Backend
 
-Tools: go, ffmpeg, yt-dlp
+Tools: go, ffmpeg
 
 Metadata and sound plugins are called “providers”.
 
 The server compiles into a single binary, all other tools should be either downloaded or extracted from the binary.
+
+The application will be distributed as a docker image.
 
 The server creates a config directory. It creates a default config.yaml file inside.
 
