@@ -26,7 +26,7 @@
 			width="w-full"
 		/>
 		<div
-			class="p-2 gap-2 opacity-0 transition-opacity relative w-full h-full flex items-end justify-center rounded-[inherit] bg-black bg-opacity-50"
+			class="cant-hover:hidden p-2 gap-2 opacity-0 transition-opacity relative w-full h-full flex items-end justify-center rounded-[inherit] bg-black bg-opacity-50"
 		>
 			<button
 				class="btn-icon btn-icon-sm variant-filled-primary"
