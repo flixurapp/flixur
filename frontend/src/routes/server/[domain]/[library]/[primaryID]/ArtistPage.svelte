@@ -8,9 +8,9 @@
 <div class="flex gap-2">
 	{#each [1, 2, 3, 4, 5] as _}
 		<LibraryCardMusic
-			name="Aluna"
-			href="/server/flixur.app/music/artistid"
-			image="https://i.scdn.co/image/ab6761610000e5ebfd31c630c1a72de7e89a2be7"
+			name="MYCELiUM"
+			href="/server/flixur.app/music/artistid/albumid"
+			image="https://i.scdn.co/image/ab67616d0000b273791e5ad29bbd6253aa453293"
 			on:play={() => toasts.trigger({ message: "play button clicked" })}
 			on:edit={() => toasts.trigger({ message: "edit button clicked" })}
 		/>
