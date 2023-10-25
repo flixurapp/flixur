@@ -1,9 +1,20 @@
 <script lang="ts">
 	import { page } from "$app/stores";
-	import { AppBar, AppRail, AppRailAnchor, AppShell } from "@skeletonlabs/skeleton";
+	import {
+		AppBar,
+		AppRail,
+		AppRailAnchor,
+		AppShell,
+		Toast,
+		initializeStores,
+	} from "@skeletonlabs/skeleton";
 	import { IconHome, IconMusic, IconSettings } from "@tabler/icons-svelte";
 	import "../app.postcss";
+
+	initializeStores();
 </script>
+
+<Toast />
 
 <AppShell slotPageContent="px-3 py-2">
 	<svelte:fragment slot="header">
