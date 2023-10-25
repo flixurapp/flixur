@@ -40,6 +40,6 @@
 
 <style>
 	.vs :global(.virtual-scroll-root) {
-		@apply snap-y snap-mandatory scroll-smooth;
+		@apply snap-y snap-mandatory;
 	}
 </style>
