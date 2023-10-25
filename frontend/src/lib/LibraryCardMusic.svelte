@@ -16,8 +16,8 @@
 	const dispatch = createEventDispatcher();
 </script>
 
-<div class="flex flex-col [&>:first-child>div]:hover:opacity-100">
-	<a {href} class="block relative w-32 h-32 rounded-token cursor-pointer">
+<div class="flex flex-col [&>:first-child>div]:hover:opacity-100 sm:w-32 w-1/3">
+	<a {href} class="block relative w-full aspect-square rounded-token cursor-pointer">
 		<Avatar
 			src={image}
 			initials={initials(name)}
@@ -42,5 +42,10 @@
 			</button>
 		</div>
 	</a>
-	<a class="hover:underline" {href}>{name}</a>
+	<a
+		class="hover:underline sm:text-base text-sm whitespace-nowrap overflow-hidden overflow-ellipsis"
+		{href}
+	>
+		{name}
+	</a>
 </div>
