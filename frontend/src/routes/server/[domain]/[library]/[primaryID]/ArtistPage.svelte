@@ -39,7 +39,9 @@
 </div>
 
 <style>
+    @media (pointer: fine) {
 	.vs :global(.virtual-scroll-root) {
-		@apply has-pointer:snap-y has-pointer:snap-mandatory;
+		@apply snap-y snap-mandatory;
+	}
 	}
 </style>
