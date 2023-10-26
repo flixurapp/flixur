@@ -13,7 +13,11 @@
 <svelte:window bind:innerWidth />
 
 <div class="h-full" bind:offsetHeight>
-	<div class="has-pointer:[&>:first-child]:snap-y has-pointer:[&>:first-child]:snap-mandatory" style:height="{offsetHeight}px" bind:offsetWidth>
+	<div
+		class="has-pointer:[&>:first-child]:snap-y has-pointer:[&>:first-child]:snap-mandatory"
+		style:height="{offsetHeight}px"
+		bind:offsetWidth
+	>
 		<VirtualScroll
 			data={new Array(1500).fill(null).map(() => ({
 				id: Math.random(),
