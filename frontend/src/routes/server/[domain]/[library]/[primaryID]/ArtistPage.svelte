@@ -23,8 +23,9 @@
 				id: Math.random(),
 				card: new Array(innerWidth > 640 ? Math.floor(offsetWidth / 128) : 3)
 					.fill(null)
-					.map(() => ({ id: Math.random() })),
+					.map((_, id) => ({ id })),
 			}))}
+			keeps={6}
 			let:data
 		>
 			<div class="flex sm:gap-4 sm:py-1 gap-2 py-0.5 items-center justify-center snap-start">
