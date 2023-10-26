@@ -40,6 +40,6 @@
 
 <style>
 	.vs :global(.virtual-scroll-root) {
-		@apply snap-y snap-mandatory;
+		@apply has-pointer:snap-y has-pointer:snap-mandatory;
 	}
 </style>

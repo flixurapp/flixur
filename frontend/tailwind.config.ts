@@ -22,6 +22,7 @@ const config = {
 		skeleton({ themes: { custom: [flixurTheme] } }),
 		plugin(function ({ addVariant }) {
 			addVariant("cant-hover", "@media (hover: none)");
+			addVariant("has-pointer", "@media (pointer: fine)");
 		}),
 	],
 } satisfies Config;
