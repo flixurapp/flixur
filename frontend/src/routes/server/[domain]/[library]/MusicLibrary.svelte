@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LibraryCardMusic from "$lib/LibraryCardMusic.svelte";
+	import LibraryCard from "$lib/LibraryCard.svelte";
 	import { getToastStore } from "@skeletonlabs/skeleton";
 
 	const toasts = getToastStore();
@@ -7,7 +7,8 @@
 
 <div class="flex gap-2">
 	{#each [1, 2, 3, 4, 5] as _}
-		<LibraryCardMusic
+		<LibraryCard
+			type="art"
 			name="Aluna"
 			href="/server/flixur.app/music/artistid"
 			image="https://i.scdn.co/image/ab6761610000e5ebfd31c630c1a72de7e89a2be7"

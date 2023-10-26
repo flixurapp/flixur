@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LibraryCardMusic from "$lib/LibraryCardMusic.svelte";
+	import LibraryCard from "$lib/LibraryCard.svelte";
 	import { getToastStore } from "@skeletonlabs/skeleton";
 	import { VirtualScroll } from "svelte-virtual-scroll-list";
 
@@ -29,7 +29,8 @@
 		>
 			<div class="flex sm:gap-4 sm:py-1 gap-2 py-0.5 items-center justify-center snap-start">
 				{#each data.card as album (album.id)}
-					<LibraryCardMusic
+					<LibraryCard
+						type="art"
 						name="MYCELiUM"
 						href="/server/flixur.app/music/artistid/albumid"
 						image="https://i.scdn.co/image/ab67616d0000b273791e5ad29bbd6253aa453293"

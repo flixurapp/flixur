@@ -6,6 +6,8 @@
 	import { createEventDispatcher } from "svelte";
 	import { initials } from "./utils";
 
+	/** Type of media in the card. `art` for artist/album. `poster` for tv/movies. `thumbnail` for episodes. */
+	export let type: "art" | "poster" | "thumbnail";
 	/** Name of the media. */
 	export let name: string;
 	/** Link to the media. */
@@ -16,20 +18,32 @@
 	const dispatch = createEventDispatcher();
 </script>
 
-<div class="flex flex-col [&>:first-child>div]:hover:opacity-100 sm:w-32 w-1/3">
-	<a {href} class="block relative w-full aspect-square rounded-token cursor-pointer">
+<div
+	class="flex flex-col [&>:first-child>div]:hover:opacity-100 {type == 'thumbnail'
+		? 'sm:w-64 w-1/2'
+		: 'sm:w-32 w-1/3'}"
+>
+	<a
+		{href}
+		class="block relative w-full {type == 'thumbnail'
+			? 'aspect-video'
+			: type == 'poster'
+			? 'aspect-[2/3]'
+			: 'aspect-square'} rounded-token cursor-pointer"
+	>
 		<Avatar
 			src={image}
 			initials={initials(name)}
-			class="absolute top-0 left-0"
+			class="absolute top-0 left-0 h-full"
 			rounded="rounded-[inherit]"
 			width="w-full"
+			height="h-full"
 		/>
 		<div
 			class="cant-hover:hidden p-2 gap-2 opacity-0 transition-opacity relative w-full h-full flex items-end justify-center rounded-[inherit] bg-black bg-opacity-50"
 		>
 			<button
-				class="btn-icon btn-icon-sm variant-filled-primary"
+				class="btn-icon btn-icon-sm variant-filled-primary mr-auto"
 				on:click|preventDefault={() => dispatch("play")}
 			>
 				<IconPlayerPlayFilled />
