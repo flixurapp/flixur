@@ -1,12 +1,13 @@
 <script lang="ts">
 	import LibraryCard from "$lib/LibraryCard.svelte";
+	import LibraryScroller from "$lib/LibraryScroller.svelte";
 	import { getToastStore } from "@skeletonlabs/skeleton";
 
 	const toasts = getToastStore();
 </script>
 
-<div class="flex gap-2">
-	{#each [1, 2, 3, 4, 5] as _}
+<LibraryScroller items={new Array(1500).fill(null)} let:data>
+	{#each data.card as album (album.id)}
 		<LibraryCard
 			type="art"
 			name="Aluna"
@@ -16,4 +17,4 @@
 			on:edit={() => toasts.trigger({ message: "edit button clicked" })}
 		/>
 	{/each}
-</div>
+</LibraryScroller>
