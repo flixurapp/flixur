@@ -11,9 +11,10 @@
 
 <svelte:window bind:innerWidth />
 
-<div class="h-full" bind:offsetHeight>
+<div class="h-full flex-1" bind:offsetHeight>
+	<!-- TODO: scroll snap setting -->
 	<div
-		class="has-pointer:[&>:first-child]:snap-y has-pointer:[&>:first-child]:snap-mandatory"
+		class="{true ? '' : 'has-pointer:[&>:first-child]:snap-y'} [&>:first-child]:px-2.5"
 		style:height="{offsetHeight}px"
 		bind:offsetWidth
 	>
@@ -22,7 +23,7 @@
 				id,
 				card: new Array(i.length).fill(null).map((_, id) => ({ id })),
 			}))}
-			keeps={6}
+			keeps={10}
 			let:data
 		>
 			<div class="flex sm:gap-4 sm:py-1 gap-2 py-0.5 items-center justify-center snap-start">
