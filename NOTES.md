@@ -79,7 +79,7 @@ Dependencies are other plugin IDs (usually server plugins) that will be loaded b
 
 Dependencies can be the ID ("yt-dlp") or include a "safe" version ("yt-dlp@1.0.0"). The safe version will log a warning if the dependency version is newer, as a newer dep version could cause issues.
 
-When a plugin is installed, the server will run the build script written in `build.go`. The output file path is specified with the `out` flag. (ex. `go run build.go -out /home/flixur/plugins/plugin.so`) The server then copies the config file to the plugins directory named `plugin-id.yaml`: (any not-allowed chars such as / will be replaced with a -)
+When a plugin is installed, the server will run the build script written in `build.sh`. The output file path is specified as an argument. (ex. `buuld.sh /home/flixur/plugins/plugin.so`) The server then copies the config file to the plugins directory named `plugin-id.yaml`: (any not-allowed chars such as / will be replaced with a -)
 
 ```yaml
 ## Inherit from the above YAML file. Additions are below:
