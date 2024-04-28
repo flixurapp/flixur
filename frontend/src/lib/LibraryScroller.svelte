@@ -23,7 +23,7 @@
 				id,
 				card: new Array(i.length).fill(null).map((_, id) => ({ id })),
 			}))}
-			keeps={10}
+			keeps={15}
 			let:data
 		>
 			<div class="flex sm:gap-4 sm:py-1 gap-2 py-0.5 items-center justify-center snap-start">
