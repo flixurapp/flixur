@@ -1,7 +1,11 @@
 <script lang="ts">
 	import chunk from "lodash/chunk";
 	import VirtualScroll from "svelte-virtual-scroll-list";
+	import type { LibraryCardType } from "./LibraryCard";
 
+	/** Type of cards in the scroller. Required for size calculations. */
+	export let cardType: LibraryCardType;
+	//TODO: add typings
 	export let items: any[];
 
 	let innerWidth = 0,
@@ -19,7 +23,13 @@
 		bind:offsetWidth
 	>
 		<VirtualScroll
-			data={chunk(items, innerWidth > 640 ? Math.floor(offsetWidth / 128) : 3).map((i, id) => ({
+			data={chunk(
+				items,
+				innerWidth > 640
+					? // divide out the card width (256/128px) and padding (16px)
+					  Math.floor(offsetWidth / ((cardType == "thumbnail" ? 256 : 128) + 16))
+					: 3
+			).map((i, id) => ({
 				id,
 				card: new Array(i.length).fill(null).map((_, id) => ({ id })),
 			}))}

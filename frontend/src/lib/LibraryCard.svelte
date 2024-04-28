@@ -4,13 +4,16 @@
 	import { Avatar } from "@skeletonlabs/skeleton";
 	import { IconPencil, IconPlayerPlayFilled } from "@tabler/icons-svelte";
 	import { createEventDispatcher, onMount } from "svelte";
+	import type { LibraryCardType } from "./LibraryCard";
 	import { Scrolling } from "./events/scroller";
 	import { initials } from "./utils";
 
 	/** Type of media in the card. `art` for artist/album. `poster` for tv/movies. `thumbnail` for episodes. */
-	export let type: "art" | "poster" | "thumbnail";
+	export let type: LibraryCardType;
 	/** Name of the media. */
 	export let name: string;
+	/** Optional text to display below the name. */
+	export let subtext: string | undefined = undefined;
 	/** Link to the media. */
 	export let href: string;
 	/** Optional image URL for the media. If not specified, will use initials generated from `name`. */
@@ -29,7 +32,8 @@
 </script>
 
 <div
-	class="flex flex-col [&>:first-child>div]:hover:opacity-100 {type == 'thumbnail'
+	class="flex flex-col [&>:first-child>div]:hover:opacity-100 sm:text-base text-sm shrink-0 {type ==
+	'thumbnail'
 		? 'sm:w-64 w-1/2'
 		: 'sm:w-32 w-1/3'}"
 >
@@ -68,10 +72,15 @@
 			</div>
 		</a>
 		<a
-			class="hover:underline sm:text-base text-sm whitespace-nowrap overflow-hidden overflow-ellipsis"
+			class="overflow-hidden [&>p]:whitespace-nowrap [&>p]:overflow-hidden [&>p]:overflow-ellipsis hover:underline"
 			{href}
 		>
-			{name}
+			<p>{name}</p>
+			{#if subtext}
+				<p class="opacity-50">
+					{subtext}
+				</p>
+			{/if}
 		</a>
 	{:else}
 		<!-- attempting to make this as "light" as possible, so the browser can render it quickly -->
@@ -82,6 +91,9 @@
 				? 'aspect-[2/3]'
 				: 'aspect-square'} rounded-token card"
 		/>
-		<div class="sm:text-base text-sm invisible">…</div>
+		<p>{"\u200b"}</p>
+		{#if subtext}
+			<p>{"\u200b"}</p>
+		{/if}
 	{/if}
 </div>
