@@ -20,9 +20,19 @@ const config = {
 	plugins: [
 		// 4. Append the Skeleton plugin (after other plugins)
 		skeleton({ themes: { custom: [flixurTheme] } }),
-		plugin(function ({ addVariant }) {
+		plugin(function ({ addVariant, addComponents }) {
 			addVariant("cant-hover", "@media (hover: none)");
 			addVariant("has-pointer", "@media (pointer: fine)");
+			addComponents([
+				// custom extra small icon button component (based off btn-icon-sm)
+				{
+					".btn-icon-xs": {
+						width: "25px",
+						"font-size": "0.5rem",
+						"line-height": "1rem",
+					},
+				},
+			]);
 		}),
 	],
 } satisfies Config;

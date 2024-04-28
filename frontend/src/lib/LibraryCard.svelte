@@ -2,7 +2,7 @@
 
 <script lang="ts">
 	import { Avatar } from "@skeletonlabs/skeleton";
-	import { IconPencil, IconPlayerPlayFilled } from "@tabler/icons-svelte";
+	import { IconDots, IconPencil, IconPlayerPlayFilled } from "@tabler/icons-svelte";
 	import { createEventDispatcher, onMount } from "svelte";
 	import type { LibraryCardType } from "./LibraryCard";
 	import { Scrolling } from "./events/scroller";
@@ -32,10 +32,13 @@
 </script>
 
 <div
-	class="flex flex-col [&>:first-child>div]:hover:opacity-100 sm:text-base text-sm shrink-0 {type ==
+	class="library-card flex flex-col [&>:first-child>div]:hover:opacity-100 sm:text-base text-sm shrink-0 {type ==
 	'thumbnail'
 		? 'sm:w-64 w-1/2'
 		: 'sm:w-32 w-1/3'}"
+	on:contextmenu|preventDefault={() => dispatch("context")}
+	role="button"
+	tabindex="-1"
 >
 	{#if mounted}
 		<a
@@ -55,19 +58,34 @@
 				height="h-full"
 			/>
 			<div
-				class="cant-hover:hidden p-2 gap-2 opacity-0 transition-opacity relative w-full h-full flex items-end justify-center rounded-[inherit] bg-black bg-opacity-50"
+				class="cant-hover:hidden p-1 gap-2 opacity-0 transition-opacity relative w-full h-full flex items-end justify-center rounded-[inherit] bg-black bg-opacity-50"
 			>
 				<button
 					class="btn-icon btn-icon-sm variant-filled-primary mr-auto"
-					on:click|preventDefault={() => dispatch("play")}
+					on:click|preventDefault={(e) => {
+						e.currentTarget.blur();
+						dispatch("play");
+					}}
 				>
-					<IconPlayerPlayFilled />
+					<IconPlayerPlayFilled size={22} />
 				</button>
 				<button
-					class="btn-icon btn-icon-sm variant-filled-secondary"
-					on:click|preventDefault={() => dispatch("edit")}
+					class="btn-icon btn-icon-xs variant-filled-secondary"
+					on:click|preventDefault={(e) => {
+						e.currentTarget.blur();
+						dispatch("edit");
+					}}
 				>
-					<IconPencil />
+					<IconPencil size={16} />
+				</button>
+				<button
+					class="btn-icon btn-icon-xs variant-filled-secondary"
+					on:click|preventDefault={(e) => {
+						e.currentTarget.blur();
+						dispatch("context");
+					}}
+				>
+					<IconDots size={16} />
 				</button>
 			</div>
 		</a>
@@ -97,3 +115,10 @@
 		{/if}
 	{/if}
 </div>
+
+<style>
+	/* Show buttons if library card is focused. */
+	.library-card:focus-within .opacity-0 {
+		opacity: 1;
+	}
+</style>
