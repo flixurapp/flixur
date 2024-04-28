@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@tabler/icons-svelte':
-        specifier: ^2.39.0
-        version: 2.39.0(svelte@4.2.2)
+        specifier: ^3.2.0
+        version: 3.2.0(svelte@4.2.2)
       '@types/lodash':
         specifier: ^4.14.200
         version: 4.14.200
@@ -31,13 +31,13 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2(tailwindcss@3.3.3)
       '@sveltejs/adapter-auto':
-        specifier: ^2.0.0
+        specifier: ^2.1.0
         version: 2.1.0(@sveltejs/kit@1.27.0(svelte@4.2.2)(vite@4.5.0(@types/node@20.8.8)))
       '@sveltejs/adapter-static':
         specifier: ^2.0.3
         version: 2.0.3(@sveltejs/kit@1.27.0(svelte@4.2.2)(vite@4.5.0(@types/node@20.8.8)))
       '@sveltejs/kit':
-        specifier: ^1.20.4
+        specifier: ^1.27.0
         version: 1.27.0(svelte@4.2.2)(vite@4.5.0(@types/node@20.8.8))
       '@tauri-apps/cli':
         specifier: ^1.5.6
@@ -46,37 +46,37 @@ importers:
         specifier: ^20.8.8
         version: 20.8.8
       autoprefixer:
-        specifier: ^10.4.14
+        specifier: ^10.4.16
         version: 10.4.16(postcss@8.4.31)
       postcss:
-        specifier: ^8.4.24
+        specifier: ^8.4.31
         version: 8.4.31
       postcss-load-config:
         specifier: ^4.0.1
         version: 4.0.1(postcss@8.4.31)
       prettier:
-        specifier: ^2.8.0
+        specifier: ^2.8.8
         version: 2.8.8
       prettier-plugin-svelte:
         specifier: ^2.10.1
         version: 2.10.1(prettier@2.8.8)(svelte@4.2.2)
       svelte:
-        specifier: ^4.0.5
+        specifier: ^4.2.2
         version: 4.2.2
       svelte-check:
-        specifier: ^3.4.3
+        specifier: ^3.5.2
         version: 3.5.2(postcss-load-config@4.0.1(postcss@8.4.31))(postcss@8.4.31)(svelte@4.2.2)
       tailwindcss:
-        specifier: ^3.3.2
+        specifier: ^3.3.3
         version: 3.3.3
       tslib:
-        specifier: ^2.4.1
+        specifier: ^2.6.2
         version: 2.6.2
       typescript:
-        specifier: ^5.0.0
+        specifier: ^5.2.2
         version: 5.2.2
       vite:
-        specifier: ^4.4.2
+        specifier: ^4.5.0
         version: 4.5.0(@types/node@20.8.8)
 
 packages:
@@ -301,13 +301,13 @@ packages:
       svelte: ^3.54.0 || ^4.0.0
       vite: ^4.0.0
 
-  '@tabler/icons-svelte@2.39.0':
-    resolution: {integrity: sha512-Tct1zWK8UdvmpaN5oS7YiMXLMcg0fuugy5oHTbyw4M8aM9I4gwA17e4viA6aHqhaksvCqcBwg5uoReeUATKcsg==}
+  '@tabler/icons-svelte@3.2.0':
+    resolution: {integrity: sha512-km8wd4xwGfTnCij+6TNSWpQ4upnJxaD43d/43lOkV9EQWTng0s2yh6E49valnRQeTkDSwB5LK4+KWv40poc6uQ==}
     peerDependencies:
       svelte: '>=3 <5'
 
-  '@tabler/icons@2.39.0':
-    resolution: {integrity: sha512-iK3j2jIEGIUaJcbYYg5iwyG1Y/m4lzUxAUbxRpvgeXCWP29jvZaH5hajZmU3KaSealddHuJg7PSQislPHpCsoQ==}
+  '@tabler/icons@3.2.0':
+    resolution: {integrity: sha512-h8GQ2rtxgiSjltrVz4vcopAxTPSpUSUi5nBfJ09H3Bk4fJk6wZ/dVUjzhv/BHfDwGTkAxZBiYe/Q/T95cPeg5Q==}
 
   '@tauri-apps/cli-darwin-arm64@1.5.6':
     resolution: {integrity: sha512-NNvG3XLtciCMsBahbDNUEvq184VZmOveTGOuy0So2R33b/6FDkuWaSgWZsR1mISpOuP034htQYW0VITCLelfqg==}
@@ -447,8 +447,8 @@ packages:
     resolution: {integrity: sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==}
     engines: {node: '>= 6'}
 
-  caniuse-lite@1.0.30001553:
-    resolution: {integrity: sha512-N0ttd6TrFfuqKNi+pMgWJTb9qrdJu4JSpgPFLe/lrD19ugC6fZgF0pUewRowDwzdDnb9V41mFcdlYgl/PyKf4A==}
+  caniuse-lite@1.0.30001613:
+    resolution: {integrity: sha512-BNjJULJfOONQERivfxte7alLfeLW4QnwHvNW4wEcLEbXfV6VSCYvr+REbf2Sojv8tC1THpjPXBxWgDbq4NtLWg==}
 
   chokidar@3.5.3:
     resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
@@ -1183,12 +1183,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@tabler/icons-svelte@2.39.0(svelte@4.2.2)':
+  '@tabler/icons-svelte@3.2.0(svelte@4.2.2)':
     dependencies:
-      '@tabler/icons': 2.39.0
+      '@tabler/icons': 3.2.0
       svelte: 4.2.2
 
-  '@tabler/icons@2.39.0': {}
+  '@tabler/icons@3.2.0': {}
 
   '@tauri-apps/cli-darwin-arm64@1.5.6':
     optional: true
@@ -1263,7 +1263,7 @@ snapshots:
   autoprefixer@10.4.16(postcss@8.4.31):
     dependencies:
       browserslist: 4.22.1
-      caniuse-lite: 1.0.30001553
+      caniuse-lite: 1.0.30001613
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1289,7 +1289,7 @@ snapshots:
 
   browserslist@4.22.1:
     dependencies:
-      caniuse-lite: 1.0.30001553
+      caniuse-lite: 1.0.30001613
       electron-to-chromium: 1.4.565
       node-releases: 2.0.13
       update-browserslist-db: 1.0.13(browserslist@4.22.1)
@@ -1300,7 +1300,7 @@ snapshots:
 
   camelcase-css@2.0.1: {}
 
-  caniuse-lite@1.0.30001553: {}
+  caniuse-lite@1.0.30001613: {}
 
   chokidar@3.5.3:
     dependencies:
