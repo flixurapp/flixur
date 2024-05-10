@@ -3,6 +3,7 @@ import type { Config } from "tailwindcss";
 
 // 1. Import the Skeleton plugin
 import { skeleton } from "@skeletonlabs/tw-plugin";
+import forms from "@tailwindcss/forms";
 import plugin from "tailwindcss/plugin";
 import { flixurTheme } from "./skeleton.theme";
 
@@ -34,6 +35,7 @@ const config = {
 				},
 			]);
 		}),
+		forms,
 	],
 } satisfies Config;
 

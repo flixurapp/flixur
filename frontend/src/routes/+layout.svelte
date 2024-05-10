@@ -1,16 +1,19 @@
 <script lang="ts">
 	import { afterNavigate } from "$app/navigation";
 	import { page } from "$app/stores";
+	import EditModal from "$lib/modals/edit/EditModal.svelte";
 	import {
 		AppBar,
 		AppRail,
 		AppRailAnchor,
 		AppShell,
+		Modal,
 		Toast,
 		initializeStores,
+		type ModalComponent,
 	} from "@skeletonlabs/skeleton";
 	import type { AfterNavigate } from "@sveltejs/kit";
-	import { IconHome, IconMusic, IconSettings } from "@tabler/icons-svelte";
+	import { IconHome, IconMusic, IconSearch, IconSettings } from "@tabler/icons-svelte";
 	import "../app.postcss";
 
 	initializeStores();
@@ -22,13 +25,26 @@
 			elemPage.scrollTop = 0;
 		}
 	});
+
+	const modalRegistry: Record<string, ModalComponent> = {
+		edit: { ref: EditModal },
+	};
 </script>
 
+<Modal components={modalRegistry} />
 <Toast />
 
 <AppShell slotPageContent="px-3 py-2">
 	<svelte:fragment slot="header">
-		<AppBar>Flixur</AppBar>
+		<AppBar>
+			<svelte:fragment slot="lead">Flixur</svelte:fragment>
+			<div class="input-group input-group-divider grid-cols-[auto_1fr_auto] w-fit">
+				<input class="input" title="Input (text)" type="text" placeholder="Search" />
+				<button class="variant-filled-secondary">
+					<IconSearch size={18} />
+				</button>
+			</div>
+		</AppBar>
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft">
 		<AppRail width="w-16">
