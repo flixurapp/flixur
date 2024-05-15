@@ -1,7 +1,7 @@
 <!-- For Artists and Albums -->
 
 <script lang="ts">
-	import { Avatar } from "@skeletonlabs/skeleton";
+	import { Avatar, getModalStore } from "@skeletonlabs/skeleton";
 	import { IconDots, IconPencil, IconPlayerPlayFilled } from "@tabler/icons-svelte";
 	import { createEventDispatcher, onMount } from "svelte";
 	import type { LibraryCardType } from "./LibraryCard";
@@ -29,6 +29,8 @@
 			mounted = true;
 		});
 	});
+
+	const modalStore = getModalStore();
 </script>
 
 <div
@@ -73,7 +75,10 @@
 					class="btn-icon btn-icon-xs variant-filled-secondary"
 					on:click|preventDefault={(e) => {
 						e.currentTarget.blur();
-						dispatch("edit");
+						modalStore.trigger({
+							type: "component",
+							component: "edit",
+						});
 					}}
 				>
 					<IconPencil size={16} />
