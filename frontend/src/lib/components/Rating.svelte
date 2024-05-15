@@ -35,7 +35,6 @@
 	role="radiogroup"
 	tabindex="-1"
 >
-	(test: {value}/10)
 	{#if type == "heart"}
 		<RatingIcon
 			icons={[IconHeart, IconHeartFilled]}
