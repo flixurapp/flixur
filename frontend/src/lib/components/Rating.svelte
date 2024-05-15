@@ -28,7 +28,7 @@
 </script>
 
 <div
-	class="flex"
+	class="flex w-fit"
 	on:mouseleave={() => {
 		displayValue = value;
 	}}
@@ -53,9 +53,9 @@
 	{:else if type == "mood" || type == "stars3"}
 		{@const stars = type == "stars3"}
 		<RatingIcon
-			icons={stars ? STAR_ICON : [IconMoodSad, IconMoodSadFilled]}
+			icons={stars ? STAR_ICON : [IconMoodSad, displayValue > 3 ? IconMoodSad : IconMoodSadFilled]}
 			{size}
-			color={stars ? STAR_COLOR : "red-600"}
+			color={stars ? STAR_COLOR : displayValue > 3 ? "" : "red-600"}
 			value={displayValue >= 3 ? 2 : 0}
 			on:change={({ detail }) => {
 				displayValue = value = detail ? 3 : 0;
@@ -65,9 +65,11 @@
 			}}
 		/>
 		<RatingIcon
-			icons={stars ? STAR_ICON : [IconMoodEmpty, IconMoodEmptyFilled]}
+			icons={stars
+				? STAR_ICON
+				: [IconMoodEmpty, displayValue > 7 ? IconMoodEmpty : IconMoodEmptyFilled]}
 			{size}
-			color={stars ? STAR_COLOR : "yellow-600"}
+			color={stars ? STAR_COLOR : displayValue > 7 ? "" : "yellow-600"}
 			value={displayValue >= 7 ? 2 : 0}
 			on:change={({ detail }) => {
 				displayValue = value = detail ? 7 : 0;
