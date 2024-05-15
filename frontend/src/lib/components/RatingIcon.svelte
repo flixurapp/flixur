@@ -7,12 +7,16 @@
 	export let size: number;
 	/** The value to use for the icon. (should be 0-2) */
 	export let value: number;
+	/** Raw value for the icon. (used for toggle) */
+	export let rawValue = 0;
 	/** Color for the icon. (name-intensity) */
 	export let color: string;
 	/** Icon to use for half-selections. Also enables them. */
 	export let halfIcon: ConstructorOfATypedSvelteComponent | undefined = undefined;
 	/** Index of this icon in the list. */
 	export let index = 0;
+	/** Allow this icon to toggle the rating. */
+	export let toggle = false;
 
 	const dispatch = createEventDispatcher();
 	let wrapper: HTMLSpanElement;
@@ -36,6 +40,11 @@
 		else if (x < w / 2) state = halfIcon ? "hover-half" : "hover-full";
 		else if (x >= w / 2) state = "hover-full";
 		else state = "none";
+
+		if (toggle && rawValue > 0 && (state == "hover-half" || state == "hover-full"))
+			state = "hover-zero";
+		else if (toggle && rawValue <= 0 && state == "hover-zero") state = "hover-full";
+
 		dispatch("hover", state == "none" ? null : index * 2 + getValue());
 	}
 	function getValue() {

@@ -37,12 +37,13 @@
 >
 	(test: {value}/10)
 	{#if type == "heart"}
-		{@const hasValue = value > 0}
 		<RatingIcon
 			icons={[IconHeart, IconHeartFilled]}
 			{size}
 			color="red-600"
-			value={hasValue ? 10 : 0}
+			value={displayValue > 0 ? 10 : 0}
+			toggle
+			rawValue={value}
 			on:change={({ detail }) => {
 				displayValue = value = detail ? 10 : 0;
 			}}
