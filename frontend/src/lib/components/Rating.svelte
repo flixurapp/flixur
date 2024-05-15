@@ -20,6 +20,9 @@
 	let displayValue = value;
 	export let size = 24;
 
+	let className = "";
+	export { className as class };
+
 	const STAR_ICON: [ConstructorOfATypedSvelteComponent, ConstructorOfATypedSvelteComponent] = [
 			IconStar,
 			IconStarFilled,
@@ -28,7 +31,7 @@
 </script>
 
 <div
-	class="flex w-fit"
+	class="flex w-fit {className}"
 	on:mouseleave={() => {
 		displayValue = value;
 	}}

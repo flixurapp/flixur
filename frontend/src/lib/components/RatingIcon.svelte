@@ -57,7 +57,9 @@
 
 <span
 	bind:this={wrapper}
-	class="cursor-pointer px-1.5"
+	class="cursor-pointer"
+	style:padding-left="{size * 0.1}px"
+	style:padding-right="{size * 0.1}px"
 	style:color={(() => {
 		const full = `var(--color-${color})`;
 		switch (state) {

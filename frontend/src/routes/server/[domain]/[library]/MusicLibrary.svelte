@@ -1,20 +1,20 @@
 <script lang="ts">
 	import LibraryCard from "$lib/LibraryCard.svelte";
 	import LibraryScroller from "$lib/LibraryScroller.svelte";
+	import { TEST_DATA } from "$lib/TEST";
 	import { getToastStore } from "@skeletonlabs/skeleton";
 
 	const toasts = getToastStore();
 </script>
 
-<LibraryScroller cardType="art" items={new Array(1500).fill(null)} let:data>
-	{#each data.card as album (album.id)}
+<LibraryScroller cardType="art" items={TEST_DATA} let:data>
+	{#each data.cards as artist (artist.id)}
 		<LibraryCard
 			type="art"
-			name="Aluna"
-			href="/server/flixur.app/music/artistid"
-			image="https://i.scdn.co/image/ab6761610000e5ebfd31c630c1a72de7e89a2be7"
+			name={artist.name}
+			href="/server/flixur.app/music/{artist.id}"
+			image={artist.icon}
 			on:play={() => toasts.trigger({ message: "play button clicked" })}
-			on:edit={() => toasts.trigger({ message: "edit button clicked" })}
 			on:context={() => toasts.trigger({ message: "context button clicked" })}
 		/>
 	{/each}
