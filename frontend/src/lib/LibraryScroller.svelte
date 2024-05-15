@@ -31,7 +31,7 @@
 					: 3
 			).map((i, id) => ({
 				id,
-				card: new Array(i.length).fill(null).map((_, id) => ({ id })),
+				cards: i,
 			}))}
 			keeps={15}
 			let:data
