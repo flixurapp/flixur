@@ -1,0 +1,109 @@
+<script lang="ts">
+	import {
+		IconHeart,
+		IconHeartFilled,
+		IconMoodEmpty,
+		IconMoodEmptyFilled,
+		IconMoodSad,
+		IconMoodSadFilled,
+		IconMoodSmile,
+		IconMoodSmileFilled,
+		IconStar,
+		IconStarFilled,
+		IconStarHalfFilled,
+	} from "@tabler/icons-svelte";
+	import type { RatingType } from "./Rating";
+	import RatingIcon from "./RatingIcon.svelte";
+
+	export let type: RatingType;
+	export let value: number = 0;
+	let displayValue = value;
+	export let size = 24;
+
+	const STAR_ICON: [ConstructorOfATypedSvelteComponent, ConstructorOfATypedSvelteComponent] = [
+			IconStar,
+			IconStarFilled,
+		],
+		STAR_COLOR = "yellow-400";
+</script>
+
+<div
+	class="flex"
+	on:mouseleave={() => {
+		displayValue = value;
+	}}
+	role="radiogroup"
+	tabindex="-1"
+>
+	(test: {value}/10)
+	{#if type == "heart"}
+		{@const hasValue = value > 0}
+		<RatingIcon
+			icons={[IconHeart, IconHeartFilled]}
+			{size}
+			color="red-600"
+			value={hasValue ? 10 : 0}
+			on:change={({ detail }) => {
+				displayValue = value = detail ? 10 : 0;
+			}}
+			on:hover={({ detail }) => {
+				displayValue = detail === null ? value : 10;
+			}}
+		/>
+	{:else if type == "mood" || type == "stars3"}
+		{@const stars = type == "stars3"}
+		<RatingIcon
+			icons={stars ? STAR_ICON : [IconMoodSad, IconMoodSadFilled]}
+			{size}
+			color={stars ? STAR_COLOR : "red-600"}
+			value={displayValue >= 3 ? 2 : 0}
+			on:change={({ detail }) => {
+				displayValue = value = detail ? 3 : 0;
+			}}
+			on:hover={({ detail }) => {
+				displayValue = detail === null ? value : 3;
+			}}
+		/>
+		<RatingIcon
+			icons={stars ? STAR_ICON : [IconMoodEmpty, IconMoodEmptyFilled]}
+			{size}
+			color={stars ? STAR_COLOR : "yellow-600"}
+			value={displayValue >= 7 ? 2 : 0}
+			on:change={({ detail }) => {
+				displayValue = value = detail ? 7 : 0;
+			}}
+			on:hover={({ detail }) => {
+				displayValue = detail === null ? value : 7;
+			}}
+		/>
+		<RatingIcon
+			icons={stars ? STAR_ICON : [IconMoodSmile, IconMoodSmileFilled]}
+			{size}
+			color={stars ? STAR_COLOR : "green-600"}
+			value={displayValue >= 10 ? 2 : 0}
+			on:change={({ detail }) => {
+				displayValue = value = detail ? 10 : 0;
+			}}
+			on:hover={({ detail }) => {
+				displayValue = detail === null ? value : 10;
+			}}
+		/>
+	{:else if type == "stars5" || type == "stars10"}
+		{#each new Array(5).fill(null) as _, i}
+			<RatingIcon
+				icons={STAR_ICON}
+				halfIcon={type == "stars10" ? IconStarHalfFilled : undefined}
+				{size}
+				color={STAR_COLOR}
+				value={Math.max(displayValue - 2 * i)}
+				index={i}
+				on:change={({ detail }) => {
+					displayValue = value = i * 2 + detail;
+				}}
+				on:hover={({ detail }) => {
+					displayValue = detail ?? value;
+				}}
+			/>
+		{/each}
+	{/if}
+</div>

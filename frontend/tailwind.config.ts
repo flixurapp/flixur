@@ -21,7 +21,7 @@ const config = {
 	plugins: [
 		// 4. Append the Skeleton plugin (after other plugins)
 		skeleton({ themes: { custom: [flixurTheme] } }),
-		plugin(function ({ addVariant, addComponents }) {
+		plugin(function ({ addVariant, addComponents, addBase, theme }) {
 			addVariant("cant-hover", "@media (hover: none)");
 			addVariant("has-pointer", "@media (pointer: fine)");
 			addComponents([
@@ -34,6 +34,25 @@ const config = {
 					},
 				},
 			]);
+
+			// https://gist.github.com/Merott/d2a19b32db07565e94f10d13d11a8574
+			function extractColorVars(colorObj, colorGroup = "") {
+				return Object.keys(colorObj).reduce((vars, colorKey) => {
+					const value = colorObj[colorKey];
+					// added to filter only hex colors out
+					if (typeof value == "string" && !value.startsWith("#")) return vars;
+
+					const newVars =
+						typeof value === "string"
+							? { [`--color${colorGroup}-${colorKey}`]: value }
+							: extractColorVars(value, `-${colorKey}`);
+
+					return { ...vars, ...newVars };
+				}, {});
+			}
+			addBase({
+				":root": extractColorVars(theme("colors")),
+			});
 		}),
 		forms,
 	],
