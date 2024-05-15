@@ -9,10 +9,10 @@
 	$: album = artist?.albums.find((a) => a.id == $page.params.secondaryID) ?? null;
 </script>
 
-page for secondary (album, season) {$page.params.secondaryID}
-
-{#if artist && album}
-	<AlbumPage {artist} {album} />
-{:else}
-	album not found
-{/if}
+<div class="flex flex-col h-full px-2.5">
+	{#if artist && album}
+		<AlbumPage {artist} {album} />
+	{:else}
+		album not found
+	{/if}
+</div>

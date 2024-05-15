@@ -36,6 +36,9 @@
 			keeps={15}
 			let:data
 		>
+			<svelte:fragment slot="header">
+				<slot name="header" />
+			</svelte:fragment>
 			<div class="flex sm:gap-4 sm:py-1 gap-2 py-0.5 items-center justify-center snap-start">
 				<slot {data} />
 			</div>

@@ -8,8 +8,6 @@
 </script>
 
 <div class="flex flex-col h-full">
-	artist page for {$page.params.domain} + {$page.params.library} + {$page.params.primaryID}
-
 	{#if artist}
 		<ArtistPage {artist} />
 	{:else}

@@ -1,6 +1,8 @@
 <script lang="ts">
-	import type { AlbumJSON, ArtistJSON } from "$lib/TEST";
-	import { getToastStore } from "@skeletonlabs/skeleton";
+	import { RATING_SETTING, type AlbumJSON, type ArtistJSON } from "$lib/TEST";
+	import Rating from "$lib/components/Rating.svelte";
+	import { initials } from "$lib/utils";
+	import { Avatar, getToastStore } from "@skeletonlabs/skeleton";
 	import { IconPencil, IconPlayerPlayFilled } from "@tabler/icons-svelte";
 
 	export let artist: ArtistJSON;
@@ -10,6 +12,34 @@
 
 	const toasts = getToastStore();
 </script>
+
+<div class="card p-4 mb-4 flex gap-4">
+	<Avatar
+		src={album.icon}
+		initials={initials(album.name)}
+		rounded="rounded"
+		height="h-44"
+		width="w-44"
+	/>
+	<div>
+		<h1 class="text-3xl font-semibold flex items-center gap-2">
+			{album.name}
+			<span class="badge variant-soft-primary">{album.year}</span>
+		</h1>
+		<a class="flex gap-1 text-lg items-center w-fit" href="/server/flixur.app/music/{artist.id}">
+			<Avatar
+				src={artist.icon}
+				initials={initials(artist.name)}
+				rounded="rounded-full"
+				height="h-5"
+				width="w-5"
+			/>
+			<span class="opacity-80 font-medium">{artist.name}</span>
+			<span class="badge badge-sm variant-soft-secondary uppercase">{album.type}</span>
+		</a>
+		<Rating class="mt-1" value={album.rating} type={RATING_SETTING} size={20} />
+	</div>
+</div>
 
 <table class="table table-hover table-compact table-fixed w-1/2 mx-auto">
 	<tbody>

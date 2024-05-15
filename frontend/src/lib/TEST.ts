@@ -1,7 +1,12 @@
+import type { RatingType } from "./components/Rating";
+
 export interface ArtistJSON {
 	id: string;
 	name: string;
 	icon: string;
+	description?: string;
+	location?: string;
+	rating: number;
 	albums: AlbumJSON[];
 }
 export interface AlbumJSON {
@@ -9,6 +14,9 @@ export interface AlbumJSON {
 	name: string;
 	icon: string;
 	year: number;
+	description?: string;
+	rating: number;
+	type: "single" | "album";
 	tracks: TrackJSON[];
 }
 export interface TrackJSON {
@@ -24,17 +32,24 @@ function d(dur: string): number {
 	return (mm * 60 + ss) * 1000;
 }
 
+export const RATING_SETTING: RatingType = "stars5";
+
 export const TEST_DATA: ArtistJSON[] = [
 	{
 		id: "testal",
 		name: "Aluna",
 		icon: "https://i.scdn.co/image/ab6761610000e5ebfd31c630c1a72de7e89a2be7",
+		location: "United Kingdom",
+		description: `Singer/songwriter Aluna Francis is one-half of the 2012-formed U.K. electronic duo AlunaGeorge and builds upon that act's sound in a solo context to venture further into eclectic dance-pop territory. She debuted with 2020's stylistically elastic Renaissance, followed over the next few years by a string of singles including "Forget About Me," "Nowhere to Hide," and "Killing Me."`,
+		rating: 8,
 		albums: [
 			{
 				id: "testalm",
 				name: "MYCELiUM",
 				icon: "https://i.scdn.co/image/ab67616d0000b273791e5ad29bbd6253aa453293",
 				year: 2023,
+				rating: 2,
+				type: "album",
 				tracks: [
 					{ id: "test1alm", index: 1, title: "Before The Bloom - Intro", duration: d("00:48") },
 					{ id: "test2alm", index: 2, title: "The Way I'm Wired", duration: d("02:51") },
@@ -58,12 +73,15 @@ export const TEST_DATA: ArtistJSON[] = [
 		id: "testjd",
 		name: "Josh Dorey",
 		icon: "https://i.scdn.co/image/ab6761610000e5ebf63d17339cf210576a8495fc",
+		rating: 10,
 		albums: [
 			{
 				id: "testmjd",
 				name: "Motions",
 				icon: "https://i.scdn.co/image/ab67616d0000b273e1f7a2b6c4c13179e724e3dc",
 				year: 2024,
+				rating: 10,
+				type: "album",
 				tracks: [
 					{ id: "test1mjd", index: 1, title: "Kiss", duration: d("02:29") },
 					{ id: "test2mjd", index: 2, title: "Motions", duration: d("02:27") },
@@ -77,12 +95,15 @@ export const TEST_DATA: ArtistJSON[] = [
 		id: "testpi",
 		name: "piri",
 		icon: "https://i1.sndcdn.com/avatars-SbmE2u9ptJqUzPKO-11Mn2Q-t200x200.jpg",
+		rating: 6,
 		albums: [
 			{
 				id: "testpib",
 				name: "beachin",
 				icon: "https://i1.sndcdn.com/artworks-iit0IbRe4K3N-0-t500x500.jpg",
 				year: 2022,
+				rating: 8,
+				type: "single",
 				tracks: [{ id: "test1pib", index: 1, title: "beachin", duration: d("03:14") }],
 			},
 			{
@@ -90,6 +111,8 @@ export const TEST_DATA: ArtistJSON[] = [
 				name: "on & on",
 				icon: "https://i1.sndcdn.com/artworks-7yGAW7enZ1Fc-0-t500x500.jpg",
 				year: 2022,
+				rating: 10,
+				type: "single",
 				tracks: [{ id: "test1pio", index: 1, title: "on & on", duration: d("02:19") }],
 			},
 			{
@@ -97,6 +120,8 @@ export const TEST_DATA: ArtistJSON[] = [
 				name: "soft spot",
 				icon: "https://i1.sndcdn.com/artworks-JODSh91actkm-0-t500x500.jpg",
 				year: 2022,
+				rating: 4,
+				type: "single",
 				tracks: [{ id: "test1pis", index: 1, title: "soft spot", duration: d("03:39") }],
 			},
 		],

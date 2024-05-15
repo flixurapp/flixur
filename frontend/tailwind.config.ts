@@ -25,12 +25,23 @@ const config = {
 			addVariant("cant-hover", "@media (hover: none)");
 			addVariant("has-pointer", "@media (pointer: fine)");
 			addComponents([
-				// custom extra small icon button component (based off btn-icon-sm)
 				{
+					// custom extra small icon button component (based off btn-icon-sm)
 					".btn-icon-xs": {
 						width: "25px",
 						"font-size": "0.5rem",
 						"line-height": "1rem",
+					},
+				},
+				{
+					// custom extra small badge component (add to badge)
+					".badge-sm": {
+						"font-size": "0.65rem",
+						"line-height": "1rem",
+						"padding-left": "0.35rem",
+						"padding-right": "0.35rem",
+						"padding-top": "0.1rem",
+						"padding-bottom": "0.1rem",
 					},
 				},
 			]);
