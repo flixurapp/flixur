@@ -1,0 +1,1 @@
+tygo generate
