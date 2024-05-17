@@ -3,15 +3,18 @@ package main
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
-
-	_ "github.com/danielgtaylor/huma/v2/formats/cbor"
 )
 
 func main() {
 	router := chi.NewMux()
+	router.Use(middleware.Compress(5))
+	router.Use(middleware.Recoverer)
+	router.Use(middleware.RequestID)
+	router.Use(middleware.RequestID)
 
 	RegisterAPI(router)
 
-	http.ListenAndServe("127.0.0.1:8888", router)
+	http.ListenAndServe(":8787", router)
 }

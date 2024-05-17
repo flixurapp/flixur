@@ -7,6 +7,7 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 
 	_ "github.com/danielgtaylor/huma/v2/formats/cbor"
 )
@@ -23,6 +24,14 @@ func RegisterAPI(router chi.Router) {
 	config.Servers = []*huma.Server{{URL: "/api"}}
 
 	router.Route("/api", func(r chi.Router) {
+		// allow CORS on api routes (so other clients can connect)
+		r.Use(cors.Handler(cors.Options{
+			AllowedOrigins: []string{"https://*", "http://*"},
+			AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+			AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+			MaxAge:         300,
+		}))
+
 		api := humachi.New(r, config)
 
 		// Register GET /greeting/{name} handler.
