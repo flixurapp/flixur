@@ -1,6 +1,6 @@
 syntax = "proto3";
 package flixur;
-option go_package = "github.com/flixurapp/flixur/proto/goproto";
+option go_package = "github.com/flixurapp/flixur/proto/go";
 
 enum PacketType {
   INIT = 0;           // PacketInit

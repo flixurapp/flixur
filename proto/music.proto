@@ -1,6 +1,6 @@
 syntax = "proto3";
 package flixur;
-option go_package = "github.com/flixurapp/flixur/proto/goproto";
+option go_package = "github.com/flixurapp/flixur/proto/go";
 
 message Artist {
   // Unique ID of the artist. (should be unique across providers)
