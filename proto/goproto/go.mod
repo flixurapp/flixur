@@ -1,4 +1,4 @@
-module github.com/flixurapp/flixur/proto/go
+module github.com/flixurapp/flixur/proto/goproto
 
 go 1.21.3
 
