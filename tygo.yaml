@@ -1,0 +1,4 @@
+packages:
+  - path: "github.com/flixurapp/flixur/proto/go"
+    output_path: "proto/types.ts"
+    indent: "  "
