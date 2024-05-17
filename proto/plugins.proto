@@ -1,0 +1,62 @@
+syntax = "proto3";
+package flixur;
+option go_package = "github.com/flixurapp/flixur/proto/go";
+
+enum PacketType {
+  INIT = 0;           // PacketInit
+  ARTIST_SEARCH = 1;  // PacketArtistSearch
+}
+enum PluginType {
+  SERVER = 0;          // Provides additional functions to server.
+  PROVIDER_AUDIO = 1;  // Provides audio metadata. (artist/album/track)
+  PROVIDER_VIDEO = 2;  // Provides video metadata. (unused)
+  DOWNLOADER = 3;      // Downloads requested content.
+}
+
+/* Both outgoing and incoming are the same, but this leaves room for expansion
+ * later if needed. */
+
+// Packets sent to the server from a plugin.
+message IncomingPluginPacket {
+  // Type of the packet.
+  PacketType type = 1;
+  // Identifier for the packet. (used to respond to certain requests)
+  string id = 3;
+
+  // The actual packet data. (a protobuf)
+  bytes data = 2;
+}
+
+// Packets sent to a plugin from the server.
+message OutgoingPluginPacket {
+  // Type of the packet.
+  PacketType type = 1;
+  // Identifier for the packet. (echoed back in the response)
+  string id = 3;
+
+  // The actual packet data. (a protobuf)
+  bytes data = 2;
+}
+
+// Sent by a plugin to identify itself when registered.
+message PacketInit {
+  // Unique Plugin ID.
+  string id = 2;
+  // Version string.
+  string version = 3;
+  // Type of the plugin.
+  PluginType type = 4;
+
+  // Name of the plugin.
+  string name = 5;
+  // Short description of the plugin.
+  string description = 6;
+  // Name of the plugin author.
+  string author = 7;
+}
+
+// Search for an artist using this plugin.
+// (supports: )
+message PacketArtistSearch {
+  string query = 4;
+}

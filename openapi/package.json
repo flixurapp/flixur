@@ -1,0 +1,6 @@
+{
+	"devDependencies": {
+		"@openapi-codegen/cli": "^2.0.2",
+		"@openapi-codegen/typescript": "^8.0.2"
+	}
+}
