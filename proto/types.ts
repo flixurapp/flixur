@@ -104,3 +104,85 @@ export interface Track {
    */
   explicit: boolean;
 }
+
+//////////
+// source: plugins.pb.go
+
+export type PacketType = number /* int32 */;
+export const PacketType_INIT: PacketType = 0; // PacketInit
+export const PacketType_ARTIST_SEARCH: PacketType = 1; // PacketArtistSearch
+export type PluginType = number /* int32 */;
+export const PluginType_SERVER: PluginType = 0; // Provides additional functions to server.
+export const PluginType_PROVIDER_AUDIO: PluginType = 1; // Provides audio metadata. (artist/album/track)
+export const PluginType_PROVIDER_VIDEO: PluginType = 2; // Provides video metadata. (unused)
+export const PluginType_DOWNLOADER: PluginType = 3; // Downloads requested content.
+/**
+ * Packets sent to the server from a plugin.
+ */
+export interface IncomingPluginPacket {
+  /**
+   * Type of the packet.
+   */
+  type: PacketType;
+  /**
+   * Identifier for the packet. (used to respond to certain requests)
+   */
+  id: string;
+  /**
+   * The actual packet data. (a protobuf)
+   */
+  data: string;
+}
+/**
+ * Packets sent to a plugin from the server.
+ */
+export interface OutgoingPluginPacket {
+  /**
+   * Type of the packet.
+   */
+  type: PacketType;
+  /**
+   * Identifier for the packet. (echoed back in the response)
+   */
+  id: string;
+  /**
+   * The actual packet data. (a protobuf)
+   */
+  data: string;
+}
+/**
+ * Sent by a plugin to identify itself when registered.
+ */
+export interface PacketInit {
+  /**
+   * Unique Plugin ID.
+   */
+  id: string;
+  /**
+   * Version string.
+   */
+  version: string;
+  /**
+   * Type of the plugin.
+   */
+  type: PluginType;
+  /**
+   * Name of the plugin.
+   */
+  name: string;
+  /**
+   * Short description of the plugin.
+   */
+  description: string;
+  /**
+   * Name of the plugin author.
+   */
+  author: string;
+}
+/**
+ * Search for an artist using this plugin.
+ * (supports: )
+ */
+export interface PacketArtistSearch {
+  query: string;
+}
