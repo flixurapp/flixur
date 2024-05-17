@@ -1,11 +1,15 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 )
+
+var port = 8787
 
 func main() {
 	router := chi.NewMux()
@@ -16,5 +20,11 @@ func main() {
 
 	RegisterAPI(router)
 
-	http.ListenAndServe(":8787", router)
+	if Dev {
+		log.Print("Running in development mode.")
+	} else {
+		log.Printf("Listening on port %d.", port)
+	}
+
+	http.ListenAndServe(fmt.Sprintf(":%d", port), router)
 }
