@@ -2,5 +2,10 @@ syntax = "proto3";
 option go_package = "github.com/flixurapp/flixur/proto/go";
 
 message Artist {
+  // Unique ID of the artist.
   string id = 1;
+  // Name for the artist.
+  string name = 2;
+  // Icon URL for the artist. Should be accessible via HTTP with CORS.
+  optional string icon = 3;
 }
