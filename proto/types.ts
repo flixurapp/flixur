@@ -3,29 +3,104 @@
 //////////
 // source: music.pb.go
 
+export type AlbumType = number /* int32 */;
+export const AlbumType_SINGLE: AlbumType = 0;
+export const AlbumType_ALBUM: AlbumType = 1;
 export interface Artist {
   /**
-   * Unique ID of the artist.
+   * Unique ID of the artist. (should be unique across providers)
    */
   id: string;
   /**
-   * Name for the artist.
+   * Name of the artist.
    */
   name: string;
   /**
    * Icon URL for the artist. Should be accessible via HTTP with CORS.
    */
   icon?: string;
+  /**
+   * Rating for the artist.
+   */
+  rating?: number /* int64 */;
+  /**
+   * Description of the artist.
+   */
+  description?: string;
+  /**
+   * Geographical location of the artist.
+   */
+  location?: string;
+  /**
+   * Follower count for the artist. (using the platform of choice)
+   */
+  followers?: number /* int64 */;
 }
 export interface Album {
   /**
    * Unique ID for the album.
    */
   id: string;
+  /**
+   * IDs of artists on this album.
+   */
+  artists: string[];
+  /**
+   * Name of the album.
+   */
+  name: string;
+  /**
+   * Cover URL for album art. Should be accessible via HTTP with CORS.
+   */
+  icon?: string;
+  /**
+   * Unix timestamp the album was released. (in seconds)
+   */
+  date: number /* int64 */;
+  /**
+   * Type of the album.
+   */
+  type: AlbumType;
+  /**
+   * Rating for the track.
+   */
+  rating?: number /* int64 */;
+  /**
+   * Description of the album.
+   */
+  description?: string;
+  /**
+   * List of genres for the album.
+   */
+  genres: string[];
 }
 export interface Track {
   /**
    * Unique ID for the track.
    */
   id: string;
+  /**
+   * IDs of artists on this track.
+   */
+  artists: string[];
+  /**
+   * Title of the track.
+   */
+  title: string;
+  /**
+   * Track number in the album.
+   */
+  index: number /* int64 */;
+  /**
+   * Duration in ms of the track.
+   */
+  duration: number /* int64 */;
+  /**
+   * Rating for the track.
+   */
+  rating?: number /* int64 */;
+  /**
+   * If this track is explicit.
+   */
+  explicit: boolean;
 }

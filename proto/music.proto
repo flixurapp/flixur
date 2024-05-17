@@ -2,20 +2,65 @@ syntax = "proto3";
 option go_package = "github.com/flixurapp/flixur/proto/go";
 
 message Artist {
-  // Unique ID of the artist.
+  // Unique ID of the artist. (should be unique across providers)
   string id = 1;
-  // Name for the artist.
+
+  // Name of the artist.
   string name = 2;
   // Icon URL for the artist. Should be accessible via HTTP with CORS.
   optional string icon = 3;
+  // Rating for the artist.
+  optional int64 rating = 7;
+
+  // Description of the artist.
+  optional string description = 4;
+  // Geographical location of the artist.
+  optional string location = 5;
+  // Follower count for the artist. (using the platform of choice)
+  optional int64 followers = 6;
 }
 
+enum AlbumType {
+  SINGLE = 0;
+  ALBUM = 1;
+}
 message Album {
   // Unique ID for the album.
   string id = 1;
+  // IDs of artists on this album.
+  repeated string artists = 2;
+
+  // Name of the album.
+  string name = 3;
+  // Cover URL for album art. Should be accessible via HTTP with CORS.
+  optional string icon = 4;
+  // Unix timestamp the album was released. (in seconds)
+  int64 date = 5;
+  // Type of the album.
+  AlbumType type = 6;
+  // Rating for the track.
+  optional int64 rating = 8;
+
+  // Description of the album.
+  optional string description = 7;
+  // List of genres for the album.
+  repeated string genres = 9;
 }
 
 message Track {
   // Unique ID for the track.
   string id = 1;
+  // IDs of artists on this track.
+  repeated string artists = 2;
+
+  // Title of the track.
+  string title = 3;
+  // Track number in the album.
+  int64 index = 4;
+  // Duration in ms of the track.
+  int64 duration = 5;
+  // Rating for the track.
+  optional int64 rating = 6;
+  // If this track is explicit.
+  bool explicit = 7;
 }
