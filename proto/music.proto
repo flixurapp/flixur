@@ -9,3 +9,13 @@ message Artist {
   // Icon URL for the artist. Should be accessible via HTTP with CORS.
   optional string icon = 3;
 }
+
+message Album {
+  // Unique ID for the album.
+  string id = 1;
+}
+
+message Track {
+  // Unique ID for the track.
+  string id = 1;
+}
