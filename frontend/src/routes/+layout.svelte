@@ -91,3 +91,11 @@
 	</svelte:fragment>
 	<slot />
 </AppShell>
+
+<style>
+	/* blur navbar with background */
+	:global(#appShell .bg-surface-100-800-token) {
+		background-color: rgb(var(--color-surface-800) / 0.75);
+		backdrop-filter: blur(24px);
+	}
+</style>
