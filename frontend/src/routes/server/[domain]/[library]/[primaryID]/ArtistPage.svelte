@@ -2,6 +2,7 @@
 	import LibraryCard from "$lib/LibraryCard.svelte";
 	import LibraryScroller from "$lib/LibraryScroller.svelte";
 	import { RATING_SETTING, type ArtistJSON } from "$lib/TEST";
+	import { iconBackgroundAction } from "$lib/background/gradient";
 	import Rating from "$lib/components/Rating.svelte";
 	import { initials } from "$lib/utils";
 	import { Avatar, getToastStore } from "@skeletonlabs/skeleton";
@@ -26,6 +27,8 @@
 			rounded="rounded"
 			height="h-44"
 			width="w-44"
+			crossorigin="anonymous"
+			action={iconBackgroundAction}
 		/>
 		<div>
 			<h1 class="text-4xl font-semibold">{artist.name}</h1>
