@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { afterNavigate } from "$app/navigation";
+	import { afterNavigate, beforeNavigate } from "$app/navigation";
 	import { page } from "$app/stores";
+	import { PageGradient } from "$lib/background/PageGradient";
 	import EditModal from "$lib/modals/edit/EditModal.svelte";
 	import {
 		AppBar,
@@ -12,14 +13,21 @@
 		initializeStores,
 		type ModalComponent,
 	} from "@skeletonlabs/skeleton";
-	import type { AfterNavigate } from "@sveltejs/kit";
 	import { IconHome, IconMusic, IconSearch, IconSettings } from "@tabler/icons-svelte";
 	import "../app.postcss";
 
 	initializeStores();
 
-	afterNavigate((params: AfterNavigate) => {
+	beforeNavigate((params) => {
 		const isNewPage: boolean = params.from?.route.id !== params.to?.route.id;
+
+		// reset page gradient on navigation change
+		if (isNewPage) PageGradient.set(null);
+	});
+
+	afterNavigate((params) => {
+		const isNewPage: boolean = params.from?.route.id !== params.to?.route.id;
+
 		const elemPage = document.querySelector("#page");
 		if (isNewPage && elemPage !== null) {
 			elemPage.scrollTop = 0;
@@ -29,6 +37,15 @@
 	const modalRegistry: Record<string, ModalComponent> = {
 		edit: { ref: EditModal },
 	};
+
+	$: {
+		if (typeof document !== "undefined" && document.body) {
+			// ensure gradient is there and correct
+			if ($PageGradient?.length == 4) {
+				document.body.style.background = `rgb(${$PageGradient[0].join(",")})`;
+			} else document.body.style.background = "";
+		}
+	}
 </script>
 
 <Modal components={modalRegistry} />

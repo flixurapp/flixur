@@ -14,6 +14,9 @@ importers:
       '@types/lodash':
         specifier: ^4.14.200
         version: 4.14.200
+      colorgram:
+        specifier: ^0.2.0
+        version: 0.2.0
       eventemitter3:
         specifier: ^5.0.1
         version: 5.0.1
@@ -553,6 +556,9 @@ packages:
 
   code-red@1.0.4:
     resolution: {integrity: sha512-7qJWqItLA8/VPVlKJlFXU+NBlo/qyfs39aJcuMT/2ere32ZqvF5OSxgdM5xOfJJ7O429gg2HM47y8v9P+9wrNw==}
+
+  colorgram@0.2.0:
+    resolution: {integrity: sha512-eym08lLsN3lURBmQoX5d9CkUmzmNmBP6HW6di+kBf/NhDT/q1gEGxJ8tKBSpKgqklUP2L8+JZOCN+8xXrKtAcQ==}
 
   commander@4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
@@ -1488,6 +1494,8 @@ snapshots:
       acorn: 8.10.0
       estree-walker: 3.0.3
       periscopic: 3.1.0
+
+  colorgram@0.2.0: {}
 
   commander@4.1.1: {}
 

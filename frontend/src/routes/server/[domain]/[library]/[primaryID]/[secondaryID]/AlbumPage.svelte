@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { RATING_SETTING, type AlbumJSON, type ArtistJSON } from "$lib/TEST";
+	import { PageGradient } from "$lib/background/PageGradient";
+	import { calculateBackgroundGradient } from "$lib/background/gradient";
+	import type { RGB } from "$lib/background/types";
 	import Rating from "$lib/components/Rating.svelte";
 	import { initials } from "$lib/utils";
 	import { Avatar, getToastStore } from "@skeletonlabs/skeleton";
@@ -8,9 +11,20 @@
 	export let artist: ArtistJSON;
 	export let album: AlbumJSON;
 
-	artist; //todo:
+	artist; //TODO:
 
 	const toasts = getToastStore();
+
+	function iconLoaded(img: HTMLElement) {
+		const colors = calculateBackgroundGradient(<HTMLImageElement>img),
+			commons = colors.slice(0, 4).map((c) => <RGB>c.slice(0, 3));
+		// ensure there's at least 4 colors in the list
+		//TODO: maybe do something with % to make it look better?
+		while (commons.length < 4) {
+			commons.push(commons[commons.length - 1]);
+		}
+		PageGradient.set(<[RGB, RGB, RGB, RGB]>commons);
+	}
 </script>
 
 <div class="card p-4 mb-4 flex gap-4">
@@ -20,6 +34,8 @@
 		rounded="rounded"
 		height="h-44"
 		width="w-44"
+		crossorigin="anonymous"
+		action={iconLoaded}
 	/>
 	<div>
 		<h1 class="text-3xl font-semibold flex items-center gap-2">
