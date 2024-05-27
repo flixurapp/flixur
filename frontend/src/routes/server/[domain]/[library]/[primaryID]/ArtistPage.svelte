@@ -12,14 +12,7 @@
 	export let artist: ArtistJSON;
 </script>
 
-<!--TODO: temporary testing-->
-<LibraryScroller
-	cardType="art"
-	items={JSON.parse(
-		"[" + new Array(500).fill(JSON.stringify(artist.albums).slice(1, -1)).join(",") + "]"
-	)}
-	let:data
->
+<LibraryScroller cardType="art" items={artist.albums} let:data>
 	<div slot="header" class="card p-4 mb-4 flex gap-4">
 		<Avatar
 			src={artist.icon}

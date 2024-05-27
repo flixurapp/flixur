@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { afterNavigate, beforeNavigate } from "$app/navigation";
+	import { afterNavigate } from "$app/navigation";
 	import { page } from "$app/stores";
 	import { PageGradient } from "$lib/background/PageGradient";
 	import EditModal from "$lib/modals/edit/EditModal.svelte";
@@ -18,13 +18,6 @@
 
 	initializeStores();
 
-	beforeNavigate((params) => {
-		const isNewPage: boolean = params.from?.route.id !== params.to?.route.id;
-
-		// reset page gradient on navigation change
-		if (isNewPage) PageGradient.set(null);
-	});
-
 	afterNavigate((params) => {
 		const isNewPage: boolean = params.from?.route.id !== params.to?.route.id;
 
@@ -38,13 +31,25 @@
 		edit: { ref: EditModal },
 	};
 
-	$: {
-		if (typeof document !== "undefined" && document.body) {
-			// ensure gradient is there and correct
-			if ($PageGradient?.length == 4) {
-				document.body.style.background = `rgb(${$PageGradient[0].join(",")})`;
-			} else document.body.style.background = "";
-		}
+	let oldColors: typeof $PageGradient = null;
+	$: if (typeof document !== "undefined" && document.body) {
+		// ensure gradient is there and correct
+		if ($PageGradient?.length == 4) {
+			// convert gradient to list of rgba colors, in same order
+			// opacity is set according to importance of color (index in array)
+			const g = $PageGradient.map((g, i) => `rgba(${g.join(",")}, ${Math.abs(1 * (i / 4) - 1)})`);
+			//TODO: could use some work but im happy with it for now
+			document.body.style.background = `
+				linear-gradient(to bottom left, ${g[1]}, ${g[3]}),
+				linear-gradient(to bottom right, ${g[0]}, ${g[2]}),
+				rgb(var(--color-surface-900) / 0.9)
+				`.trim();
+			document.body.style.backgroundBlendMode = "overlay";
+			document.body.style.backdropFilter = "blur(24px)";
+		} else document.body.style.background = "";
+
+		// save colors for interpolation
+		oldColors = $PageGradient;
 	}
 </script>
 

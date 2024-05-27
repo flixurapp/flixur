@@ -46,3 +46,8 @@ export function iconBackgroundAction(img: HTMLElement) {
 		PageGradient.set(<[RGB, RGB, RGB, RGB]>commons);
 	});
 }
+
+/** Removes the page gradient. */
+export function removePageGradient() {
+	PageGradient.set(null);
+}

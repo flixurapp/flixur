@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { page } from "$app/stores";
+	import { beforeNavigate } from "$app/navigation";
 	import { removePageGradient } from "$lib/background/gradient";
 	import { onMount } from "svelte";
 
+	beforeNavigate(removePageGradient);
 	onMount(removePageGradient);
 </script>
 
-server page for {$page.params.domain}
+<slot />
