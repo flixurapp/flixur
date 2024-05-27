@@ -14,7 +14,7 @@
 	const toasts = getToastStore();
 </script>
 
-<div class="card p-4 mb-4 flex gap-4">
+<div class="card p-4 mb-4 flex gap-4 variant-softer">
 	<Avatar
 		src={album.icon}
 		initials={initials(album.name)}

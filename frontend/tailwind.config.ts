@@ -44,6 +44,13 @@ const config = {
 						"padding-bottom": "0.1rem",
 					},
 				},
+				{
+					// for cards that are to be transparent to the background gradient
+					".card.variant-softer": {
+						"background-color": "rgb(var(--color-surface-800) / 0.5)",
+						"backdrop-filter": "blur(64px)",
+					},
+				},
 			]);
 
 			// https://gist.github.com/Merott/d2a19b32db07565e94f10d13d11a8574

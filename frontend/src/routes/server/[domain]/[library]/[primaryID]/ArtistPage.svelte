@@ -13,7 +13,7 @@
 </script>
 
 <LibraryScroller cardType="art" items={artist.albums} let:data>
-	<div slot="header" class="card p-4 mb-4 flex gap-4">
+	<div slot="header" class="card p-4 mb-4 flex gap-4 variant-softer">
 		<Avatar
 			src={artist.icon}
 			initials={initials(artist.name)}
