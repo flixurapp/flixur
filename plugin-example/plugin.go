@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/flixurapp/flixur/pluginkit"
@@ -23,7 +24,10 @@ func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{
 		Out:        os.Stderr,
 		TimeFormat: "3:04:05PM",
-	}).With().Str("id", INFO.Id).Logger()
+		FormatMessage: func(i interface{}) string {
+			return fmt.Sprintf("[%s] %s", INFO.Id, i)
+		},
+	})
 
 	log.Info().Msg("Initializing plugin...")
 
