@@ -31,7 +31,9 @@ func main() {
 	if Dev {
 		log.Info().Msg("Running in development mode.")
 	}
-	log.Info().Int("port", port).Msg("Server is online.")
 
+	RegisterPlugins("/home/meow/Documents/flixur/test/plugins")
+
+	log.Info().Int("port", port).Msg("Server is online.")
 	http.ListenAndServe(fmt.Sprintf(":%d", port), router)
 }

@@ -11,7 +11,7 @@ message Artist {
   // Icon URL for the artist. Should be accessible via HTTP with CORS.
   optional string icon = 3;
   // Rating for the artist.
-  optional int64 rating = 7;
+  optional int32 rating = 7;
 
   // Description of the artist.
   optional string description = 4;
@@ -40,7 +40,7 @@ message Album {
   // Type of the album.
   AlbumType type = 6;
   // Rating for the track.
-  optional int64 rating = 8;
+  optional int32 rating = 8;
 
   // Description of the album.
   optional string description = 7;
@@ -57,11 +57,11 @@ message Track {
   // Title of the track.
   string title = 3;
   // Track number in the album.
-  int64 index = 4;
+  int32 index = 4;
   // Duration in ms of the track.
   int64 duration = 5;
   // Rating for the track.
-  optional int64 rating = 6;
+  optional int32 rating = 6;
   // If this track is explicit.
   bool explicit = 7;
 }

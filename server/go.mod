@@ -4,10 +4,12 @@ go 1.22.3
 
 require (
 	github.com/danielgtaylor/huma/v2 v2.16.0
+	github.com/flixurapp/flixur/proto/go v0.0.0-20240528195341-89fdc2551b55
 	github.com/go-chi/chi v1.5.5
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/go-chi/cors v1.2.1
 	github.com/rs/zerolog v1.32.0
+	google.golang.org/protobuf v1.34.1
 )
 
 require (

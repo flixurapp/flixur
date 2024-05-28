@@ -4,7 +4,8 @@ option go_package = "github.com/flixurapp/flixur/proto/go";
 
 enum PacketType {
   INIT = 0;           // PacketInit
-  ARTIST_SEARCH = 1;  // PacketArtistSearch
+  INFO = 1;           // PacketInfo
+  ARTIST_SEARCH = 2;  // PacketArtistSearch
 }
 enum PluginType {
   SERVER = 0;          // Provides additional functions to server.
@@ -38,14 +39,22 @@ message OutgoingPluginPacket {
   bytes data = 2;
 }
 
-// Sent by a plugin to identify itself when registered.
+// Sent by the server to tell a plugin to initialize.
 message PacketInit {
+  // Current version of the server.
+  int32 version = 1;
+}
+
+// Sent by a plugin to identify itself.
+message PacketInfo {
   // Unique Plugin ID.
-  string id = 2;
+  string id = 1;
   // Version string.
-  string version = 3;
+  string version = 2;
   // Type of the plugin.
-  PluginType type = 4;
+  PluginType type = 3;
+  // List of plugin IDs that should be loaded before this plugin.
+  repeated string dependencies = 4;
 
   // Name of the plugin.
   string name = 5;
@@ -55,8 +64,8 @@ message PacketInit {
   string author = 7;
 }
 
+// (type: `PROVIDER_AUDIO`)
 // Search for an artist using this plugin.
-// (supports: )
 message PacketArtistSearch {
   string query = 4;
 }
