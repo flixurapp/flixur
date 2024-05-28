@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/flixurapp/flixur/api"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog"
@@ -25,7 +26,7 @@ func main() {
 	router.Use(middleware.RequestID)
 	router.Use(middleware.RequestID)
 
-	RegisterAPI(router)
+	api.RegisterAPI(router)
 
 	if Dev {
 		log.Info().Msg("Running in development mode.")
