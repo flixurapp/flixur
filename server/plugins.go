@@ -41,7 +41,11 @@ func InitPlugin(bin string) {
 		return
 	}
 	log.Debug().Str("path", bin).Msg("Loading plugin binary...")
-	go cmd.Wait()
+	go (func() {
+		cmd.Wait()
+		reader.Close()
+		writer.Close()
+	})()
 
 	pkt, err := pluginkit.ReadMessage(reader)
 	if err != nil {
