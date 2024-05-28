@@ -22,7 +22,7 @@ export interface Artist {
   /**
    * Rating for the artist.
    */
-  rating?: number /* int64 */;
+  rating?: number /* int32 */;
   /**
    * Description of the artist.
    */
@@ -64,7 +64,7 @@ export interface Album {
   /**
    * Rating for the track.
    */
-  rating?: number /* int64 */;
+  rating?: number /* int32 */;
   /**
    * Description of the album.
    */
@@ -90,7 +90,7 @@ export interface Track {
   /**
    * Track number in the album.
    */
-  index: number /* int64 */;
+  index: number /* int32 */;
   /**
    * Duration in ms of the track.
    */
@@ -98,7 +98,7 @@ export interface Track {
   /**
    * Rating for the track.
    */
-  rating?: number /* int64 */;
+  rating?: number /* int32 */;
   /**
    * If this track is explicit.
    */
@@ -110,7 +110,8 @@ export interface Track {
 
 export type PacketType = number /* int32 */;
 export const PacketType_INIT: PacketType = 0; // PacketInit
-export const PacketType_ARTIST_SEARCH: PacketType = 1; // PacketArtistSearch
+export const PacketType_INFO: PacketType = 1; // PacketInfo
+export const PacketType_ARTIST_SEARCH: PacketType = 2; // PacketArtistSearch
 export type PluginType = number /* int32 */;
 export const PluginType_SERVER: PluginType = 0; // Provides additional functions to server.
 export const PluginType_PROVIDER_AUDIO: PluginType = 1; // Provides audio metadata. (artist/album/track)
@@ -151,9 +152,18 @@ export interface OutgoingPluginPacket {
   data: string;
 }
 /**
- * Sent by a plugin to identify itself when registered.
+ * Sent by the server to tell a plugin to initialize.
  */
 export interface PacketInit {
+  /**
+   * Current version of the server.
+   */
+  version: number /* int32 */;
+}
+/**
+ * Sent by a plugin to identify itself.
+ */
+export interface PacketInfo {
   /**
    * Unique Plugin ID.
    */
@@ -166,6 +176,10 @@ export interface PacketInit {
    * Type of the plugin.
    */
   type: PluginType;
+  /**
+   * List of plugin IDs that should be loaded before this plugin.
+   */
+  dependencies: string[];
   /**
    * Name of the plugin.
    */
@@ -180,8 +194,8 @@ export interface PacketInit {
   author: string;
 }
 /**
+ * (type: `PROVIDER_AUDIO`)
  * Search for an artist using this plugin.
- * (supports: )
  */
 export interface PacketArtistSearch {
   query: string;

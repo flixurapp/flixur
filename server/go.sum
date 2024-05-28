@@ -3,6 +3,8 @@ github.com/danielgtaylor/huma/v2 v2.16.0 h1:m4APMkZamUqDcKeRAE2IFha/AIvhHMBXLtaz
 github.com/danielgtaylor/huma/v2 v2.16.0/go.mod h1:fFOnahr3rZdFha4rqDq7rjb8q3CPuZvCjoP37qg8fTI=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/flixurapp/flixur/pluginkit v0.0.0-20240528210755-daad3930e9bd h1:z4jVfKhWq8DrNfXdq6k+aHveyh70eBIcGqu186MwqgE=
+github.com/flixurapp/flixur/pluginkit v0.0.0-20240528210755-daad3930e9bd/go.mod h1:7VodjWSoNWlAi9k0AxSJFB7Auy8eLH2eZ+dVDvRiC0U=
 github.com/flixurapp/flixur/proto/go v0.0.0-20240528195341-89fdc2551b55 h1:n7H80FDjnqB7BFjgsdDp/tj8QY1bX+9PA6taEnOwmrA=
 github.com/flixurapp/flixur/proto/go v0.0.0-20240528195341-89fdc2551b55/go.mod h1:bYZisgjDzB2C0e4bQo6YlthDMXtJcymTUSEwSKBoZqc=
 github.com/fxamacker/cbor/v2 v2.6.0 h1:sU6J2usfADwWlYDAFhZBQ6TnLFBHxgesMrQfQgk1tWA=
