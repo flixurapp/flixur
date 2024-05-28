@@ -1,7 +1,12 @@
 <script lang="ts">
 	import { afterNavigate } from "$app/navigation";
 	import { page } from "$app/stores";
-	import { PageGradient } from "$lib/background/PageGradient";
+	import {
+		PageGradient,
+		PageGradientDefault,
+		type PageGradientType,
+	} from "$lib/background/PageGradient";
+	import type { RGBA } from "$lib/background/types";
 	import EditModal from "$lib/modals/edit/EditModal.svelte";
 	import {
 		AppBar,
@@ -14,6 +19,9 @@
 		type ModalComponent,
 	} from "@skeletonlabs/skeleton";
 	import { IconHome, IconMusic, IconSearch, IconSettings } from "@tabler/icons-svelte";
+	import { interpolateLab } from "d3-interpolate";
+	import { sineOut } from "svelte/easing";
+	import { tweened } from "svelte/motion";
 	import "../app.postcss";
 
 	initializeStores();
@@ -31,25 +39,57 @@
 		edit: { ref: EditModal },
 	};
 
-	let oldColors: typeof $PageGradient = null;
-	$: if (typeof document !== "undefined" && document.body) {
+	/** Current color rendered on-screen. */
+	let currentColor = tweened<PageGradientType>(PageGradientDefault(), {
+		duration: 500,
+		interpolate: (a, b) => (t) => {
+			const result = a.map((aa, i) => {
+				const bb = b![i];
+				const newColor = interpolateLab(`rgba(${aa.join(", ")})`, `rgba(${bb.join(", ")})`)(t);
+				const colors = <RGBA>newColor.split("(")[1].split(")")[0].split(", ").map(Number);
+				while (colors.length < 4) {
+					colors.push(1);
+				}
+				return colors;
+			});
+			return <PageGradientType>result;
+		},
+		easing: sineOut,
+	});
+	$: {
 		// ensure gradient is there and correct
-		if ($PageGradient?.length == 4) {
+		if ($PageGradient?.length !== 4) $PageGradient = PageGradientDefault();
+
+		// set color for interpolation
+		currentColor.set($PageGradient);
+	}
+
+	$: {
+		if ($currentColor?.length == 4) {
+			/** Amount of separation in alpha for colors. */
+			// '4' results in 1, 0.75, 0.50, 0.25
+			const ALPHA_FACTOR = 4,
+				/** Default alpha of the darkening background overlay. */
+				OVERLAY_ALPHA = 0.9;
 			// convert gradient to list of rgba colors, in same order
 			// opacity is set according to importance of color (index in array)
-			const g = $PageGradient.map((g, i) => `rgba(${g.join(",")}, ${Math.abs(1 * (i / 4) - 1)})`);
+			const g = $currentColor.map((g, i) => {
+				// clamp decimals to 3 places
+				const alpha = Math.round((g[3] ?? 1) * Math.abs(1 * (i / ALPHA_FACTOR) - 1) * 1000) / 1000;
+				return `rgba(${g.slice(0, 3).join(", ")}, ${alpha})`;
+			});
+			const totalAlpha = $currentColor.map((c) => c[3] ?? 1).reduce((a, b) => a + b) / ALPHA_FACTOR;
 			//TODO: could use some work but im happy with it for now
+			// the final OVERLAY_ALPHA is set closer to 1 the closer totalAlpha is to 0
+			// this way when the background is blended to transparency the overlay is properly 100% opaque
 			document.body.style.background = `
-				linear-gradient(to bottom left, ${g[1]}, ${g[3]}),
-				linear-gradient(to bottom right, ${g[0]}, ${g[2]}),
-				rgb(var(--color-surface-900) / 0.9)
-				`.trim();
+linear-gradient(to bottom left, ${g[1]}, ${g[3]}),
+linear-gradient(to bottom right, ${g[0]}, ${g[2]}),
+rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - totalAlpha)})
+`.trim();
 			document.body.style.backgroundBlendMode = "overlay";
 			document.body.style.backdropFilter = "blur(24px)";
 		} else document.body.style.background = "";
-
-		// save colors for interpolation
-		oldColors = $PageGradient;
 	}
 </script>
 

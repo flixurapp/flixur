@@ -1,11 +1,12 @@
 import { Channels, extract } from "colorgram";
-import { PageGradient } from "./PageGradient";
-import type { RGB, RGBF } from "./types";
+import { PageGradient, PageGradientDefault, type PageGradientType } from "./PageGradient";
+import type { RGBA } from "./types";
 
 /** Width used for calculating image colors. */
 const CALC_WIDTH = 400;
 
-export function calculateBackgroundGradient(image: HTMLImageElement): RGBF[] {
+/** Calculates background gradient for given image. Alpha channel in returned colors is used for color frequency. */
+export function calculateBackgroundGradient(image: HTMLImageElement): RGBA[] {
 	try {
 		// convert image to imagedata
 		const canvas = document.createElement("canvas");
@@ -35,19 +36,19 @@ export function calculateBackgroundGradient(image: HTMLImageElement): RGBF[] {
 export function iconBackgroundAction(img: HTMLElement) {
 	img.addEventListener("load", () => {
 		const colors = calculateBackgroundGradient(<HTMLImageElement>img),
-			commons = colors.slice(0, 4).map((c) => <RGB>c.slice(0, 3));
+			commons = colors.slice(0, 4).map((c) => <RGBA>[...c.slice(0, 3), 1]);
 		// failsafe
-		if (commons.length == 0) commons.push([0, 0, 0]);
+		if (commons.length == 0) commons.push([0, 0, 0, 0]);
 		// ensure there's at least 4 colors in the list
 		//TODO: maybe do something with % to make it look better?
 		while (commons.length < 4) {
 			commons.push(commons[commons.length - 1]);
 		}
-		PageGradient.set(<[RGB, RGB, RGB, RGB]>commons);
+		PageGradient.set(<PageGradientType>commons);
 	});
 }
 
 /** Removes the page gradient. */
 export function removePageGradient() {
-	PageGradient.set(null);
+	PageGradient.set(PageGradientDefault());
 }
