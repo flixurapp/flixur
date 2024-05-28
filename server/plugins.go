@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/flixurapp/flixur/pluginkit"
-	protobuf "github.com/flixurapp/flixur/proto/go"
 	"github.com/rs/zerolog/log"
 )
 
@@ -33,25 +32,35 @@ func RegisterPlugins(pluginPath string) {
 
 func InitPlugin(bin string) {
 	cmd := exec.CommandContext(context.Background(), bin)
+	reader, writer := io.Pipe()
+	cmd.Stderr = os.Stdout // redirect logs to stdout
+	cmd.Stdout = writer
 
 	if err := cmd.Start(); err != nil {
 		log.Err(err).Str("path", bin).Msg("Failed to load plugin.")
 		return
 	}
-
-	reader, writer := io.Pipe()
-	cmd.Stderr = os.Stdout // redirect logs to stdout
-	cmd.Stdout = writer
-
+	log.Debug().Str("path", bin).Msg("Loading plugin binary...")
 	go cmd.Wait()
 
-	pluginkit.WriteMessage(
+	pkt, err := pluginkit.ReadMessage(reader)
+	if err != nil {
+		log.Err(err).Str("path", bin).Msg("Failed to read plugin info.")
+		return
+	}
+	log.Info().Msg(pkt.Id)
+
+	/* init plugin
+	if err := pluginkit.WriteMessage(
 		&protobuf.PluginPacket{
 			Id:   "0",
 			Type: protobuf.PacketType_INIT,
 		},
 		&protobuf.PacketInit{
 			Version: 0,
-		}, writer)
-	pluginkit.ReadMessage(reader)
+		}, cmd.Stdout); err != nil {
+		log.Err(err).Str("path", bin).Msg("Failed to init plugin.")
+		return
+	}
+	*/
 }

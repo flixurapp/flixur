@@ -5,9 +5,9 @@ import (
 
 	"github.com/flixurapp/flixur/pluginkit"
 	protobuf "github.com/flixurapp/flixur/proto/go"
+	"github.com/oklog/ulid/v2"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"google.golang.org/protobuf/proto"
 )
 
 var INFO = protobuf.PacketInfo{
@@ -25,31 +25,12 @@ func main() {
 		TimeFormat: "3:04:05PM",
 	}).With().Str("id", INFO.Id).Logger()
 
-	init, err := pluginkit.ReadMessage(os.Stdin)
+	log.Info().Msg("Initializing plugin...")
 
-	//TODO: actually handle the errors
-	if err != nil {
-		log.Err(err).Msg("Failed to read init packet.")
-		panic(0)
-	}
-	if init.Type != protobuf.PacketType_INIT {
-		log.Error().Interface("type", init.Type).Msg("Initial packet is not INIT.")
-		panic(0)
-	}
-
-	var data protobuf.PacketInit
-	if err = proto.Unmarshal(init.Data, &data); err != nil {
-		log.Err(err).Msg("Failed to deserialize init packet.")
-		panic(0)
-	}
-
-	log.Info().Int32("server_version", data.Version).Msg("Plugin info was requested.")
-
-	err = pluginkit.WriteMessage(&protobuf.PluginPacket{
-		Id:   init.Id,
+	if err := pluginkit.WriteMessage(&protobuf.PluginPacket{
+		Id:   ulid.Make().String(),
 		Type: protobuf.PacketType_INFO,
-	}, &INFO, os.Stdout)
-	if err != nil {
+	}, &INFO, os.Stdout); err != nil {
 		log.Err(err).Msg("Failed to write info packet.")
 		panic(0)
 	}

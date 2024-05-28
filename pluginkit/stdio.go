@@ -13,7 +13,7 @@ import (
 func ReadMessage(stream io.Reader) (*protobuf.PluginPacket, error) {
 	var packetLength uint32
 	// get length of incoming packet
-	if err := binary.Read(stream, binary.LittleEndian, packetLength); err != nil {
+	if err := binary.Read(stream, binary.LittleEndian, &packetLength); err != nil {
 		return nil, fmt.Errorf("failed to read length prefix: %w", err)
 	}
 
