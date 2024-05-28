@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/flixurapp/flixur/pluginkit"
+	protobuf "github.com/flixurapp/flixur/proto/go"
 	"github.com/rs/zerolog/log"
 )
 
@@ -39,9 +40,18 @@ func InitPlugin(bin string) {
 	}
 
 	reader, writer := io.Pipe()
+	cmd.Stderr = os.Stdout // redirect logs to stdout
 	cmd.Stdout = writer
 
 	go cmd.Wait()
 
+	pluginkit.WriteMessage(
+		&protobuf.PluginPacket{
+			Id:   "0",
+			Type: protobuf.PacketType_INIT,
+		},
+		&protobuf.PacketInit{
+			Version: 0,
+		}, writer)
 	pluginkit.ReadMessage(reader)
 }

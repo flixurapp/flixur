@@ -1,5 +1,10 @@
 go 1.22.3
 
 use ./server
+
 use ./pluginkit
-use ./proto/go 
+
+use (
+	./plugin-example
+	./proto/go
+)

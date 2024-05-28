@@ -14,25 +14,11 @@ enum PluginType {
   DOWNLOADER = 3;      // Downloads requested content.
 }
 
-/* Both outgoing and incoming are the same, but this leaves room for expansion
- * later if needed. */
-
-// Packets sent to the server from a plugin.
-message IncomingPluginPacket {
+// Packets sent between server and plugin.
+message PluginPacket {
   // Type of the packet.
   PacketType type = 1;
   // Identifier for the packet. (used to respond to certain requests)
-  string id = 3;
-
-  // The actual packet data. (a protobuf)
-  bytes data = 2;
-}
-
-// Packets sent to a plugin from the server.
-message OutgoingPluginPacket {
-  // Type of the packet.
-  PacketType type = 1;
-  // Identifier for the packet. (echoed back in the response)
   string id = 3;
 
   // The actual packet data. (a protobuf)

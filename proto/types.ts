@@ -118,32 +118,15 @@ export const PluginType_PROVIDER_AUDIO: PluginType = 1; // Provides audio metada
 export const PluginType_PROVIDER_VIDEO: PluginType = 2; // Provides video metadata. (unused)
 export const PluginType_DOWNLOADER: PluginType = 3; // Downloads requested content.
 /**
- * Packets sent to the server from a plugin.
+ * Packets sent between server and plugin.
  */
-export interface IncomingPluginPacket {
+export interface PluginPacket {
   /**
    * Type of the packet.
    */
   type: PacketType;
   /**
    * Identifier for the packet. (used to respond to certain requests)
-   */
-  id: string;
-  /**
-   * The actual packet data. (a protobuf)
-   */
-  data: string;
-}
-/**
- * Packets sent to a plugin from the server.
- */
-export interface OutgoingPluginPacket {
-  /**
-   * Type of the packet.
-   */
-  type: PacketType;
-  /**
-   * Identifier for the packet. (echoed back in the response)
    */
   id: string;
   /**
