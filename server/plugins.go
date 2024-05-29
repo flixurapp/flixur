@@ -15,7 +15,7 @@ import (
 )
 
 type Plugin struct {
-	protobuf.PacketInfo
+	*protobuf.PacketInfo
 
 	SendPacket func(packetType protobuf.PacketType, message proto.Message, callback func(res proto.Message))
 }
@@ -38,6 +38,7 @@ func RegisterPlugins(pluginPath string) {
 		bin := path.Join(pluginPath, name)
 		InitPlugin(bin)
 	}
+	log.Info().Msgf("Loaded %d plugins.", len(Plugins))
 }
 
 func InitPlugin(bin string) {
@@ -63,6 +64,16 @@ func InitPlugin(bin string) {
 		return
 	}
 
+	for _, plugin := range Plugins {
+		if plugin.Id == info.Id {
+			log.Warn().Str("id", info.Id).Interface("details", info).Msg("Plugin with the same ID already exists. Ignoring...")
+			return
+		}
+	}
+
+	Plugins = append(Plugins, Plugin{
+		PacketInfo: info,
+	})
 	log.Info().Str("id", info.Id).Str("version", info.Version).Str("author", info.Author).Msgf("Loaded plugin %s.", info.Name)
 
 	//Plugins[0].SendPacket(protobuf.PacketType_ARTIST_SEARCH, &protobuf.PacketArtistSearch{
