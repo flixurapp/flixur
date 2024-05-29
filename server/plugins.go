@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
-	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/flixurapp/flixur/pluginkit"
@@ -33,7 +33,7 @@ func RegisterPlugins(pluginPath string) {
 		if strings.HasSuffix(name, ".disabled") {
 			continue
 		}
-		bin := path.Join(pluginPath, name)
+		bin := filepath.Join(pluginPath, name)
 		InitPlugin(bin)
 	}
 	log.Info().Msgf("Loaded %d plugins.", len(Plugins))

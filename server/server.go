@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/flixurapp/flixur/api"
 	"github.com/go-chi/chi/v5"
@@ -33,6 +35,26 @@ func main() {
 	}
 
 	RegisterPlugins("/home/meow/Documents/flixur/test/plugins")
+
+	// serves the client as static files
+	cwd, _ := os.Getwd()
+	if Dev {
+		//TODO:temp  maybe do this better? good for testing for now
+		cwd = filepath.Join(cwd, "../build")
+	}
+	serveDir := filepath.Join(cwd, "client")
+	serve := http.Dir(serveDir)
+	router.Get("/*", func(w http.ResponseWriter, r *http.Request) {
+		rctx := chi.RouteContext(r.Context())
+		pathPrefix := strings.TrimSuffix(rctx.RoutePattern(), "/*")
+		fs := http.StripPrefix(pathPrefix, http.FileServer(serve))
+
+		if _, err := os.Stat(filepath.Join(serveDir, r.RequestURI)); os.IsNotExist(err) {
+			http.ServeFile(w, r, filepath.Join(serveDir, "index.html"))
+			return
+		}
+		fs.ServeHTTP(w, r)
+	})
 
 	log.Info().Int("port", port).Msg("Server is online.")
 	http.ListenAndServe(fmt.Sprintf(":%d", port), router)

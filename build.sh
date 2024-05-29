@@ -6,7 +6,7 @@ mkdir build
 cd frontend
 pnpm i
 pnpm build
-cp build ../build/client
+cp -r build ../build/client
 cd ..
 
 # Build the server.
