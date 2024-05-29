@@ -34,15 +34,23 @@ func main() {
 		log.Info().Msg("Running in development mode.")
 	}
 
-	RegisterPlugins("/home/meow/Documents/flixur/test/plugins")
-
-	// serves the client as static files
 	cwd, _ := os.Getwd()
+	pluginDir := cwd
 	if Dev {
 		//TODO:temp  maybe do this better? good for testing for now
-		cwd = filepath.Join(cwd, "../build")
+		pluginDir = filepath.Join(pluginDir, "../test")
 	}
-	serveDir := filepath.Join(cwd, "client")
+	pluginDir = filepath.Join(pluginDir, "plugins")
+	RegisterPlugins(pluginDir)
+
+	// serves the client as static files
+
+	serveDir := cwd
+	if Dev {
+		//TODO:temp  maybe do this better? good for testing for now
+		serveDir = filepath.Join(serveDir, "../build")
+	}
+	serveDir = filepath.Join(serveDir, "client")
 	serve := http.Dir(serveDir)
 	router.Get("/*", func(w http.ResponseWriter, r *http.Request) {
 		rctx := chi.RouteContext(r.Context())
