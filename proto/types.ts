@@ -183,3 +183,9 @@ export interface PacketInfo {
 export interface PacketArtistSearch {
   query: string;
 }
+/**
+ * Response given back to PacketArtistSearch.
+ */
+export interface PacketArtistSearchResult {
+  results?: (Artist | undefined)[];
+}

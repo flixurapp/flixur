@@ -16,8 +16,6 @@ import (
 
 type Plugin struct {
 	*protobuf.PacketInfo
-
-	SendPacket func(packetType protobuf.PacketType, message proto.Message, callback func(res proto.Message))
 }
 
 var Plugins []Plugin = make([]Plugin, 0)
@@ -76,9 +74,11 @@ func InitPlugin(bin string) {
 	})
 	log.Info().Str("id", info.Id).Str("version", info.Version).Str("author", info.Author).Msgf("Loaded plugin %s.", info.Name)
 
-	//Plugins[0].SendPacket(protobuf.PacketType_ARTIST_SEARCH, &protobuf.PacketArtistSearch{
-	//	Query: "artist name",
-	//})
+	SendPacket(protobuf.PacketType_ARTIST_SEARCH, &protobuf.PacketArtistSearch{
+		Query: "artist name",
+	}, func(res *protobuf.PacketArtistSearchResult) {
+		// Handle response
+	})
 
 	/* init plugin
 	if err := pluginkit.WriteMessage(
@@ -93,4 +93,8 @@ func InitPlugin(bin string) {
 		return
 	}
 	*/
+}
+
+func SendPacket[T proto.Message](packetType protobuf.PacketType, message proto.Message, callback func(res T)) {
+
 }

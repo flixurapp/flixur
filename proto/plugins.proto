@@ -1,6 +1,8 @@
 syntax = "proto3";
-package flixur;
+package flixur.plugins;
 option go_package = "github.com/flixurapp/flixur/proto/go";
+
+import "music.proto";
 
 enum PacketType {
   INIT = 0;           // PacketInit
@@ -54,4 +56,9 @@ message PacketInfo {
 // Search for an artist using this plugin.
 message PacketArtistSearch {
   string query = 4;
+}
+
+// Response given back to PacketArtistSearch.
+message PacketArtistSearchResult {
+  repeated music.Artist results = 1;
 }
