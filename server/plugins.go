@@ -9,8 +9,18 @@ import (
 	"strings"
 
 	"github.com/flixurapp/flixur/pluginkit"
+	protobuf "github.com/flixurapp/flixur/proto/go"
 	"github.com/rs/zerolog/log"
+	"google.golang.org/protobuf/proto"
 )
+
+type Plugin struct {
+	protobuf.PacketInfo
+
+	SendPacket func(packetType protobuf.PacketType, message proto.Message, callback func(res proto.Message))
+}
+
+var Plugins []Plugin = make([]Plugin, 0)
 
 func RegisterPlugins(pluginPath string) {
 	dir, err := os.ReadDir(pluginPath)
@@ -47,12 +57,17 @@ func InitPlugin(bin string) {
 		writer.Close()
 	})()
 
-	pkt, err := pluginkit.ReadMessage(reader)
+	_, info, err := pluginkit.ReadMessage[*protobuf.PacketInfo](reader)
 	if err != nil {
 		log.Err(err).Str("path", bin).Msg("Failed to read plugin info.")
 		return
 	}
-	log.Info().Msg(pkt.Id)
+
+	log.Info().Str("id", info.Id).Str("version", info.Version).Str("author", info.Author).Msgf("Loaded plugin %s.", info.Name)
+
+	//Plugins[0].SendPacket(protobuf.PacketType_ARTIST_SEARCH, &protobuf.PacketArtistSearch{
+	//	Query: "artist name",
+	//})
 
 	/* init plugin
 	if err := pluginkit.WriteMessage(
