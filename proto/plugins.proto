@@ -5,9 +5,10 @@ option go_package = "github.com/flixurapp/flixur/proto/go";
 import "music.proto";
 
 enum PacketType {
-  INIT = 0;           // PacketInit
-  INFO = 1;           // PacketInfo
-  ARTIST_SEARCH = 2;  // PacketArtistSearch
+  INIT = 0;                  // PacketInit
+  INFO = 1;                  // PacketInfo
+  ARTIST_SEARCH = 2;         // PacketArtistSearch
+  ARTIST_SEARCH_RESULT = 3;  // PacketArtistSearchResult
 }
 enum PluginType {
   SERVER = 0;          // Provides additional functions to server.
@@ -58,6 +59,7 @@ message PacketArtistSearch {
   string query = 4;
 }
 
+// (type: `PROVIDER_AUDIO`)
 // Response given back to PacketArtistSearch.
 message PacketArtistSearchResult {
   repeated music.Artist results = 1;

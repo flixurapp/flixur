@@ -11,7 +11,6 @@ import (
 	"github.com/flixurapp/flixur/pluginkit"
 	protobuf "github.com/flixurapp/flixur/proto/go"
 	"github.com/rs/zerolog/log"
-	"google.golang.org/protobuf/proto"
 )
 
 type Plugin struct {
@@ -74,9 +73,15 @@ func InitPlugin(bin string) {
 	})
 	log.Info().Str("id", info.Id).Str("version", info.Version).Str("author", info.Author).Msgf("Loaded plugin %s.", info.Name)
 
-	SendPacket(protobuf.PacketType_ARTIST_SEARCH, &protobuf.PacketArtistSearch{
+	listen := pluginkit.StartReadingPackets(reader, func(err error) {
+		log.Err(err).Str("id", info.Id).Msg("Failed to read packet from plugin.")
+	})
+	listen(protobuf.PacketType_ARTIST_SEARCH_RESULT)
+
+	pluginkit.SendPacket(writer, protobuf.PacketType_ARTIST_SEARCH, &protobuf.PacketArtistSearch{
 		Query: "artist name",
 	}, func(res *protobuf.PacketArtistSearchResult) {
+		print(res)
 		// Handle response
 	})
 
@@ -93,8 +98,4 @@ func InitPlugin(bin string) {
 		return
 	}
 	*/
-}
-
-func SendPacket[T proto.Message](packetType protobuf.PacketType, message proto.Message, callback func(res T)) {
-
 }

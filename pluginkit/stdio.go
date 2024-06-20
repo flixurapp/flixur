@@ -18,6 +18,11 @@ func ReadMessage[T proto.Message](stream io.Reader) (*protobuf.PluginPacket, T, 
 	var packetLength uint32
 	// get length of incoming packet
 	if err := binary.Read(stream, binary.LittleEndian, &packetLength); err != nil {
+		// if pipe is closed then notify
+		// also notify on EOF
+		if err == io.ErrClosedPipe || err == io.EOF {
+			return nil, noop, err
+		}
 		return nil, noop, fmt.Errorf("failed to read length prefix: %w", err)
 	}
 

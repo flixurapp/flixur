@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"sync"
 
 	"github.com/flixurapp/flixur/pluginkit"
 	protobuf "github.com/flixurapp/flixur/proto/go"
@@ -38,4 +39,13 @@ func main() {
 		log.Err(err).Msg("Failed to write info packet.")
 		panic(0)
 	}
+
+	pluginkit.StartReadingPackets(os.Stdin, func(err error) {
+		log.Err(err).Msg("Failed to read packet from stdin.")
+	})
+
+	// never exit
+	var wg sync.WaitGroup
+	wg.Add(1)
+	wg.Wait()
 }

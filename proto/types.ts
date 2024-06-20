@@ -112,6 +112,7 @@ export type PacketType = number /* int32 */;
 export const PacketType_INIT: PacketType = 0; // PacketInit
 export const PacketType_INFO: PacketType = 1; // PacketInfo
 export const PacketType_ARTIST_SEARCH: PacketType = 2; // PacketArtistSearch
+export const PacketType_ARTIST_SEARCH_RESULT: PacketType = 3; // PacketArtistSearchResult
 export type PluginType = number /* int32 */;
 export const PluginType_SERVER: PluginType = 0; // Provides additional functions to server.
 export const PluginType_PROVIDER_AUDIO: PluginType = 1; // Provides audio metadata. (artist/album/track)
@@ -184,6 +185,7 @@ export interface PacketArtistSearch {
   query: string;
 }
 /**
+ * (type: `PROVIDER_AUDIO`)
  * Response given back to PacketArtistSearch.
  */
 export interface PacketArtistSearchResult {
