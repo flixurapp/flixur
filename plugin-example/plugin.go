@@ -40,8 +40,19 @@ func main() {
 		panic(0)
 	}
 
-	pluginkit.StartReadingPackets(os.Stdin, func(err error) {
+	listener := pluginkit.StartReadingPackets(os.Stdin, func(err error) {
 		log.Err(err).Msg("Failed to read packet from stdin.")
+	})
+	pluginkit.AddPacketListener(listener, protobuf.PacketType_ARTIST_SEARCH, func(data *protobuf.PacketArtistSearch, pkt *protobuf.PluginPacket) {
+		log.Info().Interface("d", data).Msg("plugin got packet")
+
+		pluginkit.WriteMessage(&protobuf.PluginPacket{
+			Id:   pkt.Id,
+			Type: protobuf.PacketType_ARTIST_SEARCH_RESULT,
+		},
+			&protobuf.PacketArtistSearchResult{
+				Results: make([]*protobuf.Artist, 0),
+			}, os.Stdout)
 	})
 
 	// never exit

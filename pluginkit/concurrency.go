@@ -12,13 +12,14 @@ import (
 
 type HeldCallback struct {
 	RequestID string
-	Callback  func(res proto.Message)
+	Callback  func(proto.Message)
 }
 
-type PacketListenerAdder = func(protobuf.PacketType)
 type PacketListener struct {
-	Type protobuf.PacketType
+	Type     protobuf.PacketType
+	Callback func(proto.Message, *protobuf.PluginPacket)
 }
+type PacketListenerAdder = func(PacketListener)
 
 var callbacks []HeldCallback = make([]HeldCallback, 0)
 
@@ -69,15 +70,26 @@ func StartReadingPackets(stream io.Reader, errors func(error)) PacketListenerAdd
 			}
 			for _, li := range listeners {
 				if li.Type == packet.Type {
-					// run
+					li.Callback(data, packet)
 				}
 			}
 		}
 	}()
 
-	return func(packetType protobuf.PacketType) {
-		listeners = append(listeners, PacketListener{
-			Type: packetType,
-		})
+	return func(listener PacketListener) {
+		listeners = append(listeners, listener)
 	}
+}
+
+// Adds a packet listener to a `PacketListenerAdder`.
+func AddPacketListener[T proto.Message](adder PacketListenerAdder, packetType protobuf.PacketType, callback func(T, *protobuf.PluginPacket)) {
+	adder(PacketListener{
+		Type: packetType,
+		Callback: func(_res proto.Message, pkt *protobuf.PluginPacket) {
+			// assert type of res
+			if res, ok := _res.(T); ok {
+				callback(res, pkt)
+			}
+		},
+	})
 }
