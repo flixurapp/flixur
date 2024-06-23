@@ -39,10 +39,13 @@ func RegisterPlugins(pluginPath string) {
 }
 
 func InitPlugin(bin string) {
+	readIn, writeIn := io.Pipe()
+	readOut, writeOut := io.Pipe()
+
 	cmd := exec.CommandContext(context.Background(), bin)
-	reader, writer := io.Pipe()
 	cmd.Stderr = os.Stdout // redirect logs to stdout
-	cmd.Stdout = writer
+	cmd.Stdin = readIn
+	cmd.Stdout = writeOut
 
 	if err := cmd.Start(); err != nil {
 		log.Err(err).Str("path", bin).Msg("Failed to load plugin.")
@@ -51,11 +54,13 @@ func InitPlugin(bin string) {
 	log.Debug().Str("path", bin).Msg("Loading plugin binary...")
 	go (func() {
 		cmd.Wait()
-		reader.Close()
-		writer.Close()
+		readIn.Close()
+		writeIn.Close()
+		readOut.Close()
+		writeOut.Close()
 	})()
 
-	_, info, err := pluginkit.ReadMessage[*protobuf.PacketInfo](reader)
+	_, info, err := pluginkit.ReadMessage[*protobuf.PacketInfo](readOut)
 	if err != nil {
 		log.Err(err).Str("path", bin).Msg("Failed to read plugin info.")
 		return
@@ -73,15 +78,15 @@ func InitPlugin(bin string) {
 	})
 	log.Info().Str("id", info.Id).Str("version", info.Version).Str("author", info.Author).Msgf("Loaded plugin %s.", info.Name)
 
-	listener := pluginkit.StartReadingPackets(reader, func(err error) {
+	listener := pluginkit.StartReadingPackets(readOut, func(err error) {
 		log.Err(err).Str("id", info.Id).Msg("Failed to read packet from plugin.")
 	})
 	pluginkit.AddPacketListener(listener, protobuf.PacketType_ARTIST_SEARCH_RESULT,
-		func(data *protobuf.PacketArtistSearchResult, _ *protobuf.PluginPacket) {
-			log.Info().Interface("d", data).Msg("packet from listener")
+		func(data *protobuf.PacketArtistSearchResult, pkt *protobuf.PluginPacket) {
+			log.Info().Interface("d", pkt).Msg("packet from listener")
 		})
 
-	pluginkit.SendPacket(writer, protobuf.PacketType_ARTIST_SEARCH, &protobuf.PacketArtistSearch{
+	pluginkit.SendPacket(writeIn, protobuf.PacketType_ARTIST_SEARCH, &protobuf.PacketArtistSearch{
 		Query: "artist name",
 	}, func(res *protobuf.PacketArtistSearchResult) {
 		log.Info().Interface("d", res).Msg("packet")

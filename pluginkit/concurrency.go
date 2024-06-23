@@ -12,12 +12,12 @@ import (
 
 type HeldCallback struct {
 	RequestID string
-	Callback  func(proto.Message)
+	Callback  func(*protobuf.PluginPacket) error
 }
 
 type PacketListener struct {
 	Type     protobuf.PacketType
-	Callback func(proto.Message, *protobuf.PluginPacket)
+	Callback func(*protobuf.PluginPacket) error
 }
 type PacketListenerAdder = func(PacketListener)
 
@@ -31,10 +31,12 @@ func SendPacket[T proto.Message](stream io.Writer, packetType protobuf.PacketTyp
 	WriteMessage(pkt, message, stream)
 	callbacks = append(callbacks, HeldCallback{
 		RequestID: pkt.Id,
-		Callback: func(_res proto.Message) {
-			// assert type of res
-			if res, ok := _res.(T); ok {
+		Callback: func(pkt *protobuf.PluginPacket) error {
+			if res, err := DeserializeNested[T](pkt.Data); err == nil {
 				callback(res)
+				return nil
+			} else {
+				return err
 			}
 		},
 	})
@@ -47,7 +49,8 @@ func StartReadingPackets(stream io.Reader, errors func(error)) PacketListenerAdd
 
 	go func() {
 		for {
-			packet, data, err := ReadMessage[*protobuf.PacketInit](stream)
+			// the data gets deserialized into a generic packet, which we don't need
+			packet, _, err := ReadMessage[*protobuf.PluginPacket](stream)
 			if err != nil {
 				// continue if no packet to read
 				if err == io.EOF {
@@ -63,14 +66,18 @@ func StartReadingPackets(stream io.Reader, errors func(error)) PacketListenerAdd
 
 			for i, cb := range callbacks {
 				if cb.RequestID == packet.Id {
-					cb.Callback(data)
+					if err := cb.Callback(packet); err != nil {
+						errors(fmt.Errorf("failed to run SendPacket callback: %w", err))
+					}
 					callbacks = slices.Delete(callbacks, i, i+1)
 					break
 				}
 			}
 			for _, li := range listeners {
 				if li.Type == packet.Type {
-					li.Callback(data, packet)
+					if err := li.Callback(packet); err != nil {
+						errors(fmt.Errorf("failed to run PacketListener callback: %w", err))
+					}
 				}
 			}
 		}
@@ -85,10 +92,12 @@ func StartReadingPackets(stream io.Reader, errors func(error)) PacketListenerAdd
 func AddPacketListener[T proto.Message](adder PacketListenerAdder, packetType protobuf.PacketType, callback func(T, *protobuf.PluginPacket)) {
 	adder(PacketListener{
 		Type: packetType,
-		Callback: func(_res proto.Message, pkt *protobuf.PluginPacket) {
-			// assert type of res
-			if res, ok := _res.(T); ok {
+		Callback: func(pkt *protobuf.PluginPacket) error {
+			if res, err := DeserializeNested[T](pkt.Data); err == nil {
 				callback(res, pkt)
+				return nil
+			} else {
+				return err
 			}
 		},
 	})

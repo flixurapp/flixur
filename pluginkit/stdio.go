@@ -10,6 +10,18 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+// Deserialize nested packet data into the specified interface.
+func DeserializeNested[T proto.Message](bytes []byte) (T, error) {
+	var noop T
+
+	data := reflect.New(reflect.TypeOf(T(noop)).Elem()).Interface().(T)
+	if err := proto.Unmarshal(bytes, data); err != nil {
+		return noop, err
+	}
+
+	return data, nil
+}
+
 // Reads a packet from a reader.
 func ReadMessage[T proto.Message](stream io.Reader) (*protobuf.PluginPacket, T, error) {
 	// this is the only way i could think to do this, i dunno
@@ -38,8 +50,8 @@ func ReadMessage[T proto.Message](stream io.Reader) (*protobuf.PluginPacket, T, 
 		return nil, noop, fmt.Errorf("failed to deserialize protobuf: %w", err)
 	}
 
-	data := reflect.New(reflect.TypeOf(T(noop)).Elem()).Interface().(T)
-	if err := proto.Unmarshal(packet.Data, data); err != nil {
+	data, err := DeserializeNested[T](packet.Data)
+	if err != nil {
 		return nil, noop, fmt.Errorf("failed to deserialize protobuf data: %w", err)
 	}
 
