@@ -82,14 +82,14 @@ func InitPlugin(bin string) {
 		log.Err(err).Str("id", info.Id).Msg("Failed to read packet from plugin.")
 	})
 	pluginkit.AddPacketListener(listener, protobuf.PacketType_ARTIST_SEARCH_RESULT,
-		func(data *protobuf.PacketArtistSearchResult, pkt *protobuf.PluginPacket) {
-			log.Info().Interface("d", pkt).Msg("packet from listener")
+		func(data *protobuf.PacketArtistSearchResult, _ *protobuf.PluginPacket) {
+			log.Info().Interface("d", data).Msg("packet from listener")
 		})
 
 	pluginkit.SendPacket(writeIn, protobuf.PacketType_ARTIST_SEARCH, &protobuf.PacketArtistSearch{
 		Query: "artist name",
 	}, func(res *protobuf.PacketArtistSearchResult) {
-		log.Info().Interface("d", res).Msg("packet")
+		log.Info().Interface("d", res).Msg("packet from callback")
 		// Handle response
 	})
 

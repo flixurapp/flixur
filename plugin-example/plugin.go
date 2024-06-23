@@ -51,7 +51,7 @@ func main() {
 			Type: protobuf.PacketType_ARTIST_SEARCH_RESULT,
 		},
 			&protobuf.PacketArtistSearchResult{
-				Results: make([]*protobuf.Artist, 0),
+				Results: make([]*protobuf.Artist, 1),
 			}, os.Stdout)
 	})
 
