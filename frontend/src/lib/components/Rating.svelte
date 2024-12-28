@@ -49,10 +49,10 @@
 			value={displayValue > 0 ? 10 : 0}
 			toggle
 			rawValue={value}
-			on:change={({ detail }) => {
+			onchange={(detail) => {
 				displayValue = value = detail ? 10 : 0;
 			}}
-			on:hover={({ detail }) => {
+			onhover={(detail) => {
 				displayValue = detail === null ? value : 10;
 			}}
 		/>
@@ -63,10 +63,10 @@
 			{size}
 			color={stars ? STAR_COLOR : displayValue > 3 ? "" : "red-600"}
 			value={displayValue >= 3 ? 2 : 0}
-			on:change={({ detail }) => {
+			onchange={(detail) => {
 				displayValue = value = detail ? 3 : 0;
 			}}
-			on:hover={({ detail }) => {
+			onhover={(detail) => {
 				displayValue = detail === null ? value : 3;
 			}}
 		/>
@@ -77,10 +77,10 @@
 			{size}
 			color={stars ? STAR_COLOR : displayValue > 7 ? "" : "yellow-600"}
 			value={displayValue >= 7 ? 2 : 0}
-			on:change={({ detail }) => {
+			onchange={(detail) => {
 				displayValue = value = detail ? 7 : 0;
 			}}
-			on:hover={({ detail }) => {
+			onhover={(detail) => {
 				displayValue = detail === null ? value : 7;
 			}}
 		/>
@@ -89,10 +89,10 @@
 			{size}
 			color={stars ? STAR_COLOR : "green-600"}
 			value={displayValue >= 10 ? 2 : 0}
-			on:change={({ detail }) => {
+			onchange={(detail) => {
 				displayValue = value = detail ? 10 : 0;
 			}}
-			on:hover={({ detail }) => {
+			onhover={(detail) => {
 				displayValue = detail === null ? value : 10;
 			}}
 		/>
@@ -105,10 +105,10 @@
 				color={STAR_COLOR}
 				value={Math.max(displayValue - 2 * i)}
 				index={i}
-				on:change={({ detail }) => {
+				onchange={(detail) => {
 					displayValue = value = i * 2 + detail;
 				}}
-				on:hover={({ detail }) => {
+				onhover={(detail) => {
 					displayValue = detail ?? value;
 				}}
 			/>

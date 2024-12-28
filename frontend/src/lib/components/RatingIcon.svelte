@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
-
 	interface Props {
 		/** Icon component to use. */
 		icons: [ConstructorOfATypedSvelteComponent, ConstructorOfATypedSvelteComponent];
@@ -18,6 +16,11 @@
 		index?: number;
 		/** Allow this icon to toggle the rating. */
 		toggle?: boolean;
+
+		/** Run when the icon is hovered over. */
+		onhover?(value: number | null): void;
+		/** Run when the icon is clicked on. */
+		onchange?(value: number): void;
 	}
 
 	let {
@@ -29,9 +32,10 @@
 		halfIcon = undefined,
 		index = 0,
 		toggle = false,
+		onhover,
+		onchange,
 	}: Props = $props();
 
-	const dispatch = createEventDispatcher();
 	let wrapper: HTMLSpanElement | null = $state(null);
 
 	let hoverState = $state<
@@ -61,13 +65,13 @@
 			hoverState = "hover-zero";
 		else if (toggle && rawValue <= 0 && hoverState == "hover-zero") hoverState = "hover-full";
 
-		dispatch("hover", hoverState == "none" ? null : index * 2 + getValue());
+		onhover?.(hoverState == "none" ? null : index * 2 + getValue());
 	}
 	function getValue() {
 		return hoverState == "hover-full" ? 2 : hoverState == "hover-half" ? 1 : 0;
 	}
 	function click() {
-		dispatch("change", getValue());
+		onchange?.(getValue());
 	}
 
 	const Icon = $derived(
