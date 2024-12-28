@@ -16,9 +16,9 @@
 	let { artist }: Props = $props();
 </script>
 
-<LibraryScroller cardType="art" items={artist.albums} >
+<LibraryScroller cardType="art" items={artist.albums}>
 	{#snippet header()}
-		<div  class="card p-4 mb-4 flex gap-4 variant-softer">
+		<div class="card p-4 mb-4 flex gap-4 variant-softer">
 			<Avatar
 				src={artist.icon}
 				initials={initials(artist.name)}
@@ -45,8 +45,8 @@
 				subtext={album.year}
 				href="/server/flixur.app/music/{artist.id}/{album.id}"
 				image={album.icon}
-				on:play={() => toasts.trigger({ message: "play button clicked" })}
-				on:context={() => toasts.trigger({ message: "context button clicked" })}
+				onplay={() => toasts.trigger({ message: "play button clicked" })}
+				oncontextmenu={() => toasts.trigger({ message: "context button clicked" })}
 			/>
 		{/each}
 	{/snippet}

@@ -1,11 +1,9 @@
 <!-- For Artists and Albums -->
 
 <script lang="ts">
-	import { preventDefault } from "svelte/legacy";
-
 	import { Avatar, getModalStore } from "@skeletonlabs/skeleton";
 	import { IconDots, IconPencil, IconPlayerPlayFilled } from "@tabler/icons-svelte";
-	import { createEventDispatcher, onMount } from "svelte";
+	import { onMount } from "svelte";
 	import type { LibraryCardType } from "./LibraryCard";
 	import { Scrolling } from "./events/scroller";
 	import { initials } from "./utils";
@@ -21,13 +19,23 @@
 		href: string;
 		/** Optional image URL for the media. If not specified, will use initials generated from `name`. */
 		image?: string | undefined;
-	}
 
-	let { type, name, subtext = undefined, href, image = undefined }: Props = $props();
+		/** Play button clicked. */
+		onplay?(): void;
+		/** When the context menu is opened. */
+		oncontextmenu?(event: MouseEvent): void;
+	}
+	let {
+		type,
+		name,
+		subtext = undefined,
+		href,
+		image = undefined,
+		onplay,
+		oncontextmenu,
+	}: Props = $props();
 
 	let mounted = $state(false);
-
-	const dispatch = createEventDispatcher();
 
 	onMount(async () => {
 		// wait for scroll to be finished before mounting
@@ -44,7 +52,10 @@
 	'thumbnail'
 		? 'sm:w-64 w-1/2'
 		: 'sm:w-32 w-1/3'}"
-	oncontextmenu={preventDefault(() => dispatch("context"))}
+	oncontextmenu={(e) => {
+		oncontextmenu?.(e);
+		e.preventDefault();
+	}}
 	role="button"
 	tabindex="-1"
 >
@@ -72,7 +83,8 @@
 					class="btn-icon btn-icon-sm variant-filled-primary mr-auto"
 					onclick={(e) => {
 						e.currentTarget.blur();
-						dispatch("play");
+						onplay?.();
+						e.preventDefault();
 					}}
 				>
 					<IconPlayerPlayFilled size={22} />
@@ -85,6 +97,7 @@
 							type: "component",
 							component: "edit",
 						});
+						e.preventDefault();
 					}}
 				>
 					<IconPencil size={16} />
@@ -93,7 +106,8 @@
 					class="btn-icon btn-icon-xs variant-filled-secondary"
 					onclick={(e) => {
 						e.currentTarget.blur();
-						dispatch("context");
+						oncontextmenu?.(e);
+						e.preventDefault();
 					}}
 				>
 					<IconDots size={16} />

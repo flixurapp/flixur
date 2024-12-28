@@ -7,7 +7,7 @@
 	const toasts = getToastStore();
 </script>
 
-<LibraryScroller cardType="art" items={TEST_DATA} >
+<LibraryScroller cardType="art" items={TEST_DATA}>
 	{#snippet children({ data })}
 		{#each data.cards as artist (artist.id)}
 			<LibraryCard
@@ -15,8 +15,8 @@
 				name={artist.name}
 				href="/server/flixur.app/music/{artist.id}"
 				image={artist.icon}
-				on:play={() => toasts.trigger({ message: "play button clicked" })}
-				on:context={() => toasts.trigger({ message: "context button clicked" })}
+				onplay={() => toasts.trigger({ message: "play button clicked" })}
+				oncontextmenu={() => toasts.trigger({ message: "context button clicked" })}
 			/>
 		{/each}
 	{/snippet}
