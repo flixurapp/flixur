@@ -2,9 +2,10 @@
 	import LibraryCard from "$lib/LibraryCard.svelte";
 	import LibraryScroller from "$lib/LibraryScroller.svelte";
 	import { TEST_DATA } from "$lib/TEST";
-	import { getToastStore } from "@skeletonlabs/skeleton";
+	import { type ToastContext } from "@skeletonlabs/skeleton-svelte";
+	import { getContext } from "svelte";
 
-	const toasts = getToastStore();
+	export const toasts: ToastContext = getContext("toast");
 </script>
 
 <LibraryScroller cardType="art" items={TEST_DATA}>
@@ -15,8 +16,8 @@
 				name={artist.name}
 				href="/server/flixur.app/music/{artist.id}"
 				image={artist.icon}
-				onplay={() => toasts.trigger({ message: "play button clicked" })}
-				oncontextmenu={() => toasts.trigger({ message: "context button clicked" })}
+				onplay={() => toasts.create({ description: "play button clicked" })}
+				oncontextmenu={() => toasts.create({ description: "context button clicked" })}
 			/>
 		{/each}
 	{/snippet}

@@ -2,36 +2,25 @@
 	import { run } from "svelte/legacy";
 
 	import { afterNavigate } from "$app/navigation";
-	import { page } from "$app/stores";
 	import {
 		PageGradient,
 		PageGradientDefault,
 		type PageGradientType,
 	} from "$lib/background/PageGradient";
 	import type { RGBA } from "$lib/background/types";
-	import EditModal from "$lib/modals/edit/EditModal.svelte";
-	import {
-		AppBar,
-		AppRail,
-		AppRailAnchor,
-		AppShell,
-		Modal,
-		Toast,
-		initializeStores,
-		type ModalComponent,
-	} from "@skeletonlabs/skeleton";
+	import { Navigation, ToastProvider } from "@skeletonlabs/skeleton-svelte";
 	import { IconHome, IconMusic, IconSearch, IconSettings } from "@tabler/icons-svelte";
 	import { interpolateLab } from "d3-interpolate";
+	import type { Snippet } from "svelte";
 	import { sineOut } from "svelte/easing";
 	import { tweened } from "svelte/motion";
 	import "../app.postcss";
+
 	interface Props {
-		children?: import("svelte").Snippet;
+		children: Snippet;
 	}
 
 	let { children }: Props = $props();
-
-	initializeStores();
 
 	afterNavigate((params) => {
 		const isNewPage: boolean = params.from?.route.id !== params.to?.route.id;
@@ -41,10 +30,6 @@
 			elemPage.scrollTop = 0;
 		}
 	});
-
-	const modalRegistry: Record<string, ModalComponent> = {
-		edit: { ref: EditModal },
-	};
 
 	/** Current color rendered on-screen. */
 	let currentColor = tweened<PageGradientType>(PageGradientDefault(), {
@@ -100,52 +85,42 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 	});
 </script>
 
-<Modal components={modalRegistry} />
-<Toast />
-
-<AppShell slotPageContent="px-3 py-2">
-	{#snippet header()}
-		<AppBar>
-			{#snippet lead()}
-				Flixur
-			{/snippet}
+<ToastProvider>
+	<div class="h-screen px-3 py-2 grid grid-rows-[auto_1fr] overflow-auto">
+		<header class="sticky top-0 z-10 bg-inherit p-4 backdrop-blur-sm">
+			Flixur
 			<div class="input-group input-group-divider grid-cols-[auto_1fr_auto] w-fit">
 				<input class="input" title="Input (text)" type="text" placeholder="Search" />
 				<button class="variant-filled-secondary">
 					<IconSearch size={18} />
 				</button>
 			</div>
-		</AppBar>
-	{/snippet}
-	{#snippet sidebarLeft()}
-		<AppRail width="w-16">
-			<AppRailAnchor href="/" selected={$page.url.pathname == "/"}>
-				{#snippet lead()}
-					<IconHome />
+		</header>
+
+		<div class="grid grid-cols-1 md:grid-cols-[auto_1fr]">
+			<Navigation.Rail width="w-16">
+				{#snippet tiles()}
+					<Navigation.Tile id="0" label="Home" href="/">
+						<IconHome />
+					</Navigation.Tile>
+					<Navigation.Tile id="1" label="Music" href="/server/flixur.app/music">
+						<IconMusic />
+					</Navigation.Tile>
 				{/snippet}
-				Home
-			</AppRailAnchor>
-			<AppRailAnchor
-				href="/server/flixur.app/music"
-				selected={$page.url.pathname == "/server/flixur.app/music"}
-			>
-				{#snippet lead()}
-					<IconMusic />
-				{/snippet}
-				Music
-			</AppRailAnchor>
-			{#snippet trail()}
-				<AppRailAnchor href="/settings" selected={$page.url.pathname == "/settings"}>
-					{#snippet lead()}
+
+				{#snippet footer()}
+					<Navigation.Tile id="2" label="Settings" href="/settings">
 						<IconSettings />
-					{/snippet}
-					Settings
-				</AppRailAnchor>
-			{/snippet}
-		</AppRail>
-	{/snippet}
-	{@render children?.()}
-</AppShell>
+					</Navigation.Tile>
+				{/snippet}
+			</Navigation.Rail>
+
+			<main class="p-2">
+				{@render children()}
+			</main>
+		</div>
+	</div>
+</ToastProvider>
 
 <style>
 	/* blur navbar with background */

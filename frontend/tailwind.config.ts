@@ -1,26 +1,22 @@
-import { join } from "path";
 import type { Config } from "tailwindcss";
 
-// 1. Import the Skeleton plugin
-import { skeleton } from "@skeletonlabs/tw-plugin";
+import { contentPath, skeleton } from "@skeletonlabs/skeleton/plugin";
 import forms from "@tailwindcss/forms";
 import plugin from "tailwindcss/plugin";
-import { flixurTheme } from "./skeleton.theme";
+import flixurTheme from "./skeleton.theme";
 
 const config = {
-	// 2. Opt for dark mode to be handled via the class method
 	darkMode: "class",
 	content: [
 		"./src/**/*.{html,js,svelte,ts}",
-		// 3. Append the path to the Skeleton package
-		join(require.resolve("@skeletonlabs/skeleton"), "../**/*.{html,js,svelte,ts}"),
+		contentPath("file://" + process.cwd() + "/tailwind.config.ts", "svelte"),
 	],
 	theme: {
 		extend: {},
 	},
 	plugins: [
 		// 4. Append the Skeleton plugin (after other plugins)
-		skeleton({ themes: { custom: [flixurTheme] } }),
+		skeleton({ themes: [flixurTheme] }),
 		plugin(function ({ addVariant, addComponents, addBase, theme }) {
 			addVariant("cant-hover", "@media (hover: none)");
 			addVariant("has-pointer", "@media (pointer: fine)");

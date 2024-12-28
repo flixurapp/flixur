@@ -1,12 +1,12 @@
 <!-- For Artists and Albums -->
 
 <script lang="ts">
-	import { Avatar, getModalStore } from "@skeletonlabs/skeleton";
+	import { Avatar } from "@skeletonlabs/skeleton-svelte";
 	import { IconDots, IconPencil, IconPlayerPlayFilled } from "@tabler/icons-svelte";
 	import { onMount } from "svelte";
 	import type { LibraryCardType } from "./LibraryCard";
 	import { Scrolling } from "./events/scroller";
-	import { initials } from "./utils";
+	import EditModal from "./modals/edit/EditModal.svelte";
 
 	interface Props {
 		/** Type of media in the card. `art` for artist/album. `poster` for tv/movies. `thumbnail` for episodes. */
@@ -43,8 +43,6 @@
 			mounted = true;
 		});
 	});
-
-	const modalStore = getModalStore();
 </script>
 
 <div
@@ -66,16 +64,11 @@
 				? 'aspect-video'
 				: type == 'poster'
 					? 'aspect-[2/3]'
-					: 'aspect-square'} rounded-token cursor-pointer"
+					: 'aspect-square'} rounded cursor-pointer"
 		>
-			<Avatar
-				src={image}
-				initials={initials(name)}
-				class="absolute top-0 left-0 h-full"
-				rounded="rounded-[inherit]"
-				width="w-full"
-				height="h-full"
-			/>
+			<Avatar {name} classes="absolute top-0 left-0 h-full w-full" rounded="rounded-[inherit]">
+				<img src={image} crossorigin="anonymous" class="w-full h-full" alt={name} />
+			</Avatar>
 			<div
 				class="cant-hover:hidden p-1 gap-2 opacity-0 transition-opacity relative w-full h-full flex items-end justify-center rounded-[inherit] bg-black bg-opacity-50"
 			>
@@ -89,19 +82,17 @@
 				>
 					<IconPlayerPlayFilled size={22} />
 				</button>
-				<button
-					class="btn-icon btn-icon-xs variant-filled-secondary"
-					onclick={(e) => {
-						e.currentTarget.blur();
-						modalStore.trigger({
-							type: "component",
-							component: "edit",
-						});
-						e.preventDefault();
-					}}
-				>
-					<IconPencil size={16} />
-				</button>
+				<EditModal>
+					<button
+						class="btn-icon btn-icon-xs variant-filled-secondary"
+						onclick={(e) => {
+							e.currentTarget.blur();
+							e.preventDefault();
+						}}
+					>
+						<IconPencil size={16} />
+					</button>
+				</EditModal>
 				<button
 					class="btn-icon btn-icon-xs variant-filled-secondary"
 					onclick={(e) => {

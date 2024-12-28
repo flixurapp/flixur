@@ -4,10 +4,10 @@
 	import { RATING_SETTING, type ArtistJSON } from "$lib/TEST";
 	import { iconBackgroundAction } from "$lib/background/gradient";
 	import Rating from "$lib/components/Rating.svelte";
-	import { initials } from "$lib/utils";
-	import { Avatar, getToastStore } from "@skeletonlabs/skeleton";
+	import { Avatar, type ToastContext } from "@skeletonlabs/skeleton-svelte";
+	import { getContext } from "svelte";
 
-	const toasts = getToastStore();
+	export const toasts: ToastContext = getContext("toast");
 
 	interface Props {
 		artist: ArtistJSON;
@@ -19,15 +19,9 @@
 <LibraryScroller cardType="art" items={artist.albums}>
 	{#snippet header()}
 		<div class="card p-4 mb-4 flex gap-4 variant-softer">
-			<Avatar
-				src={artist.icon}
-				initials={initials(artist.name)}
-				rounded="rounded"
-				height="h-44"
-				width="w-44"
-				crossorigin="anonymous"
-				action={iconBackgroundAction}
-			/>
+			<Avatar name={artist.name} rounded="rounded" classes="h-44 w-44">
+				<img src={artist.icon} crossorigin="anonymous" use:iconBackgroundAction alt={artist.name} />
+			</Avatar>
 			<div>
 				<h1 class="text-4xl font-semibold">{artist.name}</h1>
 				{#if artist.location}
@@ -45,8 +39,8 @@
 				subtext={album.year}
 				href="/server/flixur.app/music/{artist.id}/{album.id}"
 				image={album.icon}
-				onplay={() => toasts.trigger({ message: "play button clicked" })}
-				oncontextmenu={() => toasts.trigger({ message: "context button clicked" })}
+				onplay={() => toasts.create({ description: "play button clicked" })}
+				oncontextmenu={() => toasts.create({ description: "context button clicked" })}
 			/>
 		{/each}
 	{/snippet}
