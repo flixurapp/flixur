@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from "svelte/legacy";
+
 	import { afterNavigate } from "$app/navigation";
 	import { page } from "$app/stores";
 	import {
@@ -23,6 +25,11 @@
 	import { sineOut } from "svelte/easing";
 	import { tweened } from "svelte/motion";
 	import "../app.postcss";
+	interface Props {
+		children?: import("svelte").Snippet;
+	}
+
+	let { children }: Props = $props();
 
 	initializeStores();
 
@@ -56,15 +63,15 @@
 		},
 		easing: sineOut,
 	});
-	$: {
+	run(() => {
 		// ensure gradient is there and correct
 		if ($PageGradient?.length !== 4) $PageGradient = PageGradientDefault();
 
 		// set color for interpolation
 		currentColor.set($PageGradient);
-	}
+	});
 
-	$: {
+	run(() => {
 		if ($currentColor?.length == 4) {
 			/** Amount of separation in alpha for colors. */
 			// '4' results in 1, 0.75, 0.50, 0.25
@@ -90,16 +97,18 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 			document.body.style.backgroundBlendMode = "overlay";
 			document.body.style.backdropFilter = "blur(24px)";
 		} else document.body.style.background = "";
-	}
+	});
 </script>
 
 <Modal components={modalRegistry} />
 <Toast />
 
 <AppShell slotPageContent="px-3 py-2">
-	<svelte:fragment slot="header">
+	{#snippet header()}
 		<AppBar>
-			<svelte:fragment slot="lead">Flixur</svelte:fragment>
+			{#snippet lead()}
+				Flixur
+			{/snippet}
 			<div class="input-group input-group-divider grid-cols-[auto_1fr_auto] w-fit">
 				<input class="input" title="Input (text)" type="text" placeholder="Search" />
 				<button class="variant-filled-secondary">
@@ -107,29 +116,35 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 				</button>
 			</div>
 		</AppBar>
-	</svelte:fragment>
-	<svelte:fragment slot="sidebarLeft">
+	{/snippet}
+	{#snippet sidebarLeft()}
 		<AppRail width="w-16">
 			<AppRailAnchor href="/" selected={$page.url.pathname == "/"}>
-				<IconHome slot="lead" />
+				{#snippet lead()}
+					<IconHome />
+				{/snippet}
 				Home
 			</AppRailAnchor>
 			<AppRailAnchor
 				href="/server/flixur.app/music"
 				selected={$page.url.pathname == "/server/flixur.app/music"}
 			>
-				<IconMusic slot="lead" />
+				{#snippet lead()}
+					<IconMusic />
+				{/snippet}
 				Music
 			</AppRailAnchor>
-			<svelte:fragment slot="trail">
+			{#snippet trail()}
 				<AppRailAnchor href="/settings" selected={$page.url.pathname == "/settings"}>
-					<IconSettings slot="lead" />
+					{#snippet lead()}
+						<IconSettings />
+					{/snippet}
 					Settings
 				</AppRailAnchor>
-			</svelte:fragment>
+			{/snippet}
 		</AppRail>
-	</svelte:fragment>
-	<slot />
+	{/snippet}
+	{@render children?.()}
 </AppShell>
 
 <style>

@@ -1,60 +1,87 @@
-<!-- @migration-task Error while migrating Svelte code: can't migrate `let wrapper: HTMLSpanElement;` to `$state` because there's a variable named state.
-     Rename the variable and try again or migrate by hand. -->
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 
-	/** Icon component to use. */
-	export let icons: [ConstructorOfATypedSvelteComponent, ConstructorOfATypedSvelteComponent];
-	/** Size of the icons. */
-	export let size: number;
-	/** The value to use for the icon. (should be 0-2) */
-	export let value: number;
-	/** Raw value for the icon. (used for toggle) */
-	export let rawValue = 0;
-	/** Color for the icon. (name-intensity) */
-	export let color: string;
-	/** Icon to use for half-selections. Also enables them. */
-	export let halfIcon: ConstructorOfATypedSvelteComponent | undefined = undefined;
-	/** Index of this icon in the list. */
-	export let index = 0;
-	/** Allow this icon to toggle the rating. */
-	export let toggle = false;
+	interface Props {
+		/** Icon component to use. */
+		icons: [ConstructorOfATypedSvelteComponent, ConstructorOfATypedSvelteComponent];
+		/** Size of the icons. */
+		size: number;
+		/** The value to use for the icon. (should be 0-2) */
+		value: number;
+		/** Raw value for the icon. (used for toggle) */
+		rawValue?: number;
+		/** Color for the icon. (name-intensity) */
+		color: string;
+		/** Icon to use for half-selections. Also enables them. */
+		halfIcon?: ConstructorOfATypedSvelteComponent | undefined;
+		/** Index of this icon in the list. */
+		index?: number;
+		/** Allow this icon to toggle the rating. */
+		toggle?: boolean;
+	}
+
+	let {
+		icons,
+		size,
+		value,
+		rawValue = 0,
+		color,
+		halfIcon = undefined,
+		index = 0,
+		toggle = false,
+	}: Props = $props();
 
 	const dispatch = createEventDispatcher();
-	let wrapper: HTMLSpanElement;
+	let wrapper: HTMLSpanElement | null = $state(null);
 
-	let state: // not being hovered over
-	| "none"
+	let hoverState = $state<
+		// not being hovered over
+		| "none"
 		// hover over first half
 		| "hover-half"
 		// hover over entire thing
 		| "hover-full"
 		// hover over left padding
-		| "hover-zero" = "none";
+		| "hover-zero"
+	>("none");
 
 	function calcHover(event: MouseEvent) {
+		if (!wrapper) return;
 		const box = wrapper.getBoundingClientRect(),
 			x = event.x - box.x,
 			w = box.width;
 
-		if (x > box.width || x < 0) state = "none";
-		else if (x < (w - size) / 2) state = "hover-zero";
-		else if (x < w / 2) state = halfIcon ? "hover-half" : "hover-full";
-		else if (x >= w / 2) state = "hover-full";
-		else state = "none";
+		if (x > box.width || x < 0) hoverState = "none";
+		else if (x < (w - size) / 2) hoverState = "hover-zero";
+		else if (x < w / 2) hoverState = halfIcon ? "hover-half" : "hover-full";
+		else if (x >= w / 2) hoverState = "hover-full";
+		else hoverState = "none";
 
-		if (toggle && rawValue > 0 && (state == "hover-half" || state == "hover-full"))
-			state = "hover-zero";
-		else if (toggle && rawValue <= 0 && state == "hover-zero") state = "hover-full";
+		if (toggle && rawValue > 0 && (hoverState == "hover-half" || hoverState == "hover-full"))
+			hoverState = "hover-zero";
+		else if (toggle && rawValue <= 0 && hoverState == "hover-zero") hoverState = "hover-full";
 
-		dispatch("hover", state == "none" ? null : index * 2 + getValue());
+		dispatch("hover", hoverState == "none" ? null : index * 2 + getValue());
 	}
 	function getValue() {
-		return state == "hover-full" ? 2 : state == "hover-half" ? 1 : 0;
+		return hoverState == "hover-full" ? 2 : hoverState == "hover-half" ? 1 : 0;
 	}
 	function click() {
 		dispatch("change", getValue());
 	}
+
+	const Icon = $derived(
+		hoverState == "hover-zero"
+			? icons[0]
+			: // rating is full
+				hoverState == "hover-full" || value >= 2
+				? icons[1]
+				: // rating is half
+					halfIcon && (hoverState == "hover-half" || value % 2 == 1)
+					? halfIcon
+					: // no rating
+						icons[0],
+	);
 </script>
 
 <span
@@ -64,7 +91,7 @@
 	style:padding-right="{size * 0.1}px"
 	style:color={(() => {
 		const full = `var(--color-${color})`;
-		switch (state) {
+		switch (hoverState) {
 			case "none":
 				return value > 0 ? full : "";
 			case "hover-zero":
@@ -74,34 +101,21 @@
 				return full;
 		}
 	})()}
-	on:mouseenter={calcHover}
-	on:mousemove={calcHover}
-	on:mouseleave={() => {
-		state = "none";
+	onmouseenter={calcHover}
+	onmousemove={calcHover}
+	onmouseleave={() => {
+		hoverState = "none";
 	}}
-	on:click={(e) => {
+	onclick={(e) => {
 		calcHover(e);
 		click();
 	}}
-	on:keydown={(e) => {
+	onkeydown={(e) => {
 		if (e.code == "Space") click();
 	}}
 	role="radio"
 	aria-checked={value % 2 == 1 ? "mixed" : value == 0 ? "false" : "true"}
 	tabindex="0"
 >
-	<svelte:component
-		this={// to remove the rating
-		state == "hover-zero"
-			? icons[0]
-			: // rating is full
-				state == "hover-full" || value >= 2
-				? icons[1]
-				: // rating is half
-					halfIcon && (state == "hover-half" || value % 2 == 1)
-					? halfIcon
-					: // no rating
-						icons[0]}
-		{size}
-	/>
+	<Icon {size} />
 </span>
