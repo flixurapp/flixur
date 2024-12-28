@@ -43,11 +43,16 @@
 				cards: i,
 			}))}
 			keeps={15}
+			{...{
+				// stupid af but it supresses the type errors...
+				...{},
+				/* @ts-ignore */
+			}}
 		>
 			{#snippet header()}
 				{@render header_render?.()}
 			{/snippet}
-			{#snippet children({ data })}
+			{#snippet children({ data }: { data: any })}
 				<div class="flex sm:gap-4 sm:py-1 gap-2 py-0.5 items-center justify-center snap-start">
 					{@render children_render?.({ data })}
 				</div>
