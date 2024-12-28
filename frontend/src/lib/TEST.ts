@@ -34,6 +34,7 @@ function d(dur: string): number {
 
 export const RATING_SETTING: RatingType = "stars5";
 
+//@ts-ignore
 export const TEST_DATA: ArtistJSON[] = [
 	{
 		id: "testal",
@@ -126,4 +127,6 @@ export const TEST_DATA: ArtistJSON[] = [
 			},
 		],
 	},
-];
+]
+	.map((a) => new Array(100).fill(Math.random()).map((b) => ({ ...a, id: a.id + Math.random() })))
+	.flat(1);
