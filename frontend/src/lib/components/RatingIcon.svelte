@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: can't migrate `let wrapper: HTMLSpanElement;` to `$state` because there's a variable named state.
+     Rename the variable and try again or migrate by hand. -->
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 
@@ -93,13 +95,13 @@
 		state == "hover-zero"
 			? icons[0]
 			: // rating is full
-			state == "hover-full" || value >= 2
-			? icons[1]
-			: // rating is half
-			halfIcon && (state == "hover-half" || value % 2 == 1)
-			? halfIcon
-			: // no rating
-			  icons[0]}
+				state == "hover-full" || value >= 2
+				? icons[1]
+				: // rating is half
+					halfIcon && (state == "hover-half" || value % 2 == 1)
+					? halfIcon
+					: // no rating
+						icons[0]}
 		{size}
 	/>
 </span>

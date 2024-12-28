@@ -15,13 +15,16 @@
 	import type { RatingType } from "./Rating";
 	import RatingIcon from "./RatingIcon.svelte";
 
-	export let type: RatingType;
-	export let value: number = 0;
-	let displayValue = value;
-	export let size = 24;
+	interface Props {
+		type: RatingType;
+		value?: number;
+		size?: number;
+		class?: string;
+	}
 
-	let className = "";
-	export { className as class };
+	let { type, value = $bindable(0), size = 24, class: className = "" }: Props = $props();
+
+	let displayValue = $state(value);
 
 	const STAR_ICON: [ConstructorOfATypedSvelteComponent, ConstructorOfATypedSvelteComponent] = [
 			IconStar,
@@ -32,7 +35,7 @@
 
 <div
 	class="flex w-fit {className}"
-	on:mouseleave={() => {
+	onmouseleave={() => {
 		displayValue = value;
 	}}
 	role="radiogroup"

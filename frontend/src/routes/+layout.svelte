@@ -46,13 +46,13 @@
 			const result = a.map((aa, i) => {
 				const bb = b![i];
 				const newColor = interpolateLab(`rgba(${aa.join(", ")})`, `rgba(${bb.join(", ")})`)(t);
-				const colors = <RGBA>newColor.split("(")[1].split(")")[0].split(", ").map(Number);
+				const colors = newColor.split("(")[1].split(")")[0].split(", ").map(Number) as RGBA;
 				while (colors.length < 4) {
 					colors.push(1);
 				}
 				return colors;
 			});
-			return <PageGradientType>result;
+			return result as PageGradientType;
 		},
 		easing: sineOut,
 	});

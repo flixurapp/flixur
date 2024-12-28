@@ -2,7 +2,11 @@
 	import { getModalStore } from "@skeletonlabs/skeleton";
 	import type { SvelteComponent } from "svelte";
 
-	export let parent: SvelteComponent;
+	interface Props {
+		parent: SvelteComponent;
+	}
+
+	let { parent }: Props = $props();
 
 	const modalStore = getModalStore();
 </script>
@@ -11,6 +15,6 @@
 	<div class="card p-4 w-modal shadow-xl space-y-4">
 		<p>edit modal</p>
 		<button class="btn variant-filled-primary"> Submit </button>
-		<button class="btn variant-ghost" on:click={parent.onClose}> Cancel </button>
+		<button class="btn variant-ghost" onclick={parent.onClose}> Cancel </button>
 	</div>
 {/if}

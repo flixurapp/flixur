@@ -1,6 +1,8 @@
 <!-- For Artists and Albums -->
 
 <script lang="ts">
+	import { preventDefault } from "svelte/legacy";
+
 	import { Avatar, getModalStore } from "@skeletonlabs/skeleton";
 	import { IconDots, IconPencil, IconPlayerPlayFilled } from "@tabler/icons-svelte";
 	import { createEventDispatcher, onMount } from "svelte";
@@ -8,18 +10,22 @@
 	import { Scrolling } from "./events/scroller";
 	import { initials } from "./utils";
 
-	/** Type of media in the card. `art` for artist/album. `poster` for tv/movies. `thumbnail` for episodes. */
-	export let type: LibraryCardType;
-	/** Name of the media. */
-	export let name: string;
-	/** Optional text to display below the name. */
-	export let subtext: string | undefined = undefined;
-	/** Link to the media. */
-	export let href: string;
-	/** Optional image URL for the media. If not specified, will use initials generated from `name`. */
-	export let image: string | undefined = undefined;
+	interface Props {
+		/** Type of media in the card. `art` for artist/album. `poster` for tv/movies. `thumbnail` for episodes. */
+		type: LibraryCardType;
+		/** Name of the media. */
+		name: string;
+		/** Optional text to display below the name. */
+		subtext?: string | undefined;
+		/** Link to the media. */
+		href: string;
+		/** Optional image URL for the media. If not specified, will use initials generated from `name`. */
+		image?: string | undefined;
+	}
 
-	let mounted = false;
+	let { type, name, subtext = undefined, href, image = undefined }: Props = $props();
+
+	let mounted = $state(false);
 
 	const dispatch = createEventDispatcher();
 
@@ -38,7 +44,7 @@
 	'thumbnail'
 		? 'sm:w-64 w-1/2'
 		: 'sm:w-32 w-1/3'}"
-	on:contextmenu|preventDefault={() => dispatch("context")}
+	oncontextmenu={preventDefault(() => dispatch("context"))}
 	role="button"
 	tabindex="-1"
 >
@@ -48,8 +54,8 @@
 			class="block relative w-full {type == 'thumbnail'
 				? 'aspect-video'
 				: type == 'poster'
-				? 'aspect-[2/3]'
-				: 'aspect-square'} rounded-token cursor-pointer"
+					? 'aspect-[2/3]'
+					: 'aspect-square'} rounded-token cursor-pointer"
 		>
 			<Avatar
 				src={image}
@@ -64,7 +70,7 @@
 			>
 				<button
 					class="btn-icon btn-icon-sm variant-filled-primary mr-auto"
-					on:click|preventDefault={(e) => {
+					onclick={(e) => {
 						e.currentTarget.blur();
 						dispatch("play");
 					}}
@@ -73,7 +79,7 @@
 				</button>
 				<button
 					class="btn-icon btn-icon-xs variant-filled-secondary"
-					on:click|preventDefault={(e) => {
+					onclick={(e) => {
 						e.currentTarget.blur();
 						modalStore.trigger({
 							type: "component",
@@ -85,7 +91,7 @@
 				</button>
 				<button
 					class="btn-icon btn-icon-xs variant-filled-secondary"
-					on:click|preventDefault={(e) => {
+					onclick={(e) => {
 						e.currentTarget.blur();
 						dispatch("context");
 					}}
@@ -111,9 +117,9 @@
 			class="w-full {type == 'thumbnail'
 				? 'aspect-video'
 				: type == 'poster'
-				? 'aspect-[2/3]'
-				: 'aspect-square'} rounded-token card"
-		/>
+					? 'aspect-[2/3]'
+					: 'aspect-square'} rounded-token card"
+		></div>
 		<p>{"\u200b"}</p>
 		{#if subtext}
 			<p>{"\u200b"}</p>
