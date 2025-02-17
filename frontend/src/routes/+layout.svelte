@@ -31,7 +31,14 @@
 		}
 	});
 
-	let expanded = $state(false);
+	let expanded = $state(false),
+		railValue = $state("0");
+
+	$effect(() => {
+		if (isNaN(Number(railValue))) railValue = "0";
+	});
+
+	$inspect(railValue);
 
 	/** Current color rendered on-screen. */
 	let currentColor = tweened<PageGradientType>(PageGradientDefault(), {
@@ -88,52 +95,44 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 </script>
 
 <ToastProvider>
-	<div class="h-screen px-3 py-2 grid grid-rows-[auto_1fr] overflow-auto">
-		<header class="sticky top-0 z-10 bg-inherit p-4 backdrop-blur-sm">
-			Flixur
-			<div class="input-group input-group-divider grid-cols-[auto_1fr_auto] w-fit">
-				<input class="input" title="Input (text)" type="text" placeholder="Search" />
-				<button class="variant-filled-secondary">
-					<IconSearch size={18} />
-				</button>
-			</div>
-		</header>
+	<div class="h-screen grid grid-cols-1 md:grid-cols-[auto_1fr] overflow-auto">
+		<Navigation.Rail
+			bind:value={railValue}
+			width="w-16"
+			{expanded}
+			background="bg-surface-900 bg-opacity-80 backdrop-blur-xl"
+		>
+			{#snippet header()}
+				<Navigation.Tile
+					labelExpanded="Collapse"
+					onclick={() => (expanded = !expanded)}
+					selected={false}
+				>
+					<IconMenu2 />
+				</Navigation.Tile>
+				<Navigation.Tile labelExpanded="Search">
+					<IconSearch />
+				</Navigation.Tile>
+			{/snippet}
 
-		<div class="grid grid-cols-1 md:grid-cols-[auto_1fr]">
-			<Navigation.Rail
-				width="w-16"
-				{expanded}
-				background="bg-surface-900 bg-opacity-80 backdrop-blur-xl"
-			>
-				{#snippet header()}
-					<Navigation.Tile
-						title="Menu"
-						labelExpanded="Collapse"
-						onclick={() => (expanded = !expanded)}
-					>
-						<IconMenu2 />
-					</Navigation.Tile>
-				{/snippet}
+			{#snippet tiles()}
+				<Navigation.Tile id="0" label="Home" labelExpanded="Home" href="/">
+					<IconHome />
+				</Navigation.Tile>
+				<Navigation.Tile id="1" label="Music" labelExpanded="Music" href="/server/flixur.app/music">
+					<IconMusic />
+				</Navigation.Tile>
+			{/snippet}
 
-				{#snippet tiles()}
-					<Navigation.Tile id="0" label="Home" href="/">
-						<IconHome />
-					</Navigation.Tile>
-					<Navigation.Tile id="1" label="Music" href="/server/flixur.app/music">
-						<IconMusic />
-					</Navigation.Tile>
-				{/snippet}
+			{#snippet footer()}
+				<Navigation.Tile id="2" label="Settings" labelExpanded="Settings" href="/settings">
+					<IconSettings />
+				</Navigation.Tile>
+			{/snippet}
+		</Navigation.Rail>
 
-				{#snippet footer()}
-					<Navigation.Tile id="2" label="Settings" href="/settings">
-						<IconSettings />
-					</Navigation.Tile>
-				{/snippet}
-			</Navigation.Rail>
-
-			<main class="p-2">
-				{@render children()}
-			</main>
-		</div>
+		<main class="px-2 py-4">
+			{@render children()}
+		</main>
 	</div>
 </ToastProvider>
