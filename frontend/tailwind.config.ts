@@ -7,10 +7,7 @@ import flixurTheme from "./skeleton.theme";
 
 const config = {
 	darkMode: "class",
-	content: [
-		"./src/**/*.{html,js,svelte,ts}",
-		contentPath("file://" + process.cwd() + "/tailwind.config.ts", "svelte"),
-	],
+	content: ["./src/**/*.{html,js,svelte,ts}", contentPath(import.meta.url, "svelte")],
 	theme: {
 		extend: {},
 	},

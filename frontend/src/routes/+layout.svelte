@@ -9,7 +9,7 @@
 	} from "$lib/background/PageGradient";
 	import type { RGBA } from "$lib/background/types";
 	import { Navigation, ToastProvider } from "@skeletonlabs/skeleton-svelte";
-	import { IconHome, IconMusic, IconSearch, IconSettings } from "@tabler/icons-svelte";
+	import { IconHome, IconMenu2, IconMusic, IconSearch, IconSettings } from "@tabler/icons-svelte";
 	import { interpolateLab } from "d3-interpolate";
 	import type { Snippet } from "svelte";
 	import { sineOut } from "svelte/easing";
@@ -30,6 +30,8 @@
 			elemPage.scrollTop = 0;
 		}
 	});
+
+	let expanded = $state(false);
 
 	/** Current color rendered on-screen. */
 	let currentColor = tweened<PageGradientType>(PageGradientDefault(), {
@@ -98,7 +100,21 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 		</header>
 
 		<div class="grid grid-cols-1 md:grid-cols-[auto_1fr]">
-			<Navigation.Rail width="w-16">
+			<Navigation.Rail
+				width="w-16"
+				{expanded}
+				background="bg-surface-900 bg-opacity-80 backdrop-blur-xl"
+			>
+				{#snippet header()}
+					<Navigation.Tile
+						title="Menu"
+						labelExpanded="Collapse"
+						onclick={() => (expanded = !expanded)}
+					>
+						<IconMenu2 />
+					</Navigation.Tile>
+				{/snippet}
+
 				{#snippet tiles()}
 					<Navigation.Tile id="0" label="Home" href="/">
 						<IconHome />
@@ -121,11 +137,3 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 		</div>
 	</div>
 </ToastProvider>
-
-<style>
-	/* blur navbar with background */
-	:global(#appShell .bg-surface-100-800-token) {
-		background-color: rgb(var(--color-surface-800) / 0.75);
-		backdrop-filter: blur(24px);
-	}
-</style>
