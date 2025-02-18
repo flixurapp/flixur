@@ -12,6 +12,7 @@ const config = {
 		extend: {},
 	},
 	plugins: [
+		forms,
 		// 4. Append the Skeleton plugin (after other plugins)
 		skeleton({ themes: [flixurTheme] }),
 		plugin(function ({ addVariant, addComponents, addBase, theme }) {
@@ -65,7 +66,6 @@ const config = {
 				":root": extractColorVars(theme("colors")),
 			});
 		}),
-		forms,
 	],
 } satisfies Config;
 
