@@ -21,7 +21,7 @@
 
 <div class="card p-4 mb-4 flex gap-4 variant-softer">
 	<Avatar src={album.icon} name={album.name} rounded="rounded" classes="h-44 w-44">
-		<img src={artist.icon} crossorigin="anonymous" use:iconBackgroundAction alt={artist.name} />
+		<img src={album.icon} crossorigin="anonymous" use:iconBackgroundAction alt={artist.name} />
 	</Avatar>
 	<div>
 		<h1 class="text-3xl font-semibold flex items-center gap-2">

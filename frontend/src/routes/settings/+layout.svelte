@@ -1,12 +1,9 @@
 <script lang="ts">
 	import { beforeNavigate } from "$app/navigation";
 	import { removePageGradient } from "$lib/background/gradient";
-	import { onMount } from "svelte";
-	interface Props {
-		children?: import('svelte').Snippet;
-	}
+	import { onMount, type Snippet } from "svelte";
 
-	let { children }: Props = $props();
+	let { children }: { children?: Snippet } = $props();
 
 	beforeNavigate(removePageGradient);
 	onMount(removePageGradient);

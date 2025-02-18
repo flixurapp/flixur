@@ -98,11 +98,11 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 </script>
 
 <ToastProvider>
-	<div class="h-screen grid grid-cols-1 md:grid-cols-[auto_1fr] overflow-auto">
+	<div class="h-screen grid grid-cols-1 md:grid-cols-[auto_1fr]">
 		<Navigation.Rail
 			bind:value={railValue}
 			width="w-16"
-			background="bg-surface-900 bg-opacity-80 backdrop-blur-xl"
+			background="bg-surface-900 bg-opacity-70 backdrop-blur-xl"
 		>
 			{#snippet header()}
 				<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
@@ -118,7 +118,7 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 			{/snippet}
 		</Navigation.Rail>
 
-		<main class="px-2 py-4">
+		<main class="px-2 py-4 overflow-auto">
 			{@render children()}
 		</main>
 	</div>

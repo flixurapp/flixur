@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 </script>
 
-page for tertiary (episode) {$page.params.tertiaryID}
+page for tertiary (episode) {page.params.tertiaryID}

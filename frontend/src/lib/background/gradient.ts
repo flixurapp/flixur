@@ -46,6 +46,7 @@ export function iconBackgroundAction(img: HTMLElement) {
 		}
 		PageGradient.set(<PageGradientType>commons);
 	});
+	img.addEventListener("error", () => removePageGradient());
 }
 
 /** Removes the page gradient. */
