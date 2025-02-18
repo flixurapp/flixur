@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from "svelte/legacy";
-
 	import { afterNavigate } from "$app/navigation";
 	import {
 		PageGradient,
@@ -60,7 +58,7 @@
 		},
 		easing: sineOut,
 	});
-	run(() => {
+	$effect(() => {
 		// ensure gradient is there and correct
 		if ($PageGradient?.length !== 4) $PageGradient = PageGradientDefault();
 
@@ -68,7 +66,7 @@
 		currentColor.set($PageGradient);
 	});
 
-	run(() => {
+	$effect(() => {
 		if ($currentColor?.length == 4) {
 			/** Amount of separation in alpha for colors. */
 			// '4' results in 1, 0.75, 0.50, 0.25
@@ -124,16 +122,16 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 	</div>
 	<Modal
 		bind:open={navOpen}
-		contentBase="bg-surface-100-900 p-4 space-y-4 shadow-xl h-screen w-[300px]"
+		contentBase="bg-surface-100-900 py-4 px-2 shadow-xl h-screen w-[300px]"
 		positionerJustify="justify-start"
 		positionerPadding=""
 		transitionsPositionerIn={{ x: -300, duration: 200 }}
 		transitionsPositionerOut={{ x: -300, duration: 200 }}
 	>
 		{#snippet content()}
-			<Navigation.Rail bind:value={railValue} expanded>
+			<Navigation.Rail bind:value={railValue} expanded widthExpanded="w-full">
 				{#snippet header()}
-					<Navigation.Tile id="_back" labelExpanded="Back" onclick={() => (navOpen = false)}>
+					<Navigation.Tile id="_close" labelExpanded="Close" onclick={() => (navOpen = false)}>
 						<IconArrowLeft />
 					</Navigation.Tile>
 					<div class="input-group divide-surface-200-800 grid-cols-[auto_1fr_auto] divide-x mt-1">
