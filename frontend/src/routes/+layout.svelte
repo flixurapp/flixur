@@ -7,6 +7,7 @@
 	} from "$lib/background/PageGradient";
 	import type { RGBA } from "$lib/background/types";
 	import { type NavLink, NavLinksBottom, NavLinksTop } from "$lib/nav";
+	import State from "$lib/state.svelte";
 	import { Modal, Navigation, ToastProvider } from "@skeletonlabs/skeleton-svelte";
 	import { IconArrowLeft, IconMenu2 } from "@tabler/icons-svelte";
 	import Search from "@tabler/icons-svelte/icons/search";
@@ -96,29 +97,46 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 </script>
 
 <ToastProvider>
-	<div class="h-screen grid grid-cols-1 md:grid-cols-[auto_1fr]">
-		<Navigation.Rail
-			bind:value={railValue}
-			width="w-16"
-			background="bg-surface-950 bg-opacity-70 backdrop-blur-xl"
-		>
-			{#snippet header()}
-				<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
-					<IconMenu2 />
-				</Navigation.Tile>
-			{/snippet}
+	<div
+		class="h-screen grid grid-cols-1 grid-rows-[1fr_auto] md:grid-rows-1 md:grid-cols-[auto_1fr]"
+	>
+		{#if !State.isMobile}
+			<Navigation.Rail
+				bind:value={railValue}
+				width="w-16"
+				background="bg-surface-950 bg-opacity-70 backdrop-blur-xl"
+			>
+				{#snippet header()}
+					<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
+						<IconMenu2 />
+					</Navigation.Tile>
+				{/snippet}
 
-			{#snippet tiles()}
-				{@render renderLinks(NavLinksTop)}
-			{/snippet}
-			{#snippet footer()}
-				{@render renderLinks(NavLinksBottom)}
-			{/snippet}
-		</Navigation.Rail>
+				{#snippet tiles()}
+					{@render renderLinks(NavLinksTop)}
+				{/snippet}
+				{#snippet footer()}
+					{@render renderLinks(NavLinksBottom)}
+				{/snippet}
+			</Navigation.Rail>
+		{/if}
 
 		<main class="px-2 py-4 overflow-auto">
 			{@render children()}
 		</main>
+
+		{#if State.isMobile}
+			<Navigation.Bar
+				bind:value={railValue}
+				background="bg-surface-950 bg-opacity-70 backdrop-blur-xl"
+			>
+				<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
+					<IconMenu2 />
+				</Navigation.Tile>
+				{@render renderLinks(NavLinksTop)}
+				{@render renderLinks(NavLinksBottom)}
+			</Navigation.Bar>
+		{/if}
 	</div>
 	<Modal
 		bind:open={navOpen}
