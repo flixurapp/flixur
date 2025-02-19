@@ -100,7 +100,7 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 		<Navigation.Rail
 			bind:value={railValue}
 			width="w-16"
-			background="bg-surface-900 bg-opacity-70 backdrop-blur-xl"
+			background="bg-surface-950 bg-opacity-70 backdrop-blur-xl"
 		>
 			{#snippet header()}
 				<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
@@ -122,19 +122,19 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 	</div>
 	<Modal
 		bind:open={navOpen}
-		contentBase="bg-surface-100-900 py-4 px-2 shadow-xl h-screen w-[300px]"
+		contentBase="bg-surface-900 py-4 px-2 shadow-xl h-screen w-[300px]"
 		positionerJustify="justify-start"
 		positionerPadding=""
 		transitionsPositionerIn={{ x: -300, duration: 200 }}
 		transitionsPositionerOut={{ x: -300, duration: 200 }}
 	>
 		{#snippet content()}
-			<Navigation.Rail bind:value={railValue} expanded widthExpanded="w-full">
+			<Navigation.Rail bind:value={railValue} expanded widthExpanded="w-full" background="">
 				{#snippet header()}
 					<Navigation.Tile id="_close" labelExpanded="Close" onclick={() => (navOpen = false)}>
 						<IconArrowLeft />
 					</Navigation.Tile>
-					<div class="input-group divide-surface-200-800 grid-cols-[auto_1fr_auto] divide-x mt-1">
+					<div class="input-group divide-surface-800 grid-cols-[auto_1fr_auto] divide-x mt-1">
 						<div class="input-group-cell">
 							<Search size={16} />
 						</div>
