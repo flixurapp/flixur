@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from "$app/state";
-	import { TEST_DATA, type AlbumJSON, type ArtistJSON } from "$lib/TEST";
+	import { TEST_DATA, type AlbumJSON, type ArtistJSON } from "$lib/api";
 	import AlbumPage from "./AlbumPage.svelte";
 
 	let artist: ArtistJSON | null = $state(null);

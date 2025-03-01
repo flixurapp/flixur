@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { RATING_SETTING, type AlbumJSON, type ArtistJSON } from "$lib/TEST";
+	import { page } from "$app/state";
+	import { RATING_SETTING, type AlbumJSON, type ArtistJSON } from "$lib/api";
 	import { iconBackgroundAction } from "$lib/background/gradient";
 	import Rating from "$lib/components/Rating.svelte";
 	import { initials } from "$lib/utils";
@@ -28,7 +29,10 @@
 			{album.name}
 			<span class="badge variant-soft-primary">{album.year}</span>
 		</h1>
-		<a class="flex gap-1 text-lg items-center w-fit" href="/server/flixur.app/music/{artist.id}">
+		<a
+			class="flex gap-1 text-lg items-center w-fit"
+			href="/server/${page.params.domain}/${page.params.library}/{artist.id}"
+		>
 			<Avatar src={artist.icon} name={artist.name} rounded="rounded-full" classes="h-5 w-5">
 				{initials(artist.name)}
 			</Avatar>

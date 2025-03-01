@@ -34,7 +34,10 @@ function d(dur: string): number {
 
 export const RATING_SETTING: RatingType = "stars5";
 
-//@ts-ignore
+export const SCHEME = location.protocol === "https:" ? "https" : "http";
+
+// TODO: fix ts-ignore
+// @ts-ignore
 export const TEST_DATA: ArtistJSON[] = [
 	{
 		id: "testal",

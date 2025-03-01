@@ -1,7 +1,7 @@
 <script lang="ts">
 	import LibraryCard from "$lib/LibraryCard.svelte";
 	import LibraryScroller from "$lib/LibraryScroller.svelte";
-	import { TEST_DATA } from "$lib/TEST";
+	import { TEST_DATA } from "$lib/api";
 	import { type ToastContext } from "@skeletonlabs/skeleton-svelte";
 	import { getContext } from "svelte";
 
