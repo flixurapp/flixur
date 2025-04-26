@@ -32,6 +32,6 @@ export function initScrollingEmitter() {
 				// minimum scroll event interval seems to be about 20-30ms
 			}, 50);
 		},
-		true
+		true,
 	);
 }
