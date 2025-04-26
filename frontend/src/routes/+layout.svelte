@@ -89,7 +89,7 @@
 			document.body.style.background = `
 linear-gradient(to bottom left, ${g[1]}, ${g[3]}),
 linear-gradient(to bottom right, ${g[0]}, ${g[2]}),
-rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - totalAlpha)})
+color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - totalAlpha)) * 100}%, white)
 `.trim();
 			document.body.style.backgroundBlendMode = "overlay";
 			document.body.style.backdropFilter = "blur(24px)";
@@ -105,7 +105,7 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 			value={railValue}
 			onValueChange={(newValue) => (railValue = newValue)}
 			width="w-16"
-			background="bg-surface-950 bg-opacity-70 backdrop-blur-xl"
+			background="bg-surface-950/70 backdrop-blur-xl"
 		>
 			{#snippet header()}
 				<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
@@ -130,7 +130,7 @@ rgb(var(--color-surface-900) / ${OVERLAY_ALPHA + (1 - OVERLAY_ALPHA) * (1 - tota
 		<Navigation.Bar
 			value={railValue}
 			onValueChange={(newValue) => (railValue = newValue)}
-			background="bg-surface-950 bg-opacity-70 backdrop-blur-xl"
+			background="bg-surface-950/70 backdrop-blur-xl"
 		>
 			<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
 				<IconMenu2 />

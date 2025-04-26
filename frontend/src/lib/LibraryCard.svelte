@@ -70,7 +70,7 @@
 				<img src={image} crossorigin="anonymous" class="w-full h-full" alt={name} />
 			</Avatar>
 			<div
-				class="cant-hover:hidden p-1 gap-2 opacity-0 transition-opacity relative w-full h-full flex items-end justify-center rounded-[inherit] bg-black bg-opacity-50"
+				class="cant-hover:hidden p-1 gap-2 opacity-0 transition-opacity relative w-full h-full flex items-end justify-center rounded-[inherit] bg-black/50"
 			>
 				<button
 					class="btn-icon btn-icon-sm variant-filled-primary mr-auto"
