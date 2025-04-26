@@ -46,7 +46,7 @@
 </script>
 
 <div
-	class="library-card flex flex-col [&>:first-child>div]:hover:opacity-100 sm:text-base text-sm shrink-0 {type ==
+	class="library-card flex flex-col hover:[&>:first-child>div]:opacity-100 sm:text-base text-sm shrink-0 {type ==
 	'thumbnail'
 		? 'sm:w-64 w-1/2'
 		: 'sm:w-32 w-1/3'}"
@@ -63,7 +63,7 @@
 			class="block relative w-full {type == 'thumbnail'
 				? 'aspect-video'
 				: type == 'poster'
-					? 'aspect-[2/3]'
+					? 'aspect-2/3'
 					: 'aspect-square'} rounded cursor-pointer"
 		>
 			<Avatar {name} classes="absolute top-0 left-0 h-full w-full" rounded="rounded-[inherit]">
@@ -106,7 +106,7 @@
 			</div>
 		</a>
 		<a
-			class="overflow-hidden [&>p]:whitespace-nowrap [&>p]:overflow-hidden [&>p]:overflow-ellipsis hover:underline"
+			class="overflow-hidden [&>p]:whitespace-nowrap [&>p]:overflow-hidden [&>p]:text-ellipsis hover:underline"
 			{href}
 		>
 			<p>{name}</p>
@@ -122,7 +122,7 @@
 			class="w-full {type == 'thumbnail'
 				? 'aspect-video'
 				: type == 'poster'
-					? 'aspect-[2/3]'
+					? 'aspect-2/3'
 					: 'aspect-square'} rounded-token card"
 		></div>
 		<p>{"\u200b"}</p>

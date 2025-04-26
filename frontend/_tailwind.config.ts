@@ -3,7 +3,7 @@ import type { Config } from "tailwindcss";
 import { contentPath, skeleton } from "@skeletonlabs/skeleton/plugin";
 import forms from "@tailwindcss/forms";
 import plugin from "tailwindcss/plugin";
-import flixurTheme from "./skeleton.theme";
+import flixurTheme from "./_skeleton.theme";
 
 const config = {
 	darkMode: "class",

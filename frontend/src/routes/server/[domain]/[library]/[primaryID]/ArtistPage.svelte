@@ -1,13 +1,11 @@
 <script lang="ts">
+	import { toaster } from "$lib";
 	import LibraryCard from "$lib/LibraryCard.svelte";
 	import LibraryScroller from "$lib/LibraryScroller.svelte";
 	import { RATING_SETTING, type ArtistJSON } from "$lib/TEST";
 	import { iconBackgroundAction } from "$lib/background/gradient";
 	import Rating from "$lib/components/Rating.svelte";
-	import { Avatar, type ToastContext } from "@skeletonlabs/skeleton-svelte";
-	import { getContext } from "svelte";
-
-	export const toasts: ToastContext = getContext("toast");
+	import { Avatar } from "@skeletonlabs/skeleton-svelte";
 
 	interface Props {
 		artist: ArtistJSON;
@@ -39,8 +37,8 @@
 				subtext={album.year}
 				href="/server/flixur.app/music/{artist.id}/{album.id}"
 				image={album.icon}
-				onplay={() => toasts.create({ description: "play button clicked" })}
-				oncontextmenu={() => toasts.create({ description: "context button clicked" })}
+				onplay={() => toaster.create({ description: "play button clicked" })}
+				oncontextmenu={() => toaster.create({ description: "context button clicked" })}
 			/>
 		{/each}
 	{/snippet}

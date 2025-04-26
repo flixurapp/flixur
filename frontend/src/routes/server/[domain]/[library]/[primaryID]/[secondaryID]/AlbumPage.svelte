@@ -1,11 +1,11 @@
 <script lang="ts">
+	import { toaster } from "$lib";
 	import { RATING_SETTING, type AlbumJSON, type ArtistJSON } from "$lib/TEST";
 	import { iconBackgroundAction } from "$lib/background/gradient";
 	import Rating from "$lib/components/Rating.svelte";
 	import { initials } from "$lib/utils";
-	import { Avatar, type ToastContext } from "@skeletonlabs/skeleton-svelte";
+	import { Avatar } from "@skeletonlabs/skeleton-svelte";
 	import { IconPencil, IconPlayerPlayFilled } from "@tabler/icons-svelte";
-	import { getContext } from "svelte";
 
 	interface Props {
 		artist: ArtistJSON;
@@ -15,8 +15,6 @@
 	let { artist, album }: Props = $props();
 
 	artist; //TODO:
-
-	export const toasts: ToastContext = getContext("toast");
 </script>
 
 <div class="card p-4 mb-4 flex gap-4 variant-softer">
@@ -43,22 +41,22 @@
 	<tbody>
 		{#each [...album.tracks].sort((a, b) => a.index - b.index) as track (track.id)}
 			<tr
-				class="flex items-center [&>:first-child>span]:hover:hidden [&>td>button]:hover:inline-flex"
+				class="flex items-center hover:[&>:first-child>span]:hidden hover:[&>td>button]:inline-flex"
 			>
 				<td>
 					<span class="badge btn-icon-sm rounded-full variant-soft-primary">{track.index}</span>
 					<button
 						class="btn-icon btn-icon-sm variant-filled-primary hidden"
-						onclick={() => toasts.create({ description: "play button clicked" })}
+						onclick={() => toaster.create({ description: "play button clicked" })}
 					>
 						<IconPlayerPlayFilled size={20} />
 					</button>
 				</td>
-				<td class="flex-1 overflow-hidden overflow-ellipsis !whitespace-nowrap">{track.title}</td>
+				<td class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap!">{track.title}</td>
 				<td align="right">
 					<button
 						class="btn-icon btn-icon-sm variant-filled-secondary hidden"
-						onclick={() => toasts.create({ description: "edit button clicked" })}
+						onclick={() => toaster.create({ description: "edit button clicked" })}
 					>
 						<IconPencil size={20} />
 					</button>
