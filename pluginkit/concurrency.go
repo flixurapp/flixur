@@ -109,7 +109,7 @@ func AddPacketListener[T proto.Message](adder PacketListenerAdder, packetType pr
 }
 
 // Automatically listens for feature request packets for the specific feature.
-func ImplementFeature[REQ proto.Message, RES proto.Message](adder PacketListenerAdder, feature protobuf.Features, callback func(REQ, *protobuf.PluginPacket) RES) {
+func ImplementFeature[REQ proto.Message, RES proto.Message](adder PacketListenerAdder, feature protobuf.Features, callback func(REQ, *protobuf.PluginPacket) (RES, *protobuf.FeatureError)) {
 	// Listen for feature requests.
 	//TODO: use AddPacketListener instead? maybe ties into efficiency below
 	adder(PacketListener{
@@ -123,7 +123,22 @@ func ImplementFeature[REQ proto.Message, RES proto.Message](adder PacketListener
 				}
 				// deserialize the request payload
 				if requestPayload, err := DeserializeNested[REQ](requestPacket.Payload); err == nil {
-					response := callback(requestPayload, packet)
+					response, err := callback(requestPayload, packet)
+
+					// return error response instead
+					if err != nil {
+						WriteMessage(&protobuf.PluginPacket{
+							Id:   packet.Id,
+							Type: protobuf.PacketType_FEATURE_RESPONSE,
+						},
+							&protobuf.PacketFeatureResponse{
+								Feature: feature,
+								Error:   err,
+								//TODO: allow choosing other writers than STDOUT?
+							}, os.Stdout)
+						return nil
+					}
+
 					if any(response) != nil {
 						if payload, err := proto.Marshal(response); err == nil {
 							WriteMessage(&protobuf.PluginPacket{

@@ -46,12 +46,12 @@ func main() {
 	pluginkit.AddPacketListener(listener, protobuf.PacketType_INIT, func(data *protobuf.PacketInit, pkt *protobuf.PluginPacket) {
 		log.Info().Interface("d", data).Msg("got init packet")
 	})
-	pluginkit.ImplementFeature(listener, protobuf.Features_ARTIST_SEARCH, func(req *protobuf.FeatureArtistSearchRequest, _ *protobuf.PluginPacket) *protobuf.FeatureArtistSearchResponse {
+	pluginkit.ImplementFeature(listener, protobuf.Features_ARTIST_SEARCH, func(req *protobuf.FeatureArtistSearchRequest, _ *protobuf.PluginPacket) (*protobuf.FeatureArtistSearchResponse, *protobuf.FeatureError) {
 		log.Info().Interface("d", req).Msg("got search function")
 
 		return &protobuf.FeatureArtistSearchResponse{
 			Results: make([]*protobuf.Artist, 1),
-		}
+		}, nil
 	})
 
 	// never exit
