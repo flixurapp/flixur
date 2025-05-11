@@ -10,6 +10,7 @@ import (
 
 	"github.com/flixurapp/flixur/pluginkit"
 	protobuf "github.com/flixurapp/flixur/proto/go"
+	"github.com/oklog/ulid/v2"
 	"github.com/rs/zerolog/log"
 )
 
@@ -76,34 +77,31 @@ func InitPlugin(bin string) {
 	Plugins = append(Plugins, Plugin{
 		PacketInfo: info,
 	})
-	log.Info().Str("id", info.Id).Str("version", info.Version).Str("author", info.Author).Msgf("Loaded plugin %s.", info.Name)
+	log.Info().Str("id", info.Id).Int32("version", info.Version).Str("author", info.Author).Interface("features", info.Features).Msgf("Loaded plugin %s.", info.Name)
 
+	// Initialize the plugin.
+	pluginkit.WriteMessage(&protobuf.PluginPacket{
+		Type: protobuf.PacketType_INIT,
+		Id:   ulid.Make().String(),
+	}, &protobuf.PacketInit{
+		Version: 0,
+	}, writeIn)
+
+	// Start listening for packets.
 	listener := pluginkit.StartReadingPackets(readOut, func(err error) {
 		log.Err(err).Str("id", info.Id).Msg("Failed to read packet from plugin.")
 	})
-	pluginkit.AddPacketListener(listener, protobuf.PacketType_ARTIST_SEARCH_RESULT,
-		func(data *protobuf.PacketArtistSearchResult, _ *protobuf.PluginPacket) {
-			log.Info().Interface("d", data).Msg("packet from listener")
+
+	// testing:
+
+	pluginkit.AddPacketListener(listener, protobuf.PacketType_FEATURE_RESPONSE,
+		func(data *protobuf.PacketFeatureResponse, _ *protobuf.PluginPacket) {
+			log.Info().Interface("d", data).Msg("packet from feature listener")
 		})
 
-	pluginkit.SendPacket(writeIn, protobuf.PacketType_ARTIST_SEARCH, &protobuf.PacketArtistSearch{
-		Query: "artist name",
-	}, func(res *protobuf.PacketArtistSearchResult) {
+	pluginkit.FeatureRequest(writeIn, protobuf.Features_ARTIST_SEARCH, &protobuf.FeatureArtistSearchRequest{
+		Query: "testing 12 3",
+	}, func(res *protobuf.FeatureArtistSearchResponse, err error) {
 		log.Info().Interface("d", res).Msg("packet from callback")
-		// Handle response
 	})
-
-	/* init plugin
-	if err := pluginkit.WriteMessage(
-		&protobuf.PluginPacket{
-			Id:   "0",
-			Type: protobuf.PacketType_INIT,
-		},
-		&protobuf.PacketInit{
-			Version: 0,
-		}, cmd.Stdout); err != nil {
-		log.Err(err).Str("path", bin).Msg("Failed to init plugin.")
-		return
-	}
-	*/
 }

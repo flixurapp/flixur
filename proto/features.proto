@@ -1,0 +1,29 @@
+syntax = "proto3";
+package flixur.features;
+option go_package = "github.com/flixurapp/flixur/proto/go";
+
+import "music.proto";
+
+// Error response from any feature.
+message FeatureError {
+  int32 code = 1;
+  string message = 2;
+}
+
+/* ARTIST_GET */
+// Get a specific artist by ID.
+message FeatureArtistGetRequest {
+  string id = 1;
+}
+message FeatureArtistGetResponse {
+  music.Artist artist = 1;
+}
+
+/* ARTIST_SEARCH */
+// Search for an artist by name.
+message FeatureArtistSearchRequest {
+  string query = 1;
+}
+message FeatureArtistSearchResponse {
+  repeated music.Artist results = 1;
+}

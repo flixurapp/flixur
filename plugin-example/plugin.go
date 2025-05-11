@@ -14,8 +14,8 @@ import (
 
 var INFO = protobuf.PacketInfo{
 	Id:          "example",
-	Version:     "0.0.0",
-	Type:        protobuf.PluginType_SERVER,
+	Version:     1,
+	Features:    []protobuf.Features{protobuf.Features_ARTIST_SEARCH},
 	Name:        "Example Plugin",
 	Description: "Small example plugin.",
 	Author:      "You",
@@ -43,16 +43,15 @@ func main() {
 	listener := pluginkit.StartReadingPackets(os.Stdin, func(err error) {
 		log.Err(err).Msg("Failed to read packet from stdin.")
 	})
-	pluginkit.AddPacketListener(listener, protobuf.PacketType_ARTIST_SEARCH, func(data *protobuf.PacketArtistSearch, pkt *protobuf.PluginPacket) {
-		log.Info().Interface("d", data).Msg("plugin got packet")
+	pluginkit.AddPacketListener(listener, protobuf.PacketType_INIT, func(data *protobuf.PacketInit, pkt *protobuf.PluginPacket) {
+		log.Info().Interface("d", data).Msg("got init packet")
+	})
+	pluginkit.ImplementFeature(listener, protobuf.Features_ARTIST_SEARCH, func(req *protobuf.FeatureArtistSearchRequest, _ *protobuf.PluginPacket) *protobuf.FeatureArtistSearchResponse {
+		log.Info().Interface("d", req).Msg("got search function")
 
-		pluginkit.WriteMessage(&protobuf.PluginPacket{
-			Id:   pkt.Id,
-			Type: protobuf.PacketType_ARTIST_SEARCH_RESULT,
-		},
-			&protobuf.PacketArtistSearchResult{
-				Results: make([]*protobuf.Artist, 1),
-			}, os.Stdout)
+		return &protobuf.FeatureArtistSearchResponse{
+			Results: make([]*protobuf.Artist, 1),
+		}
 	})
 
 	// never exit

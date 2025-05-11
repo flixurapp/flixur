@@ -5,6 +5,10 @@ option go_package = "github.com/flixurapp/flixur/proto/go";
 message Artist {
   // Unique ID of the artist. (should be unique across providers)
   string id = 1;
+  // ID of the plugin that provided this artist.
+  string provider = 8;
+  // ID of the artist from the provider.
+  string internalID = 9;
 
   // Name of the artist.
   string name = 2;
@@ -51,6 +55,8 @@ message Album {
 message Track {
   // Unique ID for the track.
   string id = 1;
+  // Unique ISRC of the track. May be unofficial.
+  string isrc = 8;
   // IDs of artists on this track.
   repeated string artists = 2;
 

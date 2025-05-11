@@ -2,19 +2,22 @@ syntax = "proto3";
 package flixur.plugins;
 option go_package = "github.com/flixurapp/flixur/proto/go";
 
-import "music.proto";
+import "features.proto";
 
 enum PacketType {
-  INIT = 0;                  // PacketInit
-  INFO = 1;                  // PacketInfo
-  ARTIST_SEARCH = 2;         // PacketArtistSearch
-  ARTIST_SEARCH_RESULT = 3;  // PacketArtistSearchResult
+  INIT = 0;              // PacketInit
+  INFO = 1;              // PacketInfo
+  FEATURE_REQUEST = 2;   // PacketFeatureRequest
+  FEATURE_RESPONSE = 3;  // PacketFeatureResponse
+  DESTROY = 4;           // PacketDestroy
 }
-enum PluginType {
-  SERVER = 0;          // Provides additional functions to server.
-  PROVIDER_AUDIO = 1;  // Provides audio metadata. (artist/album/track)
-  PROVIDER_VIDEO = 2;  // Provides video metadata. (unused)
-  DOWNLOADER = 3;      // Downloads requested content.
+
+// Functions that plugins can implement.
+enum Features {
+  // Get a specific artist(s) by internal ID.
+  ARTIST_GET = 0;
+  // Search for an artist by name.
+  ARTIST_SEARCH = 1;
 }
 
 // Packets sent between server and plugin.
@@ -24,13 +27,13 @@ message PluginPacket {
   // Identifier for the packet. (used to respond to certain requests)
   string id = 3;
 
-  // The actual packet data. (a protobuf)
+  // The actual packet data. (a below protobuf)
   bytes data = 2;
 }
 
 // Sent by the server to tell a plugin to initialize.
 message PacketInit {
-  // Current version of the server.
+  // Current numerical version of the server.
   int32 version = 1;
 }
 
@@ -38,12 +41,12 @@ message PacketInit {
 message PacketInfo {
   // Unique Plugin ID.
   string id = 1;
-  // Version string.
-  string version = 2;
-  // Type of the plugin.
-  PluginType type = 3;
+  // Numerical version of the plugin.
+  int32 version = 2;
   // List of plugin IDs that should be loaded before this plugin.
   repeated string dependencies = 4;
+  // List of features this plugin implements.
+  repeated Features features = 8;
 
   // Name of the plugin.
   string name = 5;
@@ -53,14 +56,22 @@ message PacketInfo {
   string author = 7;
 }
 
-// (type: `PROVIDER_AUDIO`)
-// Search for an artist using this plugin.
-message PacketArtistSearch {
-  string query = 4;
+// Calls a feature implemented by the plugin.
+message PacketFeatureRequest {
+  // Name of the feature to call.
+  Features feature = 1;
+  // Request payload from `features` to use.
+  bytes payload = 2;
+}
+// Response from a feature request.
+message PacketFeatureResponse {
+  // Name of the feature that created the response.
+  Features feature = 1;
+  // Response payload from `features` matching the feature.
+  optional bytes payload = 2;
+  // Optional error response from the request.
+  optional features.FeatureError error = 3;
 }
 
-// (type: `PROVIDER_AUDIO`)
-// Response given back to PacketArtistSearch.
-message PacketArtistSearchResult {
-  repeated music.Artist results = 1;
-}
+// Used when the server is shutting down or plugin is being uninstalled.
+message PacketDestroy {}
