@@ -1,6 +1,11 @@
 {
-	"devDependencies": {
-		"@openapi-codegen/cli": "^2.0.2",
-		"@openapi-codegen/typescript": "^8.0.2"
-	}
+  "devDependencies": {
+    "@openapi-codegen/cli": "3.1.0",
+    "@openapi-codegen/typescript": "11.0.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@swc/core"
+    ]
+  }
 }

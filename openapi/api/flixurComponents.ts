@@ -23,10 +23,7 @@ export type GetGreetingByNameVariables = {
   pathParams: GetGreetingByNamePathParams;
 };
 
-export const getGreetingByName = (
-  variables: GetGreetingByNameVariables,
-  signal?: AbortSignal,
-) =>
+export const getGreetingByName = (variables: GetGreetingByNameVariables, signal?: AbortSignal) =>
   flixurFetch<
     Schemas.GreetingOutputBody,
     GetGreetingByNameError,
@@ -45,10 +42,7 @@ export type ArtistSearchVariables = {
 /**
  * Search for an artist by name.
  */
-export const artistSearch = (
-  variables: ArtistSearchVariables,
-  signal?: AbortSignal,
-) =>
+export const artistSearch = (variables: ArtistSearchVariables, signal?: AbortSignal) =>
   flixurFetch<
     Schemas.ArtistSearchOutputBody,
     ArtistSearchError,
