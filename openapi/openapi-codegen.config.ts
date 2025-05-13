@@ -4,7 +4,7 @@ export default defineConfig({
   flixur: {
     from: {
       source: "url",
-      url: "http://localhost:8888/api/openapi.json",
+      url: "http://localhost:8787/api/openapi.json",
     },
     outputDir: "api",
     to: async (context) => {

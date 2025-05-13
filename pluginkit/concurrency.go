@@ -165,22 +165,36 @@ func ImplementFeature[REQ proto.Message, RES proto.Message](adder PacketListener
 	})
 }
 
-func FeatureRequest[REQ proto.Message, RES proto.Message](stream io.Writer, feature protobuf.Features, request REQ, callback func(RES, error)) {
-	// only way i could think of doing this
-	var undefined *RES = nil
+func FeatureRequest[RES proto.Message, REQ proto.Message](stream io.Writer, feature protobuf.Features, request REQ) (RES, error) {
+	type featureRequestResult struct {
+		Payload RES
+		Error   error
+	}
+
 	payload, err := proto.Marshal(request)
 	if err != nil {
-		callback(*undefined, fmt.Errorf("failed to serialize feature request payload: %w", err))
-		return
+		var null RES
+		return null, fmt.Errorf("failed to serialize feature request payload: %w", err)
 	}
+
+	// channel for synchronous return
+	result := make(chan featureRequestResult)
+
 	SendPacket(stream, protobuf.PacketType_FEATURE_REQUEST, &protobuf.PacketFeatureRequest{
 		Feature: feature,
 		Payload: payload,
 	}, func(res *protobuf.PacketFeatureResponse) {
-		if payload, err := DeserializeNested[RES](res.Payload); err == nil {
-			callback(payload, nil)
+		if response, err := DeserializeNested[RES](res.Payload); err == nil {
+			result <- featureRequestResult{
+				Payload: response,
+			}
 		} else {
-			callback(*undefined, err)
+			result <- featureRequestResult{
+				Error: err,
+			}
 		}
 	})
+
+	unpackedResult := <-result
+	return unpackedResult.Payload, unpackedResult.Error
 }

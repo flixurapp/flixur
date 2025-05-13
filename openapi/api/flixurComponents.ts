@@ -23,7 +23,10 @@ export type GetGreetingByNameVariables = {
   pathParams: GetGreetingByNamePathParams;
 };
 
-export const getGreetingByName = (variables: GetGreetingByNameVariables, signal?: AbortSignal) =>
+export const getGreetingByName = (
+  variables: GetGreetingByNameVariables,
+  signal?: AbortSignal,
+) =>
   flixurFetch<
     Schemas.GreetingOutputBody,
     GetGreetingByNameError,
@@ -32,3 +35,31 @@ export const getGreetingByName = (variables: GetGreetingByNameVariables, signal?
     {},
     GetGreetingByNamePathParams
   >({ url: "/greeting/{name}", method: "get", ...variables, signal });
+
+export type ArtistSearchError = Fetcher.ErrorWrapper<undefined>;
+
+export type ArtistSearchVariables = {
+  body: Schemas.ArtistSearchRequest;
+};
+
+/**
+ * Search for an artist by name.
+ */
+export const artistSearch = (
+  variables: ArtistSearchVariables,
+  signal?: AbortSignal,
+) =>
+  flixurFetch<
+    Schemas.ArtistSearchOutputBody,
+    ArtistSearchError,
+    Schemas.ArtistSearchRequest,
+    {},
+    {},
+    {}
+  >({ url: "/music/artists/search", method: "post", ...variables, signal });
+
+export const operationsByTag = {
+  music: { artistSearch },
+  artists: { artistSearch },
+  search: { artistSearch },
+};

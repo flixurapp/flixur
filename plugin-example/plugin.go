@@ -48,9 +48,18 @@ func main() {
 	})
 	pluginkit.ImplementFeature(listener, protobuf.Features_ARTIST_SEARCH, func(req *protobuf.FeatureArtistSearchRequest, _ *protobuf.PluginPacket) (*protobuf.FeatureArtistSearchResponse, *protobuf.FeatureError) {
 		log.Info().Interface("d", req).Msg("got search function")
+		ico := "http://localhost:8787/logo.png"
 
 		return &protobuf.FeatureArtistSearchResponse{
-			Results: make([]*protobuf.Artist, 1),
+			Results: []*protobuf.Artist{
+				{
+					Id:         "uuid",
+					Provider:   INFO.Id,
+					InternalID: "internal-id",
+					Name:       "Query: " + req.GetQuery(),
+					Icon:       &ico,
+				},
+			},
 		}, nil
 	})
 

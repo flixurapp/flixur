@@ -1,4 +1,4 @@
-package main
+package plugins
 
 import (
 	"context"
@@ -13,12 +13,6 @@ import (
 	"github.com/oklog/ulid/v2"
 	"github.com/rs/zerolog/log"
 )
-
-type Plugin struct {
-	*protobuf.PacketInfo
-}
-
-var Plugins []Plugin = make([]Plugin, 0)
 
 func RegisterPlugins(pluginPath string) {
 	dir, err := os.ReadDir(pluginPath)
@@ -67,16 +61,17 @@ func InitPlugin(bin string) {
 		return
 	}
 
-	for _, plugin := range Plugins {
-		if plugin.Id == info.Id {
-			log.Warn().Str("id", info.Id).Interface("details", info).Msg("Plugin with the same ID already exists. Ignoring...")
-			return
-		}
+	if FindPluginByID(info.Id) != nil {
+		log.Warn().Str("id", info.Id).Interface("details", info).Msg("Plugin with the same ID already exists. Ignoring...")
+		return
 	}
 
-	Plugins = append(Plugins, Plugin{
+	plugin := &Plugin{
 		PacketInfo: info,
-	})
+		Input:      writeIn,
+		Output:     readOut,
+	}
+	Plugins[info.Id] = plugin
 	log.Info().Str("id", info.Id).Int32("version", info.Version).Str("author", info.Author).Interface("features", info.Features).Msgf("Loaded plugin %s.", info.Name)
 
 	// Initialize the plugin.
@@ -85,10 +80,10 @@ func InitPlugin(bin string) {
 		Id:   ulid.Make().String(),
 	}, &protobuf.PacketInit{
 		Version: 0,
-	}, writeIn)
+	}, plugin.Input)
 
 	// Start listening for packets.
-	listener := pluginkit.StartReadingPackets(readOut, func(err error) {
+	listener := pluginkit.StartReadingPackets(plugin.Output, func(err error) {
 		log.Err(err).Str("id", info.Id).Msg("Failed to read packet from plugin.")
 	})
 
@@ -99,9 +94,9 @@ func InitPlugin(bin string) {
 			log.Info().Interface("d", data).Msg("packet from feature listener")
 		})
 
-	pluginkit.FeatureRequest(writeIn, protobuf.Features_ARTIST_SEARCH, &protobuf.FeatureArtistSearchRequest{
-		Query: "testing 12 3",
-	}, func(res *protobuf.FeatureArtistSearchResponse, err error) {
-		log.Info().Interface("d", res).Msg("packet from callback")
+	res, err := pluginkit.FeatureRequest[*protobuf.FeatureArtistSearchResponse](plugin.Input, protobuf.Features_ARTIST_SEARCH, &protobuf.FeatureArtistSearchRequest{
+		Query: "frank sinatra",
 	})
+
+	log.Info().Interface("d", res.Results).Err(err).Msg("packet from callback")
 }

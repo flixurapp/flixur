@@ -3,6 +3,63 @@
  *
  * @version 0.0.1
  */
+export type Artist = {
+  description?: string;
+  /**
+   * @format int64
+   */
+  followers?: number;
+  icon?: string;
+  id: string;
+  internalID: string;
+  location?: string;
+  name: string;
+  provider: string;
+  /**
+   * @format int32
+   */
+  rating?: number;
+};
+
+export type ArtistSearchRequest = {
+  /**
+   * A URL to the JSON Schema for this object.
+   *
+   * @example /api/schemas/Artist-searchRequest.json
+   * @format uri
+   */
+  $schema?: string;
+  /**
+   * @default 10
+   * @example 100
+   * @format int64
+   * @maximum 100
+   * @minimum 1
+   */
+  limit: number;
+  /**
+   * Plugin ID to use for the request. Omit to use the local server.
+   */
+  plugin?: string;
+  /**
+   * @example Jerry Springer
+   * @maxLength 250
+   * @minLength 1
+   */
+  query: string;
+};
+
+export type ArtistSearchOutputBody = {
+  /**
+   * A URL to the JSON Schema for this object.
+   *
+   * @example /api/schemas/ArtistSearchOutputBody.json
+   * @format uri
+   */
+  $schema?: string;
+  list: Artist[];
+};
+
 export type ErrorDetail = {
   /**
    * Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
