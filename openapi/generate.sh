@@ -1,1 +1,0 @@
-npx openapi-codegen gen flixur

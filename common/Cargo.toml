@@ -1,0 +1,9 @@
+[package]
+name = "flixur-common"
+version = "0.0.1"
+edition = "2024"
+publish = false
+
+[dependencies]
+serde = { version = "1.0.225", features = ["derive"] }
+thiserror = "2.0.16"

@@ -1,0 +1,13 @@
+[package]
+name = "flixur-client"
+version = "0.0.1"
+edition = "2024"
+publish = false
+
+[dependencies]
+thiserror = "2.0.16"
+tracing = "0.1.41"
+tracing-subscriber = "0.3.20"
+hang = "0.5.4"
+flixur-common = { path = "../common" }
+tracing-subscriber-wasm = "0.1.0"
