@@ -1,5 +1,5 @@
 module github.com/flixurapp/flixur/proto/go
 
-go 1.22.3
+go 1.24.4
 
-require google.golang.org/protobuf v1.34.1
+require google.golang.org/protobuf v1.36.9
