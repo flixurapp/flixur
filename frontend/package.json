@@ -12,13 +12,13 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
+		"@iconify-json/tabler": "1.2.23",
 		"@skeletonlabs/skeleton": "3.2.2",
 		"@skeletonlabs/skeleton-svelte": "1.5.3",
 		"@sveltejs/adapter-auto": "6.1.0",
 		"@sveltejs/adapter-static": "3.0.9",
 		"@sveltejs/kit": "2.43.5",
 		"@sveltejs/vite-plugin-svelte": "6.2.1",
-		"@tabler/icons-svelte": "3.31.0",
 		"@tailwindcss/forms": "0.5.10",
 		"@tailwindcss/vite": "4.1.13",
 		"@tauri-apps/cli": "2.8.4",
@@ -26,6 +26,7 @@
 		"@types/lodash": "4.17.20",
 		"@types/node": "24.6.0",
 		"autoprefixer": "10.4.21",
+		"iconify-icon": "3.0.1",
 		"prettier": "3.6.2",
 		"prettier-plugin-svelte": "3.4.0",
 		"svelte": "5.39.6",

@@ -10,9 +10,8 @@
 	import { type NavLink, NavLinksBottom, NavLinksTop } from "$lib/nav";
 	import State from "$lib/state.svelte";
 	import { Modal, Navigation, Toaster } from "@skeletonlabs/skeleton-svelte";
-	import { IconArrowLeft, IconMenu2 } from "@tabler/icons-svelte";
-	import Search from "@tabler/icons-svelte/icons/search";
 	import { interpolateLab } from "d3-interpolate";
+	import "iconify-icon";
 	import { type Snippet } from "svelte";
 	import { sineOut } from "svelte/easing";
 	import { tweened } from "svelte/motion";
@@ -109,7 +108,7 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 		>
 			{#snippet header()}
 				<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
-					<IconMenu2 />
+					<iconify-icon icon="tabler:menu-2"></iconify-icon>
 				</Navigation.Tile>
 			{/snippet}
 
@@ -133,7 +132,7 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 			background="bg-surface-950/70 backdrop-blur-xl"
 		>
 			<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
-				<IconMenu2 />
+				<iconify-icon icon="tabler:menu-2"></iconify-icon>
 			</Navigation.Tile>
 			{@render renderLinks(NavLinksTop)}
 			{@render renderLinks(NavLinksBottom)}
@@ -158,11 +157,11 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 		>
 			{#snippet header()}
 				<Navigation.Tile id="_close" labelExpanded="Close" onclick={() => (navOpen = false)}>
-					<IconArrowLeft />
+					<iconify-icon icon="tabler:arrow-left"></iconify-icon>
 				</Navigation.Tile>
 				<div class="input-group divide-surface-800 grid-cols-[auto_1fr_auto] divide-x mt-1">
 					<div class="input-group-cell">
-						<Search size={16} />
+						<iconify-icon icon="tabler:search" height={16}></iconify-icon>
 					</div>
 					<input type="search" placeholder="Search..." bind:this={searchInput} />
 				</div>
@@ -189,7 +188,7 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 				if (navOpen) navOpen = false;
 			}}
 		>
-			<link.icon />
+			<iconify-icon icon={link.icon}></iconify-icon>
 		</Navigation.Tile>
 	{/each}
 {/snippet}

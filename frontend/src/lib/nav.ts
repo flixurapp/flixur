@@ -1,26 +1,21 @@
-import type { Icon } from "@tabler/icons-svelte";
-import Home from "@tabler/icons-svelte/icons/home";
-import Music from "@tabler/icons-svelte/icons/music";
-import Settings from "@tabler/icons-svelte/icons/settings";
-
 export interface NavLink {
 	id: number;
 	label: string;
 	href: string;
-	icon: Icon;
+	icon: string;
 }
 export const NavLinksTop: NavLink[] = [
 	{
 		id: 0,
 		label: "Home",
 		href: "/",
-		icon: Home,
+		icon: "tabler:home",
 	},
 	{
 		id: 1,
 		label: "Music",
 		href: "/server/flixur.app/music",
-		icon: Music,
+		icon: "tabler:music",
 	},
 ];
 export const NavLinksBottom: NavLink[] = [
@@ -28,6 +23,6 @@ export const NavLinksBottom: NavLink[] = [
 		id: 2,
 		label: "Settings",
 		href: "/settings",
-		icon: Settings,
+		icon: "tabler:settings",
 	},
 ];

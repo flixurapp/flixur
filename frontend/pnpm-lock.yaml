@@ -24,6 +24,9 @@ importers:
         specifier: 1.3.0
         version: 1.3.0(svelte@5.39.6)
     devDependencies:
+      '@iconify-json/tabler':
+        specifier: 1.2.23
+        version: 1.2.23
       '@skeletonlabs/skeleton':
         specifier: 3.2.2
         version: 3.2.2(tailwindcss@4.1.13)
@@ -42,9 +45,6 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: 6.2.1
         version: 6.2.1(svelte@5.39.6)(vite@7.1.7(@types/node@24.6.0)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.87.0)(yaml@2.7.0))
-      '@tabler/icons-svelte':
-        specifier: 3.31.0
-        version: 3.31.0(svelte@5.39.6)
       '@tailwindcss/forms':
         specifier: 0.5.10
         version: 0.5.10(tailwindcss@4.1.13)
@@ -66,6 +66,9 @@ importers:
       autoprefixer:
         specifier: 10.4.21
         version: 10.4.21(postcss@8.5.6)
+      iconify-icon:
+        specifier: 3.0.1
+        version: 3.0.1
       prettier:
         specifier: 3.6.2
         version: 3.6.2
@@ -257,6 +260,12 @@ packages:
 
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
+
+  '@iconify-json/tabler@1.2.23':
+    resolution: {integrity: sha512-Knb8ykgMwB5uSoqrDv1xIdJYM03OP06OXjN6QvGXaTNtdHkW9ciKA+aftz6lwM2jwJA+bsUWeDzLBlPt2uJm4w==}
+
+  '@iconify/types@2.0.0':
+    resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
 
   '@isaacs/fs-minipass@4.0.1':
     resolution: {integrity: sha512-wgm9Ehl2jpeqP3zw/7mo3kRHFp5MEDhqAdwy1fTGkHAwnkGOVsgpvQhL8B5n1qlb01jV3n/bI0ZfZp5lWA1k4w==}
@@ -528,14 +537,6 @@ packages:
     peerDependencies:
       svelte: ^5.0.0
       vite: ^6.3.0 || ^7.0.0
-
-  '@tabler/icons-svelte@3.31.0':
-    resolution: {integrity: sha512-tbsfitMdr+IQrEnEzfz//VGBqxh/H79gXzIprdI4N8KSqfaNGHKN6eO4BvgxoRp2FREeMjrD5Xf/ZwDRFlUraQ==}
-    peerDependencies:
-      svelte: '>=3 <6 || >=5.0.0-next.0'
-
-  '@tabler/icons@3.31.0':
-    resolution: {integrity: sha512-dblAdeKY3+GA1U+Q9eziZ0ooVlZMHsE8dqP0RkwvRtEsAULoKOYaCUOcJ4oW1DjWegdxk++UAt2SlQVnmeHv+g==}
 
   '@tailwindcss/forms@0.5.10':
     resolution: {integrity: sha512-utI1ONF6uf/pPNO68kmN1b8rEwNXv3czukalo8VtJH8ksIkZXr3Q3VYudZLkCsDd4Wku120uF02hYK25XGPorw==}
@@ -968,6 +969,9 @@ packages:
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
+  iconify-icon@3.0.1:
+    resolution: {integrity: sha512-M3/kH3C+e/ufhmQuOSYSb1Ri1ImJ+ZEQYcVRMKnlSc8Nrdoy+iY9YvFnplX8t/3aCRuo5wN4RVPtCSHGnbt8dg==}
+
   immutable@5.1.3:
     resolution: {integrity: sha512-+chQdDfvscSF1SJqv2gn4SRO2ZyS3xL3r7IW/wWEEzrzLisnOlKiQu5ytC/BVNcS15C39WT2Hg/bjKjDMcu+zg==}
 
@@ -1378,6 +1382,12 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
+  '@iconify-json/tabler@1.2.23':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/types@2.0.0': {}
+
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
       minipass: 7.1.2
@@ -1608,13 +1618,6 @@ snapshots:
       vitefu: 1.1.1(vite@7.1.7(@types/node@24.6.0)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.87.0)(yaml@2.7.0))
     transitivePeerDependencies:
       - supports-color
-
-  '@tabler/icons-svelte@3.31.0(svelte@5.39.6)':
-    dependencies:
-      '@tabler/icons': 3.31.0
-      svelte: 5.39.6
-
-  '@tabler/icons@3.31.0': {}
 
   '@tailwindcss/forms@0.5.10(tailwindcss@4.1.13)':
     dependencies:
@@ -2111,6 +2114,10 @@ snapshots:
     optional: true
 
   graceful-fs@4.2.11: {}
+
+  iconify-icon@3.0.1:
+    dependencies:
+      '@iconify/types': 2.0.0
 
   immutable@5.1.3:
     optional: true

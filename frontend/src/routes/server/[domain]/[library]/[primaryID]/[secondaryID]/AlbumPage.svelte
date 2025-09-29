@@ -5,7 +5,6 @@
 	import Rating from "$lib/components/Rating.svelte";
 	import { initials } from "$lib/utils";
 	import { Avatar } from "@skeletonlabs/skeleton-svelte";
-	import { IconPencil, IconPlayerPlayFilled } from "@tabler/icons-svelte";
 
 	interface Props {
 		artist: ArtistJSON;
@@ -48,8 +47,9 @@
 					<button
 						class="btn-icon btn-icon-sm variant-filled-primary hidden"
 						onclick={() => toaster.create({ description: "play button clicked" })}
+						aria-label="Play"
 					>
-						<IconPlayerPlayFilled size={20} />
+						<iconify-icon icon="tabler:player-play-filled" height={20}></iconify-icon>
 					</button>
 				</td>
 				<td class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap!">{track.title}</td>
@@ -57,8 +57,9 @@
 					<button
 						class="btn-icon btn-icon-sm variant-filled-secondary hidden"
 						onclick={() => toaster.create({ description: "edit button clicked" })}
+						aria-label="Edit"
 					>
-						<IconPencil size={20} />
+						<iconify-icon icon="tabler:pencil" height={20}></iconify-icon>
 					</button>
 				</td>
 			</tr>

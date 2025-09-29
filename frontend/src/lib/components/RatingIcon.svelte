@@ -1,17 +1,20 @@
 <script lang="ts">
+	import { loadIcons } from "iconify-icon";
+	import { onMount } from "svelte";
+
 	interface Props {
 		/** Icon component to use. */
-		icons: [ConstructorOfATypedSvelteComponent, ConstructorOfATypedSvelteComponent];
+		icons: [string, string];
 		/** Size of the icons. */
 		size: number;
 		/** The value to use for the icon. (should be 0-2) */
 		value: number;
 		/** Raw value for the icon. (used for toggle) */
 		rawValue?: number;
-		/** Color for the icon. (name-intensity) */
+		/** Color for the icon. (tailwind class) */
 		color: string;
 		/** Icon to use for half-selections. Also enables them. */
-		halfIcon?: ConstructorOfATypedSvelteComponent | undefined;
+		halfIcon?: string | undefined;
 		/** Index of this icon in the list. */
 		index?: number;
 		/** Allow this icon to toggle the rating. */
@@ -74,7 +77,12 @@
 		onchange?.(getValue());
 	}
 
-	const Icon = $derived(
+	onMount(() => {
+		loadIcons(icons);
+		if (halfIcon) loadIcons([halfIcon]);
+	});
+
+	const icon = $derived(
 		hoverState == "hover-zero"
 			? icons[0]
 			: // rating is full
@@ -90,21 +98,13 @@
 
 <span
 	bind:this={wrapper}
-	class="cursor-pointer"
+	class={[
+		"cursor-pointer",
+		hoverState == "none" && value > 0 && color,
+		(hoverState == "hover-half" || hoverState == "hover-full") && color,
+	]}
 	style:padding-left="{size * 0.1}px"
 	style:padding-right="{size * 0.1}px"
-	style:color={(() => {
-		const full = `var(--color-${color})`;
-		switch (hoverState) {
-			case "none":
-				return value > 0 ? full : "";
-			case "hover-zero":
-				return "inherit";
-			case "hover-half":
-			case "hover-full":
-				return full;
-		}
-	})()}
 	onmouseenter={calcHover}
 	onmousemove={calcHover}
 	onmouseleave={() => {
@@ -121,5 +121,5 @@
 	aria-checked={value % 2 == 1 ? "mixed" : value == 0 ? "false" : "true"}
 	tabindex="0"
 >
-	<Icon {size} />
+	<iconify-icon {icon} height={size}></iconify-icon>
 </span>

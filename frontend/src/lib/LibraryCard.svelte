@@ -2,7 +2,6 @@
 
 <script lang="ts">
 	import { Avatar } from "@skeletonlabs/skeleton-svelte";
-	import { IconDots, IconPencil, IconPlayerPlayFilled } from "@tabler/icons-svelte";
 	import { onMount } from "svelte";
 	import type { LibraryCardType } from "./LibraryCard";
 	import { Scrolling } from "./events/scroller";
@@ -79,8 +78,9 @@
 						onplay?.();
 						e.preventDefault();
 					}}
+					aria-label="Play"
 				>
-					<IconPlayerPlayFilled size={22} />
+					<iconify-icon icon="tabler:player-play-filled" height={22}></iconify-icon>
 				</button>
 				<EditModal>
 					<button
@@ -89,8 +89,9 @@
 							e.currentTarget.blur();
 							e.preventDefault();
 						}}
+						aria-label="Edit"
 					>
-						<IconPencil size={16} />
+						<iconify-icon icon="tabler:pencil" height={16}></iconify-icon>
 					</button>
 				</EditModal>
 				<button
@@ -100,8 +101,9 @@
 						oncontextmenu?.(e);
 						e.preventDefault();
 					}}
+					aria-label="More"
 				>
-					<IconDots size={16} />
+					<iconify-icon icon="tabler:dots" height={16}></iconify-icon>
 				</button>
 			</div>
 		</a>
