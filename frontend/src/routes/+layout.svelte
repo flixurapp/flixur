@@ -15,6 +15,7 @@
 	import { type Snippet } from "svelte";
 	import { sineOut } from "svelte/easing";
 	import { tweened } from "svelte/motion";
+	import { fly } from "svelte/transition";
 	import "../app.css";
 
 	interface Props {
@@ -96,8 +97,6 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 	});
 </script>
 
-<svelte:window onkeyup={(event) => navOpen && event.key == "Escape" && (navOpen = false)} />
-
 <Toaster {toaster}></Toaster>
 
 <div class="h-screen grid grid-cols-1 grid-rows-[1fr_auto] md:grid-rows-1 md:grid-cols-[1fr_auto]">
@@ -142,13 +141,35 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 </div>
 <Modal
 	open={navOpen}
+	onEscapeKeyDown={() => (navOpen = false)}
 	contentBase="bg-surface-900 py-4 px-2 shadow-xl h-screen w-[250px]"
 	backdropClasses="backdrop-blur-sm"
 	positionerJustify="justify-end"
 	positionerPadding=""
-	transitionsPositionerIn={{ x: 250, duration: 200 }}
+	transitionsPositionerIn={{ x: 250, duration: 250 }}
 >
 	{#snippet content()}
+		<!-- Search Center -->
+		<aside
+			class="absolute top-8 left-8 right-[calc(250px+--spacing(8))] bottom-8"
+			in:fly={{ y: -100, duration: 100, delay: 100 }}
+		>
+			<div
+				class="input-group grid-cols-[auto_1fr] mt-1 h-16 backdrop-blur-md focus-within:outline focus-within:outline-primary-500"
+			>
+				<div class="ig-cell preset-tonal w-14">
+					<iconify-icon icon="tabler:search" height={16} noobserver></iconify-icon>
+				</div>
+				<input
+					class="ig-input outline-none text-lg"
+					type="search"
+					placeholder="Search..."
+					bind:this={searchInput}
+				/>
+			</div>
+		</aside>
+
+		<!-- Navigation -->
 		<Navigation.Rail
 			value={railValue}
 			onValueChange={(newValue) => (railValue = newValue)}
@@ -165,12 +186,6 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 				>
 					<iconify-icon icon="tabler:arrow-right" class="mt-1" noobserver></iconify-icon>
 				</Navigation.Tile>
-				<div class="input-group grid-cols-[1fr_auto] mt-1">
-					<input class="ig-input" type="search" placeholder="Search..." bind:this={searchInput} />
-					<div class="ig-btn preset-filled-primary-500 cursor-pointer">
-						<iconify-icon icon="tabler:search" height={16} noobserver></iconify-icon>
-					</div>
-				</div>
 			{/snippet}
 
 			{#snippet tiles()}
