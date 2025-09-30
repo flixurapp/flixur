@@ -23,14 +23,14 @@
 	<div>
 		<h1 class="text-3xl font-semibold flex items-center gap-2">
 			{album.name}
-			<span class="badge variant-soft-primary">{album.year}</span>
+			<span class="badge badge-sm preset-glass-primary-500">{album.year}</span>
 		</h1>
 		<a class="flex gap-1 text-lg items-center w-fit" href="/server/flixur.app/music/{artist.id}">
 			<Avatar src={artist.icon} name={artist.name} rounded="rounded-full" classes="h-5 w-5">
 				{initials(artist.name)}
 			</Avatar>
 			<span class="opacity-80 font-medium">{artist.name}</span>
-			<span class="badge badge-sm variant-soft-secondary uppercase">{album.type}</span>
+			<span class="badge badge-sm preset-glass-secondary-500 uppercase">{album.type}</span>
 		</a>
 		<Rating class="mt-1" value={album.rating} type={RATING_SETTING} size={20} />
 	</div>
@@ -43,9 +43,9 @@
 				class="flex items-center hover:[&>:first-child>span]:hidden hover:[&>td>button]:inline-flex"
 			>
 				<td>
-					<span class="badge btn-icon-sm rounded-full variant-soft-primary">{track.index}</span>
+					<span class="btn-icon rounded-full preset-glass-primary-700">{track.index}</span>
 					<button
-						class="btn-icon btn-icon-sm variant-filled-primary hidden"
+						class="btn-icon rounded-full preset-glass-primary-500 hidden"
 						onclick={() => toaster.create({ description: "play button clicked" })}
 						aria-label="Play"
 					>
@@ -55,7 +55,7 @@
 				<td class="flex-1 overflow-hidden text-ellipsis whitespace-nowrap!">{track.title}</td>
 				<td align="right">
 					<button
-						class="btn-icon btn-icon-sm variant-filled-secondary hidden"
+						class="btn-icon rounded-full preset-glass-secondary-500 hidden"
 						onclick={() => toaster.create({ description: "edit button clicked" })}
 						aria-label="Edit"
 					>

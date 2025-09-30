@@ -72,7 +72,7 @@
 				class="cant-hover:hidden p-1 gap-2 opacity-0 transition-opacity relative w-full h-full flex items-end justify-center rounded-[inherit] bg-black/50"
 			>
 				<button
-					class="btn-icon btn-icon-sm variant-filled-primary mr-auto"
+					class="btn-icon preset-filled-primary-500 rounded-full mr-auto"
 					onclick={(e) => {
 						e.currentTarget.blur();
 						onplay?.();
@@ -80,22 +80,17 @@
 					}}
 					aria-label="Play"
 				>
-					<iconify-icon icon="tabler:player-play-filled" height={22}></iconify-icon>
+					<iconify-icon icon="tabler:player-play-filled" height={20}></iconify-icon>
 				</button>
-				<EditModal>
-					<button
-						class="btn-icon btn-icon-xs variant-filled-secondary"
-						onclick={(e) => {
-							e.currentTarget.blur();
-							e.preventDefault();
-						}}
-						aria-label="Edit"
-					>
-						<iconify-icon icon="tabler:pencil" height={16}></iconify-icon>
-					</button>
+				<EditModal
+					baseClasses="btn-icon btn-icon-sm preset-glass-secondary-500"
+					class="inline-flex items-center justify-center"
+					label="Edit"
+				>
+					<iconify-icon icon="tabler:pencil" height={16}></iconify-icon>
 				</EditModal>
 				<button
-					class="btn-icon btn-icon-xs variant-filled-secondary"
+					class="btn-icon btn-icon-sm preset-glass-secondary-500"
 					onclick={(e) => {
 						e.currentTarget.blur();
 						oncontextmenu?.(e);

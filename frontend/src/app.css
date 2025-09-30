@@ -36,3 +36,27 @@ iconify-icon {
 	box-shadow: 0 0px 30px color-mix(in oklab, --value(--color-*) 50%, transparent) inset;
 	backdrop-filter: blur(16px);
 }
+
+@utility badge-sm {
+	font-size: 0.65rem;
+	line-height: 1rem;
+	padding-inline: --spacing(1.5);
+	padding-block: --spacing(0.5);
+}
+
+/*
+addComponents([
+				{
+					// custom extra small icon button component (based off btn-icon-sm)
+					".btn-icon-xs": {
+						width: "25px",
+						"font-size": "0.5rem",
+						"line-height": "1rem",
+					},
+				},
+				{
+					// custom extra small badge component (add to badge)
+					
+				},
+			]);
+*/
