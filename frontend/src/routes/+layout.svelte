@@ -100,7 +100,11 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 
 <Toaster {toaster}></Toaster>
 
-<div class="h-screen grid grid-cols-1 grid-rows-[1fr_auto] md:grid-rows-1 md:grid-cols-[auto_1fr]">
+<div class="h-screen grid grid-cols-1 grid-rows-[1fr_auto] md:grid-rows-1 md:grid-cols-[1fr_auto]">
+	<main class="px-2 py-4 overflow-auto w-full">
+		{@render children()}
+	</main>
+
 	{#if !State.isMobile}
 		<Navigation.Rail
 			value={railValue}
@@ -121,13 +125,8 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 				{@render renderLinks(NavLinksBottom)}
 			{/snippet}
 		</Navigation.Rail>
-	{/if}
-
-	<main class="px-2 py-4 overflow-auto">
-		{@render children()}
-	</main>
-
-	{#if State.isMobile}
+	{:else}
+		<!-- Mobile -->
 		<Navigation.Bar
 			value={railValue}
 			onValueChange={(newValue) => (railValue = newValue)}
@@ -143,11 +142,11 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 </div>
 <Modal
 	open={navOpen}
-	contentBase="bg-surface-900 py-4 px-2 shadow-xl h-screen w-[300px]"
-	positionerJustify="justify-start"
+	contentBase="bg-surface-900 py-4 px-2 shadow-xl h-screen w-[250px]"
+	backdropClasses="backdrop-blur-sm"
+	positionerJustify="justify-end"
 	positionerPadding=""
-	transitionsPositionerIn={{ x: -300, duration: 200 }}
-	transitionsPositionerOut={{ x: -300, duration: 200 }}
+	transitionsPositionerIn={{ x: 250, duration: 200 }}
 >
 	{#snippet content()}
 		<Navigation.Rail
@@ -158,13 +157,18 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 			background=""
 		>
 			{#snippet header()}
-				<Navigation.Tile id="_close" labelExpanded="Close" onclick={() => (navOpen = false)}>
-					<iconify-icon icon="tabler:arrow-left"></iconify-icon>
+				<Navigation.Tile
+					id="_close"
+					labelExpanded="Back"
+					expandedClasses="flex-row-reverse"
+					onclick={() => (navOpen = false)}
+				>
+					<iconify-icon icon="tabler:arrow-right" class="mt-1" noobserver></iconify-icon>
 				</Navigation.Tile>
 				<div class="input-group grid-cols-[1fr_auto] mt-1">
 					<input class="ig-input" type="search" placeholder="Search..." bind:this={searchInput} />
 					<div class="ig-btn preset-filled-primary-500 cursor-pointer">
-						<iconify-icon icon="tabler:search" height={16}></iconify-icon>
+						<iconify-icon icon="tabler:search" height={16} noobserver></iconify-icon>
 					</div>
 				</div>
 			{/snippet}
@@ -190,7 +194,7 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 				if (navOpen) navOpen = false;
 			}}
 		>
-			<iconify-icon icon={link.icon}></iconify-icon>
+			<iconify-icon icon={link.icon} class="mt-1" noobserver></iconify-icon>
 		</Navigation.Tile>
 	{/each}
 {/snippet}
