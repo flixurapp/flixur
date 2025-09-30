@@ -99,7 +99,7 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 <Toaster {toaster}></Toaster>
 
 <div class="h-screen grid grid-cols-1 grid-rows-[1fr_auto] md:grid-rows-1 md:grid-cols-[1fr_auto]">
-	<main class="p-2 overflow-hidden w-full">
+	<main class="p-2 overflow-auto w-full">
 		{@render children()}
 	</main>
 
@@ -129,7 +129,7 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 	<Navigation.Bar
 		value={railValue}
 		onValueChange={(newValue) => (railValue = newValue)}
-		classes="md:hidden"
+		classes="md:hidden absolute bottom-0"
 		background="bg-surface-950/70 backdrop-blur-xl"
 	>
 		<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>

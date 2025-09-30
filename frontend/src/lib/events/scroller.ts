@@ -30,7 +30,7 @@ export function initScrollingEmitter() {
 				SCROLL_EMITTER.emit("scrollend");
 				// give scrolling a 50ms delay before being "finished"
 				// minimum scroll event interval seems to be about 20-30ms
-			}, 50);
+			}, 0);
 		},
 		true,
 	);

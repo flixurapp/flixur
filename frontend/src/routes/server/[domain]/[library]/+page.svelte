@@ -19,7 +19,7 @@
 	onMount(removePageGradient);
 </script>
 
-<div class="flex flex-col h-full -mb-24 md:mb-0 md:-mx-2">
+<div class="flex flex-col h-full md:-mx-2">
 	<Tabs
 		value={view}
 		onValueChange={(e) => (view = e.value)}
