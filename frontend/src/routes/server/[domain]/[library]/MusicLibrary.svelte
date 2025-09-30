@@ -6,8 +6,8 @@
 </script>
 
 <LibraryScroller cardType="art" items={TEST_DATA}>
-	{#snippet children({ data })}
-		{#each data.cards as artist (artist.id)}
+	{#snippet children(cards)}
+		{#each cards as artist (artist.id)}
 			<LibraryCard
 				type="art"
 				name={artist.name}

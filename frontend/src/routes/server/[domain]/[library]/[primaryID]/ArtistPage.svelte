@@ -16,7 +16,7 @@
 
 <LibraryScroller cardType="art" items={artist.albums}>
 	{#snippet header()}
-		<div class="card p-4 mb-4 flex gap-4 variant-softer">
+		<div class="card p-4 mb-4 flex gap-4 preset-filled-surface-300-700 bg-surface-300/15">
 			<Avatar name={artist.name} rounded="rounded" classes="h-44 w-44">
 				<img src={artist.icon} crossorigin="anonymous" use:iconBackgroundAction alt={artist.name} />
 			</Avatar>
@@ -29,12 +29,12 @@
 			</div>
 		</div>
 	{/snippet}
-	{#snippet children({ data })}
-		{#each data.cards as album}
+	{#snippet children(cards)}
+		{#each cards as album}
 			<LibraryCard
 				type="art"
 				name={album.name}
-				subtext={album.year}
+				subtext={String(album.year)}
 				href="/server/flixur.app/music/{artist.id}/{album.id}"
 				image={album.icon}
 				onplay={() => toaster.create({ description: "play button clicked" })}

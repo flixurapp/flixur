@@ -125,7 +125,7 @@
 				? 'aspect-video'
 				: type == 'poster'
 					? 'aspect-2/3'
-					: 'aspect-square'} rounded-token card"
+					: 'aspect-square'} rounded card preset-filled-surface-200-800 preset-glass-neutral"
 		></div>
 		<p>{"\u200b"}</p>
 		{#if subtext}
