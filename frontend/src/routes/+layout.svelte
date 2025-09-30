@@ -96,6 +96,8 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 	});
 </script>
 
+<svelte:window onkeyup={(event) => navOpen && event.key == "Escape" && (navOpen = false)} />
+
 <Toaster {toaster}></Toaster>
 
 <div class="h-screen grid grid-cols-1 grid-rows-[1fr_auto] md:grid-rows-1 md:grid-cols-[auto_1fr]">
@@ -159,11 +161,11 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 				<Navigation.Tile id="_close" labelExpanded="Close" onclick={() => (navOpen = false)}>
 					<iconify-icon icon="tabler:arrow-left"></iconify-icon>
 				</Navigation.Tile>
-				<div class="input-group divide-surface-800 grid-cols-[auto_1fr_auto] divide-x mt-1">
-					<div class="input-group-cell">
+				<div class="input-group grid-cols-[1fr_auto] mt-1">
+					<input class="ig-input" type="search" placeholder="Search..." bind:this={searchInput} />
+					<div class="ig-btn preset-filled-primary-500 cursor-pointer">
 						<iconify-icon icon="tabler:search" height={16}></iconify-icon>
 					</div>
-					<input type="search" placeholder="Search..." bind:this={searchInput} />
 				</div>
 			{/snippet}
 

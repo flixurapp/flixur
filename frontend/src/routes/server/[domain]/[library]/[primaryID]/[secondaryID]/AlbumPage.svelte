@@ -43,7 +43,7 @@
 				class="flex items-center hover:[&>:first-child>span]:hidden hover:[&>td>button]:inline-flex"
 			>
 				<td>
-					<span class="btn-icon rounded-full preset-glass-primary-700">{track.index}</span>
+					<span class="btn-icon rounded-full preset-glass-primary-600">{track.index}</span>
 					<button
 						class="btn-icon rounded-full preset-glass-primary-500 hidden"
 						onclick={() => toaster.create({ description: "play button clicked" })}

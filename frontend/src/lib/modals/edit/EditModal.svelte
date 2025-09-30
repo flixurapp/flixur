@@ -13,11 +13,7 @@
 		open = $state(false);
 </script>
 
-<svelte:window
-	onkeyup={(event) => {
-		if (open && event.key == "Escape") open = false;
-	}}
-/>
+<svelte:window onkeyup={(event) => open && event.key == "Escape" && (open = false)} />
 
 <Modal
 	{open}
