@@ -4,7 +4,6 @@
 	import { Avatar } from "@skeletonlabs/skeleton-svelte";
 	import { onMount } from "svelte";
 	import type { LibraryCardType } from "./LibraryCard";
-	import { Scrolling } from "./events/scroller";
 	import EditModal from "./modals/edit/EditModal.svelte";
 
 	interface Props {
@@ -36,11 +35,9 @@
 
 	let mounted = $state(false);
 
-	onMount(async () => {
-		// wait for scroll to be finished before mounting
-		Scrolling.onScrollEnd(() => {
-			mounted = true;
-		});
+	onMount(() => {
+		// mount immediately to prevent blank placeholders during scroll
+		mounted = true;
 	});
 </script>
 
