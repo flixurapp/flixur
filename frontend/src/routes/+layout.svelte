@@ -8,7 +8,6 @@
 	} from "$lib/background/PageGradient";
 	import type { RGBA } from "$lib/background/types";
 	import { type NavLink, NavLinksBottom, NavLinksTop } from "$lib/nav";
-	import State from "$lib/state.svelte";
 	import { Modal, Navigation, Toaster } from "@skeletonlabs/skeleton-svelte";
 	import { interpolateLab } from "d3-interpolate";
 	import "iconify-icon";
@@ -100,44 +99,45 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 <Toaster {toaster}></Toaster>
 
 <div class="h-screen grid grid-cols-1 grid-rows-[1fr_auto] md:grid-rows-1 md:grid-cols-[1fr_auto]">
-	<main class="px-2 py-4 overflow-auto w-full">
+	<main class="p-2 overflow-hidden w-full">
 		{@render children()}
 	</main>
 
-	{#if !State.isMobile}
-		<Navigation.Rail
-			value={railValue}
-			onValueChange={(newValue) => (railValue = newValue)}
-			width="w-16"
-			background="bg-surface-950/70 backdrop-blur-xl"
-		>
-			{#snippet header()}
-				<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
-					<iconify-icon icon="tabler:menu-2"></iconify-icon>
-				</Navigation.Tile>
-			{/snippet}
-
-			{#snippet tiles()}
-				{@render renderLinks(NavLinksTop)}
-			{/snippet}
-			{#snippet footer()}
-				{@render renderLinks(NavLinksBottom)}
-			{/snippet}
-		</Navigation.Rail>
-	{:else}
-		<!-- Mobile -->
-		<Navigation.Bar
-			value={railValue}
-			onValueChange={(newValue) => (railValue = newValue)}
-			background="bg-surface-950/70 backdrop-blur-xl"
-		>
+	<!-- Desktop -->
+	<Navigation.Rail
+		value={railValue}
+		onValueChange={(newValue) => (railValue = newValue)}
+		width="w-16"
+		classes="not-md:hidden"
+		background="bg-surface-950/70 backdrop-blur-xl"
+	>
+		{#snippet header()}
 			<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
 				<iconify-icon icon="tabler:menu-2"></iconify-icon>
 			</Navigation.Tile>
+		{/snippet}
+
+		{#snippet tiles()}
 			{@render renderLinks(NavLinksTop)}
+		{/snippet}
+		{#snippet footer()}
 			{@render renderLinks(NavLinksBottom)}
-		</Navigation.Bar>
-	{/if}
+		{/snippet}
+	</Navigation.Rail>
+
+	<!-- Mobile -->
+	<Navigation.Bar
+		value={railValue}
+		onValueChange={(newValue) => (railValue = newValue)}
+		classes="md:hidden"
+		background="bg-surface-950/70 backdrop-blur-xl"
+	>
+		<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
+			<iconify-icon icon="tabler:menu-2"></iconify-icon>
+		</Navigation.Tile>
+		{@render renderLinks(NavLinksTop)}
+		{@render renderLinks(NavLinksBottom)}
+	</Navigation.Bar>
 </div>
 <Modal
 	open={navOpen}
