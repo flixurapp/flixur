@@ -6,3 +6,12 @@ export function initials(name: string): string {
 			.join("") || ""
 	);
 }
+
+// polyfill requestIdleCallback (safari...)
+export function requestIdleWork(callback: () => void) {
+	if (typeof requestIdleCallback !== "undefined") {
+		requestIdleCallback(callback, { timeout: 100 });
+	} else {
+		setTimeout(callback, 16);
+	}
+}

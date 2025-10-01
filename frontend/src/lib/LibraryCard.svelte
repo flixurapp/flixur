@@ -4,8 +4,8 @@
 	import { Avatar } from "@skeletonlabs/skeleton-svelte";
 	import { onMount } from "svelte";
 	import type { LibraryCardType } from "./LibraryCard";
-	import { Scrolling } from "./events/scroller";
 	import EditModal from "./modals/edit/EditModal.svelte";
+	import { requestIdleWork } from "./utils";
 
 	interface Props {
 		/** Type of media in the card. `art` for artist/album. `poster` for tv/movies. `thumbnail` for episodes. */
@@ -34,12 +34,11 @@
 		oncontextmenu,
 	}: Props = $props();
 
-	let mounted = $state(false);
+	let contentReady = $state(false);
 
-	onMount(async () => {
-		// wait for scroll to be finished before mounting
-		Scrolling.onScrollEnd(() => {
-			mounted = true;
+	onMount(() => {
+		requestIdleWork(() => {
+			contentReady = true;
 		});
 	});
 </script>
@@ -56,15 +55,15 @@
 	role="button"
 	tabindex="-1"
 >
-	{#if mounted}
-		<a
-			{href}
-			class="block relative w-full {type == 'thumbnail'
-				? 'aspect-video'
-				: type == 'poster'
-					? 'aspect-2/3'
-					: 'aspect-square'} rounded cursor-pointer"
-		>
+	<a
+		{href}
+		class="block relative w-full {type == 'thumbnail'
+			? 'aspect-video'
+			: type == 'poster'
+				? 'aspect-2/3'
+				: 'aspect-square'} rounded cursor-pointer"
+	>
+		{#if contentReady}
 			<Avatar {name} classes="absolute top-0 left-0 h-full w-full" rounded="rounded-[inherit]">
 				<img src={image} crossorigin="anonymous" class="w-full h-full" alt={name} />
 			</Avatar>
@@ -101,7 +100,18 @@
 					<iconify-icon icon="tabler:dots" height={16}></iconify-icon>
 				</button>
 			</div>
-		</a>
+		{:else}
+			<div
+				class="w-full {type == 'thumbnail'
+					? 'aspect-video'
+					: type == 'poster'
+						? 'aspect-2/3'
+						: 'aspect-square'} rounded card preset-glass-neutral"
+			></div>
+		{/if}
+	</a>
+
+	{#if contentReady}
 		<a
 			class="overflow-hidden [&>p]:whitespace-nowrap [&>p]:overflow-hidden [&>p]:text-ellipsis hover:underline"
 			{href}
@@ -114,14 +124,6 @@
 			{/if}
 		</a>
 	{:else}
-		<!-- attempting to make this as "light" as possible, so the browser can render it quickly -->
-		<div
-			class="w-full {type == 'thumbnail'
-				? 'aspect-video'
-				: type == 'poster'
-					? 'aspect-2/3'
-					: 'aspect-square'} rounded card preset-filled-surface-200-800 preset-glass-neutral"
-		></div>
 		<p>{"\u200b"}</p>
 		{#if subtext}
 			<p>{"\u200b"}</p>
