@@ -1,4 +1,4 @@
-<script lang="ts" generics="T extends any">
+<script lang="ts" generics="T extends { id: string }">
 	import chunk from "lodash/chunk";
 	import type { Snippet } from "svelte";
 	import { VList } from "virtua/svelte";
@@ -44,7 +44,7 @@
 		{#if header_render}
 			{@render header_render()}
 		{/if}
-		<VList data={chunkedData} overscan={25}>
+		<VList data={chunkedData} overscan={15}>
 			{#snippet children(item)}
 				<div class="flex sm:gap-4 sm:py-1 gap-2 py-0.5 items-center justify-center snap-start">
 					{@render children_render?.(item)}
