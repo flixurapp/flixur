@@ -34,7 +34,7 @@
 		),
 	);
 
-	const [initBodyOverlayScrollbars, getBodyOverlayScrollbarsInstance] = useOverlayScrollbars({
+	const [initOverlayScrollbars, _] = useOverlayScrollbars({
 		defer: true,
 		events: {
 			initialized(osInstance) {
@@ -55,16 +55,12 @@
 	});
 
 	onMount(() => {
-		initBodyOverlayScrollbars({
+		initOverlayScrollbars({
 			target: container,
 			elements: {
 				viewport: <HTMLDivElement>container.firstElementChild,
 			},
 		});
-
-		setTimeout(() => {
-			getBodyOverlayScrollbarsInstance()?.update(true);
-		}, 1000);
 	});
 </script>
 
