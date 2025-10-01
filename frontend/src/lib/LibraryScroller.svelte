@@ -37,7 +37,12 @@
 <div class="h-full flex-1" bind:offsetHeight>
 	<!-- TODO: scroll snap setting -->
 	<div
-		class="{true ? '' : 'not-pointer-coarse:[&>:first-child]:snap-y'} [&>:first-child]:px-2.5"
+		class={[
+			false && "not-pointer-coarse:[&>:first-child]:snap-y",
+			"[&>:first-child]:px-2.5", // left/right padding
+			"[&>:first-child]:pt-13", // padding for top menu bar
+			"not-md:[&>:first-child]:pb-20", // mobile padding for bottom menu bar
+		]}
 		style:height="{offsetHeight}px"
 		bind:offsetWidth
 	>

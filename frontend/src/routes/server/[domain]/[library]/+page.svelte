@@ -19,18 +19,19 @@
 	onMount(removePageGradient);
 </script>
 
-<div class="flex flex-col h-full md:-mx-2">
+<div class="flex flex-col h-full relative">
 	<Tabs
 		value={view}
 		onValueChange={(e) => (view = e.value)}
-		base="h-full grid grid-rows-[auto_1fr]"
+		base="h-full grid grid-rows-[1fr]"
 		contentBase="flex flex-1"
-		listBase="px-2"
+		listClasses="px-2 pt-1 absolute top-0 z-[1] h-12 bg-surface-950/70 backdrop-blur-xl w-full"
 	>
 		{#snippet list()}
-			<Tabs.Control value={Views.Library}>Library</Tabs.Control>
-			<Tabs.Control value={Views.Discover}>Discover</Tabs.Control>
-			<Tabs.Control value={Views.Playlists}>Playlists</Tabs.Control>
+			{@const labelBase = "btn hover:preset-glass-primary-500"}
+			<Tabs.Control value={Views.Library} {labelBase}>Library</Tabs.Control>
+			<Tabs.Control value={Views.Discover} {labelBase}>Discover</Tabs.Control>
+			<Tabs.Control value={Views.Playlists} {labelBase}>Playlists</Tabs.Control>
 		{/snippet}
 		{#snippet content()}
 			<Tabs.Panel value={Views.Library} classes="flex flex-1">
