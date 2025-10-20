@@ -1,11 +1,8 @@
-/* Write your global styles here, in PostCSS syntax */
 @import "tailwindcss";
 
 @import "@skeletonlabs/skeleton";
-@import "@skeletonlabs/skeleton/optional/presets";
 @import "@skeletonlabs/skeleton/themes/cerberus";
-
-@source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
+@import "@skeletonlabs/skeleton-svelte";
 
 /* for app shell */
 html,

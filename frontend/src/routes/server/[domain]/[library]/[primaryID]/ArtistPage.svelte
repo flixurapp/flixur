@@ -5,7 +5,9 @@
 	import { RATING_SETTING, type ArtistJSON } from "$lib/TEST";
 	import { iconBackgroundAction } from "$lib/background/gradient";
 	import Rating from "$lib/components/Rating.svelte";
+	import { initials } from "$lib/utils";
 	import { Avatar } from "@skeletonlabs/skeleton-svelte";
+	import { fromAction } from "svelte/attachments";
 
 	interface Props {
 		artist: ArtistJSON;
@@ -17,8 +19,16 @@
 <LibraryScroller cardType="art" items={artist.albums}>
 	{#snippet header()}
 		<div class="card p-4 mb-4 flex gap-4 preset-filled-surface-300-700 bg-surface-300/15">
-			<Avatar name={artist.name} rounded="rounded" classes="h-44 w-44">
-				<img src={artist.icon} crossorigin="anonymous" use:iconBackgroundAction alt={artist.name} />
+			<Avatar class="h-44 w-44 rounded">
+				<Avatar.Image
+					src={artist.icon}
+					crossorigin="anonymous"
+					alt={artist.name}
+					{@attach fromAction(iconBackgroundAction)}
+				/>
+				<Avatar.Fallback>
+					{initials(artist.name)}
+				</Avatar.Fallback>
 			</Avatar>
 			<div>
 				<h1 class="text-4xl font-semibold">{artist.name}</h1>

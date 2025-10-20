@@ -5,6 +5,7 @@
 	import Rating from "$lib/components/Rating.svelte";
 	import { initials } from "$lib/utils";
 	import { Avatar } from "@skeletonlabs/skeleton-svelte";
+	import { fromAction } from "svelte/attachments";
 
 	interface Props {
 		artist: ArtistJSON;
@@ -17,8 +18,16 @@
 </script>
 
 <div class="card p-4 mb-4 flex gap-4 preset-filled-surface-300-700 bg-surface-300/15">
-	<Avatar src={album.icon} name={album.name} rounded="rounded" classes="h-44 w-44">
-		<img src={album.icon} crossorigin="anonymous" use:iconBackgroundAction alt={artist.name} />
+	<Avatar class="h-44 w-44 rounded">
+		<Avatar.Image
+			src={album.icon}
+			crossorigin="anonymous"
+			alt={artist.name}
+			{@attach fromAction(iconBackgroundAction)}
+		/>
+		<Avatar.Fallback>
+			{initials(album.name)}
+		</Avatar.Fallback>
 	</Avatar>
 	<div>
 		<h1 class="text-3xl font-semibold flex items-center gap-2">
@@ -26,8 +35,11 @@
 			<span class="badge badge-sm preset-glass-primary-500">{album.year}</span>
 		</h1>
 		<a class="flex gap-1 text-lg items-center w-fit" href="/server/flixur.app/music/{artist.id}">
-			<Avatar src={artist.icon} name={artist.name} rounded="rounded-full" classes="h-5 w-5">
-				{initials(artist.name)}
+			<Avatar class="h-5 w-5 rounded-full">
+				<Avatar.Image src={artist.icon} crossorigin="anonymous" alt={artist.name} />
+				<Avatar.Fallback>
+					{initials(artist.name)}
+				</Avatar.Fallback>
 			</Avatar>
 			<span class="opacity-80 font-medium">{artist.name}</span>
 			<span class="badge badge-sm preset-glass-secondary-500 uppercase">{album.type}</span>

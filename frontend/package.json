@@ -13,8 +13,8 @@
 	},
 	"devDependencies": {
 		"@iconify-json/tabler": "1.2.23",
-		"@skeletonlabs/skeleton": "3.2.2",
-		"@skeletonlabs/skeleton-svelte": "1.5.3",
+		"@skeletonlabs/skeleton": "4.1.0",
+		"@skeletonlabs/skeleton-svelte": "4.1.0",
 		"@sveltejs/adapter-auto": "6.1.0",
 		"@sveltejs/adapter-static": "3.0.9",
 		"@sveltejs/kit": "2.43.5",

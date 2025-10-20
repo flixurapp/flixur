@@ -20,27 +20,22 @@
 </script>
 
 <div class="flex flex-col h-full relative">
-	<Tabs
-		value={view}
-		onValueChange={(e) => (view = e.value)}
-		base="h-full grid grid-rows-[1fr]"
-		contentBase="flex flex-1"
-		listClasses="px-2 pt-1 absolute top-0 z-[1] h-12 bg-surface-950/70 backdrop-blur-xl w-full"
-	>
-		{#snippet list()}
+	<Tabs value={view} onValueChange={(e) => (view = e.value)} class="h-full grid grid-rows-[1fr]">
+		<Tabs.List
+			class="px-2 pt-1 absolute top-0 z-[1] h-12 bg-surface-950/70 backdrop-blur-xl w-full"
+		>
 			{@const labelBase = "btn hover:preset-glass-primary-500"}
-			<Tabs.Control value={Views.Library} {labelBase}>Library</Tabs.Control>
-			<Tabs.Control value={Views.Discover} {labelBase}>Discover</Tabs.Control>
-			<Tabs.Control value={Views.Playlists} {labelBase}>Playlists</Tabs.Control>
-		{/snippet}
-		{#snippet content()}
-			<Tabs.Panel value={Views.Library} classes="flex flex-1">
-				<MusicLibrary />
-			</Tabs.Panel>
-			<Tabs.Panel value={Views.Discover}>
-				Discovery goes here... library page for {page.params.domain} + {page.params.library}
-			</Tabs.Panel>
-			<Tabs.Panel value={Views.Playlists}>list of playlists</Tabs.Panel>
-		{/snippet}
+			<Tabs.Trigger value={Views.Library} class={labelBase}>Library</Tabs.Trigger>
+			<Tabs.Trigger value={Views.Discover} class={labelBase}>Discover</Tabs.Trigger>
+			<Tabs.Trigger value={Views.Playlists} class={labelBase}>Playlists</Tabs.Trigger>
+			<Tabs.Indicator />
+		</Tabs.List>
+		<Tabs.Content value={Views.Library} class="flex flex-1">
+			<MusicLibrary />
+		</Tabs.Content>
+		<Tabs.Content value={Views.Discover}>
+			Discovery goes here... library page for {page.params.domain} + {page.params.library}
+		</Tabs.Content>
+		<Tabs.Content value={Views.Playlists}>list of playlists</Tabs.Content>
 	</Tabs>
 </div>
