@@ -6,6 +6,7 @@ import (
 
 	"github.com/flixurapp/flixur/pluginkit"
 	protobuf "github.com/flixurapp/flixur/proto/go"
+	"github.com/samber/lo"
 )
 
 type Plugin struct {
@@ -19,22 +20,12 @@ var Plugins map[string]*Plugin = make(map[string]*Plugin)
 
 // Find specific plugin by ID.
 func FindPluginByID(id string) *Plugin {
-
-	for _, plugin := range Plugins {
-		if plugin.Id == id {
-			return plugin
-		}
-	}
-	return nil
+	return Plugins[id]
 }
 
-// Find all plugins by
+// Find all plugins that implement a specific feature.
 func FingPluginsByFeature(feature protobuf.Features) []*Plugin {
-	list := []*Plugin{}
-	for _, plugin := range Plugins {
-		if slices.Contains(plugin.Features, feature) {
-			list = append(list, plugin)
-		}
-	}
-	return list
+	return lo.FilterValues(Plugins, func(_ string, plugin *Plugin) bool {
+		return slices.Contains(plugin.Features, feature)
+	})
 }
