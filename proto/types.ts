@@ -3,6 +3,11 @@
 //////////
 // source: features.pb.go
 
+export type FeatureErrorCode = number /* int32 */;
+export const FeatureErrorCode_UNKNOWN: FeatureErrorCode = 0;
+export const FeatureErrorCode_NOT_INITIALIZED: FeatureErrorCode = 1;
+export const FeatureErrorCode_NOT_FOUND: FeatureErrorCode = 2;
+export const FeatureErrorCode_RATELIMITED: FeatureErrorCode = 3;
 /**
  * Error response from any feature.
  */
@@ -24,6 +29,10 @@ export interface FeatureArtistGetResponse {
  */
 export interface FeatureArtistSearchRequest {
   query: string;
+  /**
+   * Limit of items to fetch. Will be clamped to max request size limit if applicable.
+   */
+  limit: number /* int32 */;
 }
 export interface FeatureArtistSearchResponse {
   results?: (Artist | undefined)[];
@@ -35,19 +44,31 @@ export interface FeatureArtistSearchResponse {
 export type AlbumType = number /* int32 */;
 export const AlbumType_SINGLE: AlbumType = 0;
 export const AlbumType_ALBUM: AlbumType = 1;
+export type TrackExplicitness = number /* int32 */;
+/**
+ * Normal
+ */
+export const TrackExplicitness_CLEAN: TrackExplicitness = 0;
+/**
+ * Explicit
+ */
+export const TrackExplicitness_EXPLICIT: TrackExplicitness = 1;
+/**
+ * Rated X
+ */
+export const TrackExplicitness_RESTRICTED: TrackExplicitness = 2;
+/**
+ * Usually an artist returned from a provider.
+ */
 export interface Artist {
   /**
-   * Unique ID of the artist. (should be unique across providers)
+   * ID of the artist from the provider.
    */
   id: string;
   /**
    * ID of the plugin that provided this artist.
    */
   provider: string;
-  /**
-   * ID of the artist from the provider.
-   */
-  internalID: string;
   /**
    * Name of the artist.
    */
@@ -56,10 +77,6 @@ export interface Artist {
    * Icon URL for the artist. Should be accessible via HTTP with CORS.
    */
   icon?: string;
-  /**
-   * Rating for the artist.
-   */
-  rating?: number /* int32 */;
   /**
    * Description of the artist.
    */
@@ -72,6 +89,23 @@ export interface Artist {
    * Follower count for the artist. (using the platform of choice)
    */
   followers?: number /* int64 */;
+}
+/**
+ * An artist stored locally.
+ */
+export interface LocalArtist {
+  /**
+   * Unique ID for the artist. (unique across providers)
+   */
+  id: string;
+  /**
+   * Base metadata for the artist.
+   */
+  metadata?: Artist;
+  /**
+   * Rating for the artist.
+   */
+  rating?: number /* int32 */;
 }
 export interface Album {
   /**
@@ -141,9 +175,9 @@ export interface Track {
    */
   rating?: number /* int32 */;
   /**
-   * If this track is explicit.
+   * The explicitness of the track.
    */
-  explicit: boolean;
+  explicitness: TrackExplicitness;
 }
 
 //////////
@@ -160,13 +194,29 @@ export const PacketType_DESTROY: PacketType = 4; // PacketDestroy
  */
 export type Features = number /* int32 */;
 /**
- * Get a specific artist(s) by internal ID.
+ * Get a specific artist by internal ID.
  */
 export const Features_ARTIST_GET: Features = 0;
 /**
  * Search for an artist by name.
  */
 export const Features_ARTIST_SEARCH: Features = 1;
+/**
+ * Get a specific album by internal ID.
+ */
+export const Features_ALBUM_GET: Features = 2;
+/**
+ * Search for an album by name.
+ */
+export const Features_ALBUM_SEARCH: Features = 3;
+/**
+ * Get a specific track by internal ID.
+ */
+export const Features_TRACK_GET: Features = 4;
+/**
+ * Search for a track by name.
+ */
+export const Features_TRACK_SEARCH: Features = 5;
 /**
  * Packets sent between server and plugin.
  */
@@ -206,6 +256,10 @@ export interface PacketInfo {
    */
   version: number /* int32 */;
   /**
+   * Minimum required app version for the plugin to load.
+   */
+  min_version: number /* int32 */;
+  /**
    * List of plugin IDs that should be loaded before this plugin.
    */
   dependencies: string[];
@@ -218,6 +272,10 @@ export interface PacketInfo {
    */
   name: string;
   /**
+   * Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
+   */
+  icon: string;
+  /**
    * Short description of the plugin.
    */
   description: string;
@@ -225,6 +283,10 @@ export interface PacketInfo {
    * Name of the plugin author.
    */
   author: string;
+  /**
+   * Direct link to the source code of the plugin.
+   */
+  url: string;
 }
 /**
  * Calls a feature implemented by the plugin.

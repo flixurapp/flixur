@@ -11,32 +11,27 @@ export type Artist = {
   followers?: number;
   icon?: string;
   id: string;
-  internalID: string;
   location?: string;
   name: string;
   provider: string;
-  /**
-   * @format int32
-   */
-  rating?: number;
 };
 
 export type ArtistSearchRequest = {
   /**
    * A URL to the JSON Schema for this object.
    *
-   * @example /api/schemas/Artist-searchRequest.json
+   * @example https://example.com/schemas/Artist-searchRequest.json
    * @format uri
    */
   $schema?: string;
   /**
    * @default 10
    * @example 100
-   * @format int64
+   * @format int32
    * @maximum 100
    * @minimum 1
    */
-  limit: number;
+  limit?: number;
   /**
    * Plugin ID to use for the request. Omit to use the local server.
    */
@@ -53,11 +48,11 @@ export type ArtistSearchOutputBody = {
   /**
    * A URL to the JSON Schema for this object.
    *
-   * @example /api/schemas/ArtistSearchOutputBody.json
+   * @example https://example.com/schemas/ArtistSearchOutputBody.json
    * @format uri
    */
   $schema?: string;
-  list: Artist[];
+  list: void;
 };
 
 export type ErrorDetail = {
@@ -79,7 +74,7 @@ export type ErrorModel = {
   /**
    * A URL to the JSON Schema for this object.
    *
-   * @example /api/schemas/ErrorModel.json
+   * @example https://example.com/schemas/ErrorModel.json
    * @format uri
    */
   $schema?: string;
@@ -92,7 +87,7 @@ export type ErrorModel = {
   /**
    * Optional list of individual error details
    */
-  errors?: ErrorDetail[];
+  errors?: void;
   /**
    * A URI reference that identifies the specific occurrence of the problem.
    *
@@ -127,7 +122,7 @@ export type GreetingOutputBody = {
   /**
    * A URL to the JSON Schema for this object.
    *
-   * @example /api/schemas/GreetingOutputBody.json
+   * @example https://example.com/schemas/GreetingOutputBody.json
    * @format uri
    */
   $schema?: string;
