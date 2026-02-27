@@ -2,20 +2,17 @@ syntax = "proto3";
 package flixur.music;
 option go_package = "github.com/flixurapp/flixur/proto/go";
 
+// Usually an artist returned from a provider.
 message Artist {
-  // Unique ID of the artist. (should be unique across providers)
+  // ID of the artist from the provider.
   string id = 1;
   // ID of the plugin that provided this artist.
   string provider = 8;
-  // ID of the artist from the provider.
-  string internalID = 9;
 
   // Name of the artist.
   string name = 2;
   // Icon URL for the artist. Should be accessible via HTTP with CORS.
   optional string icon = 3;
-  // Rating for the artist.
-  optional int32 rating = 7;
 
   // Description of the artist.
   optional string description = 4;
@@ -23,6 +20,17 @@ message Artist {
   optional string location = 5;
   // Follower count for the artist. (using the platform of choice)
   optional int64 followers = 6;
+}
+
+// An artist stored locally.
+message LocalArtist {
+  // Unique ID for the artist. (unique across providers)
+  string id = 1;
+  // Base metadata for the artist.
+  Artist metadata = 2;
+
+  // Rating for the artist.
+  optional int32 rating = 3;
 }
 
 enum AlbumType {
@@ -52,6 +60,14 @@ message Album {
   repeated string genres = 9;
 }
 
+enum TrackExplicitness {
+  // Normal
+  CLEAN = 0;
+  // Explicit
+  EXPLICIT = 1;
+  // Rated X
+  RESTRICTED = 2;
+}
 message Track {
   // Unique ID for the track.
   string id = 1;
@@ -68,6 +84,6 @@ message Track {
   int64 duration = 5;
   // Rating for the track.
   optional int32 rating = 6;
-  // If this track is explicit.
-  bool explicit = 7;
+  // The explicitness of the track.
+  TrackExplicitness explicitness = 7;
 }

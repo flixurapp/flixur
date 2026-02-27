@@ -14,10 +14,18 @@ enum PacketType {
 
 // Functions that plugins can implement.
 enum Features {
-  // Get a specific artist(s) by internal ID.
+  // Get a specific artist by internal ID.
   ARTIST_GET = 0;
   // Search for an artist by name.
   ARTIST_SEARCH = 1;
+  // Get a specific album by internal ID.
+  ALBUM_GET = 2;
+  // Search for an album by name.
+  ALBUM_SEARCH = 3;
+  // Get a specific track by internal ID.
+  TRACK_GET = 4;
+  // Search for a track by name.
+  TRACK_SEARCH = 5;
 }
 
 // Packets sent between server and plugin.
@@ -43,6 +51,8 @@ message PacketInfo {
   string id = 1;
   // Numerical version of the plugin.
   int32 version = 2;
+  // Minimum required app version for the plugin to load.
+  int32 minVersion = 3;
   // List of plugin IDs that should be loaded before this plugin.
   repeated string dependencies = 4;
   // List of features this plugin implements.
@@ -54,6 +64,8 @@ message PacketInfo {
   string description = 6;
   // Name of the plugin author.
   string author = 7;
+  // Direct link to the source code of the plugin.
+  string url = 9;
 }
 
 // Calls a feature implemented by the plugin.

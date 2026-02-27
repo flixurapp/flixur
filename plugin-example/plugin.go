@@ -15,10 +15,12 @@ import (
 var INFO = protobuf.PacketInfo{
 	Id:          "example",
 	Version:     1,
+	MinVersion:  1,
 	Features:    []protobuf.Features{protobuf.Features_ARTIST_SEARCH},
 	Name:        "Example Plugin",
 	Description: "Small example plugin.",
 	Author:      "You",
+	Url:         "https://github.com/flixurapp/flixur/tree/main/plugin-example",
 }
 
 func main() {
@@ -53,11 +55,10 @@ func main() {
 		return &protobuf.FeatureArtistSearchResponse{
 			Results: []*protobuf.Artist{
 				{
-					Id:         "uuid",
-					Provider:   INFO.Id,
-					InternalID: "internal-id",
-					Name:       "Query: " + req.GetQuery(),
-					Icon:       &ico,
+					Id:       "uuid",
+					Provider: INFO.Id,
+					Name:     "Query: " + req.GetQuery(),
+					Icon:     &ico,
 				},
 			},
 		}, nil

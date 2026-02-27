@@ -4,6 +4,13 @@ option go_package = "github.com/flixurapp/flixur/proto/go";
 
 import "music.proto";
 
+enum FeatureErrorCode {
+  UNKNOWN = 0;
+  NOT_INITIALIZED = 1;
+  NOT_FOUND = 2;
+  RATELIMITED = 3;
+}
+
 // Error response from any feature.
 message FeatureError {
   int32 code = 1;
@@ -23,6 +30,8 @@ message FeatureArtistGetResponse {
 // Search for an artist by name.
 message FeatureArtistSearchRequest {
   string query = 1;
+  // Limit of items to fetch. Will be clamped to max request size limit if applicable.
+  int32 limit = 2;
 }
 message FeatureArtistSearchResponse {
   repeated music.Artist results = 1;

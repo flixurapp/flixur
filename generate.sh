@@ -11,4 +11,4 @@ go run . &
 cd ../openapi || exit
 pnpm i --frozen-lockfile
 ./generate.sh
-kill-port 8787
+killport 8787
