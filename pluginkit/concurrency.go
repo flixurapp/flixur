@@ -29,7 +29,6 @@ func SendPacket[T proto.Message](stream io.Writer, packetType protobuf.PacketTyp
 		Type: packetType,
 		Id:   ulid.Make().String(),
 	}
-	WriteMessage(pkt, message, stream)
 	callbacks = append(callbacks, HeldCallback{
 		RequestID: pkt.Id,
 		Callback: func(pkt *protobuf.PluginPacket) error {
@@ -41,6 +40,7 @@ func SendPacket[T proto.Message](stream io.Writer, packetType protobuf.PacketTyp
 			}
 		},
 	})
+	WriteMessage(pkt, message, stream)
 }
 
 // Start reading packets on `stream`.
@@ -184,7 +184,11 @@ func FeatureRequest[RES proto.Message, REQ proto.Message](stream io.Writer, feat
 		Feature: feature,
 		Payload: payload,
 	}, func(res *protobuf.PacketFeatureResponse) {
-		if response, err := DeserializeNested[RES](res.Payload); err == nil {
+		if res.Error != nil {
+			result <- featureRequestResult{
+				Error: fmt.Errorf("%s (code %d)", res.Error.GetMessage(), res.Error.GetCode()),
+			}
+		} else if response, err := DeserializeNested[RES](res.Payload); err == nil {
 			result <- featureRequestResult{
 				Payload: response,
 			}

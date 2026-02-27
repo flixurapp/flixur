@@ -98,5 +98,9 @@ func InitPlugin(bin string) {
 		Query: "frank sinatra",
 	})
 
-	log.Info().Interface("d", res.Results).Err(err).Msg("packet from callback")
+	if err == nil {
+		log.Info().Interface("d", res.Results).Err(err).Msg("packet from callback")
+	} else {
+		log.Err(err).Msg("Error packet")
+	}
 }
