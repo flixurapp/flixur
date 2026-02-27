@@ -4,19 +4,22 @@ import (
 	"io"
 	"slices"
 
+	"github.com/flixurapp/flixur/pluginkit"
 	protobuf "github.com/flixurapp/flixur/proto/go"
 )
 
 type Plugin struct {
 	*protobuf.PacketInfo
-	Input  io.Writer
-	Output io.Reader
+	Input    io.Writer
+	Output   io.Reader
+	Listener pluginkit.PacketListenerAdder
 }
 
 var Plugins map[string]*Plugin = make(map[string]*Plugin)
 
 // Find specific plugin by ID.
 func FindPluginByID(id string) *Plugin {
+
 	for _, plugin := range Plugins {
 		if plugin.Id == id {
 			return plugin

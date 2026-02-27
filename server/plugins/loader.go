@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/flixurapp/flixur/common"
 	"github.com/flixurapp/flixur/pluginkit"
 	protobuf "github.com/flixurapp/flixur/proto/go"
 	"github.com/oklog/ulid/v2"
@@ -79,28 +80,11 @@ func InitPlugin(bin string) {
 		Type: protobuf.PacketType_INIT,
 		Id:   ulid.Make().String(),
 	}, &protobuf.PacketInit{
-		Version: 0,
+		Version: common.Version,
 	}, plugin.Input)
 
 	// Start listening for packets.
-	listener := pluginkit.StartReadingPackets(plugin.Output, func(err error) {
+	plugin.Listener = pluginkit.StartReadingPackets(plugin.Output, func(err error) {
 		log.Err(err).Str("id", info.Id).Msg("Failed to read packet from plugin.")
 	})
-
-	// testing:
-
-	pluginkit.AddPacketListener(listener, protobuf.PacketType_FEATURE_RESPONSE,
-		func(data *protobuf.PacketFeatureResponse, _ *protobuf.PluginPacket) {
-			log.Info().Interface("d", data).Msg("packet from feature listener")
-		})
-
-	res, err := pluginkit.FeatureRequest[*protobuf.FeatureArtistSearchResponse](plugin.Input, protobuf.Features_ARTIST_SEARCH, &protobuf.FeatureArtistSearchRequest{
-		Query: "frank sinatra",
-	})
-
-	if err == nil {
-		log.Info().Interface("d", res.Results).Err(err).Msg("packet from callback")
-	} else {
-		log.Err(err).Msg("Error packet")
-	}
 }

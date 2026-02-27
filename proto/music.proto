@@ -7,7 +7,7 @@ message Artist {
   // ID of the artist from the provider.
   string id = 1;
   // ID of the plugin that provided this artist.
-  string provider = 8;
+  string provider = 7;
 
   // Name of the artist.
   string name = 2;
@@ -35,8 +35,9 @@ message LocalArtist {
 
 enum AlbumType {
   SINGLE = 0;
-  ALBUM = 1;
+  ALBUM  = 1;
 }
+
 message Album {
   // Unique ID for the album.
   string id = 1;
@@ -68,6 +69,7 @@ enum TrackExplicitness {
   // Rated X
   RESTRICTED = 2;
 }
+
 message Track {
   // Unique ID for the track.
   string id = 1;

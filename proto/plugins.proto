@@ -5,11 +5,11 @@ option go_package = "github.com/flixurapp/flixur/proto/go";
 import "features.proto";
 
 enum PacketType {
-  INIT = 0;              // PacketInit
-  INFO = 1;              // PacketInfo
-  FEATURE_REQUEST = 2;   // PacketFeatureRequest
-  FEATURE_RESPONSE = 3;  // PacketFeatureResponse
-  DESTROY = 4;           // PacketDestroy
+  INIT             = 0; // PacketInit
+  INFO             = 1; // PacketInfo
+  FEATURE_REQUEST  = 2; // PacketFeatureRequest
+  FEATURE_RESPONSE = 3; // PacketFeatureResponse
+  DESTROY          = 4; // PacketDestroy
 }
 
 // Functions that plugins can implement.
@@ -52,7 +52,7 @@ message PacketInfo {
   // Numerical version of the plugin.
   int32 version = 2;
   // Minimum required app version for the plugin to load.
-  int32 minVersion = 3;
+  int32 min_version = 3;
   // List of plugin IDs that should be loaded before this plugin.
   repeated string dependencies = 4;
   // List of features this plugin implements.
@@ -60,6 +60,8 @@ message PacketInfo {
 
   // Name of the plugin.
   string name = 5;
+  // Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
+  string icon = 10;
   // Short description of the plugin.
   string description = 6;
   // Name of the plugin author.
@@ -75,6 +77,7 @@ message PacketFeatureRequest {
   // Request payload from `features` to use.
   bytes payload = 2;
 }
+
 // Response from a feature request.
 message PacketFeatureResponse {
   // Name of the feature that created the response.

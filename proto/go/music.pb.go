@@ -125,7 +125,7 @@ type Artist struct {
 	// ID of the artist from the provider.
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id"`
 	// ID of the plugin that provided this artist.
-	Provider string `protobuf:"bytes,8,opt,name=provider,proto3" json:"provider"`
+	Provider string `protobuf:"bytes,7,opt,name=provider,proto3" json:"provider"`
 	// Name of the artist.
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
 	// Icon URL for the artist. Should be accessible via HTTP with CORS.
@@ -515,7 +515,7 @@ const file_music_proto_rawDesc = "" +
 	"\vmusic.proto\x12\fflixur.music\"\x80\x02\n" +
 	"\x06Artist\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
-	"\bprovider\x18\b \x01(\tR\bprovider\x12\x12\n" +
+	"\bprovider\x18\a \x01(\tR\bprovider\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x17\n" +
 	"\x04icon\x18\x03 \x01(\tH\x00R\x04icon\x88\x01\x01\x12%\n" +
 	"\vdescription\x18\x04 \x01(\tH\x01R\vdescription\x88\x01\x01\x12\x1f\n" +
