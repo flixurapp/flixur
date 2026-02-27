@@ -18,7 +18,7 @@ type InputSearchParams struct {
 	Query string `json:"query" example:"Jerry Springer" minLength:"1" maxLength:"250"`
 }
 type InputLimitParams struct {
-	Limit int `json:"limit" default:"10" example:"100" minimum:"1" maximum:"100"`
+	Limit int32 `json:"limit,omitempty" default:"10" example:"100" minimum:"1" maximum:"100"`
 }
 type InputPluginParamsOptional struct {
 	Plugin string `json:"plugin,omitempty" doc:"Plugin ID to use for the request. Omit to use the local server."`

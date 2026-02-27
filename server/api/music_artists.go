@@ -42,6 +42,7 @@ func RegisterMusicArtistsAPI(api huma.API) {
 
 			if res, err := pluginkit.FeatureRequest[*protobuf.FeatureArtistSearchResponse](plugin.Input, protobuf.Features_ARTIST_SEARCH, &protobuf.FeatureArtistSearchRequest{
 				Query: input.Body.Query,
+				Limit: input.Body.Limit,
 			}); err != nil {
 				return nil, err
 			} else {
