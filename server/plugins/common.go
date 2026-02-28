@@ -1,19 +1,22 @@
 package plugins
 
 import (
-	"io"
 	"slices"
 
 	"github.com/flixurapp/flixur/pluginkit"
-	protobuf "github.com/flixurapp/flixur/proto/go"
+	pb "github.com/flixurapp/flixur/proto/go"
 	"github.com/samber/lo"
 )
 
 type Plugin struct {
-	*protobuf.PacketInfo
-	Input    io.Writer
-	Output   io.Reader
-	Listener pluginkit.PacketListenerAdder
+	Info    *pb.PluginInfo
+	RPC     pluginkit.FlixurPlugin
+	destroy func()
+}
+
+func (p *Plugin) HasFeature(feature pb.Feature) bool {
+	// If your Info.Features is a slice of strings, convert the enum to string
+	return slices.Contains(p.Info.Features, feature)
 }
 
 var Plugins map[string]*Plugin = make(map[string]*Plugin)
@@ -24,8 +27,17 @@ func FindPluginByID(id string) *Plugin {
 }
 
 // Find all plugins that implement a specific feature.
-func FingPluginsByFeature(feature protobuf.Features) []*Plugin {
+func FindPluginsByFeature(feature pb.Feature) []*Plugin {
 	return lo.FilterValues(Plugins, func(_ string, plugin *Plugin) bool {
-		return slices.Contains(plugin.Features, feature)
+		return slices.Contains(plugin.Info.Features, feature)
 	})
+}
+
+// Destroy all loaded plugins and clean up resources.
+func DestroyAllPlugins() {
+	for _, plugin := range Plugins {
+		if plugin.destroy != nil {
+			plugin.destroy()
+		}
+	}
 }

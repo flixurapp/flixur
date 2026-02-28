@@ -216,6 +216,14 @@ export interface TrackSearchResponse {
 // source: plugins.pb.go
 
 /**
+ * Used to test if a plugin supports certain features.
+ */
+export type Feature = number /* int32 */;
+/**
+ * Implements `Artist*`, `Album*`, `Track*` RPC calls
+ */
+export const Feature_MUSIC_METADATA: Feature = 0;
+/**
  * Empty message for RPC calls that don't require input.
  */
 export interface EmptyRequest {
@@ -243,7 +251,7 @@ export interface PluginInfo {
   /**
    * List of feature names this plugin implements.
    */
-  features: string[];
+  features: Feature[];
   /**
    * Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
    */

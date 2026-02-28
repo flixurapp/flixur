@@ -6,14 +6,13 @@ import (
 	"net/http"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/flixurapp/flixur/pluginkit"
 	"github.com/flixurapp/flixur/plugins"
-	protobuf "github.com/flixurapp/flixur/proto/go"
+	pb "github.com/flixurapp/flixur/proto/go"
 )
 
 type ArtistSearchOutput struct {
 	Body struct {
-		List []*protobuf.Artist `json:"list"`
+		List []*pb.Artist `json:"list"`
 	}
 }
 
@@ -39,16 +38,19 @@ func RegisterMusicArtistsAPI(api huma.API) {
 			if plugin == nil {
 				return nil, fmt.Errorf("plugin not found")
 			}
+			if !plugin.HasFeature(pb.Feature_MUSIC_METADATA) {
+				return nil, fmt.Errorf("feature not implemented")
+			}
 
-			if res, err := pluginkit.FeatureRequest[*protobuf.FeatureArtistSearchResponse](plugin.Input, protobuf.Features_ARTIST_SEARCH, &protobuf.FeatureArtistSearchRequest{
+			res, err := plugin.RPC.ArtistSearch(ctx, &pb.ArtistSearchRequest{
 				Query: input.Body.Query,
 				Limit: input.Body.Limit,
-			}); err != nil {
+			})
+			if err != nil {
 				return nil, err
-			} else {
-				response.Body.List = res.Results
-				return response, nil
 			}
+			response.Body.List = res.Results
+			return response, nil
 		} else {
 			return nil, fmt.Errorf("not implemented")
 		}

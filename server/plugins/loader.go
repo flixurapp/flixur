@@ -2,16 +2,13 @@ package plugins
 
 import (
 	"context"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
-	"github.com/flixurapp/flixur/common"
 	"github.com/flixurapp/flixur/pluginkit"
-	protobuf "github.com/flixurapp/flixur/proto/go"
-	"github.com/oklog/ulid/v2"
+	"github.com/hashicorp/go-plugin"
 	"github.com/rs/zerolog/log"
 )
 
@@ -35,56 +32,57 @@ func RegisterPlugins(pluginPath string) {
 }
 
 func InitPlugin(bin string) {
-	readIn, writeIn := io.Pipe()
-	readOut, writeOut := io.Pipe()
-
-	cmd := exec.CommandContext(context.Background(), bin)
-	cmd.Stderr = os.Stdout // redirect logs to stdout
-	cmd.Stdin = readIn
-	cmd.Stdout = writeOut
-
-	if err := cmd.Start(); err != nil {
-		log.Err(err).Str("path", bin).Msg("Failed to load plugin.")
-		return
-	}
 	log.Debug().Str("path", bin).Msg("Loading plugin binary...")
-	go (func() {
-		cmd.Wait()
-		readIn.Close()
-		writeIn.Close()
-		readOut.Close()
-		writeOut.Close()
-	})()
 
-	_, info, err := pluginkit.ReadMessage[*protobuf.PacketInfo](readOut)
+	// Create a new plugin client
+	client := plugin.NewClient(&plugin.ClientConfig{
+		HandshakeConfig:  pluginkit.HandshakeConfig,
+		Plugins:          map[string]plugin.Plugin{"flixur_plugin": &pluginkit.FlixurGRPCPlugin{}},
+		Cmd:              exec.Command(bin),
+		AllowedProtocols: []plugin.Protocol{plugin.ProtocolGRPC},
+		Stderr:           os.Stderr, // Plugin logs go to stderr
+	})
+
+	// Connect to the plugin
+	rpcClient, err := client.Client()
 	if err != nil {
-		log.Err(err).Str("path", bin).Msg("Failed to read plugin info.")
+		log.Err(err).Str("path", bin).Msg("Failed to connect to plugin.")
+		client.Kill()
 		return
 	}
 
+	// Dispense the plugin
+	raw, err := rpcClient.Dispense("flixur_plugin")
+	if err != nil {
+		log.Err(err).Str("path", bin).Msg("Failed to dispense plugin.")
+		client.Kill()
+		return
+	}
+
+	flixurPlugin := raw.(pluginkit.FlixurPlugin)
+
+	// Get plugin info
+	ctx := context.Background()
+	info, err := flixurPlugin.GetPluginInfo(ctx)
+	if err != nil {
+		log.Err(err).Str("path", bin).Msg("Failed to get plugin info.")
+		client.Kill()
+		return
+	}
+
+	// Check if plugin with same ID already exists
 	if FindPluginByID(info.Id) != nil {
-		log.Warn().Str("id", info.Id).Interface("details", info).Msg("Plugin with the same ID already exists. Ignoring...")
+		log.Warn().Str("id", info.Id).Str("name", info.Name).Msg("Plugin with the same ID already exists. Ignoring...")
+		client.Kill()
 		return
 	}
 
+	// Register the plugin
 	plugin := &Plugin{
-		PacketInfo: info,
-		Input:      writeIn,
-		Output:     readOut,
+		Info:    info,
+		RPC:     flixurPlugin,
+		destroy: client.Kill,
 	}
 	Plugins[info.Id] = plugin
-	log.Info().Str("id", info.Id).Int32("version", info.Version).Str("author", info.Author).Interface("features", info.Features).Msgf("Loaded plugin %s.", info.Name)
-
-	// Initialize the plugin.
-	pluginkit.WriteMessage(&protobuf.PluginPacket{
-		Type: protobuf.PacketType_INIT,
-		Id:   ulid.Make().String(),
-	}, &protobuf.PacketInit{
-		Version: common.Version,
-	}, plugin.Input)
-
-	// Start listening for packets.
-	plugin.Listener = pluginkit.StartReadingPackets(plugin.Output, func(err error) {
-		log.Err(err).Str("id", info.Id).Msg("Failed to read packet from plugin.")
-	})
+	log.Info().Interface("info", info).Msg("Loaded plugin.")
 }

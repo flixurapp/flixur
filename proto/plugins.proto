@@ -4,6 +4,12 @@ option go_package = "github.com/flixurapp/flixur/proto/go";
 
 import "music_features.proto";
 
+// Used to test if a plugin supports certain features.
+enum Feature {
+  // Implements `Artist*`, `Album*`, `Track*` RPC calls
+  MUSIC_METADATA = 0;
+}
+
 // Empty message for RPC calls that don't require input.
 message EmptyRequest {}
 
@@ -18,7 +24,7 @@ message PluginInfo {
   // List of plugin IDs that should be loaded before this plugin.
   repeated string dependencies = 4;
   // List of feature names this plugin implements.
-  repeated string features = 5;
+  repeated Feature features = 5;
   // Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
   string icon = 6;
   // Short description of the plugin.

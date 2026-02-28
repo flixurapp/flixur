@@ -76,6 +76,7 @@ func main() {
 	}
 	pluginDir = filepath.Join(pluginDir, "plugins")
 	plugins.RegisterPlugins(pluginDir)
+	defer plugins.DestroyAllPlugins()
 
 	// serves the client as static files
 
