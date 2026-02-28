@@ -9,6 +9,8 @@ import (
 	pb "github.com/flixurapp/flixur/proto/go"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 var PluginInfo = pb.PluginInfo{
@@ -33,7 +35,7 @@ func (p *Plugin) GetPluginInfo(ctx context.Context) (*pb.PluginInfo, error) {
 func (p *Plugin) ArtistGet(ctx context.Context, req *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error) {
 	// Not implemented in this example
 	log.Info().Str("id", req.Id).Msg("ArtistGet called")
-	return nil, fmt.Errorf("not implemented")
+	return nil, status.Error(codes.Unimplemented, "not implemented")
 }
 
 func (p *Plugin) ArtistSearch(ctx context.Context, req *pb.ArtistSearchRequest) (*pb.ArtistSearchResponse, error) {
