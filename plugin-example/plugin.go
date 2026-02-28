@@ -17,7 +17,7 @@ var PluginInfo = pb.PluginInfo{
 	Id:          "example",
 	Name:        "Example Plugin",
 	Version:     1,
-	Features:    []string{"ArtistSearch"},
+	Features:    []pb.Feature{pb.Feature_MUSIC_METADATA},
 	Icon:        "mdi:music",
 	Description: "Small example plugin.",
 	Author:      "You",
