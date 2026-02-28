@@ -4,7 +4,6 @@ import (
 	"context"
 
 	pb "github.com/flixurapp/flixur/proto/go"
-	pbmusic "github.com/flixurapp/flixur/proto/go"
 	"github.com/hashicorp/go-plugin"
 	"google.golang.org/grpc"
 )
@@ -17,12 +16,12 @@ var HandshakeConfig = plugin.HandshakeConfig{
 
 type FlixurPlugin interface {
 	GetPluginInfo(ctx context.Context) (*pb.PluginInfo, error)
-	ArtistGet(ctx context.Context, req *pbmusic.ArtistGetRequest) (*pbmusic.ArtistGetResponse, error)
-	ArtistSearch(ctx context.Context, req *pbmusic.ArtistSearchRequest) (*pbmusic.ArtistSearchResponse, error)
-	AlbumGet(ctx context.Context, req *pbmusic.AlbumGetRequest) (*pbmusic.AlbumGetResponse, error)
-	AlbumSearch(ctx context.Context, req *pbmusic.AlbumSearchRequest) (*pbmusic.AlbumSearchResponse, error)
-	TrackGet(ctx context.Context, req *pbmusic.TrackGetRequest) (*pbmusic.TrackGetResponse, error)
-	TrackSearch(ctx context.Context, req *pbmusic.TrackSearchRequest) (*pbmusic.TrackSearchResponse, error)
+	ArtistGet(ctx context.Context, req *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error)
+	ArtistSearch(ctx context.Context, req *pb.ArtistSearchRequest) (*pb.ArtistSearchResponse, error)
+	AlbumGet(ctx context.Context, req *pb.AlbumGetRequest) (*pb.AlbumGetResponse, error)
+	AlbumSearch(ctx context.Context, req *pb.AlbumSearchRequest) (*pb.AlbumSearchResponse, error)
+	TrackGet(ctx context.Context, req *pb.TrackGetRequest) (*pb.TrackGetResponse, error)
+	TrackSearch(ctx context.Context, req *pb.TrackSearchRequest) (*pb.TrackSearchResponse, error)
 }
 
 // The go-plugin wrapper that handles gRPC communication.
@@ -49,27 +48,27 @@ func (m *grpcClient) GetPluginInfo(ctx context.Context) (*pb.PluginInfo, error) 
 	return m.client.GetPluginInfo(ctx, &pb.EmptyRequest{})
 }
 
-func (m *grpcClient) ArtistGet(ctx context.Context, req *pbmusic.ArtistGetRequest) (*pbmusic.ArtistGetResponse, error) {
+func (m *grpcClient) ArtistGet(ctx context.Context, req *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error) {
 	return m.client.ArtistGet(ctx, req)
 }
 
-func (m *grpcClient) ArtistSearch(ctx context.Context, req *pbmusic.ArtistSearchRequest) (*pbmusic.ArtistSearchResponse, error) {
+func (m *grpcClient) ArtistSearch(ctx context.Context, req *pb.ArtistSearchRequest) (*pb.ArtistSearchResponse, error) {
 	return m.client.ArtistSearch(ctx, req)
 }
 
-func (m *grpcClient) AlbumGet(ctx context.Context, req *pbmusic.AlbumGetRequest) (*pbmusic.AlbumGetResponse, error) {
+func (m *grpcClient) AlbumGet(ctx context.Context, req *pb.AlbumGetRequest) (*pb.AlbumGetResponse, error) {
 	return m.client.AlbumGet(ctx, req)
 }
 
-func (m *grpcClient) AlbumSearch(ctx context.Context, req *pbmusic.AlbumSearchRequest) (*pbmusic.AlbumSearchResponse, error) {
+func (m *grpcClient) AlbumSearch(ctx context.Context, req *pb.AlbumSearchRequest) (*pb.AlbumSearchResponse, error) {
 	return m.client.AlbumSearch(ctx, req)
 }
 
-func (m *grpcClient) TrackGet(ctx context.Context, req *pbmusic.TrackGetRequest) (*pbmusic.TrackGetResponse, error) {
+func (m *grpcClient) TrackGet(ctx context.Context, req *pb.TrackGetRequest) (*pb.TrackGetResponse, error) {
 	return m.client.TrackGet(ctx, req)
 }
 
-func (m *grpcClient) TrackSearch(ctx context.Context, req *pbmusic.TrackSearchRequest) (*pbmusic.TrackSearchResponse, error) {
+func (m *grpcClient) TrackSearch(ctx context.Context, req *pb.TrackSearchRequest) (*pb.TrackSearchResponse, error) {
 	return m.client.TrackSearch(ctx, req)
 }
 
@@ -83,27 +82,27 @@ func (m *grpcServer) GetPluginInfo(ctx context.Context, _ *pb.EmptyRequest) (*pb
 	return m.Impl.GetPluginInfo(ctx)
 }
 
-func (m *grpcServer) ArtistGet(ctx context.Context, req *pbmusic.ArtistGetRequest) (*pbmusic.ArtistGetResponse, error) {
+func (m *grpcServer) ArtistGet(ctx context.Context, req *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error) {
 	return m.Impl.ArtistGet(ctx, req)
 }
 
-func (m *grpcServer) ArtistSearch(ctx context.Context, req *pbmusic.ArtistSearchRequest) (*pbmusic.ArtistSearchResponse, error) {
+func (m *grpcServer) ArtistSearch(ctx context.Context, req *pb.ArtistSearchRequest) (*pb.ArtistSearchResponse, error) {
 	return m.Impl.ArtistSearch(ctx, req)
 }
 
-func (m *grpcServer) AlbumGet(ctx context.Context, req *pbmusic.AlbumGetRequest) (*pbmusic.AlbumGetResponse, error) {
+func (m *grpcServer) AlbumGet(ctx context.Context, req *pb.AlbumGetRequest) (*pb.AlbumGetResponse, error) {
 	return m.Impl.AlbumGet(ctx, req)
 }
 
-func (m *grpcServer) AlbumSearch(ctx context.Context, req *pbmusic.AlbumSearchRequest) (*pbmusic.AlbumSearchResponse, error) {
+func (m *grpcServer) AlbumSearch(ctx context.Context, req *pb.AlbumSearchRequest) (*pb.AlbumSearchResponse, error) {
 	return m.Impl.AlbumSearch(ctx, req)
 }
 
-func (m *grpcServer) TrackGet(ctx context.Context, req *pbmusic.TrackGetRequest) (*pbmusic.TrackGetResponse, error) {
+func (m *grpcServer) TrackGet(ctx context.Context, req *pb.TrackGetRequest) (*pb.TrackGetResponse, error) {
 	return m.Impl.TrackGet(ctx, req)
 }
 
-func (m *grpcServer) TrackSearch(ctx context.Context, req *pbmusic.TrackSearchRequest) (*pbmusic.TrackSearchResponse, error) {
+func (m *grpcServer) TrackSearch(ctx context.Context, req *pb.TrackSearchRequest) (*pb.TrackSearchResponse, error) {
 	return m.Impl.TrackSearch(ctx, req)
 }
 
