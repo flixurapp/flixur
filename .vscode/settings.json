@@ -1,5 +1,5 @@
 {
-  "protoc": {
-    "options": ["--proto_path=proto"]
+  "files.associations": {
+    "*.css": "tailwindcss"
   }
 }

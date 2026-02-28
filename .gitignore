@@ -2,3 +2,5 @@ build/
 test/
 
 server/static/
+
+/frontend_old/

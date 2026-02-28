@@ -1,5 +1,1 @@
-import { createToaster } from "@skeletonlabs/skeleton-svelte";
-
-export const toaster = createToaster({
-	placement: "bottom-start",
-});
+// place files you want to import through the `$lib` alias in this folder.
