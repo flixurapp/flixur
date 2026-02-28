@@ -1,0 +1,65 @@
+syntax = "proto3";
+package flixur.music_features;
+option go_package = "github.com/flixurapp/flixur/proto/go";
+
+import "music.proto";
+
+/* GetArtist */
+message ArtistGetRequest {
+  string id = 1;
+}
+
+message ArtistGetResponse {
+  music.Artist artist = 1;
+}
+
+/* SearchArtists */
+message ArtistSearchRequest {
+  string query = 1;
+  // Limit of items to fetch. Will be clamped to max request size limit if applicable.
+  int32 limit = 2;
+}
+
+message ArtistSearchResponse {
+  repeated music.Artist results = 1;
+}
+
+/* GetAlbum */
+message AlbumGetRequest {
+  string id = 1;
+}
+
+message AlbumGetResponse {
+  music.Album album = 1;
+}
+
+/* SearchAlbums */
+message AlbumSearchRequest {
+  string query = 1;
+  // Limit of items to fetch. Will be clamped to max request size limit if applicable.
+  int32 limit = 2;
+}
+
+message AlbumSearchResponse {
+  repeated music.Album results = 1;
+}
+
+/* GetTrack */
+message TrackGetRequest {
+  string id = 1;
+}
+
+message TrackGetResponse {
+  music.Track track = 1;
+}
+
+/* SearchTracks */
+message TrackSearchRequest {
+  string query = 1;
+  // Limit of items to fetch. Will be clamped to max request size limit if applicable.
+  int32 limit = 2;
+}
+
+message TrackSearchResponse {
+  repeated music.Track results = 1;
+}

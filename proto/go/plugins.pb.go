@@ -21,153 +21,27 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type PacketType int32
-
-const (
-	PacketType_INIT             PacketType = 0 // PacketInit
-	PacketType_INFO             PacketType = 1 // PacketInfo
-	PacketType_FEATURE_REQUEST  PacketType = 2 // PacketFeatureRequest
-	PacketType_FEATURE_RESPONSE PacketType = 3 // PacketFeatureResponse
-	PacketType_DESTROY          PacketType = 4 // PacketDestroy
-)
-
-// Enum value maps for PacketType.
-var (
-	PacketType_name = map[int32]string{
-		0: "INIT",
-		1: "INFO",
-		2: "FEATURE_REQUEST",
-		3: "FEATURE_RESPONSE",
-		4: "DESTROY",
-	}
-	PacketType_value = map[string]int32{
-		"INIT":             0,
-		"INFO":             1,
-		"FEATURE_REQUEST":  2,
-		"FEATURE_RESPONSE": 3,
-		"DESTROY":          4,
-	}
-)
-
-func (x PacketType) Enum() *PacketType {
-	p := new(PacketType)
-	*p = x
-	return p
-}
-
-func (x PacketType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (PacketType) Descriptor() protoreflect.EnumDescriptor {
-	return file_plugins_proto_enumTypes[0].Descriptor()
-}
-
-func (PacketType) Type() protoreflect.EnumType {
-	return &file_plugins_proto_enumTypes[0]
-}
-
-func (x PacketType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use PacketType.Descriptor instead.
-func (PacketType) EnumDescriptor() ([]byte, []int) {
-	return file_plugins_proto_rawDescGZIP(), []int{0}
-}
-
-// Functions that plugins can implement.
-type Features int32
-
-const (
-	// Get a specific artist by internal ID.
-	Features_ARTIST_GET Features = 0
-	// Search for an artist by name.
-	Features_ARTIST_SEARCH Features = 1
-	// Get a specific album by internal ID.
-	Features_ALBUM_GET Features = 2
-	// Search for an album by name.
-	Features_ALBUM_SEARCH Features = 3
-	// Get a specific track by internal ID.
-	Features_TRACK_GET Features = 4
-	// Search for a track by name.
-	Features_TRACK_SEARCH Features = 5
-)
-
-// Enum value maps for Features.
-var (
-	Features_name = map[int32]string{
-		0: "ARTIST_GET",
-		1: "ARTIST_SEARCH",
-		2: "ALBUM_GET",
-		3: "ALBUM_SEARCH",
-		4: "TRACK_GET",
-		5: "TRACK_SEARCH",
-	}
-	Features_value = map[string]int32{
-		"ARTIST_GET":    0,
-		"ARTIST_SEARCH": 1,
-		"ALBUM_GET":     2,
-		"ALBUM_SEARCH":  3,
-		"TRACK_GET":     4,
-		"TRACK_SEARCH":  5,
-	}
-)
-
-func (x Features) Enum() *Features {
-	p := new(Features)
-	*p = x
-	return p
-}
-
-func (x Features) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (Features) Descriptor() protoreflect.EnumDescriptor {
-	return file_plugins_proto_enumTypes[1].Descriptor()
-}
-
-func (Features) Type() protoreflect.EnumType {
-	return &file_plugins_proto_enumTypes[1]
-}
-
-func (x Features) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use Features.Descriptor instead.
-func (Features) EnumDescriptor() ([]byte, []int) {
-	return file_plugins_proto_rawDescGZIP(), []int{1}
-}
-
-// Packets sent between server and plugin.
-type PluginPacket struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Type of the packet.
-	Type PacketType `protobuf:"varint,1,opt,name=type,proto3,enum=flixur.plugins.PacketType" json:"type"`
-	// Identifier for the packet. (used to respond to certain requests)
-	Id string `protobuf:"bytes,3,opt,name=id,proto3" json:"id"`
-	// The actual packet data. (a below protobuf)
-	Data          []byte `protobuf:"bytes,2,opt,name=data,proto3" json:"data"`
+// Empty message for RPC calls that don't require input.
+type EmptyRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PluginPacket) Reset() {
-	*x = PluginPacket{}
+func (x *EmptyRequest) Reset() {
+	*x = EmptyRequest{}
 	mi := &file_plugins_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PluginPacket) String() string {
+func (x *EmptyRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PluginPacket) ProtoMessage() {}
+func (*EmptyRequest) ProtoMessage() {}
 
-func (x *PluginPacket) ProtoReflect() protoreflect.Message {
+func (x *EmptyRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_plugins_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -179,120 +53,53 @@ func (x *PluginPacket) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PluginPacket.ProtoReflect.Descriptor instead.
-func (*PluginPacket) Descriptor() ([]byte, []int) {
+// Deprecated: Use EmptyRequest.ProtoReflect.Descriptor instead.
+func (*EmptyRequest) Descriptor() ([]byte, []int) {
 	return file_plugins_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PluginPacket) GetType() PacketType {
-	if x != nil {
-		return x.Type
-	}
-	return PacketType_INIT
-}
-
-func (x *PluginPacket) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *PluginPacket) GetData() []byte {
-	if x != nil {
-		return x.Data
-	}
-	return nil
-}
-
-// Sent by the server to tell a plugin to initialize.
-type PacketInit struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Current numerical version of the server.
-	Version       int32 `protobuf:"varint,1,opt,name=version,proto3" json:"version"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PacketInit) Reset() {
-	*x = PacketInit{}
-	mi := &file_plugins_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PacketInit) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PacketInit) ProtoMessage() {}
-
-func (x *PacketInit) ProtoReflect() protoreflect.Message {
-	mi := &file_plugins_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PacketInit.ProtoReflect.Descriptor instead.
-func (*PacketInit) Descriptor() ([]byte, []int) {
-	return file_plugins_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *PacketInit) GetVersion() int32 {
-	if x != nil {
-		return x.Version
-	}
-	return 0
-}
-
-// Sent by a plugin to identify itself.
-type PacketInfo struct {
+// Plugin metadata returned by GetPluginInfo.
+type PluginInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Unique Plugin ID.
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id"`
-	// Numerical version of the plugin.
-	Version int32 `protobuf:"varint,2,opt,name=version,proto3" json:"version"`
-	// Minimum required app version for the plugin to load.
-	MinVersion int32 `protobuf:"varint,3,opt,name=min_version,json=minVersion,proto3" json:"min_version"`
-	// List of plugin IDs that should be loaded before this plugin.
-	Dependencies []string `protobuf:"bytes,4,rep,name=dependencies,proto3" json:"dependencies"`
-	// List of features this plugin implements.
-	Features []Features `protobuf:"varint,8,rep,packed,name=features,proto3,enum=flixur.plugins.Features" json:"features"`
 	// Name of the plugin.
-	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name"`
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
+	// Numerical version of the plugin.
+	Version int32 `protobuf:"varint,3,opt,name=version,proto3" json:"version"`
+	// Minimum required app version for the plugin to load.
+	MinVersion int32 `protobuf:"varint,4,opt,name=min_version,json=minVersion,proto3" json:"min_version"`
+	// List of plugin IDs that should be loaded before this plugin.
+	Dependencies []string `protobuf:"bytes,5,rep,name=dependencies,proto3" json:"dependencies"`
+	// List of feature names this plugin implements.
+	Features []string `protobuf:"bytes,6,rep,name=features,proto3" json:"features"`
 	// Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
-	Icon string `protobuf:"bytes,10,opt,name=icon,proto3" json:"icon"`
+	Icon string `protobuf:"bytes,7,opt,name=icon,proto3" json:"icon"`
 	// Short description of the plugin.
-	Description string `protobuf:"bytes,6,opt,name=description,proto3" json:"description"`
+	Description string `protobuf:"bytes,8,opt,name=description,proto3" json:"description"`
 	// Name of the plugin author.
-	Author string `protobuf:"bytes,7,opt,name=author,proto3" json:"author"`
+	Author string `protobuf:"bytes,9,opt,name=author,proto3" json:"author"`
 	// Direct link to the source code of the plugin.
-	Url           string `protobuf:"bytes,9,opt,name=url,proto3" json:"url"`
+	Url           string `protobuf:"bytes,10,opt,name=url,proto3" json:"url"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PacketInfo) Reset() {
-	*x = PacketInfo{}
-	mi := &file_plugins_proto_msgTypes[2]
+func (x *PluginInfo) Reset() {
+	*x = PluginInfo{}
+	mi := &file_plugins_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PacketInfo) String() string {
+func (x *PluginInfo) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PacketInfo) ProtoMessage() {}
+func (*PluginInfo) ProtoMessage() {}
 
-func (x *PacketInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_plugins_proto_msgTypes[2]
+func (x *PluginInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_plugins_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -303,289 +110,109 @@ func (x *PacketInfo) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PacketInfo.ProtoReflect.Descriptor instead.
-func (*PacketInfo) Descriptor() ([]byte, []int) {
-	return file_plugins_proto_rawDescGZIP(), []int{2}
+// Deprecated: Use PluginInfo.ProtoReflect.Descriptor instead.
+func (*PluginInfo) Descriptor() ([]byte, []int) {
+	return file_plugins_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *PacketInfo) GetId() string {
+func (x *PluginInfo) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-func (x *PacketInfo) GetVersion() int32 {
-	if x != nil {
-		return x.Version
-	}
-	return 0
-}
-
-func (x *PacketInfo) GetMinVersion() int32 {
-	if x != nil {
-		return x.MinVersion
-	}
-	return 0
-}
-
-func (x *PacketInfo) GetDependencies() []string {
-	if x != nil {
-		return x.Dependencies
-	}
-	return nil
-}
-
-func (x *PacketInfo) GetFeatures() []Features {
-	if x != nil {
-		return x.Features
-	}
-	return nil
-}
-
-func (x *PacketInfo) GetName() string {
+func (x *PluginInfo) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *PacketInfo) GetIcon() string {
+func (x *PluginInfo) GetVersion() int32 {
+	if x != nil {
+		return x.Version
+	}
+	return 0
+}
+
+func (x *PluginInfo) GetMinVersion() int32 {
+	if x != nil {
+		return x.MinVersion
+	}
+	return 0
+}
+
+func (x *PluginInfo) GetDependencies() []string {
+	if x != nil {
+		return x.Dependencies
+	}
+	return nil
+}
+
+func (x *PluginInfo) GetFeatures() []string {
+	if x != nil {
+		return x.Features
+	}
+	return nil
+}
+
+func (x *PluginInfo) GetIcon() string {
 	if x != nil {
 		return x.Icon
 	}
 	return ""
 }
 
-func (x *PacketInfo) GetDescription() string {
+func (x *PluginInfo) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-func (x *PacketInfo) GetAuthor() string {
+func (x *PluginInfo) GetAuthor() string {
 	if x != nil {
 		return x.Author
 	}
 	return ""
 }
 
-func (x *PacketInfo) GetUrl() string {
+func (x *PluginInfo) GetUrl() string {
 	if x != nil {
 		return x.Url
 	}
 	return ""
 }
 
-// Calls a feature implemented by the plugin.
-type PacketFeatureRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Name of the feature to call.
-	Feature Features `protobuf:"varint,1,opt,name=feature,proto3,enum=flixur.plugins.Features" json:"feature"`
-	// Request payload from `features` to use.
-	Payload       []byte `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PacketFeatureRequest) Reset() {
-	*x = PacketFeatureRequest{}
-	mi := &file_plugins_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PacketFeatureRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PacketFeatureRequest) ProtoMessage() {}
-
-func (x *PacketFeatureRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_plugins_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PacketFeatureRequest.ProtoReflect.Descriptor instead.
-func (*PacketFeatureRequest) Descriptor() ([]byte, []int) {
-	return file_plugins_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *PacketFeatureRequest) GetFeature() Features {
-	if x != nil {
-		return x.Feature
-	}
-	return Features_ARTIST_GET
-}
-
-func (x *PacketFeatureRequest) GetPayload() []byte {
-	if x != nil {
-		return x.Payload
-	}
-	return nil
-}
-
-// Response from a feature request.
-type PacketFeatureResponse struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Name of the feature that created the response.
-	Feature Features `protobuf:"varint,1,opt,name=feature,proto3,enum=flixur.plugins.Features" json:"feature"`
-	// Response payload from `features` matching the feature.
-	Payload []byte `protobuf:"bytes,2,opt,name=payload,proto3,oneof" json:"payload"`
-	// Optional error response from the request.
-	Error         *FeatureError `protobuf:"bytes,3,opt,name=error,proto3,oneof" json:"error,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PacketFeatureResponse) Reset() {
-	*x = PacketFeatureResponse{}
-	mi := &file_plugins_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PacketFeatureResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PacketFeatureResponse) ProtoMessage() {}
-
-func (x *PacketFeatureResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_plugins_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PacketFeatureResponse.ProtoReflect.Descriptor instead.
-func (*PacketFeatureResponse) Descriptor() ([]byte, []int) {
-	return file_plugins_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *PacketFeatureResponse) GetFeature() Features {
-	if x != nil {
-		return x.Feature
-	}
-	return Features_ARTIST_GET
-}
-
-func (x *PacketFeatureResponse) GetPayload() []byte {
-	if x != nil {
-		return x.Payload
-	}
-	return nil
-}
-
-func (x *PacketFeatureResponse) GetError() *FeatureError {
-	if x != nil {
-		return x.Error
-	}
-	return nil
-}
-
-// Used when the server is shutting down or plugin is being uninstalled.
-type PacketDestroy struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PacketDestroy) Reset() {
-	*x = PacketDestroy{}
-	mi := &file_plugins_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PacketDestroy) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PacketDestroy) ProtoMessage() {}
-
-func (x *PacketDestroy) ProtoReflect() protoreflect.Message {
-	mi := &file_plugins_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PacketDestroy.ProtoReflect.Descriptor instead.
-func (*PacketDestroy) Descriptor() ([]byte, []int) {
-	return file_plugins_proto_rawDescGZIP(), []int{5}
-}
-
 var File_plugins_proto protoreflect.FileDescriptor
 
 const file_plugins_proto_rawDesc = "" +
 	"\n" +
-	"\rplugins.proto\x12\x0eflixur.plugins\x1a\x0efeatures.proto\"b\n" +
-	"\fPluginPacket\x12.\n" +
-	"\x04type\x18\x01 \x01(\x0e2\x1a.flixur.plugins.PacketTypeR\x04type\x12\x0e\n" +
-	"\x02id\x18\x03 \x01(\tR\x02id\x12\x12\n" +
-	"\x04data\x18\x02 \x01(\fR\x04data\"&\n" +
+	"\rplugins.proto\x12\x0eflixur.plugins\x1a\x14music_features.proto\"\x0e\n" +
+	"\fEmptyRequest\"\x8b\x02\n" +
 	"\n" +
-	"PacketInit\x12\x18\n" +
-	"\aversion\x18\x01 \x01(\x05R\aversion\"\xa5\x02\n" +
-	"\n" +
-	"PacketInfo\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\x05R\aversion\x12\x1f\n" +
-	"\vmin_version\x18\x03 \x01(\x05R\n" +
+	"PluginInfo\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
+	"\aversion\x18\x03 \x01(\x05R\aversion\x12\x1f\n" +
+	"\vmin_version\x18\x04 \x01(\x05R\n" +
 	"minVersion\x12\"\n" +
-	"\fdependencies\x18\x04 \x03(\tR\fdependencies\x124\n" +
-	"\bfeatures\x18\b \x03(\x0e2\x18.flixur.plugins.FeaturesR\bfeatures\x12\x12\n" +
-	"\x04name\x18\x05 \x01(\tR\x04name\x12\x12\n" +
-	"\x04icon\x18\n" +
-	" \x01(\tR\x04icon\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\x12\x16\n" +
-	"\x06author\x18\a \x01(\tR\x06author\x12\x10\n" +
-	"\x03url\x18\t \x01(\tR\x03url\"d\n" +
-	"\x14PacketFeatureRequest\x122\n" +
-	"\afeature\x18\x01 \x01(\x0e2\x18.flixur.plugins.FeaturesR\afeature\x12\x18\n" +
-	"\apayload\x18\x02 \x01(\fR\apayload\"\xba\x01\n" +
-	"\x15PacketFeatureResponse\x122\n" +
-	"\afeature\x18\x01 \x01(\x0e2\x18.flixur.plugins.FeaturesR\afeature\x12\x1d\n" +
-	"\apayload\x18\x02 \x01(\fH\x00R\apayload\x88\x01\x01\x128\n" +
-	"\x05error\x18\x03 \x01(\v2\x1d.flixur.features.FeatureErrorH\x01R\x05error\x88\x01\x01B\n" +
-	"\n" +
-	"\b_payloadB\b\n" +
-	"\x06_error\"\x0f\n" +
-	"\rPacketDestroy*X\n" +
-	"\n" +
-	"PacketType\x12\b\n" +
-	"\x04INIT\x10\x00\x12\b\n" +
-	"\x04INFO\x10\x01\x12\x13\n" +
-	"\x0fFEATURE_REQUEST\x10\x02\x12\x14\n" +
-	"\x10FEATURE_RESPONSE\x10\x03\x12\v\n" +
-	"\aDESTROY\x10\x04*o\n" +
-	"\bFeatures\x12\x0e\n" +
-	"\n" +
-	"ARTIST_GET\x10\x00\x12\x11\n" +
-	"\rARTIST_SEARCH\x10\x01\x12\r\n" +
-	"\tALBUM_GET\x10\x02\x12\x10\n" +
-	"\fALBUM_SEARCH\x10\x03\x12\r\n" +
-	"\tTRACK_GET\x10\x04\x12\x10\n" +
-	"\fTRACK_SEARCH\x10\x05B&Z$github.com/flixurapp/flixur/proto/gob\x06proto3"
+	"\fdependencies\x18\x05 \x03(\tR\fdependencies\x12\x1a\n" +
+	"\bfeatures\x18\x06 \x03(\tR\bfeatures\x12\x12\n" +
+	"\x04icon\x18\a \x01(\tR\x04icon\x12 \n" +
+	"\vdescription\x18\b \x01(\tR\vdescription\x12\x16\n" +
+	"\x06author\x18\t \x01(\tR\x06author\x12\x10\n" +
+	"\x03url\x18\n" +
+	" \x01(\tR\x03url2\xa8\x05\n" +
+	"\fFlixurPlugin\x12I\n" +
+	"\rGetPluginInfo\x12\x1c.flixur.plugins.EmptyRequest\x1a\x1a.flixur.plugins.PluginInfo\x12^\n" +
+	"\tArtistGet\x12'.flixur.music_features.ArtistGetRequest\x1a(.flixur.music_features.ArtistGetResponse\x12g\n" +
+	"\fArtistSearch\x12*.flixur.music_features.ArtistSearchRequest\x1a+.flixur.music_features.ArtistSearchResponse\x12[\n" +
+	"\bAlbumGet\x12&.flixur.music_features.AlbumGetRequest\x1a'.flixur.music_features.AlbumGetResponse\x12d\n" +
+	"\vAlbumSearch\x12).flixur.music_features.AlbumSearchRequest\x1a*.flixur.music_features.AlbumSearchResponse\x12[\n" +
+	"\bTrackGet\x12&.flixur.music_features.TrackGetRequest\x1a'.flixur.music_features.TrackGetResponse\x12d\n" +
+	"\vTrackSearch\x12).flixur.music_features.TrackSearchRequest\x1a*.flixur.music_features.TrackSearchResponseB&Z$github.com/flixurapp/flixur/proto/gob\x06proto3"
 
 var (
 	file_plugins_proto_rawDescOnce sync.Once
@@ -599,30 +226,43 @@ func file_plugins_proto_rawDescGZIP() []byte {
 	return file_plugins_proto_rawDescData
 }
 
-var file_plugins_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_plugins_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_plugins_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_plugins_proto_goTypes = []any{
-	(PacketType)(0),               // 0: flixur.plugins.PacketType
-	(Features)(0),                 // 1: flixur.plugins.Features
-	(*PluginPacket)(nil),          // 2: flixur.plugins.PluginPacket
-	(*PacketInit)(nil),            // 3: flixur.plugins.PacketInit
-	(*PacketInfo)(nil),            // 4: flixur.plugins.PacketInfo
-	(*PacketFeatureRequest)(nil),  // 5: flixur.plugins.PacketFeatureRequest
-	(*PacketFeatureResponse)(nil), // 6: flixur.plugins.PacketFeatureResponse
-	(*PacketDestroy)(nil),         // 7: flixur.plugins.PacketDestroy
-	(*FeatureError)(nil),          // 8: flixur.features.FeatureError
+	(*EmptyRequest)(nil),         // 0: flixur.plugins.EmptyRequest
+	(*PluginInfo)(nil),           // 1: flixur.plugins.PluginInfo
+	(*ArtistGetRequest)(nil),     // 2: flixur.music_features.ArtistGetRequest
+	(*ArtistSearchRequest)(nil),  // 3: flixur.music_features.ArtistSearchRequest
+	(*AlbumGetRequest)(nil),      // 4: flixur.music_features.AlbumGetRequest
+	(*AlbumSearchRequest)(nil),   // 5: flixur.music_features.AlbumSearchRequest
+	(*TrackGetRequest)(nil),      // 6: flixur.music_features.TrackGetRequest
+	(*TrackSearchRequest)(nil),   // 7: flixur.music_features.TrackSearchRequest
+	(*ArtistGetResponse)(nil),    // 8: flixur.music_features.ArtistGetResponse
+	(*ArtistSearchResponse)(nil), // 9: flixur.music_features.ArtistSearchResponse
+	(*AlbumGetResponse)(nil),     // 10: flixur.music_features.AlbumGetResponse
+	(*AlbumSearchResponse)(nil),  // 11: flixur.music_features.AlbumSearchResponse
+	(*TrackGetResponse)(nil),     // 12: flixur.music_features.TrackGetResponse
+	(*TrackSearchResponse)(nil),  // 13: flixur.music_features.TrackSearchResponse
 }
 var file_plugins_proto_depIdxs = []int32{
-	0, // 0: flixur.plugins.PluginPacket.type:type_name -> flixur.plugins.PacketType
-	1, // 1: flixur.plugins.PacketInfo.features:type_name -> flixur.plugins.Features
-	1, // 2: flixur.plugins.PacketFeatureRequest.feature:type_name -> flixur.plugins.Features
-	1, // 3: flixur.plugins.PacketFeatureResponse.feature:type_name -> flixur.plugins.Features
-	8, // 4: flixur.plugins.PacketFeatureResponse.error:type_name -> flixur.features.FeatureError
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	0,  // 0: flixur.plugins.FlixurPlugin.GetPluginInfo:input_type -> flixur.plugins.EmptyRequest
+	2,  // 1: flixur.plugins.FlixurPlugin.ArtistGet:input_type -> flixur.music_features.ArtistGetRequest
+	3,  // 2: flixur.plugins.FlixurPlugin.ArtistSearch:input_type -> flixur.music_features.ArtistSearchRequest
+	4,  // 3: flixur.plugins.FlixurPlugin.AlbumGet:input_type -> flixur.music_features.AlbumGetRequest
+	5,  // 4: flixur.plugins.FlixurPlugin.AlbumSearch:input_type -> flixur.music_features.AlbumSearchRequest
+	6,  // 5: flixur.plugins.FlixurPlugin.TrackGet:input_type -> flixur.music_features.TrackGetRequest
+	7,  // 6: flixur.plugins.FlixurPlugin.TrackSearch:input_type -> flixur.music_features.TrackSearchRequest
+	1,  // 7: flixur.plugins.FlixurPlugin.GetPluginInfo:output_type -> flixur.plugins.PluginInfo
+	8,  // 8: flixur.plugins.FlixurPlugin.ArtistGet:output_type -> flixur.music_features.ArtistGetResponse
+	9,  // 9: flixur.plugins.FlixurPlugin.ArtistSearch:output_type -> flixur.music_features.ArtistSearchResponse
+	10, // 10: flixur.plugins.FlixurPlugin.AlbumGet:output_type -> flixur.music_features.AlbumGetResponse
+	11, // 11: flixur.plugins.FlixurPlugin.AlbumSearch:output_type -> flixur.music_features.AlbumSearchResponse
+	12, // 12: flixur.plugins.FlixurPlugin.TrackGet:output_type -> flixur.music_features.TrackGetResponse
+	13, // 13: flixur.plugins.FlixurPlugin.TrackSearch:output_type -> flixur.music_features.TrackSearchResponse
+	7,  // [7:14] is the sub-list for method output_type
+	0,  // [0:7] is the sub-list for method input_type
+	0,  // [0:0] is the sub-list for extension type_name
+	0,  // [0:0] is the sub-list for extension extendee
+	0,  // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_plugins_proto_init() }
@@ -630,21 +270,19 @@ func file_plugins_proto_init() {
 	if File_plugins_proto != nil {
 		return
 	}
-	file_features_proto_init()
-	file_plugins_proto_msgTypes[4].OneofWrappers = []any{}
+	file_music_features_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_plugins_proto_rawDesc), len(file_plugins_proto_rawDesc)),
-			NumEnums:      2,
-			NumMessages:   6,
+			NumEnums:      0,
+			NumMessages:   2,
 			NumExtensions: 0,
-			NumServices:   0,
+			NumServices:   1,
 		},
 		GoTypes:           file_plugins_proto_goTypes,
 		DependencyIndexes: file_plugins_proto_depIdxs,
-		EnumInfos:         file_plugins_proto_enumTypes,
 		MessageInfos:      file_plugins_proto_msgTypes,
 	}.Build()
 	File_plugins_proto = out.File

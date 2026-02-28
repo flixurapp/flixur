@@ -1,26 +1,56 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
-	"sync"
 
 	"github.com/flixurapp/flixur/pluginkit"
-	protobuf "github.com/flixurapp/flixur/proto/go"
-	"github.com/oklog/ulid/v2"
+	pb "github.com/flixurapp/flixur/proto/go"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
-var INFO = protobuf.PacketInfo{
+var PluginInfo = pb.PluginInfo{
 	Id:          "example",
+	Name:        "Example Plugin",
 	Version:     1,
 	MinVersion:  1,
-	Features:    []protobuf.Features{protobuf.Features_ARTIST_SEARCH},
-	Name:        "Example Plugin",
+	Features:    []string{"ArtistSearch"},
+	Icon:        "mdi:music",
 	Description: "Small example plugin.",
 	Author:      "You",
 	Url:         "https://github.com/flixurapp/flixur/tree/main/plugin-example",
+}
+
+type Plugin struct {
+	pb.UnimplementedFlixurPluginServer
+}
+
+func (p *Plugin) GetPluginInfo(ctx context.Context) (*pb.PluginInfo, error) {
+	return &PluginInfo, nil
+}
+
+func (p *Plugin) ArtistGet(ctx context.Context, req *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error) {
+	// Not implemented in this example
+	log.Info().Str("id", req.Id).Msg("ArtistGet called")
+	return nil, fmt.Errorf("not implemented")
+}
+
+func (p *Plugin) ArtistSearch(ctx context.Context, req *pb.ArtistSearchRequest) (*pb.ArtistSearchResponse, error) {
+	log.Info().Str("query", req.Query).Int32("limit", req.Limit).Msg("ArtistSearch called")
+
+	ico := "http://localhost:8787/logo.png"
+	return &pb.ArtistSearchResponse{
+		Results: []*pb.Artist{
+			{
+				Id:       "example-1",
+				Provider: "example",
+				Name:     "Query: " + req.Query,
+				Icon:     &ico,
+			},
+		},
+	}, nil
 }
 
 func main() {
@@ -28,44 +58,11 @@ func main() {
 		Out:        os.Stderr,
 		TimeFormat: "3:04:05PM",
 		FormatMessage: func(i interface{}) string {
-			return fmt.Sprintf("[%s] %s", INFO.Id, i)
+			return fmt.Sprintf("[%s] %s", PluginInfo.Id, i)
 		},
 	})
 
-	log.Info().Msg("Initializing plugin...")
+	log.Info().Msg("Example plugin starting...")
 
-	if err := pluginkit.WriteMessage(&protobuf.PluginPacket{
-		Id:   ulid.Make().String(),
-		Type: protobuf.PacketType_INFO,
-	}, &INFO, os.Stdout); err != nil {
-		log.Err(err).Msg("Failed to write info packet.")
-		panic(0)
-	}
-
-	listener := pluginkit.StartReadingPackets(os.Stdin, func(err error) {
-		log.Err(err).Msg("Failed to read packet from stdin.")
-	})
-	pluginkit.AddPacketListener(listener, protobuf.PacketType_INIT, func(data *protobuf.PacketInit, pkt *protobuf.PluginPacket) {
-		log.Info().Interface("d", data).Msg("got init packet")
-	})
-	pluginkit.ImplementFeature(listener, protobuf.Features_ARTIST_SEARCH, func(req *protobuf.FeatureArtistSearchRequest, _ *protobuf.PluginPacket) (*protobuf.FeatureArtistSearchResponse, *protobuf.FeatureError) {
-		log.Info().Interface("d", req).Msg("got search function")
-		ico := "http://localhost:8787/logo.png"
-
-		return &protobuf.FeatureArtistSearchResponse{
-			Results: []*protobuf.Artist{
-				{
-					Id:       "uuid",
-					Provider: INFO.Id,
-					Name:     "Query: " + req.GetQuery(),
-					Icon:     &ico,
-				},
-			},
-		}, nil
-	})
-
-	// never exit
-	var wg sync.WaitGroup
-	wg.Add(1)
-	wg.Wait()
+	pluginkit.Serve(&Plugin{})
 }

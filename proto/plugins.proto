@@ -2,91 +2,55 @@ syntax = "proto3";
 package flixur.plugins;
 option go_package = "github.com/flixurapp/flixur/proto/go";
 
-import "features.proto";
+import "music_features.proto";
 
-enum PacketType {
-  INIT             = 0; // PacketInit
-  INFO             = 1; // PacketInfo
-  FEATURE_REQUEST  = 2; // PacketFeatureRequest
-  FEATURE_RESPONSE = 3; // PacketFeatureResponse
-  DESTROY          = 4; // PacketDestroy
-}
+// Empty message for RPC calls that don't require input.
+message EmptyRequest {}
 
-// Functions that plugins can implement.
-enum Features {
-  // Get a specific artist by internal ID.
-  ARTIST_GET = 0;
-  // Search for an artist by name.
-  ARTIST_SEARCH = 1;
-  // Get a specific album by internal ID.
-  ALBUM_GET = 2;
-  // Search for an album by name.
-  ALBUM_SEARCH = 3;
-  // Get a specific track by internal ID.
-  TRACK_GET = 4;
-  // Search for a track by name.
-  TRACK_SEARCH = 5;
-}
-
-// Packets sent between server and plugin.
-message PluginPacket {
-  // Type of the packet.
-  PacketType type = 1;
-  // Identifier for the packet. (used to respond to certain requests)
-  string id = 3;
-
-  // The actual packet data. (a below protobuf)
-  bytes data = 2;
-}
-
-// Sent by the server to tell a plugin to initialize.
-message PacketInit {
-  // Current numerical version of the server.
-  int32 version = 1;
-}
-
-// Sent by a plugin to identify itself.
-message PacketInfo {
+// Plugin metadata returned by GetPluginInfo.
+message PluginInfo {
   // Unique Plugin ID.
   string id = 1;
-  // Numerical version of the plugin.
-  int32 version = 2;
-  // Minimum required app version for the plugin to load.
-  int32 min_version = 3;
-  // List of plugin IDs that should be loaded before this plugin.
-  repeated string dependencies = 4;
-  // List of features this plugin implements.
-  repeated Features features = 8;
-
   // Name of the plugin.
-  string name = 5;
+  string name = 2;
+  // Numerical version of the plugin.
+  int32 version = 3;
+  // Minimum required app version for the plugin to load.
+  int32 min_version = 4;
+  // List of plugin IDs that should be loaded before this plugin.
+  repeated string dependencies = 5;
+  // List of feature names this plugin implements.
+  repeated string features = 6;
   // Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
-  string icon = 10;
+  string icon = 7;
   // Short description of the plugin.
-  string description = 6;
+  string description = 8;
   // Name of the plugin author.
-  string author = 7;
+  string author = 9;
   // Direct link to the source code of the plugin.
-  string url = 9;
+  string url = 10;
 }
 
-// Calls a feature implemented by the plugin.
-message PacketFeatureRequest {
-  // Name of the feature to call.
-  Features feature = 1;
-  // Request payload from `features` to use.
-  bytes payload = 2;
-}
+// The main plugin service. Plugins implement this gRPC service.
+service FlixurPlugin {
+  // Get plugin metadata and capabilities.
+  rpc GetPluginInfo (EmptyRequest) returns (PluginInfo);
 
-// Response from a feature request.
-message PacketFeatureResponse {
-  // Name of the feature that created the response.
-  Features feature = 1;
-  // Response payload from `features` matching the feature.
-  optional bytes payload = 2;
-  // Optional error response from the request.
-  optional features.FeatureError error = 3;
-}
+  // === Artist Methods ===
+  // Get a specific artist by ID.
+  rpc ArtistGet (music_features.ArtistGetRequest) returns (music_features.ArtistGetResponse);
+  // Search for artists by name.
+  rpc ArtistSearch (music_features.ArtistSearchRequest) returns (music_features.ArtistSearchResponse);
 
-// Used when the server is shutting down or plugin is being uninstalled.
-message PacketDestroy {}
+  // === Album Methods ===
+  // Get a specific album by ID.
+  rpc AlbumGet (music_features.AlbumGetRequest) returns (music_features.AlbumGetResponse);
+  // Search for albums by name.
+  rpc AlbumSearch (music_features.AlbumSearchRequest) returns (music_features.AlbumSearchResponse);
+
+  // === Track Methods ===
+  // Get a specific track by ID.
+  rpc TrackGet (music_features.TrackGetRequest) returns (music_features.TrackGetResponse);
+  // Search for tracks by name.
+  rpc TrackSearch (music_features.TrackSearchRequest) returns (music_features.TrackSearchResponse);
+}

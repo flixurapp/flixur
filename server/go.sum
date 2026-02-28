@@ -3,12 +3,8 @@ github.com/danielgtaylor/huma/v2 v2.37.2 h1:Nf9vjy2sxBJFaupPlthXL/Hy2+LurfVbaKHm
 github.com/danielgtaylor/huma/v2 v2.37.2/go.mod h1:95S04G/lExFRYlBkKaBaZm9lVmxRmqX9f2CgoOZ11AM=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/flixurapp/flixur/pluginkit v0.0.0-20251001183712-bc2b18fd8a58 h1:Kr9UHpzLQF6Zl9oohvqEymZmIQCwzqxnJNG+VMCZyjM=
-github.com/flixurapp/flixur/pluginkit v0.0.0-20251001183712-bc2b18fd8a58/go.mod h1:GVRv9kHR48oQyYofN0AVA0UexBJLldfXyeIhm4KyLnQ=
 github.com/flixurapp/flixur/pluginkit v0.0.0-20260227231322-350c131943ba h1:AtLm4S7cLhRLKm9tjjwHCDtUPvGJPeRSWRPiup2bSEQ=
 github.com/flixurapp/flixur/pluginkit v0.0.0-20260227231322-350c131943ba/go.mod h1:yoVadwtsQAJoqeQMKYF/K+1bBP0+lR88y1gL/tqd9wY=
-github.com/flixurapp/flixur/proto/go v0.0.0-20251001183712-bc2b18fd8a58 h1:83cehGVas0V+H/PbA00oLghrG8k1WuNcwPRpmxV4Ag8=
-github.com/flixurapp/flixur/proto/go v0.0.0-20251001183712-bc2b18fd8a58/go.mod h1:fHIJug9ivvIrrV2ebSWwcyNs2RTXyVDf+xQNZJHbhCc=
 github.com/flixurapp/flixur/proto/go v0.0.0-20260227231322-350c131943ba h1:+rjAWtoV/UzN7+Rr6m8LYbYsYlSYLcvG4f1VwNbjFhY=
 github.com/flixurapp/flixur/proto/go v0.0.0-20260227231322-350c131943ba/go.mod h1:J0IfRNO/mBlcC6cVPVfNNthSK586Vom3yP9g7FsDkZM=
 github.com/fxamacker/cbor/v2 v2.9.0 h1:NpKPmjDBgUfBms6tr6JZkTHtfFGcMKsw3eGcmD/sapM=
