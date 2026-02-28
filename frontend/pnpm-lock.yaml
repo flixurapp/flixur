@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@flixur/openapi':
+        specifier: link:../openapi
+        version: link:../openapi
+      '@flixur/proto':
+        specifier: link:../proto
+        version: link:../proto
       colorgram:
         specifier: 0.2.0
         version: 0.2.0

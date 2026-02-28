@@ -8,6 +8,7 @@
 	} from "$lib/background/PageGradient";
 	import type { RGBA } from "$lib/background/types";
 	import { type NavLink, NavLinksBottom, NavLinksTop } from "$lib/nav";
+	import { artistSearch } from "@flixur/openapi/components";
 	import { Modal, Navigation, Toaster } from "@skeletonlabs/skeleton-svelte";
 	import { interpolateLab } from "d3-interpolate";
 	import "iconify-icon";
@@ -34,7 +35,8 @@
 
 	let railValue = $state("0"),
 		navOpen = $state(false),
-		searchInput: HTMLInputElement;
+		searchInput: HTMLInputElement,
+		searchResults = $state<ReturnType<typeof artistSearch> | null>(null);
 
 	$effect(() => {
 		if (railValue.startsWith("_")) {
@@ -167,7 +169,27 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 					type="search"
 					placeholder="Search..."
 					bind:this={searchInput}
+					oninput={() => {
+						searchResults = artistSearch({
+							body: {
+								query: searchInput.value,
+							},
+						});
+					}}
 				/>
+			</div>
+			<div>
+				{#await searchResults}
+					waiting
+				{:then res}
+					{#if res}
+						done {res.list}
+					{/if}
+				{:catch err}
+					<p class="text-error-500">
+						{err?.payload || "Error."}
+					</p>
+				{/await}
 			</div>
 		</aside>
 
