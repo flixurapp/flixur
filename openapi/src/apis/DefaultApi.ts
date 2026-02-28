@@ -66,8 +66,8 @@ export class DefaultApi extends runtime.BaseAPI {
     /**
      * Get greeting by name
      */
-    async getGreetingByName(requestParameters: GetGreetingByNameRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GreetingOutputBody> {
-        const response = await this.getGreetingByNameRaw(requestParameters, initOverrides);
+    async getGreetingByName(name: string, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GreetingOutputBody> {
+        const response = await this.getGreetingByNameRaw({ name: name }, initOverrides);
         return await response.value();
     }
 

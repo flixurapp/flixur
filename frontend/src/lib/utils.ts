@@ -1,5 +1,5 @@
 import { browser } from "$app/environment";
-import { ArtistsApi, Configuration } from "@flixur/openapi";
+import { ArtistsApi, Configuration, DefaultApi } from "@flixur/openapi";
 
 export function initials(name: string): string {
 	return (
@@ -25,5 +25,6 @@ const config = new Configuration({
 
 // we dont really care about 'music' or 'search' since they are covered by others
 export const API = {
+	base: new DefaultApi(config),
 	artists: new ArtistsApi(config),
 };

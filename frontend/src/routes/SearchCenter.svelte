@@ -10,7 +10,8 @@
 		queryKey: ["search", searchValue],
 		queryFn: () =>
 			API.artists.artistSearch({
-				artistSearchRequest: { query: searchValue, plugin: "musicbrainz" },
+				query: searchValue,
+				plugin: "musicbrainz",
 			}),
 		enabled: () => searchValue.length > 0,
 		staleTime: 1000 * 60 * 1, // 1min

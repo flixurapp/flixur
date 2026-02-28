@@ -73,8 +73,8 @@ export class MusicApi extends runtime.BaseAPI {
      * Search for an artist by name.
      * Search for artists.
      */
-    async artistSearch(requestParameters: ArtistSearchOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ArtistSearchOutputBody> {
-        const response = await this.artistSearchRaw(requestParameters, initOverrides);
+    async artistSearch(artistSearchRequest: ArtistSearchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ArtistSearchOutputBody> {
+        const response = await this.artistSearchRaw({ artistSearchRequest: artistSearchRequest }, initOverrides);
         return await response.value();
     }
 
