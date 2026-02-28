@@ -67,20 +67,18 @@ type PluginInfo struct {
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
 	// Numerical version of the plugin.
 	Version int32 `protobuf:"varint,3,opt,name=version,proto3" json:"version"`
-	// Minimum required app version for the plugin to load.
-	MinVersion int32 `protobuf:"varint,4,opt,name=min_version,json=minVersion,proto3" json:"min_version"`
 	// List of plugin IDs that should be loaded before this plugin.
-	Dependencies []string `protobuf:"bytes,5,rep,name=dependencies,proto3" json:"dependencies"`
+	Dependencies []string `protobuf:"bytes,4,rep,name=dependencies,proto3" json:"dependencies"`
 	// List of feature names this plugin implements.
-	Features []string `protobuf:"bytes,6,rep,name=features,proto3" json:"features"`
+	Features []string `protobuf:"bytes,5,rep,name=features,proto3" json:"features"`
 	// Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
-	Icon string `protobuf:"bytes,7,opt,name=icon,proto3" json:"icon"`
+	Icon string `protobuf:"bytes,6,opt,name=icon,proto3" json:"icon"`
 	// Short description of the plugin.
-	Description string `protobuf:"bytes,8,opt,name=description,proto3" json:"description"`
+	Description string `protobuf:"bytes,7,opt,name=description,proto3" json:"description"`
 	// Name of the plugin author.
-	Author string `protobuf:"bytes,9,opt,name=author,proto3" json:"author"`
+	Author string `protobuf:"bytes,8,opt,name=author,proto3" json:"author"`
 	// Direct link to the source code of the plugin.
-	Url           string `protobuf:"bytes,10,opt,name=url,proto3" json:"url"`
+	Url           string `protobuf:"bytes,9,opt,name=url,proto3" json:"url"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -136,13 +134,6 @@ func (x *PluginInfo) GetVersion() int32 {
 	return 0
 }
 
-func (x *PluginInfo) GetMinVersion() int32 {
-	if x != nil {
-		return x.MinVersion
-	}
-	return 0
-}
-
 func (x *PluginInfo) GetDependencies() []string {
 	if x != nil {
 		return x.Dependencies
@@ -190,21 +181,18 @@ var File_plugins_proto protoreflect.FileDescriptor
 const file_plugins_proto_rawDesc = "" +
 	"\n" +
 	"\rplugins.proto\x12\x0eflixur.plugins\x1a\x14music_features.proto\"\x0e\n" +
-	"\fEmptyRequest\"\x8b\x02\n" +
+	"\fEmptyRequest\"\xea\x01\n" +
 	"\n" +
 	"PluginInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
-	"\aversion\x18\x03 \x01(\x05R\aversion\x12\x1f\n" +
-	"\vmin_version\x18\x04 \x01(\x05R\n" +
-	"minVersion\x12\"\n" +
-	"\fdependencies\x18\x05 \x03(\tR\fdependencies\x12\x1a\n" +
-	"\bfeatures\x18\x06 \x03(\tR\bfeatures\x12\x12\n" +
-	"\x04icon\x18\a \x01(\tR\x04icon\x12 \n" +
-	"\vdescription\x18\b \x01(\tR\vdescription\x12\x16\n" +
-	"\x06author\x18\t \x01(\tR\x06author\x12\x10\n" +
-	"\x03url\x18\n" +
-	" \x01(\tR\x03url2\xa8\x05\n" +
+	"\aversion\x18\x03 \x01(\x05R\aversion\x12\"\n" +
+	"\fdependencies\x18\x04 \x03(\tR\fdependencies\x12\x1a\n" +
+	"\bfeatures\x18\x05 \x03(\tR\bfeatures\x12\x12\n" +
+	"\x04icon\x18\x06 \x01(\tR\x04icon\x12 \n" +
+	"\vdescription\x18\a \x01(\tR\vdescription\x12\x16\n" +
+	"\x06author\x18\b \x01(\tR\x06author\x12\x10\n" +
+	"\x03url\x18\t \x01(\tR\x03url2\xa8\x05\n" +
 	"\fFlixurPlugin\x12I\n" +
 	"\rGetPluginInfo\x12\x1c.flixur.plugins.EmptyRequest\x1a\x1a.flixur.plugins.PluginInfo\x12^\n" +
 	"\tArtistGet\x12'.flixur.music_features.ArtistGetRequest\x1a(.flixur.music_features.ArtistGetResponse\x12g\n" +

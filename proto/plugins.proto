@@ -15,20 +15,18 @@ message PluginInfo {
   string name = 2;
   // Numerical version of the plugin.
   int32 version = 3;
-  // Minimum required app version for the plugin to load.
-  int32 min_version = 4;
   // List of plugin IDs that should be loaded before this plugin.
-  repeated string dependencies = 5;
+  repeated string dependencies = 4;
   // List of feature names this plugin implements.
-  repeated string features = 6;
+  repeated string features = 5;
   // Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
-  string icon = 7;
+  string icon = 6;
   // Short description of the plugin.
-  string description = 8;
+  string description = 7;
   // Name of the plugin author.
-  string author = 9;
+  string author = 8;
   // Direct link to the source code of the plugin.
-  string url = 10;
+  string url = 9;
 }
 
 // The main plugin service. Plugins implement this gRPC service.
