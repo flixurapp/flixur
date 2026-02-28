@@ -1,3 +1,6 @@
+import { browser } from "$app/environment";
+import { ArtistsApi, Configuration } from "@flixur/openapi";
+
 export function initials(name: string): string {
 	return (
 		name
@@ -15,3 +18,12 @@ export function requestIdleWork(callback: () => void) {
 		setTimeout(callback, 16);
 	}
 }
+
+const config = new Configuration({
+	basePath: `${browser ? window.location.origin : "http://localhost:8787"}/api`,
+});
+
+// we dont really care about 'music' or 'search' since they are covered by others
+export const API = {
+	artists: new ArtistsApi(config),
+};

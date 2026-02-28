@@ -38,7 +38,7 @@ export interface ArtistSearchOutputBody {
      * @type {Array<Artist>}
      * @memberof ArtistSearchOutputBody
      */
-    list: Array<Artist> | null;
+    list: Array<Artist>;
 }
 
 /**
@@ -60,7 +60,7 @@ export function ArtistSearchOutputBodyFromJSONTyped(json: any, ignoreDiscriminat
     return {
         
         '$schema': json['$schema'] == null ? undefined : json['$schema'],
-        'list': (json['list'] == null ? null : (json['list'] as Array<any>).map(ArtistFromJSON)),
+        'list': ((json['list'] as Array<any>).map(ArtistFromJSON)),
     };
 }
 
@@ -75,7 +75,7 @@ export function ArtistSearchOutputBodyToJSONTyped(value?: Omit<ArtistSearchOutpu
 
     return {
         
-        'list': (value['list'] == null ? null : (value['list'] as Array<any>).map(ArtistToJSON)),
+        'list': ((value['list'] as Array<any>).map(ArtistToJSON)),
     };
 }
 

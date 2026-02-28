@@ -8,6 +8,7 @@ mkdir build
 cd frontend || exit
 pnpm i
 pnpm build
+rm -rf ../server/static
 cp -r build/ ../server/static
 
 cd ../server || exit

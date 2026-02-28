@@ -44,6 +44,9 @@ importers:
       '@tanstack/svelte-query':
         specifier: 6.0.18
         version: 6.0.18(svelte@5.39.6)
+      '@tanstack/svelte-query-devtools':
+        specifier: 6.0.4
+        version: 6.0.4(@tanstack/svelte-query@6.0.18(svelte@5.39.6))(svelte@5.39.6)
       '@tauri-apps/cli':
         specifier: 2.8.4
         version: 2.8.4
@@ -652,6 +655,15 @@ packages:
 
   '@tanstack/query-core@5.90.20':
     resolution: {integrity: sha512-OMD2HLpNouXEfZJWcKeVKUgQ5n+n3A2JFmBaScpNDUqSrQSjiveC7dKMe53uJUg1nDG16ttFPz2xfilz6i2uVg==}
+
+  '@tanstack/query-devtools@5.93.0':
+    resolution: {integrity: sha512-+kpsx1NQnOFTZsw6HAFCW3HkKg0+2cepGtAWXjiiSOJJ1CtQpt72EE2nyZb+AjAbLRPoeRmPJ8MtQd8r8gsPdg==}
+
+  '@tanstack/svelte-query-devtools@6.0.4':
+    resolution: {integrity: sha512-jHcpWb8KrL3QxoyBHpceR1tIfZUQB1uCiXjh+rDBrmkw1AMIMnIKANzLoz8eQgIGJC7C2dUZXRvDpUvtLDgRAQ==}
+    peerDependencies:
+      '@tanstack/svelte-query': ^6.0.18
+      svelte: ^5.25.0
 
   '@tanstack/svelte-query@6.0.18':
     resolution: {integrity: sha512-iGS8osfrIVUW5pkV4Ig6pspNIMtiNjGnVTNJKDas0m/QaNDFFIKbgg74rCzcjwrTIvO38tMpzb4VUKklvAmjxw==}
@@ -1750,6 +1762,15 @@ snapshots:
       vite: 7.1.7(@types/node@24.6.0)(jiti@2.6.0)(lightningcss@1.30.1)(sass@1.87.0)(yaml@2.7.0)
 
   '@tanstack/query-core@5.90.20': {}
+
+  '@tanstack/query-devtools@5.93.0': {}
+
+  '@tanstack/svelte-query-devtools@6.0.4(@tanstack/svelte-query@6.0.18(svelte@5.39.6))(svelte@5.39.6)':
+    dependencies:
+      '@tanstack/query-devtools': 5.93.0
+      '@tanstack/svelte-query': 6.0.18(svelte@5.39.6)
+      esm-env: 1.2.2
+      svelte: 5.39.6
 
   '@tanstack/svelte-query@6.0.18(svelte@5.39.6)':
     dependencies:

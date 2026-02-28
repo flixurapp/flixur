@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from "$app/environment";
 	import { afterNavigate } from "$app/navigation";
 	import { toaster } from "$lib";
 	import {
@@ -8,21 +9,30 @@
 	} from "$lib/background/PageGradient";
 	import type { RGBA } from "$lib/background/types";
 	import { type NavLink, NavLinksBottom, NavLinksTop } from "$lib/nav";
-	import { artistSearch } from "@flixur/openapi/components";
 	import { Modal, Navigation, Toaster } from "@skeletonlabs/skeleton-svelte";
+	import { QueryClient, QueryClientProvider } from "@tanstack/svelte-query";
+	import { SvelteQueryDevtools } from "@tanstack/svelte-query-devtools";
 	import { interpolateLab } from "d3-interpolate";
 	import "iconify-icon";
 	import { type Snippet } from "svelte";
 	import { sineOut } from "svelte/easing";
 	import { tweened } from "svelte/motion";
-	import { fly } from "svelte/transition";
 	import "../app.css";
+	import SearchCenter from "./SearchCenter.svelte";
 
 	interface Props {
 		children: Snippet;
 	}
 
 	let { children }: Props = $props();
+
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				enabled: browser,
+			},
+		},
+	});
 
 	afterNavigate((params) => {
 		const isNewPage: boolean = params.from?.route.id !== params.to?.route.id;
@@ -34,9 +44,7 @@
 	});
 
 	let railValue = $state("0"),
-		navOpen = $state(false),
-		searchInput: HTMLInputElement,
-		searchResults = $state<ReturnType<typeof artistSearch> | null>(null);
+		navOpen = $state(false);
 
 	$effect(() => {
 		if (railValue.startsWith("_")) {
@@ -100,115 +108,25 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 
 <Toaster {toaster}></Toaster>
 
-<div
-	class="h-screen grid not-md:grid-cols-1 not-md:grid-rows-[1fr_auto] md:grid-rows-1 md:grid-cols-[1fr_auto]"
->
-	<main class="overflow-auto w-full">
-		{@render children()}
-	</main>
-
-	<!-- Desktop -->
-	<Navigation.Rail
-		value={railValue}
-		onValueChange={(newValue) => (railValue = newValue)}
-		width="w-16"
-		classes="not-md:hidden"
-		background="bg-surface-950/70 backdrop-blur-xl"
+<QueryClientProvider client={queryClient}>
+	<div
+		class="h-screen grid not-md:grid-cols-1 not-md:grid-rows-[1fr_auto] md:grid-rows-1 md:grid-cols-[1fr_auto]"
 	>
-		{#snippet header()}
-			<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
-				<iconify-icon icon="tabler:menu-2"></iconify-icon>
-			</Navigation.Tile>
-		{/snippet}
+		<main class="overflow-auto w-full">
+			{@render children()}
+		</main>
 
-		{#snippet tiles()}
-			{@render renderLinks(NavLinksTop)}
-		{/snippet}
-		{#snippet footer()}
-			{@render renderLinks(NavLinksBottom)}
-		{/snippet}
-	</Navigation.Rail>
-
-	<!-- Mobile -->
-	<Navigation.Bar
-		value={railValue}
-		onValueChange={(newValue) => (railValue = newValue)}
-		classes="md:hidden absolute bottom-0"
-		background="bg-surface-950/70 backdrop-blur-xl"
-	>
-		<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
-			<iconify-icon icon="tabler:menu-2"></iconify-icon>
-		</Navigation.Tile>
-		{@render renderLinks(NavLinksTop)}
-		{@render renderLinks(NavLinksBottom)}
-	</Navigation.Bar>
-</div>
-<Modal
-	open={navOpen}
-	onEscapeKeyDown={() => (navOpen = false)}
-	contentBase="bg-surface-900 py-4 px-2 shadow-xl h-screen w-[250px]"
-	backdropClasses="backdrop-blur-sm"
-	positionerJustify="justify-end"
-	positionerPadding=""
-	transitionsPositionerIn={{ x: 250, duration: 250 }}
->
-	{#snippet content()}
-		<!-- Search Center -->
-		<aside
-			class="absolute top-8 left-8 right-[calc(250px+--spacing(8))] bottom-8"
-			in:fly={{ y: -100, duration: 100, delay: 100 }}
-		>
-			<div
-				class="input-group grid-cols-[auto_1fr] mt-1 h-16 backdrop-blur-md focus-within:outline focus-within:outline-primary-500"
-			>
-				<div class="ig-cell preset-tonal w-14">
-					<iconify-icon icon="tabler:search" height={16} noobserver></iconify-icon>
-				</div>
-				<input
-					class="ig-input outline-none text-lg"
-					type="search"
-					placeholder="Search..."
-					bind:this={searchInput}
-					oninput={() => {
-						searchResults = artistSearch({
-							body: {
-								query: searchInput.value,
-							},
-						});
-					}}
-				/>
-			</div>
-			<div>
-				{#await searchResults}
-					waiting
-				{:then res}
-					{#if res}
-						done {res.list}
-					{/if}
-				{:catch err}
-					<p class="text-error-500">
-						{err?.payload || "Error."}
-					</p>
-				{/await}
-			</div>
-		</aside>
-
-		<!-- Navigation -->
+		<!-- Desktop -->
 		<Navigation.Rail
 			value={railValue}
 			onValueChange={(newValue) => (railValue = newValue)}
-			expanded
-			widthExpanded="w-full"
-			background=""
+			width="w-16"
+			classes="not-md:hidden"
+			background="bg-surface-950/70 backdrop-blur-xl"
 		>
 			{#snippet header()}
-				<Navigation.Tile
-					id="_close"
-					labelExpanded="Back"
-					expandedClasses="flex-row-reverse"
-					onclick={() => (navOpen = false)}
-				>
-					<iconify-icon icon="tabler:arrow-right" class="mt-1" noobserver></iconify-icon>
+				<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
+					<iconify-icon icon="tabler:menu-2"></iconify-icon>
 				</Navigation.Tile>
 			{/snippet}
 
@@ -219,8 +137,63 @@ color-mix(in oklch, var(--color-surface-900) ${(OVERLAY_ALPHA + (1 - OVERLAY_ALP
 				{@render renderLinks(NavLinksBottom)}
 			{/snippet}
 		</Navigation.Rail>
-	{/snippet}
-</Modal>
+
+		<!-- Mobile -->
+		<Navigation.Bar
+			value={railValue}
+			onValueChange={(newValue) => (railValue = newValue)}
+			classes="md:hidden absolute bottom-0"
+			background="bg-surface-950/70 backdrop-blur-xl"
+		>
+			<Navigation.Tile id="_expand" onclick={() => (navOpen = true)}>
+				<iconify-icon icon="tabler:menu-2"></iconify-icon>
+			</Navigation.Tile>
+			{@render renderLinks(NavLinksTop)}
+			{@render renderLinks(NavLinksBottom)}
+		</Navigation.Bar>
+	</div>
+	<Modal
+		open={navOpen}
+		onEscapeKeyDown={() => (navOpen = false)}
+		contentBase="bg-surface-900 py-4 px-2 shadow-xl h-screen w-[250px]"
+		backdropClasses="backdrop-blur-sm"
+		positionerJustify="justify-end"
+		positionerPadding=""
+		transitionsPositionerIn={{ x: 250, duration: 250 }}
+	>
+		{#snippet content()}
+			<SearchCenter />
+
+			<!-- Navigation -->
+			<Navigation.Rail
+				value={railValue}
+				onValueChange={(newValue) => (railValue = newValue)}
+				expanded
+				widthExpanded="w-full"
+				background=""
+			>
+				{#snippet header()}
+					<Navigation.Tile
+						id="_close"
+						labelExpanded="Back"
+						expandedClasses="flex-row-reverse"
+						onclick={() => (navOpen = false)}
+					>
+						<iconify-icon icon="tabler:arrow-right" class="mt-1" noobserver></iconify-icon>
+					</Navigation.Tile>
+				{/snippet}
+
+				{#snippet tiles()}
+					{@render renderLinks(NavLinksTop)}
+				{/snippet}
+				{#snippet footer()}
+					{@render renderLinks(NavLinksBottom)}
+				{/snippet}
+			</Navigation.Rail>
+		{/snippet}
+	</Modal>
+	<SvelteQueryDevtools />
+</QueryClientProvider>
 
 {#snippet renderLinks(links: NavLink[])}
 	{#each links as link}

@@ -12,7 +12,7 @@ import (
 
 type ArtistSearchOutput struct {
 	Body struct {
-		List []*pb.Artist `json:"list"`
+		List []*pb.Artist `json:"list" nullable:"false"`
 	}
 }
 
