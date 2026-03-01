@@ -2,8 +2,10 @@ package pluginkit
 
 import (
 	"context"
+	"os"
 
 	pb "github.com/flixurapp/flixur/proto/go"
+	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
 	"google.golang.org/grpc"
 )
@@ -114,5 +116,11 @@ func Serve(impl FlixurPlugin) {
 			"flixur_plugin": &FlixurGRPCPlugin{Impl: impl},
 		},
 		GRPCServer: plugin.DefaultGRPCServer,
+		// from the official library, just increasing log level to Debug instead of Trace
+		Logger: hclog.New(&hclog.LoggerOptions{
+			Level:      hclog.Debug,
+			Output:     os.Stderr,
+			JSONFormat: true,
+		}),
 	})
 }
