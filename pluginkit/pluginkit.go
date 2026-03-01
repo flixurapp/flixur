@@ -110,6 +110,11 @@ func (m *grpcServer) TrackSearch(ctx context.Context, req *pb.TrackSearchRequest
 
 // Serve is a convenience function for plugins. It sets up the go-plugin framework.
 func Serve(impl FlixurPlugin) {
+	var logLevel hclog.Level = hclog.Debug
+	if env := os.Getenv("FLIXUR_LOG_LEVEL"); env != "" {
+		logLevel = hclog.LevelFromString(env)
+	}
+
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: HandshakeConfig,
 		Plugins: map[string]plugin.Plugin{
@@ -118,9 +123,8 @@ func Serve(impl FlixurPlugin) {
 		GRPCServer: plugin.DefaultGRPCServer,
 		// from the official library, just increasing log level to Debug instead of Trace
 		Logger: hclog.New(&hclog.LoggerOptions{
-			Level:      hclog.Debug,
-			Output:     os.Stderr,
-			JSONFormat: true,
+			Level:  logLevel,
+			Output: os.Stderr,
 		}),
 	})
 }
