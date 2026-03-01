@@ -56,6 +56,12 @@ func (spa spaFileSystem) Open(name string) (http.File, error) {
 }
 
 func main() {
+	// set log level from env
+	var logLevel zerolog.Level = zerolog.TraceLevel
+	if env := os.Getenv("FLIXUR_LOG_LEVEL"); env != "" {
+		logLevel, _ = zerolog.ParseLevel(env)
+	}
+	zerolog.SetGlobalLevel(logLevel)
 	log.Logger = log.Output(zerolog.ConsoleWriter{
 		Out:        os.Stdout,
 		TimeFormat: "3:04:05PM",
