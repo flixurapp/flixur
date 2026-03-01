@@ -20,7 +20,8 @@ export function requestIdleWork(callback: () => void) {
 }
 
 const config = new Configuration({
-	basePath: `${browser ? window.location.origin : "http://localhost:8787"}/api`,
+	// fetch from origin unless we are in development environment
+	basePath: `${browser && !import.meta.env.DEV ? window.location.origin : "http://localhost:8787"}/api`,
 });
 
 // we dont really care about 'music' or 'search' since they are covered by others
