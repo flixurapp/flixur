@@ -7,7 +7,7 @@
 	let searchValue = $state("");
 
 	const query = createQuery(() => ({
-		queryKey: ["search", searchValue],
+		queryKey: ["search-center", searchValue],
 		queryFn: () =>
 			API.artists.artistSearch({
 				query: searchValue,
