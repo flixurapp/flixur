@@ -2,18 +2,15 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"os"
 
 	"github.com/flixurapp/flixur/pluginkit"
 	pb "github.com/flixurapp/flixur/proto/go"
-	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-var PluginInfo = pb.PluginInfo{
+var PluginInfo = &pb.PluginInfo{
 	Id:          "example",
 	Name:        "Example Plugin",
 	Version:     1,
@@ -29,7 +26,7 @@ type Plugin struct {
 }
 
 func (p *Plugin) GetPluginInfo(ctx context.Context) (*pb.PluginInfo, error) {
-	return &PluginInfo, nil
+	return PluginInfo, nil
 }
 
 func (p *Plugin) ArtistGet(ctx context.Context, req *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error) {
@@ -55,14 +52,7 @@ func (p *Plugin) ArtistSearch(ctx context.Context, req *pb.ArtistSearchRequest) 
 }
 
 func main() {
-	log.Logger = log.Output(zerolog.ConsoleWriter{
-		Out:        os.Stderr,
-		TimeFormat: "3:04:05PM",
-		FormatMessage: func(i interface{}) string {
-			return fmt.Sprintf("[%s] %s", PluginInfo.Id, i)
-		},
-	})
-
+	pluginkit.SetupPluginLogger(PluginInfo)
 	log.Info().Msg("Example plugin starting...")
 
 	pluginkit.Serve(&Plugin{})

@@ -6,6 +6,7 @@ require (
 	github.com/flixurapp/flixur/proto/go v0.0.0-20260228024019-340efa6054ac
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/hashicorp/go-plugin v1.7.0
+	github.com/rs/zerolog v1.34.0
 	google.golang.org/grpc v1.79.1
 )
 
