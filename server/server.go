@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"embed"
 	"fmt"
-	"io/fs"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -25,9 +25,6 @@ import (
 )
 
 var port = 8787
-
-//go:embed static/*
-var static embed.FS
 
 type spaFileSystem struct {
 	fs       http.FileSystem
@@ -88,35 +85,12 @@ func main() {
 	plugins.RegisterPlugins(pluginDir)
 	defer plugins.DestroyAllPlugins()
 
-	// serves the client as static files
-
-	serveDir := cwd
-	if common.Dev {
-		//TODO:temp  maybe do this better? good for testing for now
-		serveDir = filepath.Join(serveDir, "../build")
-	}
-	serveDir = filepath.Join(serveDir, "client")
-	serve := http.Dir(serveDir)
-
-	staticSub, _ := fs.Sub(static, "static")
-	fileServer := http.FileServer(spaFileSystem{
-		fs:       http.FS(staticSub),
-		fallback: "index.html",
-	})
-	if common.Dev {
-		fileServer = http.FileServer(serve)
-	}
-
-	router.Get("/*", func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/" {
-			http.ServeFileFS(w, r, staticSub, "index.html")
-		} else {
-			rctx := chi.RouteContext(r.Context())
-			pathPrefix := strings.TrimSuffix(rctx.RoutePattern(), "/*")
-			fs := http.StripPrefix(pathPrefix, fileServer)
-
-			fs.ServeHTTP(w, r)
-		}
+	// serves the client as a reverse proxy
+	//TODO: this has to be deterministic (env var?)
+	proxyURL, _ := url.Parse("http://localhost:8788")
+	proxy := httputil.NewSingleHostReverseProxy(proxyURL)
+	router.NotFound(func(w http.ResponseWriter, r *http.Request) {
+		proxy.ServeHTTP(w, r)
 	})
 
 	// create http server/channel and listen
