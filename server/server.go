@@ -1,13 +1,17 @@
 package main
 
 import (
+	"context"
 	"embed"
 	"fmt"
 	"io/fs"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"strings"
+	"syscall"
+	"time"
 
 	"github.com/flixurapp/flixur/api"
 	"github.com/flixurapp/flixur/common"
@@ -109,6 +113,38 @@ func main() {
 		}
 	})
 
-	log.Info().Int("port", port).Msg("Server is online.")
-	http.ListenAndServe(fmt.Sprintf(":%d", port), router)
+	// create http server/channel and listen
+	server := &http.Server{
+		Addr:    fmt.Sprintf(":%d", port),
+		Handler: router,
+	}
+	serverChan := make(chan error, 1)
+	go func() {
+		log.Info().Int("port", port).Msg("Server is online.")
+		// channel passes any errors back to the signal handler
+		serverChan <- server.ListenAndServe()
+	}()
+
+	// catch stop signals from system
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+
+	// wait for either server error or stop signal
+	select {
+	case err := <-serverChan:
+		if err != nil && err != http.ErrServerClosed {
+			log.Error().Err(err).Msg("Server error")
+		}
+	case sig := <-sigChan:
+		log.Info().Stringer("signal", sig).Msg("Shutdown signal received, gracefully shutting down...")
+	}
+
+	// shut down HTTP server with 30sec timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		log.Error().Err(err).Msg("Server shutdown error.")
+	}
+
+	log.Info().Msg("Goodbye.")
 }
