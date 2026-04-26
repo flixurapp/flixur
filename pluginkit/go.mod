@@ -3,12 +3,14 @@ module github.com/flixurapp/flixur/pluginkit
 go 1.25.0
 
 require (
-	github.com/flixurapp/flixur/proto/go v0.0.0-20260228024019-340efa6054ac
+	github.com/flixurapp/flixur/proto/go v0.0.0
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/hashicorp/go-plugin v1.7.0
 	github.com/rs/zerolog v1.34.0
 	google.golang.org/grpc v1.79.1
 )
+
+replace github.com/flixurapp/flixur/proto/go => ../proto/go
 
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
