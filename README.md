@@ -1,5 +1,5 @@
-# flixur
+# 2026-legacy-frontend
 
-The flixur client and server applications.
+This is the legacy SvelteKit/TypeScript frontend for Flixur. This is incomplete and is only here for historical record.
 
-Major WIP.
+The new frontend is on the main branch and written in Flutter.
