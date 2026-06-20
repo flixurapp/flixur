@@ -1,6 +1,6 @@
 syntax = "proto3";
 package flixur.music;
-option go_package = "github.com/flixurapp/flixur/proto/go";
+option go_package = "forge.xela.codes/xela/flixur/proto/go";
 
 // Usually an artist returned from a provider.
 message Artist {

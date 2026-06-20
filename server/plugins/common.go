@@ -3,8 +3,8 @@ package plugins
 import (
 	"slices"
 
-	"github.com/flixurapp/flixur/pluginkit"
-	pb "github.com/flixurapp/flixur/proto/go"
+	"forge.xela.codes/xela/flixur/pluginkit"
+	pb "forge.xela.codes/xela/flixur/proto/go"
 	"github.com/samber/lo"
 )
 

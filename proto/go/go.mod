@@ -1,4 +1,4 @@
-module github.com/flixurapp/flixur/proto/go
+module forge.xela.codes/xela/flixur/proto/go
 
 go 1.25.0
 

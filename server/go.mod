@@ -1,11 +1,11 @@
-module github.com/flixurapp/flixur
+module forge.xela.codes/xela/flixur
 
 go 1.25.0
 
 require (
+	forge.xela.codes/xela/flixur/pluginkit v0.0.0
+	forge.xela.codes/xela/flixur/proto/go v0.0.0
 	github.com/danielgtaylor/huma/v2 v2.37.2
-	github.com/flixurapp/flixur/pluginkit v0.0.0
-	github.com/flixurapp/flixur/proto/go v0.0.0
 	github.com/go-chi/chi/v5 v5.2.5
 	github.com/go-chi/cors v1.2.2
 	github.com/hashicorp/go-hclog v1.6.3
@@ -14,9 +14,9 @@ require (
 	github.com/samber/lo v1.52.0
 )
 
-replace github.com/flixurapp/flixur/pluginkit => ../pluginkit
+replace forge.xela.codes/xela/flixur/pluginkit => ../pluginkit
 
-replace github.com/flixurapp/flixur/proto/go => ../proto/go
+replace forge.xela.codes/xela/flixur/proto/go => ../proto/go
 
 require (
 	github.com/fatih/color v1.18.0 // indirect

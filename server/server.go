@@ -13,9 +13,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/flixurapp/flixur/api"
-	"github.com/flixurapp/flixur/common"
-	"github.com/flixurapp/flixur/plugins"
+	"forge.xela.codes/xela/flixur/api"
+	"forge.xela.codes/xela/flixur/common"
+	"forge.xela.codes/xela/flixur/plugins"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/zerolog"

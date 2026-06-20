@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"forge.xela.codes/xela/flixur/plugins"
+	pb "forge.xela.codes/xela/flixur/proto/go"
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/flixurapp/flixur/plugins"
-	pb "github.com/flixurapp/flixur/proto/go"
 )
 
 type ArtistSearchOutput struct {

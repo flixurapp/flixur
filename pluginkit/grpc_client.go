@@ -3,7 +3,7 @@ package pluginkit
 import (
 	"context"
 
-	pb "github.com/flixurapp/flixur/proto/go"
+	pb "forge.xela.codes/xela/flixur/proto/go"
 	"github.com/hashicorp/go-plugin"
 	"google.golang.org/grpc"
 )

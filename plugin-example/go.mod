@@ -1,17 +1,17 @@
-module github.com/flixurapp/flixur/plugin-example
+module forge.xela.codes/xela/flixur/plugin-example
 
 go 1.25.0
 
 require (
-	github.com/flixurapp/flixur/pluginkit v0.0.0
-	github.com/flixurapp/flixur/proto/go v0.0.0
+	forge.xela.codes/xela/flixur/pluginkit v0.0.0
+	forge.xela.codes/xela/flixur/proto/go v0.0.0
 	github.com/rs/zerolog v1.34.0
 	google.golang.org/grpc v1.79.1
 )
 
-replace github.com/flixurapp/flixur/pluginkit => ../pluginkit
+replace forge.xela.codes/xela/flixur/pluginkit => ../pluginkit
 
-replace github.com/flixurapp/flixur/proto/go => ../proto/go
+replace forge.xela.codes/xela/flixur/proto/go => ../proto/go
 
 require (
 	github.com/fatih/color v1.18.0 // indirect

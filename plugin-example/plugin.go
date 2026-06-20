@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 
-	"github.com/flixurapp/flixur/pluginkit"
-	pb "github.com/flixurapp/flixur/proto/go"
+	"forge.xela.codes/xela/flixur/pluginkit"
+	pb "forge.xela.codes/xela/flixur/proto/go"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -18,7 +18,7 @@ var PluginInfo = &pb.PluginInfo{
 	Icon:        "mdi:music",
 	Description: "Small example plugin.",
 	Author:      "You",
-	Url:         "https://github.com/flixurapp/flixur/tree/main/plugin-example",
+	Url:         "https://forge.xela.codes/xela/flixur/src/branch/master/plugin-example",
 }
 
 type Plugin struct {
