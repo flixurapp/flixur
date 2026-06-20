@@ -12,18 +12,17 @@
  * Do not edit the class manually.
  */
 
-
 import * as runtime from '../runtime';
-import type {
-  ErrorModel,
-  GreetingOutputBody,
-} from '../models/index';
 import {
+    type ErrorModel,
     ErrorModelFromJSON,
     ErrorModelToJSON,
+} from '../models/ErrorModel';
+import {
+    type GreetingOutputBody,
     GreetingOutputBodyFromJSON,
     GreetingOutputBodyToJSON,
-} from '../models/index';
+} from '../models/GreetingOutputBody';
 
 export interface GetGreetingByNameRequest {
     name: string;
@@ -35,9 +34,9 @@ export interface GetGreetingByNameRequest {
 export class DefaultApi extends runtime.BaseAPI {
 
     /**
-     * Get greeting by name
+     * Creates request options for getGreetingByName without sending the request
      */
-    async getGreetingByNameRaw(requestParameters: GetGreetingByNameRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GreetingOutputBody>> {
+    async getGreetingByNameRequestOpts(requestParameters: GetGreetingByNameRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['name'] == null) {
             throw new runtime.RequiredError(
                 'name',
@@ -51,14 +50,22 @@ export class DefaultApi extends runtime.BaseAPI {
 
 
         let urlPath = `/greeting/{name}`;
-        urlPath = urlPath.replace(`{${"name"}}`, encodeURIComponent(String(requestParameters['name'])));
+        urlPath = urlPath.replace('{name}', encodeURIComponent(String(requestParameters['name'])));
 
-        const response = await this.request({
+        return {
             path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
+        };
+    }
+
+    /**
+     * Get greeting by name
+     */
+    async getGreetingByNameRaw(requestParameters: GetGreetingByNameRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GreetingOutputBody>> {
+        const requestOptions = await this.getGreetingByNameRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => GreetingOutputBodyFromJSON(jsonValue));
     }

@@ -12,21 +12,22 @@
  * Do not edit the class manually.
  */
 
-
 import * as runtime from '../runtime';
-import type {
-  ArtistSearchOutputBody,
-  ArtistSearchRequest,
-  ErrorModel,
-} from '../models/index';
 import {
+    type ArtistSearchOutputBody,
     ArtistSearchOutputBodyFromJSON,
     ArtistSearchOutputBodyToJSON,
+} from '../models/ArtistSearchOutputBody';
+import {
+    type ArtistSearchRequest,
     ArtistSearchRequestFromJSON,
     ArtistSearchRequestToJSON,
+} from '../models/ArtistSearchRequest';
+import {
+    type ErrorModel,
     ErrorModelFromJSON,
     ErrorModelToJSON,
-} from '../models/index';
+} from '../models/ErrorModel';
 
 export interface ArtistSearchOperationRequest {
     artistSearchRequest: Omit<ArtistSearchRequest, '$schema'>;
@@ -38,10 +39,9 @@ export interface ArtistSearchOperationRequest {
 export class MusicApi extends runtime.BaseAPI {
 
     /**
-     * Search for an artist by name.
-     * Search for artists.
+     * Creates request options for artistSearch without sending the request
      */
-    async artistSearchRaw(requestParameters: ArtistSearchOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ArtistSearchOutputBody>> {
+    async artistSearchRequestOpts(requestParameters: ArtistSearchOperationRequest): Promise<runtime.RequestOpts> {
         if (requestParameters['artistSearchRequest'] == null) {
             throw new runtime.RequiredError(
                 'artistSearchRequest',
@@ -58,13 +58,22 @@ export class MusicApi extends runtime.BaseAPI {
 
         let urlPath = `/music/artists/search`;
 
-        const response = await this.request({
+        return {
             path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
             body: ArtistSearchRequestToJSON(requestParameters['artistSearchRequest']),
-        }, initOverrides);
+        };
+    }
+
+    /**
+     * Search for an artist by name.
+     * Search for artists.
+     */
+    async artistSearchRaw(requestParameters: ArtistSearchOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ArtistSearchOutputBody>> {
+        const requestOptions = await this.artistSearchRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ArtistSearchOutputBodyFromJSON(jsonValue));
     }
