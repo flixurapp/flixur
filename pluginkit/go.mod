@@ -3,7 +3,7 @@ module forge.xela.codes/xela/flixur/pluginkit
 go 1.25.0
 
 require (
-	forge.xela.codes/xela/flixur/proto/go v0.0.0
+	forge.xela.codes/xela/flixur/proto/go v0.0.0-20260620184117-eddb96f9ca0e
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/hashicorp/go-plugin v1.8.0
 	github.com/rs/zerolog v1.35.1
