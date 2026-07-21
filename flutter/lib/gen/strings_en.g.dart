@@ -67,8 +67,8 @@ class Translations$pages$login$en {
 	/// en: 'Server URL'
 	String get server_url => 'Server URL';
 
-	/// en: 'Welcome'
-	String get welcome => 'Welcome';
+	/// en: 'Welcome!'
+	String get welcome => 'Welcome!';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -81,7 +81,7 @@ extension on Translations {
 		return switch (path) {
 			'pages.login.connect' => 'Connect',
 			'pages.login.server_url' => 'Server URL',
-			'pages.login.welcome' => 'Welcome',
+			'pages.login.welcome' => 'Welcome!',
 			_ => null,
 		};
 	}
