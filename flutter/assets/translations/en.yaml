@@ -1,0 +1,6 @@
+---
+pages:
+  login:
+    connect: "Connect"
+    server_url: "Server URL"
+    welcome: "Welcome"

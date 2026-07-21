@@ -1,0 +1,5 @@
+_:
+    flutter run
+
+translations:
+    flutter pub run slang
