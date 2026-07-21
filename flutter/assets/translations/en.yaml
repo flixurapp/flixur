@@ -3,4 +3,5 @@ pages:
   login:
     connect: "Connect"
     server_url: "Server URL"
+    server_url_error: "Server URL is not valid!"
     welcome: "Welcome!"

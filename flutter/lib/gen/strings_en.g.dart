@@ -67,6 +67,9 @@ class Translations$pages$login$en {
 	/// en: 'Server URL'
 	String get server_url => 'Server URL';
 
+	/// en: 'Server URL is not valid!'
+	String get server_url_error => 'Server URL is not valid!';
+
 	/// en: 'Welcome!'
 	String get welcome => 'Welcome!';
 }
@@ -81,6 +84,7 @@ extension on Translations {
 		return switch (path) {
 			'pages.login.connect' => 'Connect',
 			'pages.login.server_url' => 'Server URL',
+			'pages.login.server_url_error' => 'Server URL is not valid!',
 			'pages.login.welcome' => 'Welcome!',
 			_ => null,
 		};

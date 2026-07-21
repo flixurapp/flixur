@@ -30,6 +30,8 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.textMuted,
   });
 
+  Color get onPrimary => text;
+
   // idc about these
   @override
   AppColors copyWith() => this;
@@ -83,7 +85,7 @@ ThemeData buildAppTheme(AppColors colors) {
     colorScheme: ColorScheme(
       brightness: colors.brightness,
       primary: colors.primary,
-      onPrimary: colors.base,
+      onPrimary: colors.onPrimary,
       secondary: colors.secondary,
       onSecondary: colors.base,
       error: colors.error,
@@ -94,9 +96,11 @@ ThemeData buildAppTheme(AppColors colors) {
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         backgroundColor: colors.primary,
-        foregroundColor: colors.base,
+        foregroundColor: colors.onPrimary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        enabledMouseCursor: SystemMouseCursors.click,
+        disabledMouseCursor: SystemMouseCursors.forbidden,
       ),
     ),
     textTheme: TextTheme(
