@@ -1,5 +1,6 @@
-_:
+_: generate
     flutter run
 
-translations:
-    flutter pub run slang
+generate:
+    # we know its deprecated, but this is the only one that works on nixos
+    flutter pub run build_runner build

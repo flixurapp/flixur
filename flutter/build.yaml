@@ -1,0 +1,8 @@
+targets:
+  $default:
+    builders:
+      slang_build_runner:
+        options:
+          base_locale: en
+          input_directory: assets/translations
+          input_file_pattern: .yaml
