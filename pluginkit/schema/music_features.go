@@ -1,65 +1,61 @@
-syntax = "proto3";
-package flixur.music_features;
-option go_package = "forge.xela.codes/xela/flixur/proto/go";
+package schema
 
-import "music.proto";
-
-/* GetArtist */
-message ArtistGetRequest {
-  string id = 1;
+// GetRequest fetches a single item by ID. Shared by all Get* requests below.
+type GetRequest struct {
+	ID string `json:"id"`
 }
 
-message ArtistGetResponse {
-  music.Artist artist = 1;
+// SearchRequest searches for items matching a query. Shared by all Search* requests below.
+type SearchRequest struct {
+	Query string `json:"query"`
+	// Limit of items to fetch. Will be clamped to max request size limit if applicable.
+	Limit int32 `json:"limit"`
+}
+
+/* GetArtist */
+
+type ArtistGetRequest = GetRequest
+
+type ArtistGetResponse struct {
+	Artist Artist `json:"artist"`
 }
 
 /* SearchArtists */
-message ArtistSearchRequest {
-  string query = 1;
-  // Limit of items to fetch. Will be clamped to max request size limit if applicable.
-  int32 limit = 2;
-}
 
-message ArtistSearchResponse {
-  repeated music.Artist results = 1;
+type ArtistSearchRequest = SearchRequest
+
+type ArtistSearchResponse struct {
+	Results []Artist `json:"results"`
 }
 
 /* GetAlbum */
-message AlbumGetRequest {
-  string id = 1;
-}
 
-message AlbumGetResponse {
-  music.Album album = 1;
+type AlbumGetRequest = GetRequest
+
+type AlbumGetResponse struct {
+	Album Album `json:"album"`
 }
 
 /* SearchAlbums */
-message AlbumSearchRequest {
-  string query = 1;
-  // Limit of items to fetch. Will be clamped to max request size limit if applicable.
-  int32 limit = 2;
-}
 
-message AlbumSearchResponse {
-  repeated music.Album results = 1;
+type AlbumSearchRequest = SearchRequest
+
+type AlbumSearchResponse struct {
+	Results []Album `json:"results"`
 }
 
 /* GetTrack */
-message TrackGetRequest {
-  string id = 1;
-}
 
-message TrackGetResponse {
-  music.Track track = 1;
+type TrackGetRequest = GetRequest
+
+type TrackGetResponse struct {
+	Track Track `json:"track"`
 }
 
 /* SearchTracks */
-message TrackSearchRequest {
-  string query = 1;
-  // Limit of items to fetch. Will be clamped to max request size limit if applicable.
-  int32 limit = 2;
-}
 
-message TrackSearchResponse {
-  repeated music.Track results = 1;
+type TrackSearchRequest = SearchRequest
+
+type TrackSearchResponse struct {
+	Results []Track `json:"results"`
 }
