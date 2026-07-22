@@ -78,9 +78,8 @@
 
               openapi-generator-cli generate \
                 -i http://localhost:8787/api/openapi.json \
-                -g typescript-fetch \
-                -o openapi/src \
-                --additional-properties=supportsES6=true,useSingleRequestParameter=false
+                -g dart \
+                -o openapi/
             '';
           };
           proto = pkgs.writeShellApplication {
