@@ -1,87 +1,93 @@
+package schema
+
 // Usually an artist returned from a provider.
-message Artist {
-  // ID of the artist from the provider.
-  string id = 1;
-  // ID of the plugin that provided this artist.
-  string provider = 7;
+type Artist struct {
+	// ID of the artist from the provider.
+	ID string `json:"id"`
+	// ID of the plugin that provided this artist.
+	Provider string `json:"provider"`
 
-  // Name of the artist.
-  string name = 2;
-  // Icon URL for the artist. Should be accessible via HTTP with CORS.
-  optional string icon = 3;
+	// Name of the artist.
+	Name string `json:"name"`
+	// Icon URL for the artist. Should be accessible via HTTP with CORS.
+	Icon *string `json:"icon,omitempty"`
 
-  // Description of the artist.
-  optional string description = 4;
-  // Geographical location of the artist.
-  optional string location = 5;
-  // Follower count for the artist. (using the platform of choice)
-  optional int64 followers = 6;
+	// Description of the artist.
+	Description *string `json:"description,omitempty"`
+	// Geographical location of the artist.
+	Location *string `json:"location,omitempty"`
+	// Follower count for the artist. (using the platform of choice)
+	Followers *int64 `json:"followers,omitempty"`
 }
 
 // An artist stored locally.
-message LocalArtist {
-  // Unique ID for the artist. (unique across providers)
-  string id = 1;
-  // Base metadata for the artist.
-  Artist metadata = 2;
+type LocalArtist struct {
+	// Unique ID for the artist. (unique across providers)
+	ID string `json:"id"`
+	// Base metadata for the artist.
+	Metadata Artist `json:"metadata"`
 
-  // Rating for the artist.
-  optional int32 rating = 3;
+	// Rating for the artist.
+	Rating *int32 `json:"rating,omitempty"`
 }
 
-enum AlbumType {
-  SINGLE = 0;
-  ALBUM  = 1;
+type AlbumType int32
+
+const (
+	AlbumTypeSingle AlbumType = 0
+	AlbumTypeAlbum  AlbumType = 1
+)
+
+type Album struct {
+	// Unique ID for the album.
+	ID string `json:"id"`
+	// IDs of artists on this album.
+	Artists []string `json:"artists"`
+
+	// Name of the album.
+	Name string `json:"name"`
+	// Cover URL for album art. Should be accessible via HTTP with CORS.
+	Icon *string `json:"icon,omitempty"`
+	// Unix timestamp the album was released. (in seconds)
+	Date int64 `json:"date"`
+	// Type of the album.
+	Type AlbumType `json:"type"`
+	// Rating for the track.
+	Rating *int32 `json:"rating,omitempty"`
+
+	// Description of the album.
+	Description *string `json:"description,omitempty"`
+	// List of genres for the album.
+	Genres []string `json:"genres"`
 }
 
-message Album {
-  // Unique ID for the album.
-  string id = 1;
-  // IDs of artists on this album.
-  repeated string artists = 2;
+type TrackExplicitness int32
 
-  // Name of the album.
-  string name = 3;
-  // Cover URL for album art. Should be accessible via HTTP with CORS.
-  optional string icon = 4;
-  // Unix timestamp the album was released. (in seconds)
-  int64 date = 5;
-  // Type of the album.
-  AlbumType type = 6;
-  // Rating for the track.
-  optional int32 rating = 8;
+const (
+	// Normal
+	TrackExplicitnessClean TrackExplicitness = 0
+	// Explicit
+	TrackExplicitnessExplicit TrackExplicitness = 1
+	// Rated X
+	TrackExplicitnessRestricted TrackExplicitness = 2
+)
 
-  // Description of the album.
-  optional string description = 7;
-  // List of genres for the album.
-  repeated string genres = 9;
-}
+type Track struct {
+	// Unique ID for the track.
+	ID string `json:"id"`
+	// Unique ISRC of the track. May be unofficial.
+	ISRC string `json:"isrc"`
+	// IDs of artists on this track.
+	Artists []string `json:"artists"`
 
-enum TrackExplicitness {
-  // Normal
-  CLEAN = 0;
-  // Explicit
-  EXPLICIT = 1;
-  // Rated X
-  RESTRICTED = 2;
-}
-
-message Track {
-  // Unique ID for the track.
-  string id = 1;
-  // Unique ISRC of the track. May be unofficial.
-  string isrc = 8;
-  // IDs of artists on this track.
-  repeated string artists = 2;
-
-  // Title of the track.
-  string title = 3;
-  // Track number in the album.
-  int32 index = 4;
-  // Duration in ms of the track.
-  int64 duration = 5;
-  // Rating for the track.
-  optional int32 rating = 6;
-  // The explicitness of the track.
-  TrackExplicitness explicitness = 7;
+	// Title of the track.
+	Title string `json:"title"`
+	// Track number in the album.
+	Index int32 `json:"index"`
+	// Duration in ms of the track.
+	Duration int64 `json:"duration"`
+	// Rating for the track.
+	Rating *int32 `json:"rating,omitempty"`
+	// The explicitness of the track.
+	Explicitness TrackExplicitness `json:"explicitness"`
 }
