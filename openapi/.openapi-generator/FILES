@@ -35,6 +35,3 @@ lib/model/error_detail.dart
 lib/model/error_model.dart
 lib/model/ping_output_body.dart
 pubspec.yaml
-test/authentication_api_test.dart
-test/connectivity_api_test.dart
-test/ping_output_body_test.dart
