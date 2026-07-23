@@ -106,6 +106,7 @@
                 sed -i '/\*.*omitempty/!s/,omitempty//' ${proto-out}/*.pb.go
               '';
             };
+          #TODO: eventually fix this and publish a js package?
           tygo = pkgs.writeShellApplication {
             name = "tygo";
             runtimeInputs = with pkgs; [ tygo ];
@@ -124,7 +125,7 @@
             text = ''
               ${setup}
               proto
-              tygo
+              #tygo
               openapi
             '';
           };
