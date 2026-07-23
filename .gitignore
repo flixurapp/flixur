@@ -1,6 +1,3 @@
 build/
+result/
 test/
-
-server/static/
-
-/frontend_old/
