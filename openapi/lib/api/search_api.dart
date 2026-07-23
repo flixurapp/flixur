@@ -10,7 +10,6 @@
 
 part of openapi.api;
 
-
 class SearchApi {
   SearchApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
 
@@ -25,7 +24,9 @@ class SearchApi {
   /// Parameters:
   ///
   /// * [ArtistSearchRequest] artistSearchRequest (required):
-  Future<Response> artistSearchWithHttpInfo(ArtistSearchRequest artistSearchRequest,) async {
+  Future<Response> artistSearchWithHttpInfo(
+    ArtistSearchRequest artistSearchRequest,
+  ) async {
     // ignore: prefer_const_declarations
     final path = r'/music/artists/search';
 
@@ -37,7 +38,6 @@ class SearchApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>['application/json'];
-
 
     return apiClient.invokeAPI(
       path,
@@ -57,17 +57,24 @@ class SearchApi {
   /// Parameters:
   ///
   /// * [ArtistSearchRequest] artistSearchRequest (required):
-  Future<ArtistSearchOutputBody?> artistSearch(ArtistSearchRequest artistSearchRequest,) async {
-    final response = await artistSearchWithHttpInfo(artistSearchRequest,);
+  Future<ArtistSearchOutputBody?> artistSearch(
+    ArtistSearchRequest artistSearchRequest,
+  ) async {
+    final response = await artistSearchWithHttpInfo(
+      artistSearchRequest,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'ArtistSearchOutputBody',) as ArtistSearchOutputBody;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'ArtistSearchOutputBody',
+      ) as ArtistSearchOutputBody;
     }
     return null;
   }

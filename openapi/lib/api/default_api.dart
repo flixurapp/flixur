@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
-
 class DefaultApi {
-  DefaultApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
+  DefaultApi([ApiClient? apiClient])
+      : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -24,10 +24,11 @@ class DefaultApi {
   ///
   /// * [String] name (required):
   ///   Name to greet
-  Future<Response> getGreetingByNameWithHttpInfo(String name,) async {
+  Future<Response> getGreetingByNameWithHttpInfo(
+    String name,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/greeting/{name}'
-      .replaceAll('{name}', name);
+    final path = r'/greeting/{name}'.replaceAll('{name}', name);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -37,7 +38,6 @@ class DefaultApi {
     final formParams = <String, String>{};
 
     const contentTypes = <String>[];
-
 
     return apiClient.invokeAPI(
       path,
@@ -56,17 +56,24 @@ class DefaultApi {
   ///
   /// * [String] name (required):
   ///   Name to greet
-  Future<GreetingOutputBody?> getGreetingByName(String name,) async {
-    final response = await getGreetingByNameWithHttpInfo(name,);
+  Future<GreetingOutputBody?> getGreetingByName(
+    String name,
+  ) async {
+    final response = await getGreetingByNameWithHttpInfo(
+      name,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'GreetingOutputBody',) as GreetingOutputBody;
-    
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'GreetingOutputBody',
+      ) as GreetingOutputBody;
     }
     return null;
   }

@@ -29,18 +29,20 @@ class ArtistSearchOutputBody {
   List<Artist> list;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ArtistSearchOutputBody &&
-    other.dollarSchema == dollarSchema &&
-    _deepEquality.equals(other.list, list);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ArtistSearchOutputBody &&
+          other.dollarSchema == dollarSchema &&
+          _deepEquality.equals(other.list, list);
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (dollarSchema == null ? 0 : dollarSchema!.hashCode) +
-    (list.hashCode);
+      // ignore: unnecessary_parenthesis
+      (dollarSchema == null ? 0 : dollarSchema!.hashCode) + (list.hashCode);
 
   @override
-  String toString() => 'ArtistSearchOutputBody[dollarSchema=$dollarSchema, list=$list]';
+  String toString() =>
+      'ArtistSearchOutputBody[dollarSchema=$dollarSchema, list=$list]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -49,7 +51,7 @@ class ArtistSearchOutputBody {
     } else {
       json[r'$schema'] = null;
     }
-      json[r'list'] = this.list;
+    json[r'list'] = this.list;
     return json;
   }
 
@@ -64,8 +66,10 @@ class ArtistSearchOutputBody {
       // Note 1: the values aren't checked for validity beyond being non-null.
       // Note 2: this code is stripped in release mode!
       assert(() {
-        assert(json.containsKey(r'list'), 'Required key "ArtistSearchOutputBody[list]" is missing from JSON.');
-        assert(json[r'list'] != null, 'Required key "ArtistSearchOutputBody[list]" has a null value in JSON.');
+        assert(json.containsKey(r'list'),
+            'Required key "ArtistSearchOutputBody[list]" is missing from JSON.');
+        assert(json[r'list'] != null,
+            'Required key "ArtistSearchOutputBody[list]" has a null value in JSON.');
         return true;
       }());
 
@@ -77,7 +81,10 @@ class ArtistSearchOutputBody {
     return null;
   }
 
-  static List<ArtistSearchOutputBody> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<ArtistSearchOutputBody> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <ArtistSearchOutputBody>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -105,13 +112,19 @@ class ArtistSearchOutputBody {
   }
 
   // maps a json object with a list of ArtistSearchOutputBody-objects as value to a dart map
-  static Map<String, List<ArtistSearchOutputBody>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<ArtistSearchOutputBody>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<ArtistSearchOutputBody>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = ArtistSearchOutputBody.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = ArtistSearchOutputBody.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -122,4 +135,3 @@ class ArtistSearchOutputBody {
     'list',
   };
 }
-

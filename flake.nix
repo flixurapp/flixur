@@ -81,10 +81,13 @@
                   exit 1
                 fi
 
+                export DART_POST_PROCESS_FILE="${pkgs.dart}/bin/dart format"  
+
                 openapi-generator-cli generate \
                   -i http://localhost:8787/api/openapi.json \
                   -g dart \
-                  -o ${openapi-out}
+                  -o ${openapi-out} \
+                  --enable-post-process-file
               '';
             };
           proto =

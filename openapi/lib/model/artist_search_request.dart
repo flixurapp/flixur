@@ -44,22 +44,25 @@ class ArtistSearchRequest {
   String query;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ArtistSearchRequest &&
-    other.dollarSchema == dollarSchema &&
-    other.limit == limit &&
-    other.plugin == plugin &&
-    other.query == query;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ArtistSearchRequest &&
+          other.dollarSchema == dollarSchema &&
+          other.limit == limit &&
+          other.plugin == plugin &&
+          other.query == query;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (dollarSchema == null ? 0 : dollarSchema!.hashCode) +
-    (limit.hashCode) +
-    (plugin == null ? 0 : plugin!.hashCode) +
-    (query.hashCode);
+      // ignore: unnecessary_parenthesis
+      (dollarSchema == null ? 0 : dollarSchema!.hashCode) +
+      (limit.hashCode) +
+      (plugin == null ? 0 : plugin!.hashCode) +
+      (query.hashCode);
 
   @override
-  String toString() => 'ArtistSearchRequest[dollarSchema=$dollarSchema, limit=$limit, plugin=$plugin, query=$query]';
+  String toString() =>
+      'ArtistSearchRequest[dollarSchema=$dollarSchema, limit=$limit, plugin=$plugin, query=$query]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -68,13 +71,13 @@ class ArtistSearchRequest {
     } else {
       json[r'$schema'] = null;
     }
-      json[r'limit'] = this.limit;
+    json[r'limit'] = this.limit;
     if (this.plugin != null) {
       json[r'plugin'] = this.plugin;
     } else {
       json[r'plugin'] = null;
     }
-      json[r'query'] = this.query;
+    json[r'query'] = this.query;
     return json;
   }
 
@@ -89,8 +92,10 @@ class ArtistSearchRequest {
       // Note 1: the values aren't checked for validity beyond being non-null.
       // Note 2: this code is stripped in release mode!
       assert(() {
-        assert(json.containsKey(r'query'), 'Required key "ArtistSearchRequest[query]" is missing from JSON.');
-        assert(json[r'query'] != null, 'Required key "ArtistSearchRequest[query]" has a null value in JSON.');
+        assert(json.containsKey(r'query'),
+            'Required key "ArtistSearchRequest[query]" is missing from JSON.');
+        assert(json[r'query'] != null,
+            'Required key "ArtistSearchRequest[query]" has a null value in JSON.');
         return true;
       }());
 
@@ -104,7 +109,10 @@ class ArtistSearchRequest {
     return null;
   }
 
-  static List<ArtistSearchRequest> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<ArtistSearchRequest> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <ArtistSearchRequest>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -132,13 +140,19 @@ class ArtistSearchRequest {
   }
 
   // maps a json object with a list of ArtistSearchRequest-objects as value to a dart map
-  static Map<String, List<ArtistSearchRequest>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<ArtistSearchRequest>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<ArtistSearchRequest>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = ArtistSearchRequest.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = ArtistSearchRequest.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -149,4 +163,3 @@ class ArtistSearchRequest {
     'query',
   };
 }
-

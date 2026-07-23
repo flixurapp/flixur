@@ -61,28 +61,31 @@ class Artist {
   String provider;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Artist &&
-    other.description == description &&
-    other.followers == followers &&
-    other.icon == icon &&
-    other.id == id &&
-    other.location == location &&
-    other.name == name &&
-    other.provider == provider;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Artist &&
+          other.description == description &&
+          other.followers == followers &&
+          other.icon == icon &&
+          other.id == id &&
+          other.location == location &&
+          other.name == name &&
+          other.provider == provider;
 
   @override
   int get hashCode =>
-    // ignore: unnecessary_parenthesis
-    (description == null ? 0 : description!.hashCode) +
-    (followers == null ? 0 : followers!.hashCode) +
-    (icon == null ? 0 : icon!.hashCode) +
-    (id.hashCode) +
-    (location == null ? 0 : location!.hashCode) +
-    (name.hashCode) +
-    (provider.hashCode);
+      // ignore: unnecessary_parenthesis
+      (description == null ? 0 : description!.hashCode) +
+      (followers == null ? 0 : followers!.hashCode) +
+      (icon == null ? 0 : icon!.hashCode) +
+      (id.hashCode) +
+      (location == null ? 0 : location!.hashCode) +
+      (name.hashCode) +
+      (provider.hashCode);
 
   @override
-  String toString() => 'Artist[description=$description, followers=$followers, icon=$icon, id=$id, location=$location, name=$name, provider=$provider]';
+  String toString() =>
+      'Artist[description=$description, followers=$followers, icon=$icon, id=$id, location=$location, name=$name, provider=$provider]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -101,14 +104,14 @@ class Artist {
     } else {
       json[r'icon'] = null;
     }
-      json[r'id'] = this.id;
+    json[r'id'] = this.id;
     if (this.location != null) {
       json[r'location'] = this.location;
     } else {
       json[r'location'] = null;
     }
-      json[r'name'] = this.name;
-      json[r'provider'] = this.provider;
+    json[r'name'] = this.name;
+    json[r'provider'] = this.provider;
     return json;
   }
 
@@ -123,12 +126,18 @@ class Artist {
       // Note 1: the values aren't checked for validity beyond being non-null.
       // Note 2: this code is stripped in release mode!
       assert(() {
-        assert(json.containsKey(r'id'), 'Required key "Artist[id]" is missing from JSON.');
-        assert(json[r'id'] != null, 'Required key "Artist[id]" has a null value in JSON.');
-        assert(json.containsKey(r'name'), 'Required key "Artist[name]" is missing from JSON.');
-        assert(json[r'name'] != null, 'Required key "Artist[name]" has a null value in JSON.');
-        assert(json.containsKey(r'provider'), 'Required key "Artist[provider]" is missing from JSON.');
-        assert(json[r'provider'] != null, 'Required key "Artist[provider]" has a null value in JSON.');
+        assert(json.containsKey(r'id'),
+            'Required key "Artist[id]" is missing from JSON.');
+        assert(json[r'id'] != null,
+            'Required key "Artist[id]" has a null value in JSON.');
+        assert(json.containsKey(r'name'),
+            'Required key "Artist[name]" is missing from JSON.');
+        assert(json[r'name'] != null,
+            'Required key "Artist[name]" has a null value in JSON.');
+        assert(json.containsKey(r'provider'),
+            'Required key "Artist[provider]" is missing from JSON.');
+        assert(json[r'provider'] != null,
+            'Required key "Artist[provider]" has a null value in JSON.');
         return true;
       }());
 
@@ -145,7 +154,10 @@ class Artist {
     return null;
   }
 
-  static List<Artist> listFromJson(dynamic json, {bool growable = false,}) {
+  static List<Artist> listFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final result = <Artist>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -173,13 +185,19 @@ class Artist {
   }
 
   // maps a json object with a list of Artist-objects as value to a dart map
-  static Map<String, List<Artist>> mapListFromJson(dynamic json, {bool growable = false,}) {
+  static Map<String, List<Artist>> mapListFromJson(
+    dynamic json, {
+    bool growable = false,
+  }) {
     final map = <String, List<Artist>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = Artist.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = Artist.listFromJson(
+          entry.value,
+          growable: growable,
+        );
       }
     }
     return map;
@@ -192,4 +210,3 @@ class Artist {
     'provider',
   };
 }
-
