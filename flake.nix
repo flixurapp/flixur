@@ -50,38 +50,43 @@
             name = "govendor";
             text = "${go-overlay.packages.${system}.govendor}/bin/govendor";
           };
-          openapi = pkgs.writeShellApplication {
-            name = "openapi";
-            runtimeInputs = with pkgs; [
-              curl
-              openapi-generator-cli
-            ];
-            text = ''
-              ${setup}
+          openapi =
+            let
+              openapi-out = "openapi/";
+            in
+            pkgs.writeShellApplication {
+              name = "openapi";
+              runtimeInputs = with pkgs; [
+                curl
+                openapi-generator-cli
+              ];
+              text = ''
+                ${setup}
 
-              ${flixur-server}/bin/flixur-server >/tmp/flixur-openapi-server.log 2>&1 &
-              server_pid=$!
-              trap 'kill "$server_pid" >/dev/null 2>&1 || true' EXIT
+                ${flixur-server}/bin/flixur-server >/tmp/flixur-openapi-server.log 2>&1 &
+                server_pid=$!
+                trap 'kill "$server_pid" >/dev/null 2>&1 || true' EXIT
 
-              for _ in $(seq 1 60); do
-                if curl -fsS "http://127.0.0.1:8787/api/openapi.json" >/dev/null; then
-                  break
+                for _ in $(seq 1 60); do
+                  if curl -fsS "http://127.0.0.1:8787/api/openapi.json" >/dev/null; then
+                    break
+                  fi
+                  echo "Waiting..."
+                  sleep 0.5
+                done
+
+                if ! curl -fsS "http://127.0.0.1:8787/api/openapi.json" >/dev/null; then
+                  echo "Server did not become ready on :8787" >&2
+                  echo "Check /tmp/flixur-openapi-server.log for details" >&2
+                  exit 1
                 fi
-                sleep 0.5
-              done
 
-              if ! curl -fsS "http://127.0.0.1:8787/api/openapi.json" >/dev/null; then
-                echo "Server did not become ready on :8787" >&2
-                echo "Check /tmp/flixur-openapi-server.log for details" >&2
-                exit 1
-              fi
-
-              openapi-generator-cli generate \
-                -i http://localhost:8787/api/openapi.json \
-                -g dart \
-                -o openapi/
-            '';
-          };
+                openapi-generator-cli generate \
+                  -i http://localhost:8787/api/openapi.json \
+                  -g dart \
+                  -o ${openapi-out}
+              '';
+            };
           proto =
             let
               proto-in = "./proto";
