@@ -63,7 +63,7 @@
               text = ''
                 ${setup}
 
-                ${flixur-server}/bin/flixur-server >/tmp/flixur-openapi-server.log 2>&1 &
+                go run ./server >/tmp/flixur-openapi-server.log 2>&1 &
                 server_pid=$!
                 trap 'kill "$server_pid" >/dev/null 2>&1 || true' EXIT
 
@@ -109,6 +109,9 @@
                   ${proto-in}/*.proto
                 # remove the omitempty flag from json that isnt "optional" (with *)
                 sed -i '/\*.*omitempty/!s/,omitempty//' ${proto-out}/*.pb.go
+
+                cd pluginkit
+                go generate ./...
               '';
             };
           #TODO: eventually fix this and publish a js package?

@@ -14,6 +14,8 @@ var HandshakeConfig = plugin.HandshakeConfig{
 }
 
 // The flixur plugin implementation. Both client/server implement these functions.
+//
+//go:generate go run ./generator -dir . -out ./grpc_client.go
 type FlixurPlugin interface {
 	// Get plugin metadata and capabilities.
 	GetPluginInfo(ctx context.Context) (*pb.PluginInfo, error)
