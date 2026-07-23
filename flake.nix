@@ -27,7 +27,8 @@
           overlays = [ go-overlay.overlays.default ];
         };
 
-        flixur-flutter = pkgs.callPackage ./nix/flutter.pkg.nix { };
+        flixur-flutter-linux = pkgs.callPackage ./nix/flutter.pkg.nix { };
+        flixur-flutter-web = pkgs.callPackage ./nix/flutter.pkg.nix { targetFlutterPlatform = "web"; };
         flixur-server = pkgs.callPackage ./nix/server.pkg.nix { };
 
         # util to cd to root
@@ -149,7 +150,7 @@
       in
       {
         packages = {
-          inherit flixur-server flixur-flutter;
+          inherit flixur-server flixur-flutter-linux flixur-flutter-web;
           default = flixur-server;
         };
 
