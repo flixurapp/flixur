@@ -55,12 +55,13 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://localhost:8787/api*
+All URIs are relative to *http://127.0.0.1:8787/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *ArtistsApi* | [**artistSearch**](doc//ArtistsApi.md#artistsearch) | **POST** /music/artists/search | Search for artists.
-*DefaultApi* | [**getGreetingByName**](doc//DefaultApi.md#getgreetingbyname) | **GET** /greeting/{name} | Get greeting by name
+*AuthenticationApi* | [**ping**](doc//AuthenticationApi.md#ping) | **GET** /ping | Test server connectivity.
+*ConnectivityApi* | [**ping**](doc//ConnectivityApi.md#ping) | **GET** /ping | Test server connectivity.
 *MusicApi* | [**artistSearch**](doc//MusicApi.md#artistsearch) | **POST** /music/artists/search | Search for artists.
 *SearchApi* | [**artistSearch**](doc//SearchApi.md#artistsearch) | **POST** /music/artists/search | Search for artists.
 
@@ -72,7 +73,7 @@ Class | Method | HTTP request | Description
  - [ArtistSearchRequest](doc//ArtistSearchRequest.md)
  - [ErrorDetail](doc//ErrorDetail.md)
  - [ErrorModel](doc//ErrorModel.md)
- - [GreetingOutputBody](doc//GreetingOutputBody.md)
+ - [PingOutputBody](doc//PingOutputBody.md)
 
 
 ## Documentation For Authorization

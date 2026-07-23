@@ -12,7 +12,7 @@ part of openapi.api;
 
 class ApiClient {
   ApiClient({
-    this.basePath = 'http://localhost:8787/api',
+    this.basePath = 'http://127.0.0.1:8787/api',
     this.authentication,
   });
 
@@ -239,8 +239,8 @@ class ApiClient {
           return ErrorDetail.fromJson(value);
         case 'ErrorModel':
           return ErrorModel.fromJson(value);
-        case 'GreetingOutputBody':
-          return GreetingOutputBody.fromJson(value);
+        case 'PingOutputBody':
+          return PingOutputBody.fromJson(value);
         default:
           dynamic match;
           if (value is List &&

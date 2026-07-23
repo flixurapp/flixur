@@ -52,6 +52,8 @@
           };
           openapi =
             let
+              openapi-port = "8787";
+              openapi-addr = "http://127.0.0.1:${openapi-port}/api/openapi.json";
               openapi-out = "openapi/";
             in
             pkgs.writeShellApplication {
@@ -59,24 +61,26 @@
               runtimeInputs = with pkgs; [
                 curl
                 openapi-generator-cli
+                killport
               ];
               text = ''
                 ${setup}
 
+                killport ${openapi-port}
                 go run ./server >/tmp/flixur-openapi-server.log 2>&1 &
                 server_pid=$!
                 trap 'kill "$server_pid" >/dev/null 2>&1 || true' EXIT
 
                 for _ in $(seq 1 60); do
-                  if curl -fsS "http://127.0.0.1:8787/api/openapi.json" >/dev/null; then
+                  if curl -fsS "${openapi-addr}" >/dev/null; then
                     break
                   fi
                   echo "Waiting..."
                   sleep 0.5
                 done
 
-                if ! curl -fsS "http://127.0.0.1:8787/api/openapi.json" >/dev/null; then
-                  echo "Server did not become ready on :8787" >&2
+                if ! curl -fsS "${openapi-addr}" >/dev/null; then
+                  echo "Server did not become ready on :${openapi-port}" >&2
                   echo "Check /tmp/flixur-openapi-server.log for details" >&2
                   exit 1
                 fi
@@ -84,7 +88,7 @@
                 export DART_POST_PROCESS_FILE="${pkgs.dart}/bin/dart format"  
 
                 openapi-generator-cli generate \
-                  -i http://localhost:8787/api/openapi.json \
+                  -i ${openapi-addr} \
                   -g dart \
                   -o ${openapi-out} \
                   --enable-post-process-file
