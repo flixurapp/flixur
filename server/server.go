@@ -51,16 +51,13 @@ func (spa spaFileSystem) Open(name string) (http.File, error) {
 }
 
 func main() {
-	// set log level from env
-	var logLevel zerolog.Level = zerolog.TraceLevel
-	if env := os.Getenv("FLIXUR_LOG_LEVEL"); env != "" {
-		logLevel, _ = zerolog.ParseLevel(env)
-	}
-	zerolog.SetGlobalLevel(logLevel)
+	// log traces until we init the logger and config
+	zerolog.SetGlobalLevel(zerolog.TraceLevel)
 	log.Logger = log.Output(zerolog.ConsoleWriter{
 		Out:        os.Stdout,
 		TimeFormat: "3:04:05PM",
 	})
+	// ParseConfig will set the new log level from the config
 	common.ParseConfig()
 
 	router := chi.NewMux()

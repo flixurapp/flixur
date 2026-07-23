@@ -13,6 +13,7 @@ import (
 // Convenience function to set up a zerolog logger for the plugin.
 func SetupPluginLogger(info *pb.PluginInfo) {
 	var logLevel zerolog.Level = zerolog.TraceLevel
+	// this should be kept up-to-date with the server env var
 	if env := os.Getenv("FLIXUR_LOG_LEVEL"); env != "" {
 		logLevel, _ = zerolog.ParseLevel(env)
 	}
