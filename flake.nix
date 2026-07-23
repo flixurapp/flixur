@@ -135,12 +135,14 @@
           generate = pkgs.writeShellApplication {
             name = "generate";
             runtimeInputs = [
+              commands.govendor
               commands.proto
               commands.tygo
               commands.openapi
             ];
             text = ''
               ${setup}
+              govendor
               proto
               #tygo
               openapi

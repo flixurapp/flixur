@@ -4,6 +4,7 @@ go 1.25.0
 
 require (
 	forge.xela.codes/xela/flixur/pluginkit v0.0.0
+	github.com/caarlos0/env/v11 v11.4.1
 	github.com/danielgtaylor/huma/v2 v2.38.0
 	github.com/go-chi/chi/v5 v5.3.0
 	github.com/go-chi/cors v1.2.2

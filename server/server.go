@@ -24,8 +24,6 @@ import (
 	_ "embed"
 )
 
-var port = 8787
-
 type spaFileSystem struct {
 	fs       http.FileSystem
 	fallback string
@@ -63,6 +61,7 @@ func main() {
 		Out:        os.Stdout,
 		TimeFormat: "3:04:05PM",
 	})
+	common.ParseConfig()
 
 	router := chi.NewMux()
 	router.Use(middleware.Compress(5))
@@ -95,12 +94,12 @@ func main() {
 
 	// create http server/channel and listen
 	server := &http.Server{
-		Addr:    fmt.Sprintf(":%d", port),
+		Addr:    fmt.Sprintf("%s:%d", common.Config.Address, common.Config.Port),
 		Handler: router,
 	}
 	serverChan := make(chan error, 1)
 	go func() {
-		log.Info().Int("port", port).Msg("Server is online.")
+		log.Info().Str("address", common.Config.Address).Int("port", common.Config.Port).Msg("Server is online.")
 		// channel passes any errors back to the signal handler
 		serverChan <- server.ListenAndServe()
 	}()
