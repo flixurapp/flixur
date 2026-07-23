@@ -1,0 +1,91 @@
+syntax = "proto3";
+package flixur.music;
+option go_package = "forge.xela.codes/xela/flixur/proto/go";
+
+// Usually an artist returned from a provider.
+message Artist {
+  // ID of the artist from the provider.
+  string id = 1;
+  // ID of the plugin that provided this artist.
+  string provider = 7;
+
+  // Name of the artist.
+  string name = 2;
+  // Icon URL for the artist. Should be accessible via HTTP with CORS.
+  optional string icon = 3;
+
+  // Description of the artist.
+  optional string description = 4;
+  // Geographical location of the artist.
+  optional string location = 5;
+  // Follower count for the artist. (using the platform of choice)
+  optional int64 followers = 6;
+}
+
+// An artist stored locally.
+message LocalArtist {
+  // Unique ID for the artist. (unique across providers)
+  string id = 1;
+  // Base metadata for the artist.
+  Artist metadata = 2;
+
+  // Rating for the artist.
+  optional int32 rating = 3;
+}
+
+enum AlbumType {
+  SINGLE = 0;
+  ALBUM  = 1;
+}
+
+message Album {
+  // Unique ID for the album.
+  string id = 1;
+  // IDs of artists on this album.
+  repeated string artists = 2;
+
+  // Name of the album.
+  string name = 3;
+  // Cover URL for album art. Should be accessible via HTTP with CORS.
+  optional string icon = 4;
+  // Unix timestamp the album was released. (in seconds)
+  int64 date = 5;
+  // Type of the album.
+  AlbumType type = 6;
+  // Rating for the track.
+  optional int32 rating = 8;
+
+  // Description of the album.
+  optional string description = 7;
+  // List of genres for the album.
+  repeated string genres = 9;
+}
+
+enum TrackExplicitness {
+  // Normal
+  CLEAN = 0;
+  // Explicit
+  EXPLICIT = 1;
+  // Rated X
+  RESTRICTED = 2;
+}
+
+message Track {
+  // Unique ID for the track.
+  string id = 1;
+  // Unique ISRC of the track. May be unofficial.
+  string isrc = 8;
+  // IDs of artists on this track.
+  repeated string artists = 2;
+
+  // Title of the track.
+  string title = 3;
+  // Track number in the album.
+  int32 index = 4;
+  // Duration in ms of the track.
+  int64 duration = 5;
+  // Rating for the track.
+  optional int32 rating = 6;
+  // The explicitness of the track.
+  TrackExplicitness explicitness = 7;
+}

@@ -1,0 +1,60 @@
+syntax = "proto3";
+package flixur.plugins;
+option go_package = "forge.xela.codes/xela/flixur/proto/go";
+
+import "music_features.proto";
+
+// Used to test if a plugin supports certain features.
+enum Feature {
+  // Implements `Artist*`, `Album*`, `Track*` RPC calls
+  MUSIC_METADATA = 0;
+}
+
+// Empty message for RPC calls that don't require input.
+message EmptyRequest {}
+
+// Plugin metadata returned by GetPluginInfo.
+message PluginInfo {
+  // Unique Plugin ID.
+  string id = 1;
+  // Name of the plugin.
+  string name = 2;
+  // Numerical version of the plugin.
+  int32 version = 3;
+  // List of plugin IDs that should be loaded before this plugin.
+  repeated string dependencies = 4;
+  // List of feature names this plugin implements.
+  repeated Feature features = 5;
+  // Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
+  string icon = 6;
+  // Short description of the plugin.
+  string description = 7;
+  // Name of the plugin author.
+  string author = 8;
+  // Direct link to the source code of the plugin.
+  string url = 9;
+}
+
+// The main plugin service. Plugins implement this gRPC service.
+service FlixurPlugin {
+  // Get plugin metadata and capabilities.
+  rpc GetPluginInfo (EmptyRequest) returns (PluginInfo);
+
+  // === Artist Methods ===
+  // Get a specific artist by ID.
+  rpc ArtistGet (music_features.ArtistGetRequest) returns (music_features.ArtistGetResponse);
+  // Search for artists by name.
+  rpc ArtistSearch (music_features.ArtistSearchRequest) returns (music_features.ArtistSearchResponse);
+
+  // === Album Methods ===
+  // Get a specific album by ID.
+  rpc AlbumGet (music_features.AlbumGetRequest) returns (music_features.AlbumGetResponse);
+  // Search for albums by name.
+  rpc AlbumSearch (music_features.AlbumSearchRequest) returns (music_features.AlbumSearchResponse);
+
+  // === Track Methods ===
+  // Get a specific track by ID.
+  rpc TrackGet (music_features.TrackGetRequest) returns (music_features.TrackGetResponse);
+  // Search for tracks by name.
+  rpc TrackSearch (music_features.TrackSearchRequest) returns (music_features.TrackSearchResponse);
+}
