@@ -26,17 +26,8 @@
           inherit system;
           overlays = [ go-overlay.overlays.default ];
         };
-        gopkg = pkgs.go-bin.fromGoMod ./server/go.mod;
 
-        flixur-server = pkgs.buildGoWorkspace {
-          go = gopkg;
-          pname = "flixur-server";
-          version = "0.0.0";
-          src = ./.;
-          subPackages = [ "server" ];
-          modules = ./govendor.toml;
-          postInstall = "mv $out/bin/flixur $out/bin/flixur-server";
-        };
+        flixur-server = pkgs.callPackage ./nix/server.pkg.nix { };
 
         # util to cd to root
         setup = ''
