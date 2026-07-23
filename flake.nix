@@ -27,6 +27,7 @@
           overlays = [ go-overlay.overlays.default ];
         };
 
+        flixur-flutter = pkgs.callPackage ./nix/flutter.pkg.nix { };
         flixur-server = pkgs.callPackage ./nix/server.pkg.nix { };
 
         # util to cd to root
@@ -126,6 +127,7 @@
           generate = pkgs.writeShellApplication {
             name = "generate";
             runtimeInputs = [
+              pkgs.yq
               commands.govendor
               commands.proto
               commands.tygo
@@ -137,6 +139,9 @@
               proto
               #tygo
               openapi
+
+              # we also need to generate the JSON file for the flutter pubspec
+              yq . flutter/pubspec.lock > flutter/pubspec.lock.json
             '';
           };
         };
@@ -144,7 +149,7 @@
       in
       {
         packages = {
-          inherit flixur-server;
+          inherit flixur-server flixur-flutter;
           default = flixur-server;
         };
 
