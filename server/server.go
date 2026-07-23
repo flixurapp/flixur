@@ -67,18 +67,16 @@ func main() {
 
 	api.RegisterAPI(router)
 
-	if common.Dev {
+	if common.Config.DevelopmentMode {
 		log.Info().Msg("Running in development mode.")
 	}
 
-	cwd, _ := os.Getwd()
-	pluginDir := cwd
-	if common.Dev {
-		//TODO:temp  maybe do this better? good for testing for now
-		pluginDir = filepath.Join(pluginDir, "../test")
+	pluginDir, err := filepath.Abs(common.Config.PluginDir)
+	if err != nil {
+		log.Err(err).Msg("Failed to resolve plugin directory.")
+	} else {
+		plugins.RegisterPlugins(pluginDir)
 	}
-	pluginDir = filepath.Join(pluginDir, "plugins")
-	plugins.RegisterPlugins(pluginDir)
 	defer plugins.DestroyAllPlugins()
 
 	// serves the client as a reverse proxy

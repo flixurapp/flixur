@@ -20,6 +20,10 @@ type config struct {
 	// The log level for both server and (most official) spawned plugins.
 	//TODO: change default to info for prod
 	LogLevel logLevel `env:"LOG_LEVEL" envDefault:"trace"` // realistically this should never change so plugins remain compatible
+	// Runs the server in development mode, some features may act differently.
+	DevelopmentMode bool `env:"DEVELOPMENT_MODE" envDefault:"false"`
+	// Path to the directory to scan for plugins.
+	PluginDir string `env:"PLUGIN_DIR" envDefault:"./plugins"`
 }
 
 var Config config
