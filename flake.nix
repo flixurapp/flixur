@@ -92,6 +92,8 @@
                   -g dart \
                   -o ${openapi-out} \
                   --enable-post-process-file
+
+                killport ${openapi-port}
               '';
             };
           proto =
