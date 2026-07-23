@@ -15,12 +15,28 @@ var HandshakeConfig = plugin.HandshakeConfig{
 
 // The flixur plugin implementation. Both client/server implement these functions.
 type FlixurPlugin interface {
+	// Get plugin metadata and capabilities.
 	GetPluginInfo(ctx context.Context) (*pb.PluginInfo, error)
+
+	// === Artist Methods ===
+
+	// Get a specific artist by ID.
 	ArtistGet(ctx context.Context, req *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error)
+	// Search for artists by name.
 	ArtistSearch(ctx context.Context, req *pb.ArtistSearchRequest) (*pb.ArtistSearchResponse, error)
+
+	// === Album Methods ===
+
+	// Get a specific album by ID.
 	AlbumGet(ctx context.Context, req *pb.AlbumGetRequest) (*pb.AlbumGetResponse, error)
+	// Search for albums by name.
 	AlbumSearch(ctx context.Context, req *pb.AlbumSearchRequest) (*pb.AlbumSearchResponse, error)
+
+	// === Track Methods ===
+
+	// Get a specific track by ID.
 	TrackGet(ctx context.Context, req *pb.TrackGetRequest) (*pb.TrackGetResponse, error)
+	// Search for tracks by name.
 	TrackSearch(ctx context.Context, req *pb.TrackSearchRequest) (*pb.TrackSearchResponse, error)
 }
 
