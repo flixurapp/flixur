@@ -46,14 +46,14 @@
             let
               openapi-port = "8787";
               openapi-addr = "http://127.0.0.1:${openapi-port}/api/openapi.json";
-              openapi-out = "openapi/";
+              openapi-out = "flutter/openapi/";
             in
             pkgs.writeShellApplication {
               name = "openapi";
               runtimeInputs = with pkgs; [
                 curl
-                openapi-generator-cli
                 killport
+                openapi-generator-cli
               ];
               text = ''
                 ${setup}
