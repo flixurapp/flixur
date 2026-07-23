@@ -46,7 +46,7 @@ func RegisterAPI(router chi.Router) {
 
 		api := humachi.New(r, config)
 
-		RegisterMusicArtistsAPI(api)
+		RegisterMusicArtistsRoutes(api)
 
 		//TODO:testing
 		// Register GET /greeting/{name} handler.
