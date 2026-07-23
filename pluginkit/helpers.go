@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	pb "forge.xela.codes/xela/flixur/proto/go"
+	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 	"github.com/hashicorp/go-hclog"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"

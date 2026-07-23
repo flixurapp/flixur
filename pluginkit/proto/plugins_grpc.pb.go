@@ -4,7 +4,7 @@
 // - protoc             v7.34.1
 // source: plugins.proto
 
-package _go
+package proto
 
 import (
 	context "context"

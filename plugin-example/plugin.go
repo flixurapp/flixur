@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"forge.xela.codes/xela/flixur/pluginkit"
-	pb "forge.xela.codes/xela/flixur/proto/go"
+	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

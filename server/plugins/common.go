@@ -4,7 +4,7 @@ import (
 	"slices"
 
 	"forge.xela.codes/xela/flixur/pluginkit"
-	pb "forge.xela.codes/xela/flixur/proto/go"
+	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 	"github.com/samber/lo"
 )
 

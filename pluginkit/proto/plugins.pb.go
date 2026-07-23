@@ -4,7 +4,7 @@
 // 	protoc        v7.34.1
 // source: plugins.proto
 
-package _go
+package proto
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -247,7 +247,7 @@ const file_plugins_proto_rawDesc = "" +
 	"\bAlbumGet\x12&.flixur.music_features.AlbumGetRequest\x1a'.flixur.music_features.AlbumGetResponse\x12d\n" +
 	"\vAlbumSearch\x12).flixur.music_features.AlbumSearchRequest\x1a*.flixur.music_features.AlbumSearchResponse\x12[\n" +
 	"\bTrackGet\x12&.flixur.music_features.TrackGetRequest\x1a'.flixur.music_features.TrackGetResponse\x12d\n" +
-	"\vTrackSearch\x12).flixur.music_features.TrackSearchRequest\x1a*.flixur.music_features.TrackSearchResponseB'Z%forge.xela.codes/xela/flixur/proto/gob\x06proto3"
+	"\vTrackSearch\x12).flixur.music_features.TrackSearchRequest\x1a*.flixur.music_features.TrackSearchResponseB.Z,forge.xela.codes/xela/flixur/pluginkit/protob\x06proto3"
 
 var (
 	file_plugins_proto_rawDescOnce sync.Once

@@ -4,7 +4,7 @@
 // 	protoc        v7.34.1
 // source: music.proto
 
-package _go
+package proto
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -562,7 +562,7 @@ const file_music_proto_rawDesc = "" +
 	"\x05CLEAN\x10\x00\x12\f\n" +
 	"\bEXPLICIT\x10\x01\x12\x0e\n" +
 	"\n" +
-	"RESTRICTED\x10\x02B'Z%forge.xela.codes/xela/flixur/proto/gob\x06proto3"
+	"RESTRICTED\x10\x02B.Z,forge.xela.codes/xela/flixur/pluginkit/protob\x06proto3"
 
 var (
 	file_music_proto_rawDescOnce sync.Once

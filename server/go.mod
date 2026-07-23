@@ -4,7 +4,6 @@ go 1.25.0
 
 require (
 	forge.xela.codes/xela/flixur/pluginkit v0.0.0
-	forge.xela.codes/xela/flixur/proto/go v0.0.0
 	github.com/danielgtaylor/huma/v2 v2.38.0
 	github.com/go-chi/chi/v5 v5.3.0
 	github.com/go-chi/cors v1.2.2
@@ -15,8 +14,6 @@ require (
 )
 
 replace forge.xela.codes/xela/flixur/pluginkit => ../pluginkit
-
-replace forge.xela.codes/xela/flixur/proto/go => ../proto/go
 
 require (
 	github.com/fatih/color v1.19.0 // indirect

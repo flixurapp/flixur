@@ -82,25 +82,30 @@
                 -o openapi/
             '';
           };
-          proto = pkgs.writeShellApplication {
-            name = "proto";
-            runtimeInputs = with pkgs; [
-              gnused
-              protobuf
-              protoc-gen-go
-              protoc-gen-go-grpc
-            ];
-            text = ''
-              ${setup}
+          proto =
+            let
+              proto-in = "./proto";
+              proto-out = "./pluginkit/proto";
+            in
+            pkgs.writeShellApplication {
+              name = "proto";
+              runtimeInputs = with pkgs; [
+                gnused
+                protobuf
+                protoc-gen-go
+                protoc-gen-go-grpc
+              ];
+              text = ''
+                ${setup}
 
-              protoc -I=./proto \
-                --go_out=./proto/go --go_opt=paths=source_relative \
-                --go-grpc_out=./proto/go --go-grpc_opt=paths=source_relative \
-                ./proto/*.proto
-              # remove the omitempty flag from json that isnt "optional" (with *)
-              sed -i '/\*.*omitempty/!s/,omitempty//' ./proto/go/*.pb.go
-            '';
-          };
+                protoc -I=${proto-in} \
+                  --go_out=${proto-out} --go_opt=paths=source_relative \
+                  --go-grpc_out=${proto-out} --go-grpc_opt=paths=source_relative \
+                  ${proto-in}/*.proto
+                # remove the omitempty flag from json that isnt "optional" (with *)
+                sed -i '/\*.*omitempty/!s/,omitempty//' ${proto-out}/*.pb.go
+              '';
+            };
           tygo = pkgs.writeShellApplication {
             name = "tygo";
             runtimeInputs = with pkgs; [ tygo ];

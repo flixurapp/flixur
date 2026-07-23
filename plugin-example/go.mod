@@ -4,14 +4,11 @@ go 1.25.0
 
 require (
 	forge.xela.codes/xela/flixur/pluginkit v0.0.0
-	forge.xela.codes/xela/flixur/proto/go v0.0.0
 	github.com/rs/zerolog v1.35.1
 	google.golang.org/grpc v1.81.1
 )
 
 replace forge.xela.codes/xela/flixur/pluginkit => ../pluginkit
-
-replace forge.xela.codes/xela/flixur/proto/go => ../proto/go
 
 require (
 	github.com/fatih/color v1.19.0 // indirect

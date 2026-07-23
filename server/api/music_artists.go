@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
+	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 	"forge.xela.codes/xela/flixur/plugins"
-	pb "forge.xela.codes/xela/flixur/proto/go"
 	"github.com/danielgtaylor/huma/v2"
 )
 

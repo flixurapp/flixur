@@ -1,7 +1,0 @@
-{
-  "name": "@flixur/proto",
-  "version": "1.0.0",
-  "exports": {
-    ".": "./types.ts"
-  }
-}

@@ -4,7 +4,7 @@
 // 	protoc        v7.34.1
 // source: music_features.proto
 
-package _go
+package proto
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -613,7 +613,7 @@ const file_music_features_proto_rawDesc = "" +
 	"\x05query\x18\x01 \x01(\tR\x05query\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\"D\n" +
 	"\x13TrackSearchResponse\x12-\n" +
-	"\aresults\x18\x01 \x03(\v2\x13.flixur.music.TrackR\aresultsB'Z%forge.xela.codes/xela/flixur/proto/gob\x06proto3"
+	"\aresults\x18\x01 \x03(\v2\x13.flixur.music.TrackR\aresultsB.Z,forge.xela.codes/xela/flixur/pluginkit/protob\x06proto3"
 
 var (
 	file_music_features_proto_rawDescOnce sync.Once

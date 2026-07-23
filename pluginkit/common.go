@@ -3,7 +3,7 @@ package pluginkit
 import (
 	"context"
 
-	pb "forge.xela.codes/xela/flixur/proto/go"
+	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 	"github.com/hashicorp/go-plugin"
 )
 
