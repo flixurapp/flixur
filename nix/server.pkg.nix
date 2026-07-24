@@ -1,6 +1,7 @@
 {
   buildGoWorkspace,
   go-bin,
+  lib,
   makeWrapper,
 
   # path to the frontend files to embed in the server
@@ -20,7 +21,6 @@ buildGoWorkspace {
   modules = ../govendor.toml;
 
   nativeBuildInputs = [ makeWrapper ];
-
   postInstall = ''
     mv $out/bin/flixur $out/bin/flixur-server
     wrapProgram $out/bin/flixur-server \
