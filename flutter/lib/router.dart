@@ -42,7 +42,7 @@ final router = GoRouter(
         return CustomTransitionPage(
           key: state.pageKey,
           child: LoginView(serverInfo: serverResponse),
-          transitionDuration: const Duration(milliseconds: 500),
+          transitionDuration: const Duration(seconds: 1),
           transitionsBuilder: (_, animation, _, child) {
             // start at bottom and work up
             final tween = Tween(

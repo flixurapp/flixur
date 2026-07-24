@@ -44,6 +44,9 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	/// en: 'Flixur'
 	String get app_name => 'Flixur';
 
+	/// en: 'OR'
+	String get or_line => 'OR';
+
 	late final Translations$routes$en routes = Translations$routes$en._(_root);
 }
 
@@ -78,9 +81,6 @@ class Translations$routes$setup$login$en {
 
 	/// en: 'Log In'
 	String get login => 'Log In';
-
-	/// en: 'or'
-	String get or => 'or';
 
 	/// en: 'Password'
 	String get password => 'Password';
@@ -122,8 +122,8 @@ extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
 			'app_name' => 'Flixur',
+			'or_line' => 'OR',
 			'routes.setup.login.login' => 'Log In',
-			'routes.setup.login.or' => 'or',
 			'routes.setup.login.password' => 'Password',
 			'routes.setup.login.username' => 'Username',
 			'routes.setup.server_url.connect' => 'Connect',

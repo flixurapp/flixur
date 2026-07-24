@@ -1,7 +1,9 @@
+import "package:flixur/routes/setup/components.dart";
 import "package:flixur/routes/setup/server_url.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
+import "package:openapi/api.dart";
 
 class LoginView extends StatefulWidget {
   const LoginView({required this.serverInfo, super.key});
@@ -15,9 +17,20 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _passwordFocus = FocusNode();
+
+  PingOutputBody get serverResponseBody => widget.serverInfo.body;
+
+  AuthenticationApi? api;
+  @override
+  void initState() {
+    super.initState();
+    api = AuthenticationApi(ApiClient(basePath: widget.serverInfo.url));
+  }
 
   String? errorText;
-  bool isLoading = false;
+  bool isPasswordLoading = false;
+  bool isOidcLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +38,12 @@ class _LoginViewState extends State<LoginView> {
       backgroundColor: context.colors.base,
       appBar: AppBar(
         backgroundColor: context.colors.mantle,
-        leading: Images.logo,
+        leading: Padding(
+          padding: const .symmetric(vertical: 6),
+          child: Images.logo,
+        ),
         title: Text(t.routes.setup.login.login),
+        toolbarHeight: 60,
       ),
       body: Center(
         child: FractionallySizedBox(
@@ -36,27 +53,39 @@ class _LoginViewState extends State<LoginView> {
             crossAxisAlignment: .stretch,
             spacing: 14,
             children: [
-              FlixurInput(
-                label: t.routes.setup.server_url.url.toUpperCase(),
-                hintText: "https://demo.flixur.app",
-                errorText: errorText,
-                textController: _usernameController,
-                onSubmitted: (_) => _loginSubmit(),
-              ),
-              FilledButton(
-                onPressed: isLoading ? null : _loginSubmit,
-                style: .new(
-                  padding: .all(const .symmetric(vertical: 18)),
-                  textStyle: .all(
-                    const .new(fontSize: 24, fontWeight: .w500),
-                  ),
+              if (serverResponseBody.supportsPasswordLogin) ...[
+                FlixurInput(
+                  label: t.routes.setup.login.username.toUpperCase(),
+                  hintText: "peppa.pig",
+                  textController: _usernameController,
+                  onSubmitted: (_) => _passwordFocus.requestFocus(),
                 ),
-                child: isLoading
-                    ? const LoadingSpinner()
-                    : Text(
-                        t.routes.setup.login.login.toUpperCase(),
-                      ),
-              ),
+                FlixurInput(
+                  label: t.routes.setup.login.password.toUpperCase(),
+                  hintText: "*" * 12,
+                  errorText: errorText,
+                  textController: _passwordController,
+                  onSubmitted: (_) => _passwordSubmit(),
+                  focusNode: _passwordFocus,
+                  obscureText: true,
+                ),
+                SetupButton(
+                  text: t.routes.setup.login.login,
+                  isLoading: isPasswordLoading,
+                  // disable button if OIDC is loading
+                  onPressed: isOidcLoading ? null : _passwordSubmit,
+                ),
+              ],
+              // only show the "OR" line if both methods are allowed
+              if (serverResponseBody.supportsPasswordLogin &&
+                  serverResponseBody.supportsOIDCLogin != "")
+                const OrLine(),
+              if (serverResponseBody.supportsOIDCLogin != "")
+                SetupButton(
+                  text: serverResponseBody.supportsOIDCLogin,
+                  isLoading: isOidcLoading,
+                  onPressed: isPasswordLoading ? null : _oidcSubmit,
+                ),
             ],
           ),
         ),
@@ -64,9 +93,19 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  void setServerUrlError(String? text) {
+  void setLoginError(String? text) {
     setState(() => errorText = text);
   }
 
-  Future<void> _loginSubmit() async {}
+  Future<void> _passwordSubmit() async {
+    if (isPasswordLoading || isOidcLoading || api == null) return;
+
+    setState(() => isPasswordLoading = true);
+  }
+
+  Future<void> _oidcSubmit() async {
+    if (isOidcLoading || isPasswordLoading || api == null) return;
+
+    setState(() => isOidcLoading = true);
+  }
 }

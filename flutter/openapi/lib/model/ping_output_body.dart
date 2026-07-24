@@ -16,6 +16,8 @@ class PingOutputBody {
     this.dollarSchema,
     required this.isSetup,
     required this.protocolVersion,
+    required this.supportsOIDCLogin,
+    required this.supportsPasswordLogin,
     required this.version,
   });
 
@@ -32,6 +34,10 @@ class PingOutputBody {
 
   int protocolVersion;
 
+  String supportsOIDCLogin;
+
+  bool supportsPasswordLogin;
+
   String version;
 
   @override
@@ -41,6 +47,8 @@ class PingOutputBody {
           other.dollarSchema == dollarSchema &&
           other.isSetup == isSetup &&
           other.protocolVersion == protocolVersion &&
+          other.supportsOIDCLogin == supportsOIDCLogin &&
+          other.supportsPasswordLogin == supportsPasswordLogin &&
           other.version == version;
 
   @override
@@ -49,11 +57,13 @@ class PingOutputBody {
       (dollarSchema == null ? 0 : dollarSchema!.hashCode) +
       (isSetup.hashCode) +
       (protocolVersion.hashCode) +
+      (supportsOIDCLogin.hashCode) +
+      (supportsPasswordLogin.hashCode) +
       (version.hashCode);
 
   @override
   String toString() =>
-      'PingOutputBody[dollarSchema=$dollarSchema, isSetup=$isSetup, protocolVersion=$protocolVersion, version=$version]';
+      'PingOutputBody[dollarSchema=$dollarSchema, isSetup=$isSetup, protocolVersion=$protocolVersion, supportsOIDCLogin=$supportsOIDCLogin, supportsPasswordLogin=$supportsPasswordLogin, version=$version]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -64,6 +74,8 @@ class PingOutputBody {
     }
     json[r'isSetup'] = this.isSetup;
     json[r'protocolVersion'] = this.protocolVersion;
+    json[r'supportsOIDCLogin'] = this.supportsOIDCLogin;
+    json[r'supportsPasswordLogin'] = this.supportsPasswordLogin;
     json[r'version'] = this.version;
     return json;
   }
@@ -87,6 +99,14 @@ class PingOutputBody {
             'Required key "PingOutputBody[protocolVersion]" is missing from JSON.');
         assert(json[r'protocolVersion'] != null,
             'Required key "PingOutputBody[protocolVersion]" has a null value in JSON.');
+        assert(json.containsKey(r'supportsOIDCLogin'),
+            'Required key "PingOutputBody[supportsOIDCLogin]" is missing from JSON.');
+        assert(json[r'supportsOIDCLogin'] != null,
+            'Required key "PingOutputBody[supportsOIDCLogin]" has a null value in JSON.');
+        assert(json.containsKey(r'supportsPasswordLogin'),
+            'Required key "PingOutputBody[supportsPasswordLogin]" is missing from JSON.');
+        assert(json[r'supportsPasswordLogin'] != null,
+            'Required key "PingOutputBody[supportsPasswordLogin]" has a null value in JSON.');
         assert(json.containsKey(r'version'),
             'Required key "PingOutputBody[version]" is missing from JSON.');
         assert(json[r'version'] != null,
@@ -98,6 +118,9 @@ class PingOutputBody {
         dollarSchema: mapValueOfType<String>(json, r'$schema'),
         isSetup: mapValueOfType<bool>(json, r'isSetup')!,
         protocolVersion: mapValueOfType<int>(json, r'protocolVersion')!,
+        supportsOIDCLogin: mapValueOfType<String>(json, r'supportsOIDCLogin')!,
+        supportsPasswordLogin:
+            mapValueOfType<bool>(json, r'supportsPasswordLogin')!,
         version: mapValueOfType<String>(json, r'version')!,
       );
     }
@@ -157,6 +180,8 @@ class PingOutputBody {
   static const requiredKeys = <String>{
     'isSetup',
     'protocolVersion',
+    'supportsOIDCLogin',
+    'supportsPasswordLogin',
     'version',
   };
 }

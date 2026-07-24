@@ -60,8 +60,10 @@ All URIs are relative to *http://127.0.0.1:8787/api*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *ArtistsApi* | [**artistSearch**](doc//ArtistsApi.md#artistsearch) | **POST** /music/artists/search | Search for artists.
+*AuthenticationApi* | [**oidcInit**](doc//AuthenticationApi.md#oidcinit) | **GET** /oidc_init | Initialize an OIDC login request.
 *AuthenticationApi* | [**ping**](doc//AuthenticationApi.md#ping) | **GET** /ping | Test server connectivity.
 *ConnectivityApi* | [**ping**](doc//ConnectivityApi.md#ping) | **GET** /ping | Test server connectivity.
+*LoginApi* | [**oidcInit**](doc//LoginApi.md#oidcinit) | **GET** /oidc_init | Initialize an OIDC login request.
 *MusicApi* | [**artistSearch**](doc//MusicApi.md#artistsearch) | **POST** /music/artists/search | Search for artists.
 *SearchApi* | [**artistSearch**](doc//SearchApi.md#artistsearch) | **POST** /music/artists/search | Search for artists.
 
@@ -73,6 +75,7 @@ Class | Method | HTTP request | Description
  - [ArtistSearchRequest](doc//ArtistSearchRequest.md)
  - [ErrorDetail](doc//ErrorDetail.md)
  - [ErrorModel](doc//ErrorModel.md)
+ - [OIDCInitOutputBody](doc//OIDCInitOutputBody.md)
  - [PingOutputBody](doc//PingOutputBody.md)
 
 

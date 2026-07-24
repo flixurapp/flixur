@@ -19,6 +19,45 @@ class LoadingSpinner extends StatelessWidget {
   }
 }
 
+// A line with "OR" in the middle. ---- OR ----
+class OrLine extends StatelessWidget {
+  const OrLine({super.key, this.padding = 6});
+
+  // Vertical padding for the line.
+  final double padding;
+
+  @override
+  Widget build(BuildContext context) {
+    final line = Expanded(
+      child: Divider(
+        color: context.colors.textMuted,
+        thickness: 1,
+      ),
+    );
+
+    return Row(
+      children: [
+        line,
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: padding,
+          ),
+          child: Text(
+            t.or_line,
+            style: TextStyle(
+              color: context.colors.textMuted,
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+            ),
+          ),
+        ),
+        line,
+      ],
+    );
+  }
+}
+
 class FlixurInput extends StatelessWidget {
   const FlixurInput({
     required this.label,
@@ -27,6 +66,7 @@ class FlixurInput extends StatelessWidget {
     this.errorText,
     this.obscureText = false,
     this.textController,
+    this.focusNode,
     this.onSubmitted,
   });
   final String label;
@@ -36,6 +76,7 @@ class FlixurInput extends StatelessWidget {
   final String? errorText;
   final bool obscureText;
   final TextEditingController? textController;
+  final FocusNode? focusNode;
   final ValueChanged<String>? onSubmitted;
 
   @override
@@ -68,6 +109,7 @@ class FlixurInput extends StatelessWidget {
           obscureText: obscureText,
           controller: textController,
           onSubmitted: onSubmitted,
+          focusNode: focusNode,
         ),
       ],
     );

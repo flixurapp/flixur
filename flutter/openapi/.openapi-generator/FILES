@@ -10,7 +10,9 @@ doc/AuthenticationApi.md
 doc/ConnectivityApi.md
 doc/ErrorDetail.md
 doc/ErrorModel.md
+doc/LoginApi.md
 doc/MusicApi.md
+doc/OIDCInitOutputBody.md
 doc/PingOutputBody.md
 doc/SearchApi.md
 git_push.sh
@@ -18,6 +20,7 @@ lib/api.dart
 lib/api/artists_api.dart
 lib/api/authentication_api.dart
 lib/api/connectivity_api.dart
+lib/api/login_api.dart
 lib/api/music_api.dart
 lib/api/search_api.dart
 lib/api_client.dart
@@ -33,5 +36,8 @@ lib/model/artist_search_output_body.dart
 lib/model/artist_search_request.dart
 lib/model/error_detail.dart
 lib/model/error_model.dart
+lib/model/oidc_init_output_body.dart
 lib/model/ping_output_body.dart
 pubspec.yaml
+test/login_api_test.dart
+test/oidc_init_output_body_test.dart

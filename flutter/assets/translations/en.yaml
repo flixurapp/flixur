@@ -1,10 +1,10 @@
 ---
 app_name: "Flixur"
+or_line: "OR"
 routes:
   setup:
     login:
       login: "Log In"
-      or: "or"
       password: "Password"
       username: "Username"
     server_url:

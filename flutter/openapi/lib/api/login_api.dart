@@ -10,9 +10,8 @@
 
 part of openapi.api;
 
-class AuthenticationApi {
-  AuthenticationApi([ApiClient? apiClient])
-      : apiClient = apiClient ?? defaultApiClient;
+class LoginApi {
+  LoginApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -62,56 +61,6 @@ class AuthenticationApi {
         await _decodeBodyBytes(response),
         'OIDCInitOutputBody',
       ) as OIDCInitOutputBody;
-    }
-    return null;
-  }
-
-  /// Test server connectivity.
-  ///
-  /// Can be used to test the server connectivity and version.
-  ///
-  /// Note: This method returns the HTTP [Response].
-  Future<Response> pingWithHttpInfo() async {
-    // ignore: prefer_const_declarations
-    final path = r'/ping';
-
-    // ignore: prefer_final_locals
-    Object? postBody;
-
-    final queryParams = <QueryParam>[];
-    final headerParams = <String, String>{};
-    final formParams = <String, String>{};
-
-    const contentTypes = <String>[];
-
-    return apiClient.invokeAPI(
-      path,
-      'GET',
-      queryParams,
-      postBody,
-      headerParams,
-      formParams,
-      contentTypes.isEmpty ? null : contentTypes.first,
-    );
-  }
-
-  /// Test server connectivity.
-  ///
-  /// Can be used to test the server connectivity and version.
-  Future<PingOutputBody?> ping() async {
-    final response = await pingWithHttpInfo();
-    if (response.statusCode >= HttpStatus.badRequest) {
-      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
-    }
-    // When a remote server returns no body with a status of 204, we shall not decode it.
-    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
-    // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'PingOutputBody',
-      ) as PingOutputBody;
     }
     return null;
   }

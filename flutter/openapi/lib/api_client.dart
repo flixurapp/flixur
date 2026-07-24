@@ -239,6 +239,8 @@ class ApiClient {
           return ErrorDetail.fromJson(value);
         case 'ErrorModel':
           return ErrorModel.fromJson(value);
+        case 'OIDCInitOutputBody':
+          return OIDCInitOutputBody.fromJson(value);
         case 'PingOutputBody':
           return PingOutputBody.fromJson(value);
         default:

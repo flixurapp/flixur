@@ -1,3 +1,4 @@
+import "package:flixur/routes/setup/components.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
@@ -64,19 +65,10 @@ class _ServerUrlViewState extends State<ServerUrlView> {
                       textController: _serverUrlController,
                       onSubmitted: (_) => _serverUrlSubmit(),
                     ),
-                    FilledButton(
-                      onPressed: isLoading ? null : _serverUrlSubmit,
-                      style: .new(
-                        padding: .all(const .symmetric(vertical: 18)),
-                        textStyle: .all(
-                          const .new(fontSize: 24, fontWeight: .w500),
-                        ),
-                      ),
-                      child: isLoading
-                          ? const LoadingSpinner()
-                          : Text(
-                              t.routes.setup.server_url.connect.toUpperCase(),
-                            ),
+                    SetupButton(
+                      text: t.routes.setup.server_url.connect,
+                      isLoading: isLoading,
+                      onPressed: _serverUrlSubmit,
                     ),
                   ],
                 ),
