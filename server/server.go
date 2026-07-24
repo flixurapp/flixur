@@ -23,32 +23,6 @@ import (
 	_ "embed"
 )
 
-type spaFileSystem struct {
-	fs       http.FileSystem
-	fallback string
-}
-
-func (spa spaFileSystem) Open(name string) (http.File, error) {
-	// Strip leading slash (if any)
-	name = strings.TrimPrefix(name, "/")
-
-	// Try to open the requested file
-	file, err := spa.fs.Open(name)
-	if err != nil {
-		// If file not found, fall back to index.html
-		return spa.fs.Open(spa.fallback)
-	}
-
-	// Check if it's a directory and return index.html if it is
-	stat, err := file.Stat()
-	if err == nil && stat.IsDir() {
-		return spa.fs.Open(spa.fallback)
-	}
-
-	// Return the found file
-	return file, nil
-}
-
 func main() {
 	// log traces until we init the logger and config
 	zerolog.SetGlobalLevel(zerolog.TraceLevel)
