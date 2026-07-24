@@ -1,7 +1,16 @@
-import 'package:flixur/ui/theme.dart';
-import 'package:flutter/material.dart';
+import "package:flixur/ui/theme.dart";
+import "package:flutter/material.dart";
 
 class FlixurInput extends StatelessWidget {
+  const FlixurInput({
+    required this.label,
+    super.key,
+    this.hintText,
+    this.errorText,
+    this.obscureText = false,
+    this.textController,
+    this.onSubmitted,
+  });
   final String label;
 
   // passed to TextField
@@ -10,16 +19,6 @@ class FlixurInput extends StatelessWidget {
   final bool obscureText;
   final TextEditingController? textController;
   final ValueChanged<String>? onSubmitted;
-
-  const FlixurInput({
-    super.key,
-    required this.label,
-    this.hintText,
-    this.errorText,
-    this.obscureText = false,
-    this.textController,
-    this.onSubmitted,
-  });
 
   @override
   Widget build(BuildContext context) {

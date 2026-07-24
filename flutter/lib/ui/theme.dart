@@ -1,21 +1,8 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 //TODO: use theme_tailor once it works??
 @immutable
 class AppColors extends ThemeExtension<AppColors> {
-  final Brightness brightness;
-
-  final Color primary;
-  final Color secondary;
-  final Color tertiary;
-  final Color success;
-  final Color error;
-  final Color crust;
-  final Color mantle;
-  final Color base;
-  final Color text;
-  final Color textMuted;
-
   const AppColors({
     required this.brightness,
     required this.primary,
@@ -29,6 +16,18 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.text,
     required this.textMuted,
   });
+  final Brightness brightness;
+
+  final Color primary;
+  final Color secondary;
+  final Color tertiary;
+  final Color success;
+  final Color error;
+  final Color crust;
+  final Color mantle;
+  final Color base;
+  final Color text;
+  final Color textMuted;
 
   Color get onPrimary => text;
 

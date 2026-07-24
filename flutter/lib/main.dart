@@ -1,15 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
+import "package:flixur/gen/strings.g.dart";
+import "package:flixur/router.dart";
+import "package:flixur/ui/theme.dart";
+import "package:flutter/material.dart";
+import "package:flutter_web_plugins/url_strategy.dart";
 
-import './gen/strings.g.dart';
-import './router.dart';
-import './ui/theme.dart';
-
-void main() {
+void main() async {
+  // enable path URLs
   usePathUrlStrategy();
   // set up and use translations
   WidgetsFlutterBinding.ensureInitialized();
-  LocaleSettings.useDeviceLocale();
+  await LocaleSettings.useDeviceLocale();
   runApp(TranslationProvider(child: const MainApp()));
 }
 
