@@ -14,6 +14,8 @@ class PingOutputBody {
   /// Returns a new [PingOutputBody] instance.
   PingOutputBody({
     this.dollarSchema,
+    required this.isSetup,
+    required this.protocolVersion,
     required this.version,
   });
 
@@ -26,6 +28,10 @@ class PingOutputBody {
   ///
   String? dollarSchema;
 
+  bool isSetup;
+
+  int protocolVersion;
+
   String version;
 
   @override
@@ -33,16 +39,21 @@ class PingOutputBody {
       identical(this, other) ||
       other is PingOutputBody &&
           other.dollarSchema == dollarSchema &&
+          other.isSetup == isSetup &&
+          other.protocolVersion == protocolVersion &&
           other.version == version;
 
   @override
   int get hashCode =>
       // ignore: unnecessary_parenthesis
-      (dollarSchema == null ? 0 : dollarSchema!.hashCode) + (version.hashCode);
+      (dollarSchema == null ? 0 : dollarSchema!.hashCode) +
+      (isSetup.hashCode) +
+      (protocolVersion.hashCode) +
+      (version.hashCode);
 
   @override
   String toString() =>
-      'PingOutputBody[dollarSchema=$dollarSchema, version=$version]';
+      'PingOutputBody[dollarSchema=$dollarSchema, isSetup=$isSetup, protocolVersion=$protocolVersion, version=$version]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -51,6 +62,8 @@ class PingOutputBody {
     } else {
       json[r'$schema'] = null;
     }
+    json[r'isSetup'] = this.isSetup;
+    json[r'protocolVersion'] = this.protocolVersion;
     json[r'version'] = this.version;
     return json;
   }
@@ -66,6 +79,14 @@ class PingOutputBody {
       // Note 1: the values aren't checked for validity beyond being non-null.
       // Note 2: this code is stripped in release mode!
       assert(() {
+        assert(json.containsKey(r'isSetup'),
+            'Required key "PingOutputBody[isSetup]" is missing from JSON.');
+        assert(json[r'isSetup'] != null,
+            'Required key "PingOutputBody[isSetup]" has a null value in JSON.');
+        assert(json.containsKey(r'protocolVersion'),
+            'Required key "PingOutputBody[protocolVersion]" is missing from JSON.');
+        assert(json[r'protocolVersion'] != null,
+            'Required key "PingOutputBody[protocolVersion]" has a null value in JSON.');
         assert(json.containsKey(r'version'),
             'Required key "PingOutputBody[version]" is missing from JSON.');
         assert(json[r'version'] != null,
@@ -75,6 +96,8 @@ class PingOutputBody {
 
       return PingOutputBody(
         dollarSchema: mapValueOfType<String>(json, r'$schema'),
+        isSetup: mapValueOfType<bool>(json, r'isSetup')!,
+        protocolVersion: mapValueOfType<int>(json, r'protocolVersion')!,
         version: mapValueOfType<String>(json, r'version')!,
       );
     }
@@ -132,6 +155,8 @@ class PingOutputBody {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
+    'isSetup',
+    'protocolVersion',
     'version',
   };
 }

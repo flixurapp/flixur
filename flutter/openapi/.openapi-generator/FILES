@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 README.md
 analysis_options.yaml
@@ -36,14 +35,3 @@ lib/model/error_detail.dart
 lib/model/error_model.dart
 lib/model/ping_output_body.dart
 pubspec.yaml
-test/artist_search_output_body_test.dart
-test/artist_search_request_test.dart
-test/artist_test.dart
-test/artists_api_test.dart
-test/authentication_api_test.dart
-test/connectivity_api_test.dart
-test/error_detail_test.dart
-test/error_model_test.dart
-test/music_api_test.dart
-test/ping_output_body_test.dart
-test/search_api_test.dart

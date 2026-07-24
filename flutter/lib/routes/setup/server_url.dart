@@ -30,19 +30,17 @@ class _ServerUrlViewState extends State<ServerUrlView> {
                 mainAxisAlignment: .center,
                 spacing: 16,
                 children: [
-                  RepaintBoundary(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        // sane sizing for logo depending on screen size
-                        maxWidth:
-                            context.screenSize.width *
-                            (context.isLandscape ? 0.4 : 0.8),
-                        maxHeight:
-                            context.screenSize.height *
-                            (context.isLandscape ? 0.4 : 0.3),
-                      ),
-                      child: Image.asset("assets/logo.png", fit: .contain),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      // sane sizing for logo depending on screen size
+                      maxWidth:
+                          context.screenSize.width *
+                          (context.isLandscape ? 0.4 : 0.8),
+                      maxHeight:
+                          context.screenSize.height *
+                          (context.isLandscape ? 0.4 : 0.3),
                     ),
+                    child: Image.asset("assets/logo.png", fit: .contain),
                   ),
                   Text(
                     t.pages.login.welcome,

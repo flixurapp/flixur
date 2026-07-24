@@ -10,6 +10,7 @@ void main() async {
   // set up and use translations
   WidgetsFlutterBinding.ensureInitialized();
   await LocaleSettings.useDeviceLocale();
+
   runApp(TranslationProvider(child: const MainApp()));
 }
 
