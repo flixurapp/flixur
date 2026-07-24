@@ -1,7 +1,9 @@
 ---
-pages:
-  login:
-    connect: "Connect"
-    server_url: "Server URL"
-    server_url_error: "Server URL is not valid!"
-    welcome: "Welcome!"
+routes:
+  setup:
+    server_url:
+      connect: "Connect"
+      server_ping_error: "Failed to connect to server."
+      url: "Server URL"
+      url_error: "Server URL is not valid!"
+      welcome: "Welcome!"

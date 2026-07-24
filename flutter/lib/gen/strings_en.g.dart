@@ -40,22 +40,32 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	Translations $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => Translations(meta: meta ?? this.$meta);
 
 	// Translations
-	late final Translations$pages$en pages = Translations$pages$en._(_root);
+	late final Translations$routes$en routes = Translations$routes$en._(_root);
 }
 
-// Path: pages
-class Translations$pages$en {
-	Translations$pages$en._(this._root);
+// Path: routes
+class Translations$routes$en {
+	Translations$routes$en._(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	late final Translations$pages$login$en login = Translations$pages$login$en._(_root);
+	late final Translations$routes$setup$en setup = Translations$routes$setup$en._(_root);
 }
 
-// Path: pages.login
-class Translations$pages$login$en {
-	Translations$pages$login$en._(this._root);
+// Path: routes.setup
+class Translations$routes$setup$en {
+	Translations$routes$setup$en._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	late final Translations$routes$setup$server_url$en server_url = Translations$routes$setup$server_url$en._(_root);
+}
+
+// Path: routes.setup.server_url
+class Translations$routes$setup$server_url$en {
+	Translations$routes$setup$server_url$en._(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -64,11 +74,14 @@ class Translations$pages$login$en {
 	/// en: 'Connect'
 	String get connect => 'Connect';
 
+	/// en: 'Failed to connect to server.'
+	String get server_ping_error => 'Failed to connect to server.';
+
 	/// en: 'Server URL'
-	String get server_url => 'Server URL';
+	String get url => 'Server URL';
 
 	/// en: 'Server URL is not valid!'
-	String get server_url_error => 'Server URL is not valid!';
+	String get url_error => 'Server URL is not valid!';
 
 	/// en: 'Welcome!'
 	String get welcome => 'Welcome!';
@@ -82,10 +95,11 @@ class Translations$pages$login$en {
 extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
-			'pages.login.connect' => 'Connect',
-			'pages.login.server_url' => 'Server URL',
-			'pages.login.server_url_error' => 'Server URL is not valid!',
-			'pages.login.welcome' => 'Welcome!',
+			'routes.setup.server_url.connect' => 'Connect',
+			'routes.setup.server_url.server_ping_error' => 'Failed to connect to server.',
+			'routes.setup.server_url.url' => 'Server URL',
+			'routes.setup.server_url.url_error' => 'Server URL is not valid!',
+			'routes.setup.server_url.welcome' => 'Welcome!',
 			_ => null,
 		};
 	}

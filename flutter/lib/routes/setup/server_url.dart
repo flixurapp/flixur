@@ -1,8 +1,8 @@
+import "package:flixur/extensions.dart";
 import "package:flixur/gen/strings.g.dart";
 import "package:flixur/ui/inputs.dart";
-import "package:flixur/ui/responsiveness.dart";
-import "package:flixur/ui/theme.dart";
 import "package:flutter/material.dart";
+import "package:openapi/api.dart";
 
 class ServerUrlView extends StatefulWidget {
   const ServerUrlView({super.key});
@@ -43,7 +43,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
                     child: Image.asset("assets/logo.png", fit: .contain),
                   ),
                   Text(
-                    t.pages.login.welcome,
+                    t.routes.setup.server_url.welcome,
                     style: const TextStyle(fontSize: 56),
                   ),
                 ],
@@ -58,21 +58,23 @@ class _ServerUrlViewState extends State<ServerUrlView> {
                   spacing: 14,
                   children: [
                     FlixurInput(
-                      label: t.pages.login.server_url.toUpperCase(),
+                      label: t.routes.setup.server_url.url.toUpperCase(),
                       hintText: "https://demo.flixur.app",
                       errorText: errorText,
                       textController: _serverUrlController,
-                      onSubmitted: (_) => _serverUrlSubmit(),
+                      onSubmitted: (_) => _serverUrlSubmit(context),
                     ),
                     FilledButton(
-                      onPressed: _serverUrlSubmit,
+                      onPressed: () => _serverUrlSubmit(context),
                       style: .new(
                         padding: .all(const .symmetric(vertical: 18)),
                         textStyle: .all(
                           const .new(fontSize: 24, fontWeight: .w500),
                         ),
                       ),
-                      child: Text(t.pages.login.connect.toUpperCase()),
+                      child: Text(
+                        t.routes.setup.server_url.connect.toUpperCase(),
+                      ),
                     ),
                   ],
                 ),
@@ -88,7 +90,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
     setState(() => errorText = text);
   }
 
-  Future<void> _serverUrlSubmit() async {
+  Future<void> _serverUrlSubmit(BuildContext context) async {
     setServerUrlError(null);
     final serverUrl = Uri.tryParse(_serverUrlController.text);
     if (serverUrl == null ||
@@ -96,8 +98,34 @@ class _ServerUrlViewState extends State<ServerUrlView> {
         (serverUrl.scheme != "http" && serverUrl.scheme != "https") ||
         // and have a host
         serverUrl.authority == "") {
-      setServerUrlError(t.pages.login.server_url_error);
+      setServerUrlError(t.routes.setup.server_url.url_error);
       return;
+    }
+
+    final apiClient = ApiClient(
+      // append the `api` path to the URL
+      basePath: serverUrl
+          .replace(
+            pathSegments: [...serverUrl.pathSegments, "api"],
+          )
+          .toString(),
+    );
+    final api = AuthenticationApi(apiClient);
+
+    try {
+      final pingResponse = await api.ping();
+      if (pingResponse == null) throw ApiException(0, "No response returned.");
+      if (!context.mounted) return;
+
+      if (pingResponse.isSetup) {
+        context.go("/setup/login");
+      } else {
+        //TODO: setup screen
+      }
+    } on ApiException catch (e) {
+      setServerUrlError(
+        e.message ?? t.routes.setup.server_url.server_ping_error,
+      );
     }
   }
 }
