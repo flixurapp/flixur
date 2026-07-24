@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"net/http/httputil"
-	"net/url"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -79,13 +77,13 @@ func main() {
 	}
 	defer plugins.DestroyAllPlugins()
 
-	// serves the client as a reverse proxy
-	//TODO: this has to be deterministic (env var?)
-	proxyURL, _ := url.Parse("http://localhost:8788")
-	proxy := httputil.NewSingleHostReverseProxy(proxyURL)
-	router.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		proxy.ServeHTTP(w, r)
-	})
+	// serve the frontend if available
+	if dir := common.Config.FrontendDir; dir != "" {
+		router.NotFound(http.FileServer(http.FS(os.DirFS(dir))).ServeHTTP)
+		log.Trace().Msgf("Serving frontend via '%s'.", dir)
+	} else {
+		log.Warn().Msg("Not serving the frontend as no frontend path was provided.")
+	}
 
 	// create http server/channel and listen
 	server := &http.Server{

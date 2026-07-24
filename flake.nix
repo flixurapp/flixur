@@ -29,7 +29,7 @@
 
         flixur-flutter-linux = pkgs.callPackage ./nix/flutter.pkg.nix { };
         flixur-flutter-web = pkgs.callPackage ./nix/flutter.pkg.nix { targetFlutterPlatform = "web"; };
-        flixur-server = pkgs.callPackage ./nix/server.pkg.nix { };
+        flixur-server = pkgs.callPackage ./nix/server.pkg.nix { frontendDir = flixur-flutter-web; };
 
         # util to cd to root
         setup = ''

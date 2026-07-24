@@ -22,6 +22,9 @@ type config struct {
 	LogLevel logLevel `env:"LOG_LEVEL" envDefault:"trace"` // realistically this should never change so plugins remain compatible
 	// Runs the server in development mode, some features may act differently.
 	DevelopmentMode bool `env:"DEVELOPMENT_MODE" envDefault:"false"`
+	// Path to the directory to serve the flutter frontend from.
+	// If omitted, the server will not serve a frontend.
+	FrontendDir string `env:"FRONTEND_DIR"`
 	// Path to the directory to scan for plugins.
 	PluginDir string `env:"PLUGIN_DIR" envDefault:"./plugins"`
 }
