@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"os"
 	"os/signal"
@@ -79,7 +80,30 @@ func main() {
 
 	// serve the frontend if available
 	if dir := common.Config.FrontendDir; dir != "" {
-		router.NotFound(http.FileServer(http.FS(os.DirFS(dir))).ServeHTTP)
+		// use root to prevent symlink traversal
+		root, err := os.OpenRoot(dir)
+		if err != nil {
+			log.Err(err).Msg("Failed to open frontend directory.")
+		}
+		defer root.Close()
+
+		fsys := root.FS()
+		fileServer := http.FileServer(http.FS(fsys))
+		router.NotFound(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			stat, err := fs.Stat(fsys, strings.TrimPrefix(r.URL.Path, "/"))
+			switch {
+			// serve actual files
+			case err == nil && !stat.IsDir():
+				fileServer.ServeHTTP(w, r)
+				return
+			case err == nil: // we arent listing directories
+			default:
+				// these just get the default index.html with the app
+				r.URL.Path = "/"
+				fileServer.ServeHTTP(w, r)
+				return
+			}
+		}))
 		log.Trace().Msgf("Serving frontend via '%s'.", dir)
 	} else {
 		log.Warn().Msg("Not serving the frontend as no frontend path was provided.")
