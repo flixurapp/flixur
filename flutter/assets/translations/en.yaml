@@ -1,6 +1,12 @@
 ---
+app_name: "Flixur"
 routes:
   setup:
+    login:
+      login: "Log In"
+      or: "or"
+      password: "Password"
+      username: "Username"
     server_url:
       connect: "Connect"
       server_ping_error: "Failed to connect to server."

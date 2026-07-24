@@ -1,4 +1,3 @@
-import "package:flixur/gen/strings.g.dart";
 import "package:flixur/router.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";

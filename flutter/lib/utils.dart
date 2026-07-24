@@ -1,6 +1,8 @@
+import "package:flutter/material.dart";
 import "package:openapi/api.dart";
 
 // re-export several extensions on the context so we arent duplicating
+export "package:flixur/gen/strings.g.dart";
 export "package:flixur/ui/responsiveness.dart";
 export "package:flixur/ui/theme.dart";
 export "package:go_router/go_router.dart";
@@ -17,6 +19,11 @@ class ApiSuccess<T> extends ApiResult<T> {
 class ApiFailure<T> extends ApiResult<T> {
   const ApiFailure(this.err);
   final ApiException err;
+}
+
+class Images {
+  // App logo.
+  static Image get logo => Image.asset("assets/logo.png", fit: .contain);
 }
 
 // safely make a request and return the error if it occurs

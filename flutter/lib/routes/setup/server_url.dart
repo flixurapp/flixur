@@ -1,4 +1,3 @@
-import "package:flixur/gen/strings.g.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
@@ -41,7 +40,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
                           context.screenSize.height *
                           (context.isLandscape ? 0.4 : 0.3),
                     ),
-                    child: Image.asset("assets/logo.png", fit: .contain),
+                    child: Images.logo,
                   ),
                   Text(
                     t.routes.setup.server_url.welcome,
@@ -125,7 +124,10 @@ class _ServerUrlViewState extends State<ServerUrlView> {
     switch (pingResponse) {
       case ApiSuccess(:final data):
         if (data.isSetup) {
-          context.go("/setup/login");
+          context.go(
+            "/setup/login",
+            extra: ServerLoginPayload(url: apiClient.basePath, body: data),
+          );
         } else {
           //TODO: setup screen
         }
@@ -135,4 +137,13 @@ class _ServerUrlViewState extends State<ServerUrlView> {
         );
     }
   }
+}
+
+class ServerLoginPayload {
+  ServerLoginPayload({required this.url, required this.body});
+
+  // Full basePath of the api client.
+  final String url;
+  // Server ping response body.
+  final PingOutputBody body;
 }

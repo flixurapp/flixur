@@ -40,6 +40,10 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	Translations $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => Translations(meta: meta ?? this.$meta);
 
 	// Translations
+
+	/// en: 'Flixur'
+	String get app_name => 'Flixur';
+
 	late final Translations$routes$en routes = Translations$routes$en._(_root);
 }
 
@@ -60,7 +64,29 @@ class Translations$routes$setup$en {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+	late final Translations$routes$setup$login$en login = Translations$routes$setup$login$en._(_root);
 	late final Translations$routes$setup$server_url$en server_url = Translations$routes$setup$server_url$en._(_root);
+}
+
+// Path: routes.setup.login
+class Translations$routes$setup$login$en {
+	Translations$routes$setup$login$en._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Log In'
+	String get login => 'Log In';
+
+	/// en: 'or'
+	String get or => 'or';
+
+	/// en: 'Password'
+	String get password => 'Password';
+
+	/// en: 'Username'
+	String get username => 'Username';
 }
 
 // Path: routes.setup.server_url
@@ -95,6 +121,11 @@ class Translations$routes$setup$server_url$en {
 extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
+			'app_name' => 'Flixur',
+			'routes.setup.login.login' => 'Log In',
+			'routes.setup.login.or' => 'or',
+			'routes.setup.login.password' => 'Password',
+			'routes.setup.login.username' => 'Username',
 			'routes.setup.server_url.connect' => 'Connect',
 			'routes.setup.server_url.server_ping_error' => 'Failed to connect to server.',
 			'routes.setup.server_url.url' => 'Server URL',
