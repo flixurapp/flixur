@@ -6,7 +6,7 @@
 }:
 flutter341.buildFlutterApplication {
   pname = "flixur-flutter";
-  version = "0.0.0";
+  version = "0.0.0+1";
   inherit targetFlutterPlatform;
   src = ../flutter;
   pubspecLock = lib.importJSON ../flutter/pubspec.lock.json;
