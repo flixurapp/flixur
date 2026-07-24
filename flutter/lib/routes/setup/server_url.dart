@@ -1,6 +1,6 @@
-import "package:flixur/extensions.dart";
 import "package:flixur/gen/strings.g.dart";
 import "package:flixur/ui/inputs.dart";
+import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
 import "package:openapi/api.dart";
 
@@ -15,6 +15,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
   final _serverUrlController = TextEditingController();
 
   String? errorText;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,19 +63,21 @@ class _ServerUrlViewState extends State<ServerUrlView> {
                       hintText: "https://demo.flixur.app",
                       errorText: errorText,
                       textController: _serverUrlController,
-                      onSubmitted: (_) => _serverUrlSubmit(context),
+                      onSubmitted: (_) => _serverUrlSubmit(),
                     ),
                     FilledButton(
-                      onPressed: () => _serverUrlSubmit(context),
+                      onPressed: isLoading ? null : _serverUrlSubmit,
                       style: .new(
                         padding: .all(const .symmetric(vertical: 18)),
                         textStyle: .all(
                           const .new(fontSize: 24, fontWeight: .w500),
                         ),
                       ),
-                      child: Text(
-                        t.routes.setup.server_url.connect.toUpperCase(),
-                      ),
+                      child: isLoading
+                          ? const LoadingSpinner()
+                          : Text(
+                              t.routes.setup.server_url.connect.toUpperCase(),
+                            ),
                     ),
                   ],
                 ),
@@ -90,7 +93,9 @@ class _ServerUrlViewState extends State<ServerUrlView> {
     setState(() => errorText = text);
   }
 
-  Future<void> _serverUrlSubmit(BuildContext context) async {
+  Future<void> _serverUrlSubmit() async {
+    if (isLoading) return;
+
     setServerUrlError(null);
     final serverUrl = Uri.tryParse(_serverUrlController.text);
     if (serverUrl == null ||
@@ -112,20 +117,22 @@ class _ServerUrlViewState extends State<ServerUrlView> {
     );
     final api = AuthenticationApi(apiClient);
 
-    try {
-      final pingResponse = await api.ping();
-      if (pingResponse == null) throw ApiException(0, "No response returned.");
-      if (!context.mounted) return;
+    setState(() => isLoading = true);
+    final pingResponse = await safeGet(api.ping);
+    if (!mounted) return;
+    setState(() => isLoading = false);
 
-      if (pingResponse.isSetup) {
-        context.go("/setup/login");
-      } else {
-        //TODO: setup screen
-      }
-    } on ApiException catch (e) {
-      setServerUrlError(
-        e.message ?? t.routes.setup.server_url.server_ping_error,
-      );
+    switch (pingResponse) {
+      case ApiSuccess(:final data):
+        if (data.isSetup) {
+          context.go("/setup/login");
+        } else {
+          //TODO: setup screen
+        }
+      case ApiFailure(:final err):
+        setServerUrlError(
+          err.message ?? t.routes.setup.server_url.server_ping_error,
+        );
     }
   }
 }

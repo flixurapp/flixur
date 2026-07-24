@@ -1,6 +1,6 @@
-import "package:flixur/extensions.dart";
 import "package:flixur/gen/strings.g.dart";
 import "package:flixur/router.dart";
+import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
 import "package:flutter_web_plugins/url_strategy.dart";
 

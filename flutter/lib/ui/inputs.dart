@@ -1,5 +1,23 @@
-import "package:flixur/ui/theme.dart";
+import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
+
+class LoadingSpinner extends StatelessWidget {
+  const LoadingSpinner({super.key, this.color});
+
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 20,
+      width: 20,
+      child: CircularProgressIndicator(
+        strokeWidth: 2.5,
+        color: color ?? DefaultTextStyle.of(context).style.color,
+      ),
+    );
+  }
+}
 
 class FlixurInput extends StatelessWidget {
   const FlixurInput({
