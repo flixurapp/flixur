@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"forge.xela.codes/xela/flixur/ent/predicate"
 	"forge.xela.codes/xela/flixur/ent/user"
+	"forge.xela.codes/xela/flixur/ent/userlinkedoidc"
 )
 
 // UserUpdate is the builder for updating User entities.
@@ -55,9 +56,45 @@ func (_u *UserUpdate) SetNillablePassword(v *string) *UserUpdate {
 	return _u
 }
 
+// AddOidcLinkIDs adds the "oidcLinks" edge to the UserLinkedOIDC entity by IDs.
+func (_u *UserUpdate) AddOidcLinkIDs(ids ...int) *UserUpdate {
+	_u.mutation.AddOidcLinkIDs(ids...)
+	return _u
+}
+
+// AddOidcLinks adds the "oidcLinks" edges to the UserLinkedOIDC entity.
+func (_u *UserUpdate) AddOidcLinks(v ...*UserLinkedOIDC) *UserUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddOidcLinkIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdate) Mutation() *UserMutation {
 	return _u.mutation
+}
+
+// ClearOidcLinks clears all "oidcLinks" edges to the UserLinkedOIDC entity.
+func (_u *UserUpdate) ClearOidcLinks() *UserUpdate {
+	_u.mutation.ClearOidcLinks()
+	return _u
+}
+
+// RemoveOidcLinkIDs removes the "oidcLinks" edge to UserLinkedOIDC entities by IDs.
+func (_u *UserUpdate) RemoveOidcLinkIDs(ids ...int) *UserUpdate {
+	_u.mutation.RemoveOidcLinkIDs(ids...)
+	return _u
+}
+
+// RemoveOidcLinks removes "oidcLinks" edges to UserLinkedOIDC entities.
+func (_u *UserUpdate) RemoveOidcLinks(v ...*UserLinkedOIDC) *UserUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveOidcLinkIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -106,7 +143,7 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if err := _u.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeString))
 	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -119,6 +156,51 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
+	}
+	if _u.mutation.OidcLinksCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OidcLinksTable,
+			Columns: []string{user.OidcLinksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userlinkedoidc.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedOidcLinksIDs(); len(nodes) > 0 && !_u.mutation.OidcLinksCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OidcLinksTable,
+			Columns: []string{user.OidcLinksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userlinkedoidc.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.OidcLinksIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OidcLinksTable,
+			Columns: []string{user.OidcLinksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userlinkedoidc.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -168,9 +250,45 @@ func (_u *UserUpdateOne) SetNillablePassword(v *string) *UserUpdateOne {
 	return _u
 }
 
+// AddOidcLinkIDs adds the "oidcLinks" edge to the UserLinkedOIDC entity by IDs.
+func (_u *UserUpdateOne) AddOidcLinkIDs(ids ...int) *UserUpdateOne {
+	_u.mutation.AddOidcLinkIDs(ids...)
+	return _u
+}
+
+// AddOidcLinks adds the "oidcLinks" edges to the UserLinkedOIDC entity.
+func (_u *UserUpdateOne) AddOidcLinks(v ...*UserLinkedOIDC) *UserUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddOidcLinkIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdateOne) Mutation() *UserMutation {
 	return _u.mutation
+}
+
+// ClearOidcLinks clears all "oidcLinks" edges to the UserLinkedOIDC entity.
+func (_u *UserUpdateOne) ClearOidcLinks() *UserUpdateOne {
+	_u.mutation.ClearOidcLinks()
+	return _u
+}
+
+// RemoveOidcLinkIDs removes the "oidcLinks" edge to UserLinkedOIDC entities by IDs.
+func (_u *UserUpdateOne) RemoveOidcLinkIDs(ids ...int) *UserUpdateOne {
+	_u.mutation.RemoveOidcLinkIDs(ids...)
+	return _u
+}
+
+// RemoveOidcLinks removes "oidcLinks" edges to UserLinkedOIDC entities.
+func (_u *UserUpdateOne) RemoveOidcLinks(v ...*UserLinkedOIDC) *UserUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveOidcLinkIDs(ids...)
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -232,7 +350,7 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	if err := _u.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeString))
 	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "User.id" for update`)}
@@ -262,6 +380,51 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	}
 	if value, ok := _u.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
+	}
+	if _u.mutation.OidcLinksCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OidcLinksTable,
+			Columns: []string{user.OidcLinksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userlinkedoidc.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedOidcLinksIDs(); len(nodes) > 0 && !_u.mutation.OidcLinksCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OidcLinksTable,
+			Columns: []string{user.OidcLinksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userlinkedoidc.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.OidcLinksIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OidcLinksTable,
+			Columns: []string{user.OidcLinksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userlinkedoidc.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &User{config: _u.config}
 	_spec.Assign = _node.assignValues

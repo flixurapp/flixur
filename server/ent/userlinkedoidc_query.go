@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"forge.xela.codes/xela/flixur/ent/predicate"
+	"forge.xela.codes/xela/flixur/ent/user"
 	"forge.xela.codes/xela/flixur/ent/userlinkedoidc"
 )
 
@@ -22,6 +23,8 @@ type UserLinkedOIDCQuery struct {
 	order      []userlinkedoidc.OrderOption
 	inters     []Interceptor
 	predicates []predicate.UserLinkedOIDC
+	withUser   *UserQuery
+	withFKs    bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -56,6 +59,28 @@ func (_q *UserLinkedOIDCQuery) Unique(unique bool) *UserLinkedOIDCQuery {
 func (_q *UserLinkedOIDCQuery) Order(o ...userlinkedoidc.OrderOption) *UserLinkedOIDCQuery {
 	_q.order = append(_q.order, o...)
 	return _q
+}
+
+// QueryUser chains the current query on the "user" edge.
+func (_q *UserLinkedOIDCQuery) QueryUser() *UserQuery {
+	query := (&UserClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(userlinkedoidc.Table, userlinkedoidc.FieldID, selector),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, userlinkedoidc.UserTable, userlinkedoidc.UserColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first UserLinkedOIDC entity from the query.
@@ -250,14 +275,38 @@ func (_q *UserLinkedOIDCQuery) Clone() *UserLinkedOIDCQuery {
 		order:      append([]userlinkedoidc.OrderOption{}, _q.order...),
 		inters:     append([]Interceptor{}, _q.inters...),
 		predicates: append([]predicate.UserLinkedOIDC{}, _q.predicates...),
+		withUser:   _q.withUser.Clone(),
 		// clone intermediate query.
 		sql:  _q.sql.Clone(),
 		path: _q.path,
 	}
 }
 
+// WithUser tells the query-builder to eager-load the nodes that are connected to
+// the "user" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *UserLinkedOIDCQuery) WithUser(opts ...func(*UserQuery)) *UserLinkedOIDCQuery {
+	query := (&UserClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withUser = query
+	return _q
+}
+
 // GroupBy is used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		Issuer string `json:"issuer,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.UserLinkedOIDC.Query().
+//		GroupBy(userlinkedoidc.FieldIssuer).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
 func (_q *UserLinkedOIDCQuery) GroupBy(field string, fields ...string) *UserLinkedOIDCGroupBy {
 	_q.ctx.Fields = append([]string{field}, fields...)
 	grbuild := &UserLinkedOIDCGroupBy{build: _q}
@@ -269,6 +318,16 @@ func (_q *UserLinkedOIDCQuery) GroupBy(field string, fields ...string) *UserLink
 
 // Select allows the selection one or more fields/columns for the given query,
 // instead of selecting all fields in the entity.
+//
+// Example:
+//
+//	var v []struct {
+//		Issuer string `json:"issuer,omitempty"`
+//	}
+//
+//	client.UserLinkedOIDC.Query().
+//		Select(userlinkedoidc.FieldIssuer).
+//		Scan(ctx, &v)
 func (_q *UserLinkedOIDCQuery) Select(fields ...string) *UserLinkedOIDCSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
 	sbuild := &UserLinkedOIDCSelect{UserLinkedOIDCQuery: _q}
@@ -310,15 +369,26 @@ func (_q *UserLinkedOIDCQuery) prepareQuery(ctx context.Context) error {
 
 func (_q *UserLinkedOIDCQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*UserLinkedOIDC, error) {
 	var (
-		nodes = []*UserLinkedOIDC{}
-		_spec = _q.querySpec()
+		nodes       = []*UserLinkedOIDC{}
+		withFKs     = _q.withFKs
+		_spec       = _q.querySpec()
+		loadedTypes = [1]bool{
+			_q.withUser != nil,
+		}
 	)
+	if _q.withUser != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, userlinkedoidc.ForeignKeys...)
+	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*UserLinkedOIDC).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &UserLinkedOIDC{config: _q.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -330,7 +400,46 @@ func (_q *UserLinkedOIDCQuery) sqlAll(ctx context.Context, hooks ...queryHook) (
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := _q.withUser; query != nil {
+		if err := _q.loadUser(ctx, query, nodes, nil,
+			func(n *UserLinkedOIDC, e *User) { n.Edges.User = e }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (_q *UserLinkedOIDCQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*UserLinkedOIDC, init func(*UserLinkedOIDC), assign func(*UserLinkedOIDC, *User)) error {
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*UserLinkedOIDC)
+	for i := range nodes {
+		if nodes[i].user_oidc_links == nil {
+			continue
+		}
+		fk := *nodes[i].user_oidc_links
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(user.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "user_oidc_links" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
 }
 
 func (_q *UserLinkedOIDCQuery) sqlCount(ctx context.Context) (int, error) {

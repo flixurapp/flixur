@@ -4,6 +4,7 @@ package userlinkedoidc
 
 import (
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -11,13 +12,34 @@ const (
 	Label = "user_linked_oidc"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldIssuer holds the string denoting the issuer field in the database.
+	FieldIssuer = "issuer"
+	// FieldSubject holds the string denoting the subject field in the database.
+	FieldSubject = "subject"
+	// EdgeUser holds the string denoting the user edge name in mutations.
+	EdgeUser = "user"
 	// Table holds the table name of the userlinkedoidc in the database.
 	Table = "user_linked_oid_cs"
+	// UserTable is the table that holds the user relation/edge.
+	UserTable = "user_linked_oid_cs"
+	// UserInverseTable is the table name for the User entity.
+	// It exists in this package in order to avoid circular dependency with the "user" package.
+	UserInverseTable = "users"
+	// UserColumn is the table column denoting the user relation/edge.
+	UserColumn = "user_oidc_links"
 )
 
 // Columns holds all SQL columns for userlinkedoidc fields.
 var Columns = []string{
 	FieldID,
+	FieldIssuer,
+	FieldSubject,
+}
+
+// ForeignKeys holds the SQL foreign-keys that are owned by the "user_linked_oid_cs"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"user_oidc_links",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -27,8 +49,20 @@ func ValidColumn(column string) bool {
 			return true
 		}
 	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
+			return true
+		}
+	}
 	return false
 }
+
+var (
+	// IssuerValidator is a validator for the "issuer" field. It is called by the builders before save.
+	IssuerValidator func(string) error
+	// SubjectValidator is a validator for the "subject" field. It is called by the builders before save.
+	SubjectValidator func(string) error
+)
 
 // OrderOption defines the ordering options for the UserLinkedOIDC queries.
 type OrderOption func(*sql.Selector)
@@ -36,4 +70,28 @@ type OrderOption func(*sql.Selector)
 // ByID orders the results by the id field.
 func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByIssuer orders the results by the issuer field.
+func ByIssuer(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIssuer, opts...).ToFunc()
+}
+
+// BySubject orders the results by the subject field.
+func BySubject(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSubject, opts...).ToFunc()
+}
+
+// ByUserField orders the results by user field.
+func ByUserField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newUserStep(), sql.OrderByField(field, opts...))
+	}
+}
+func newUserStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(UserInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
+	)
 }

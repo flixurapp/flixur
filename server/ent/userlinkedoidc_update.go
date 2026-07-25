@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"forge.xela.codes/xela/flixur/ent/predicate"
+	"forge.xela.codes/xela/flixur/ent/user"
 	"forge.xela.codes/xela/flixur/ent/userlinkedoidc"
 )
 
@@ -27,9 +28,54 @@ func (_u *UserLinkedOIDCUpdate) Where(ps ...predicate.UserLinkedOIDC) *UserLinke
 	return _u
 }
 
+// SetIssuer sets the "issuer" field.
+func (_u *UserLinkedOIDCUpdate) SetIssuer(v string) *UserLinkedOIDCUpdate {
+	_u.mutation.SetIssuer(v)
+	return _u
+}
+
+// SetNillableIssuer sets the "issuer" field if the given value is not nil.
+func (_u *UserLinkedOIDCUpdate) SetNillableIssuer(v *string) *UserLinkedOIDCUpdate {
+	if v != nil {
+		_u.SetIssuer(*v)
+	}
+	return _u
+}
+
+// SetSubject sets the "subject" field.
+func (_u *UserLinkedOIDCUpdate) SetSubject(v string) *UserLinkedOIDCUpdate {
+	_u.mutation.SetSubject(v)
+	return _u
+}
+
+// SetNillableSubject sets the "subject" field if the given value is not nil.
+func (_u *UserLinkedOIDCUpdate) SetNillableSubject(v *string) *UserLinkedOIDCUpdate {
+	if v != nil {
+		_u.SetSubject(*v)
+	}
+	return _u
+}
+
+// SetUserID sets the "user" edge to the User entity by ID.
+func (_u *UserLinkedOIDCUpdate) SetUserID(id string) *UserLinkedOIDCUpdate {
+	_u.mutation.SetUserID(id)
+	return _u
+}
+
+// SetUser sets the "user" edge to the User entity.
+func (_u *UserLinkedOIDCUpdate) SetUser(v *User) *UserLinkedOIDCUpdate {
+	return _u.SetUserID(v.ID)
+}
+
 // Mutation returns the UserLinkedOIDCMutation object of the builder.
 func (_u *UserLinkedOIDCUpdate) Mutation() *UserLinkedOIDCMutation {
 	return _u.mutation
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (_u *UserLinkedOIDCUpdate) ClearUser() *UserLinkedOIDCUpdate {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -59,7 +105,28 @@ func (_u *UserLinkedOIDCUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (_u *UserLinkedOIDCUpdate) check() error {
+	if v, ok := _u.mutation.Issuer(); ok {
+		if err := userlinkedoidc.IssuerValidator(v); err != nil {
+			return &ValidationError{Name: "issuer", err: fmt.Errorf(`ent: validator failed for field "UserLinkedOIDC.issuer": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.Subject(); ok {
+		if err := userlinkedoidc.SubjectValidator(v); err != nil {
+			return &ValidationError{Name: "subject", err: fmt.Errorf(`ent: validator failed for field "UserLinkedOIDC.subject": %w`, err)}
+		}
+	}
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "UserLinkedOIDC.user"`)
+	}
+	return nil
+}
+
 func (_u *UserLinkedOIDCUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(userlinkedoidc.Table, userlinkedoidc.Columns, sqlgraph.NewFieldSpec(userlinkedoidc.FieldID, field.TypeInt))
 	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -67,6 +134,41 @@ func (_u *UserLinkedOIDCUpdate) sqlSave(ctx context.Context) (_node int, err err
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := _u.mutation.Issuer(); ok {
+		_spec.SetField(userlinkedoidc.FieldIssuer, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.Subject(); ok {
+		_spec.SetField(userlinkedoidc.FieldSubject, field.TypeString, value)
+	}
+	if _u.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   userlinkedoidc.UserTable,
+			Columns: []string{userlinkedoidc.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   userlinkedoidc.UserTable,
+			Columns: []string{userlinkedoidc.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -88,9 +190,54 @@ type UserLinkedOIDCUpdateOne struct {
 	mutation *UserLinkedOIDCMutation
 }
 
+// SetIssuer sets the "issuer" field.
+func (_u *UserLinkedOIDCUpdateOne) SetIssuer(v string) *UserLinkedOIDCUpdateOne {
+	_u.mutation.SetIssuer(v)
+	return _u
+}
+
+// SetNillableIssuer sets the "issuer" field if the given value is not nil.
+func (_u *UserLinkedOIDCUpdateOne) SetNillableIssuer(v *string) *UserLinkedOIDCUpdateOne {
+	if v != nil {
+		_u.SetIssuer(*v)
+	}
+	return _u
+}
+
+// SetSubject sets the "subject" field.
+func (_u *UserLinkedOIDCUpdateOne) SetSubject(v string) *UserLinkedOIDCUpdateOne {
+	_u.mutation.SetSubject(v)
+	return _u
+}
+
+// SetNillableSubject sets the "subject" field if the given value is not nil.
+func (_u *UserLinkedOIDCUpdateOne) SetNillableSubject(v *string) *UserLinkedOIDCUpdateOne {
+	if v != nil {
+		_u.SetSubject(*v)
+	}
+	return _u
+}
+
+// SetUserID sets the "user" edge to the User entity by ID.
+func (_u *UserLinkedOIDCUpdateOne) SetUserID(id string) *UserLinkedOIDCUpdateOne {
+	_u.mutation.SetUserID(id)
+	return _u
+}
+
+// SetUser sets the "user" edge to the User entity.
+func (_u *UserLinkedOIDCUpdateOne) SetUser(v *User) *UserLinkedOIDCUpdateOne {
+	return _u.SetUserID(v.ID)
+}
+
 // Mutation returns the UserLinkedOIDCMutation object of the builder.
 func (_u *UserLinkedOIDCUpdateOne) Mutation() *UserLinkedOIDCMutation {
 	return _u.mutation
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (_u *UserLinkedOIDCUpdateOne) ClearUser() *UserLinkedOIDCUpdateOne {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Where appends a list predicates to the UserLinkedOIDCUpdate builder.
@@ -133,7 +280,28 @@ func (_u *UserLinkedOIDCUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (_u *UserLinkedOIDCUpdateOne) check() error {
+	if v, ok := _u.mutation.Issuer(); ok {
+		if err := userlinkedoidc.IssuerValidator(v); err != nil {
+			return &ValidationError{Name: "issuer", err: fmt.Errorf(`ent: validator failed for field "UserLinkedOIDC.issuer": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.Subject(); ok {
+		if err := userlinkedoidc.SubjectValidator(v); err != nil {
+			return &ValidationError{Name: "subject", err: fmt.Errorf(`ent: validator failed for field "UserLinkedOIDC.subject": %w`, err)}
+		}
+	}
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "UserLinkedOIDC.user"`)
+	}
+	return nil
+}
+
 func (_u *UserLinkedOIDCUpdateOne) sqlSave(ctx context.Context) (_node *UserLinkedOIDC, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(userlinkedoidc.Table, userlinkedoidc.Columns, sqlgraph.NewFieldSpec(userlinkedoidc.FieldID, field.TypeInt))
 	id, ok := _u.mutation.ID()
 	if !ok {
@@ -158,6 +326,41 @@ func (_u *UserLinkedOIDCUpdateOne) sqlSave(ctx context.Context) (_node *UserLink
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := _u.mutation.Issuer(); ok {
+		_spec.SetField(userlinkedoidc.FieldIssuer, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.Subject(); ok {
+		_spec.SetField(userlinkedoidc.FieldSubject, field.TypeString, value)
+	}
+	if _u.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   userlinkedoidc.UserTable,
+			Columns: []string{userlinkedoidc.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   userlinkedoidc.UserTable,
+			Columns: []string{userlinkedoidc.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &UserLinkedOIDC{config: _u.config}
 	_spec.Assign = _node.assignValues

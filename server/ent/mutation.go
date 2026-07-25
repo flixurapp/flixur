@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"forge.xela.codes/xela/flixur/ent/predicate"
 	"forge.xela.codes/xela/flixur/ent/user"
+	"forge.xela.codes/xela/flixur/ent/userlinkedoidc"
 )
 
 const (
@@ -30,15 +31,18 @@ const (
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	username      *string
-	password      *string
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*User, error)
-	predicates    []predicate.User
+	op               Op
+	typ              string
+	id               *string
+	username         *string
+	password         *string
+	clearedFields    map[string]struct{}
+	oidcLinks        map[int]struct{}
+	removedoidcLinks map[int]struct{}
+	clearedoidcLinks bool
+	done             bool
+	oldValue         func(context.Context) (*User, error)
+	predicates       []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -61,7 +65,7 @@ func newUserMutation(c config, op Op, opts ...userOption) *UserMutation {
 }
 
 // withUserID sets the ID field of the mutation.
-func withUserID(id int) userOption {
+func withUserID(id string) userOption {
 	return func(m *UserMutation) {
 		var (
 			err   error
@@ -111,9 +115,15 @@ func (m UserMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of User entities.
+func (m *UserMutation) SetID(id string) {
+	m.id = &id
+}
+
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *UserMutation) ID() (id int, exists bool) {
+func (m *UserMutation) ID() (id string, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -124,12 +134,12 @@ func (m *UserMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *UserMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *UserMutation) IDs(ctx context.Context) ([]string, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []string{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -209,6 +219,60 @@ func (m *UserMutation) OldPassword(ctx context.Context) (v string, err error) {
 // ResetPassword resets all changes to the "password" field.
 func (m *UserMutation) ResetPassword() {
 	m.password = nil
+}
+
+// AddOidcLinkIDs adds the "oidcLinks" edge to the UserLinkedOIDC entity by ids.
+func (m *UserMutation) AddOidcLinkIDs(ids ...int) {
+	if m.oidcLinks == nil {
+		m.oidcLinks = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.oidcLinks[ids[i]] = struct{}{}
+	}
+}
+
+// ClearOidcLinks clears the "oidcLinks" edge to the UserLinkedOIDC entity.
+func (m *UserMutation) ClearOidcLinks() {
+	m.clearedoidcLinks = true
+}
+
+// OidcLinksCleared reports if the "oidcLinks" edge to the UserLinkedOIDC entity was cleared.
+func (m *UserMutation) OidcLinksCleared() bool {
+	return m.clearedoidcLinks
+}
+
+// RemoveOidcLinkIDs removes the "oidcLinks" edge to the UserLinkedOIDC entity by IDs.
+func (m *UserMutation) RemoveOidcLinkIDs(ids ...int) {
+	if m.removedoidcLinks == nil {
+		m.removedoidcLinks = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.oidcLinks, ids[i])
+		m.removedoidcLinks[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedOidcLinks returns the removed IDs of the "oidcLinks" edge to the UserLinkedOIDC entity.
+func (m *UserMutation) RemovedOidcLinksIDs() (ids []int) {
+	for id := range m.removedoidcLinks {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// OidcLinksIDs returns the "oidcLinks" edge IDs in the mutation.
+func (m *UserMutation) OidcLinksIDs() (ids []int) {
+	for id := range m.oidcLinks {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetOidcLinks resets all changes to the "oidcLinks" edge.
+func (m *UserMutation) ResetOidcLinks() {
+	m.oidcLinks = nil
+	m.clearedoidcLinks = false
+	m.removedoidcLinks = nil
 }
 
 // Where appends a list predicates to the UserMutation builder.
@@ -361,49 +425,85 @@ func (m *UserMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.oidcLinks != nil {
+		edges = append(edges, user.EdgeOidcLinks)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *UserMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case user.EdgeOidcLinks:
+		ids := make([]ent.Value, 0, len(m.oidcLinks))
+		for id := range m.oidcLinks {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.removedoidcLinks != nil {
+		edges = append(edges, user.EdgeOidcLinks)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *UserMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case user.EdgeOidcLinks:
+		ids := make([]ent.Value, 0, len(m.removedoidcLinks))
+		for id := range m.removedoidcLinks {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedoidcLinks {
+		edges = append(edges, user.EdgeOidcLinks)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *UserMutation) EdgeCleared(name string) bool {
+	switch name {
+	case user.EdgeOidcLinks:
+		return m.clearedoidcLinks
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *UserMutation) ClearEdge(name string) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown User unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *UserMutation) ResetEdge(name string) error {
+	switch name {
+	case user.EdgeOidcLinks:
+		m.ResetOidcLinks()
+		return nil
+	}
 	return fmt.Errorf("unknown User edge %s", name)
 }
 
@@ -413,7 +513,11 @@ type UserLinkedOIDCMutation struct {
 	op            Op
 	typ           string
 	id            *int
+	issuer        *string
+	subject       *string
 	clearedFields map[string]struct{}
+	user          *string
+	cleareduser   bool
 	done          bool
 	oldValue      func(context.Context) (*UserLinkedOIDC, error)
 	predicates    []predicate.UserLinkedOIDC
@@ -517,6 +621,117 @@ func (m *UserLinkedOIDCMutation) IDs(ctx context.Context) ([]int, error) {
 	}
 }
 
+// SetIssuer sets the "issuer" field.
+func (m *UserLinkedOIDCMutation) SetIssuer(s string) {
+	m.issuer = &s
+}
+
+// Issuer returns the value of the "issuer" field in the mutation.
+func (m *UserLinkedOIDCMutation) Issuer() (r string, exists bool) {
+	v := m.issuer
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIssuer returns the old "issuer" field's value of the UserLinkedOIDC entity.
+// If the UserLinkedOIDC object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserLinkedOIDCMutation) OldIssuer(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIssuer is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIssuer requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIssuer: %w", err)
+	}
+	return oldValue.Issuer, nil
+}
+
+// ResetIssuer resets all changes to the "issuer" field.
+func (m *UserLinkedOIDCMutation) ResetIssuer() {
+	m.issuer = nil
+}
+
+// SetSubject sets the "subject" field.
+func (m *UserLinkedOIDCMutation) SetSubject(s string) {
+	m.subject = &s
+}
+
+// Subject returns the value of the "subject" field in the mutation.
+func (m *UserLinkedOIDCMutation) Subject() (r string, exists bool) {
+	v := m.subject
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSubject returns the old "subject" field's value of the UserLinkedOIDC entity.
+// If the UserLinkedOIDC object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserLinkedOIDCMutation) OldSubject(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSubject is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSubject requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSubject: %w", err)
+	}
+	return oldValue.Subject, nil
+}
+
+// ResetSubject resets all changes to the "subject" field.
+func (m *UserLinkedOIDCMutation) ResetSubject() {
+	m.subject = nil
+}
+
+// SetUserID sets the "user" edge to the User entity by id.
+func (m *UserLinkedOIDCMutation) SetUserID(id string) {
+	m.user = &id
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (m *UserLinkedOIDCMutation) ClearUser() {
+	m.cleareduser = true
+}
+
+// UserCleared reports if the "user" edge to the User entity was cleared.
+func (m *UserLinkedOIDCMutation) UserCleared() bool {
+	return m.cleareduser
+}
+
+// UserID returns the "user" edge ID in the mutation.
+func (m *UserLinkedOIDCMutation) UserID() (id string, exists bool) {
+	if m.user != nil {
+		return *m.user, true
+	}
+	return
+}
+
+// UserIDs returns the "user" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// UserID instead. It exists only for internal usage by the builders.
+func (m *UserLinkedOIDCMutation) UserIDs() (ids []string) {
+	if id := m.user; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetUser resets all changes to the "user" edge.
+func (m *UserLinkedOIDCMutation) ResetUser() {
+	m.user = nil
+	m.cleareduser = false
+}
+
 // Where appends a list predicates to the UserLinkedOIDCMutation builder.
 func (m *UserLinkedOIDCMutation) Where(ps ...predicate.UserLinkedOIDC) {
 	m.predicates = append(m.predicates, ps...)
@@ -551,7 +766,13 @@ func (m *UserLinkedOIDCMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserLinkedOIDCMutation) Fields() []string {
-	fields := make([]string, 0, 0)
+	fields := make([]string, 0, 2)
+	if m.issuer != nil {
+		fields = append(fields, userlinkedoidc.FieldIssuer)
+	}
+	if m.subject != nil {
+		fields = append(fields, userlinkedoidc.FieldSubject)
+	}
 	return fields
 }
 
@@ -559,6 +780,12 @@ func (m *UserLinkedOIDCMutation) Fields() []string {
 // return value indicates that this field was not set, or was not defined in the
 // schema.
 func (m *UserLinkedOIDCMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case userlinkedoidc.FieldIssuer:
+		return m.Issuer()
+	case userlinkedoidc.FieldSubject:
+		return m.Subject()
+	}
 	return nil, false
 }
 
@@ -566,6 +793,12 @@ func (m *UserLinkedOIDCMutation) Field(name string) (ent.Value, bool) {
 // returned if the mutation operation is not UpdateOne, or the query to the
 // database failed.
 func (m *UserLinkedOIDCMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case userlinkedoidc.FieldIssuer:
+		return m.OldIssuer(ctx)
+	case userlinkedoidc.FieldSubject:
+		return m.OldSubject(ctx)
+	}
 	return nil, fmt.Errorf("unknown UserLinkedOIDC field %s", name)
 }
 
@@ -574,6 +807,20 @@ func (m *UserLinkedOIDCMutation) OldField(ctx context.Context, name string) (ent
 // type.
 func (m *UserLinkedOIDCMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case userlinkedoidc.FieldIssuer:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIssuer(v)
+		return nil
+	case userlinkedoidc.FieldSubject:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSubject(v)
+		return nil
 	}
 	return fmt.Errorf("unknown UserLinkedOIDC field %s", name)
 }
@@ -595,6 +842,8 @@ func (m *UserLinkedOIDCMutation) AddedField(name string) (ent.Value, bool) {
 // the field is not defined in the schema, or if the type mismatched the field
 // type.
 func (m *UserLinkedOIDCMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown UserLinkedOIDC numeric field %s", name)
 }
 
@@ -620,24 +869,41 @@ func (m *UserLinkedOIDCMutation) ClearField(name string) error {
 // ResetField resets all changes in the mutation for the field with the given name.
 // It returns an error if the field is not defined in the schema.
 func (m *UserLinkedOIDCMutation) ResetField(name string) error {
+	switch name {
+	case userlinkedoidc.FieldIssuer:
+		m.ResetIssuer()
+		return nil
+	case userlinkedoidc.FieldSubject:
+		m.ResetSubject()
+		return nil
+	}
 	return fmt.Errorf("unknown UserLinkedOIDC field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserLinkedOIDCMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.user != nil {
+		edges = append(edges, userlinkedoidc.EdgeUser)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *UserLinkedOIDCMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case userlinkedoidc.EdgeUser:
+		if id := m.user; id != nil {
+			return []ent.Value{*id}
+		}
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserLinkedOIDCMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
 	return edges
 }
 
@@ -649,24 +915,41 @@ func (m *UserLinkedOIDCMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserLinkedOIDCMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.cleareduser {
+		edges = append(edges, userlinkedoidc.EdgeUser)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *UserLinkedOIDCMutation) EdgeCleared(name string) bool {
+	switch name {
+	case userlinkedoidc.EdgeUser:
+		return m.cleareduser
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *UserLinkedOIDCMutation) ClearEdge(name string) error {
+	switch name {
+	case userlinkedoidc.EdgeUser:
+		m.ClearUser()
+		return nil
+	}
 	return fmt.Errorf("unknown UserLinkedOIDC unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *UserLinkedOIDCMutation) ResetEdge(name string) error {
+	switch name {
+	case userlinkedoidc.EdgeUser:
+		m.ResetUser()
+		return nil
+	}
 	return fmt.Errorf("unknown UserLinkedOIDC edge %s", name)
 }

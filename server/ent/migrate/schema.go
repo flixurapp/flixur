@@ -10,7 +10,7 @@ import (
 var (
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeString, Unique: true},
 		{Name: "username", Type: field.TypeString, Unique: true, Size: 64},
 		{Name: "password", Type: field.TypeString},
 	}
@@ -23,12 +23,30 @@ var (
 	// UserLinkedOidCsColumns holds the columns for the "user_linked_oid_cs" table.
 	UserLinkedOidCsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "issuer", Type: field.TypeString},
+		{Name: "subject", Type: field.TypeString},
+		{Name: "user_oidc_links", Type: field.TypeString},
 	}
 	// UserLinkedOidCsTable holds the schema information for the "user_linked_oid_cs" table.
 	UserLinkedOidCsTable = &schema.Table{
 		Name:       "user_linked_oid_cs",
 		Columns:    UserLinkedOidCsColumns,
 		PrimaryKey: []*schema.Column{UserLinkedOidCsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "user_linked_oid_cs_users_oidcLinks",
+				Columns:    []*schema.Column{UserLinkedOidCsColumns[3]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "userlinkedoidc_issuer_subject",
+				Unique:  true,
+				Columns: []*schema.Column{UserLinkedOidCsColumns[1], UserLinkedOidCsColumns[2]},
+			},
+		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
@@ -38,4 +56,5 @@ var (
 )
 
 func init() {
+	UserLinkedOidCsTable.ForeignKeys[0].RefTable = UsersTable
 }

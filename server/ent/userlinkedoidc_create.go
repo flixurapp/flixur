@@ -4,10 +4,12 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"forge.xela.codes/xela/flixur/ent/user"
 	"forge.xela.codes/xela/flixur/ent/userlinkedoidc"
 )
 
@@ -16,6 +18,29 @@ type UserLinkedOIDCCreate struct {
 	config
 	mutation *UserLinkedOIDCMutation
 	hooks    []Hook
+}
+
+// SetIssuer sets the "issuer" field.
+func (_c *UserLinkedOIDCCreate) SetIssuer(v string) *UserLinkedOIDCCreate {
+	_c.mutation.SetIssuer(v)
+	return _c
+}
+
+// SetSubject sets the "subject" field.
+func (_c *UserLinkedOIDCCreate) SetSubject(v string) *UserLinkedOIDCCreate {
+	_c.mutation.SetSubject(v)
+	return _c
+}
+
+// SetUserID sets the "user" edge to the User entity by ID.
+func (_c *UserLinkedOIDCCreate) SetUserID(id string) *UserLinkedOIDCCreate {
+	_c.mutation.SetUserID(id)
+	return _c
+}
+
+// SetUser sets the "user" edge to the User entity.
+func (_c *UserLinkedOIDCCreate) SetUser(v *User) *UserLinkedOIDCCreate {
+	return _c.SetUserID(v.ID)
 }
 
 // Mutation returns the UserLinkedOIDCMutation object of the builder.
@@ -52,6 +77,25 @@ func (_c *UserLinkedOIDCCreate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *UserLinkedOIDCCreate) check() error {
+	if _, ok := _c.mutation.Issuer(); !ok {
+		return &ValidationError{Name: "issuer", err: errors.New(`ent: missing required field "UserLinkedOIDC.issuer"`)}
+	}
+	if v, ok := _c.mutation.Issuer(); ok {
+		if err := userlinkedoidc.IssuerValidator(v); err != nil {
+			return &ValidationError{Name: "issuer", err: fmt.Errorf(`ent: validator failed for field "UserLinkedOIDC.issuer": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.Subject(); !ok {
+		return &ValidationError{Name: "subject", err: errors.New(`ent: missing required field "UserLinkedOIDC.subject"`)}
+	}
+	if v, ok := _c.mutation.Subject(); ok {
+		if err := userlinkedoidc.SubjectValidator(v); err != nil {
+			return &ValidationError{Name: "subject", err: fmt.Errorf(`ent: validator failed for field "UserLinkedOIDC.subject": %w`, err)}
+		}
+	}
+	if len(_c.mutation.UserIDs()) == 0 {
+		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "UserLinkedOIDC.user"`)}
+	}
 	return nil
 }
 
@@ -78,6 +122,31 @@ func (_c *UserLinkedOIDCCreate) createSpec() (*UserLinkedOIDC, *sqlgraph.CreateS
 		_node = &UserLinkedOIDC{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(userlinkedoidc.Table, sqlgraph.NewFieldSpec(userlinkedoidc.FieldID, field.TypeInt))
 	)
+	if value, ok := _c.mutation.Issuer(); ok {
+		_spec.SetField(userlinkedoidc.FieldIssuer, field.TypeString, value)
+		_node.Issuer = value
+	}
+	if value, ok := _c.mutation.Subject(); ok {
+		_spec.SetField(userlinkedoidc.FieldSubject, field.TypeString, value)
+		_node.Subject = value
+	}
+	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   userlinkedoidc.UserTable,
+			Columns: []string{userlinkedoidc.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.user_oidc_links = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	return _node, _spec
 }
 

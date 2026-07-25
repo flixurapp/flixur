@@ -4,6 +4,7 @@ package userlinkedoidc
 
 import (
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"forge.xela.codes/xela/flixur/ent/predicate"
 )
 
@@ -50,6 +51,169 @@ func IDLT(id int) predicate.UserLinkedOIDC {
 // IDLTE applies the LTE predicate on the ID field.
 func IDLTE(id int) predicate.UserLinkedOIDC {
 	return predicate.UserLinkedOIDC(sql.FieldLTE(FieldID, id))
+}
+
+// Issuer applies equality check predicate on the "issuer" field. It's identical to IssuerEQ.
+func Issuer(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldEQ(FieldIssuer, v))
+}
+
+// Subject applies equality check predicate on the "subject" field. It's identical to SubjectEQ.
+func Subject(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldEQ(FieldSubject, v))
+}
+
+// IssuerEQ applies the EQ predicate on the "issuer" field.
+func IssuerEQ(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldEQ(FieldIssuer, v))
+}
+
+// IssuerNEQ applies the NEQ predicate on the "issuer" field.
+func IssuerNEQ(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldNEQ(FieldIssuer, v))
+}
+
+// IssuerIn applies the In predicate on the "issuer" field.
+func IssuerIn(vs ...string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldIn(FieldIssuer, vs...))
+}
+
+// IssuerNotIn applies the NotIn predicate on the "issuer" field.
+func IssuerNotIn(vs ...string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldNotIn(FieldIssuer, vs...))
+}
+
+// IssuerGT applies the GT predicate on the "issuer" field.
+func IssuerGT(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldGT(FieldIssuer, v))
+}
+
+// IssuerGTE applies the GTE predicate on the "issuer" field.
+func IssuerGTE(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldGTE(FieldIssuer, v))
+}
+
+// IssuerLT applies the LT predicate on the "issuer" field.
+func IssuerLT(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldLT(FieldIssuer, v))
+}
+
+// IssuerLTE applies the LTE predicate on the "issuer" field.
+func IssuerLTE(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldLTE(FieldIssuer, v))
+}
+
+// IssuerContains applies the Contains predicate on the "issuer" field.
+func IssuerContains(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldContains(FieldIssuer, v))
+}
+
+// IssuerHasPrefix applies the HasPrefix predicate on the "issuer" field.
+func IssuerHasPrefix(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldHasPrefix(FieldIssuer, v))
+}
+
+// IssuerHasSuffix applies the HasSuffix predicate on the "issuer" field.
+func IssuerHasSuffix(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldHasSuffix(FieldIssuer, v))
+}
+
+// IssuerEqualFold applies the EqualFold predicate on the "issuer" field.
+func IssuerEqualFold(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldEqualFold(FieldIssuer, v))
+}
+
+// IssuerContainsFold applies the ContainsFold predicate on the "issuer" field.
+func IssuerContainsFold(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldContainsFold(FieldIssuer, v))
+}
+
+// SubjectEQ applies the EQ predicate on the "subject" field.
+func SubjectEQ(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldEQ(FieldSubject, v))
+}
+
+// SubjectNEQ applies the NEQ predicate on the "subject" field.
+func SubjectNEQ(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldNEQ(FieldSubject, v))
+}
+
+// SubjectIn applies the In predicate on the "subject" field.
+func SubjectIn(vs ...string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldIn(FieldSubject, vs...))
+}
+
+// SubjectNotIn applies the NotIn predicate on the "subject" field.
+func SubjectNotIn(vs ...string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldNotIn(FieldSubject, vs...))
+}
+
+// SubjectGT applies the GT predicate on the "subject" field.
+func SubjectGT(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldGT(FieldSubject, v))
+}
+
+// SubjectGTE applies the GTE predicate on the "subject" field.
+func SubjectGTE(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldGTE(FieldSubject, v))
+}
+
+// SubjectLT applies the LT predicate on the "subject" field.
+func SubjectLT(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldLT(FieldSubject, v))
+}
+
+// SubjectLTE applies the LTE predicate on the "subject" field.
+func SubjectLTE(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldLTE(FieldSubject, v))
+}
+
+// SubjectContains applies the Contains predicate on the "subject" field.
+func SubjectContains(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldContains(FieldSubject, v))
+}
+
+// SubjectHasPrefix applies the HasPrefix predicate on the "subject" field.
+func SubjectHasPrefix(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldHasPrefix(FieldSubject, v))
+}
+
+// SubjectHasSuffix applies the HasSuffix predicate on the "subject" field.
+func SubjectHasSuffix(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldHasSuffix(FieldSubject, v))
+}
+
+// SubjectEqualFold applies the EqualFold predicate on the "subject" field.
+func SubjectEqualFold(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldEqualFold(FieldSubject, v))
+}
+
+// SubjectContainsFold applies the ContainsFold predicate on the "subject" field.
+func SubjectContainsFold(v string) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(sql.FieldContainsFold(FieldSubject, v))
+}
+
+// HasUser applies the HasEdge predicate on the "user" edge.
+func HasUser() predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasUserWith applies the HasEdge predicate on the "user" edge with a given conditions (other predicates).
+func HasUserWith(preds ...predicate.User) predicate.UserLinkedOIDC {
+	return predicate.UserLinkedOIDC(func(s *sql.Selector) {
+		step := newUserStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

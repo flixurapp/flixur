@@ -5,12 +5,16 @@ package ent
 import (
 	"forge.xela.codes/xela/flixur/ent/schema"
 	"forge.xela.codes/xela/flixur/ent/user"
+	"forge.xela.codes/xela/flixur/ent/userlinkedoidc"
 )
 
 // The init function reads all schema descriptors with runtime code
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	userMixin := schema.User{}.Mixin()
+	userMixinFields0 := userMixin[0].Fields()
+	_ = userMixinFields0
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescUsername is the schema descriptor for username field.
@@ -35,4 +39,18 @@ func init() {
 	userDescPassword := userFields[1].Descriptor()
 	// user.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	user.PasswordValidator = userDescPassword.Validators[0].(func(string) error)
+	// userDescID is the schema descriptor for id field.
+	userDescID := userMixinFields0[0].Descriptor()
+	// user.DefaultID holds the default value on creation for the id field.
+	user.DefaultID = userDescID.Default.(func() string)
+	userlinkedoidcFields := schema.UserLinkedOIDC{}.Fields()
+	_ = userlinkedoidcFields
+	// userlinkedoidcDescIssuer is the schema descriptor for issuer field.
+	userlinkedoidcDescIssuer := userlinkedoidcFields[0].Descriptor()
+	// userlinkedoidc.IssuerValidator is a validator for the "issuer" field. It is called by the builders before save.
+	userlinkedoidc.IssuerValidator = userlinkedoidcDescIssuer.Validators[0].(func(string) error)
+	// userlinkedoidcDescSubject is the schema descriptor for subject field.
+	userlinkedoidcDescSubject := userlinkedoidcFields[1].Descriptor()
+	// userlinkedoidc.SubjectValidator is a validator for the "subject" field. It is called by the builders before save.
+	userlinkedoidc.SubjectValidator = userlinkedoidcDescSubject.Validators[0].(func(string) error)
 }

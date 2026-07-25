@@ -4,6 +4,7 @@ package user
 
 import (
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -15,8 +16,17 @@ const (
 	FieldUsername = "username"
 	// FieldPassword holds the string denoting the password field in the database.
 	FieldPassword = "password"
+	// EdgeOidcLinks holds the string denoting the oidclinks edge name in mutations.
+	EdgeOidcLinks = "oidcLinks"
 	// Table holds the table name of the user in the database.
 	Table = "users"
+	// OidcLinksTable is the table that holds the oidcLinks relation/edge.
+	OidcLinksTable = "user_linked_oid_cs"
+	// OidcLinksInverseTable is the table name for the UserLinkedOIDC entity.
+	// It exists in this package in order to avoid circular dependency with the "userlinkedoidc" package.
+	OidcLinksInverseTable = "user_linked_oid_cs"
+	// OidcLinksColumn is the table column denoting the oidcLinks relation/edge.
+	OidcLinksColumn = "user_oidc_links"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -41,6 +51,8 @@ var (
 	UsernameValidator func(string) error
 	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	PasswordValidator func(string) error
+	// DefaultID holds the default value on creation for the "id" field.
+	DefaultID func() string
 )
 
 // OrderOption defines the ordering options for the User queries.
@@ -59,4 +71,25 @@ func ByUsername(opts ...sql.OrderTermOption) OrderOption {
 // ByPassword orders the results by the password field.
 func ByPassword(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPassword, opts...).ToFunc()
+}
+
+// ByOidcLinksCount orders the results by oidcLinks count.
+func ByOidcLinksCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newOidcLinksStep(), opts...)
+	}
+}
+
+// ByOidcLinks orders the results by oidcLinks terms.
+func ByOidcLinks(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newOidcLinksStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newOidcLinksStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(OidcLinksInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, OidcLinksTable, OidcLinksColumn),
+	)
 }
