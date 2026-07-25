@@ -32,6 +32,26 @@ func (_c *UserCreate) SetPassword(v string) *UserCreate {
 	return _c
 }
 
+// SetIsAdmin sets the "isAdmin" field.
+func (_c *UserCreate) SetIsAdmin(v bool) *UserCreate {
+	_c.mutation.SetIsAdmin(v)
+	return _c
+}
+
+// SetNillableIsAdmin sets the "isAdmin" field if the given value is not nil.
+func (_c *UserCreate) SetNillableIsAdmin(v *bool) *UserCreate {
+	if v != nil {
+		_c.SetIsAdmin(*v)
+	}
+	return _c
+}
+
+// SetPermissions sets the "permissions" field.
+func (_c *UserCreate) SetPermissions(v []string) *UserCreate {
+	_c.mutation.SetPermissions(v)
+	return _c
+}
+
 // SetID sets the "id" field.
 func (_c *UserCreate) SetID(v string) *UserCreate {
 	_c.mutation.SetID(v)
@@ -96,6 +116,14 @@ func (_c *UserCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *UserCreate) defaults() {
+	if _, ok := _c.mutation.IsAdmin(); !ok {
+		v := user.DefaultIsAdmin
+		_c.mutation.SetIsAdmin(v)
+	}
+	if _, ok := _c.mutation.Permissions(); !ok {
+		v := user.DefaultPermissions
+		_c.mutation.SetPermissions(v)
+	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := user.DefaultID()
 		_c.mutation.SetID(v)
@@ -119,6 +147,12 @@ func (_c *UserCreate) check() error {
 		if err := user.PasswordValidator(v); err != nil {
 			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "User.password": %w`, err)}
 		}
+	}
+	if _, ok := _c.mutation.IsAdmin(); !ok {
+		return &ValidationError{Name: "isAdmin", err: errors.New(`ent: missing required field "User.isAdmin"`)}
+	}
+	if _, ok := _c.mutation.Permissions(); !ok {
+		return &ValidationError{Name: "permissions", err: errors.New(`ent: missing required field "User.permissions"`)}
 	}
 	return nil
 }
@@ -162,6 +196,14 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
 		_node.Password = value
+	}
+	if value, ok := _c.mutation.IsAdmin(); ok {
+		_spec.SetField(user.FieldIsAdmin, field.TypeBool, value)
+		_node.IsAdmin = value
+	}
+	if value, ok := _c.mutation.Permissions(); ok {
+		_spec.SetField(user.FieldPermissions, field.TypeJSON, value)
+		_node.Permissions = value
 	}
 	if nodes := _c.mutation.OidcLinksIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

@@ -16,6 +16,10 @@ const (
 	FieldUsername = "username"
 	// FieldPassword holds the string denoting the password field in the database.
 	FieldPassword = "password"
+	// FieldIsAdmin holds the string denoting the isadmin field in the database.
+	FieldIsAdmin = "is_admin"
+	// FieldPermissions holds the string denoting the permissions field in the database.
+	FieldPermissions = "permissions"
 	// EdgeOidcLinks holds the string denoting the oidclinks edge name in mutations.
 	EdgeOidcLinks = "oidcLinks"
 	// Table holds the table name of the user in the database.
@@ -34,6 +38,8 @@ var Columns = []string{
 	FieldID,
 	FieldUsername,
 	FieldPassword,
+	FieldIsAdmin,
+	FieldPermissions,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -51,6 +57,10 @@ var (
 	UsernameValidator func(string) error
 	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	PasswordValidator func(string) error
+	// DefaultIsAdmin holds the default value on creation for the "isAdmin" field.
+	DefaultIsAdmin bool
+	// DefaultPermissions holds the default value on creation for the "permissions" field.
+	DefaultPermissions []string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() string
 )
@@ -71,6 +81,11 @@ func ByUsername(opts ...sql.OrderTermOption) OrderOption {
 // ByPassword orders the results by the password field.
 func ByPassword(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPassword, opts...).ToFunc()
+}
+
+// ByIsAdmin orders the results by the isAdmin field.
+func ByIsAdmin(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsAdmin, opts...).ToFunc()
 }
 
 // ByOidcLinksCount orders the results by oidcLinks count.

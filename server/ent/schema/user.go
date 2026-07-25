@@ -17,6 +17,9 @@ func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("username").Unique().MinLen(common.USERNAME_MIN_LENGTH).MaxLen(common.USERNAME_MAX_LENGTH),
 		field.String("password").NotEmpty(),
+		// If the user is an administrator, bypasses all permissions.
+		field.Bool("isAdmin").Default(false),
+		field.Strings("permissions").Default([]string{}),
 	}
 }
 

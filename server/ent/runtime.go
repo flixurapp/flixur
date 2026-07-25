@@ -39,6 +39,14 @@ func init() {
 	userDescPassword := userFields[1].Descriptor()
 	// user.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	user.PasswordValidator = userDescPassword.Validators[0].(func(string) error)
+	// userDescIsAdmin is the schema descriptor for isAdmin field.
+	userDescIsAdmin := userFields[2].Descriptor()
+	// user.DefaultIsAdmin holds the default value on creation for the isAdmin field.
+	user.DefaultIsAdmin = userDescIsAdmin.Default.(bool)
+	// userDescPermissions is the schema descriptor for permissions field.
+	userDescPermissions := userFields[3].Descriptor()
+	// user.DefaultPermissions holds the default value on creation for the permissions field.
+	user.DefaultPermissions = userDescPermissions.Default.([]string)
 	// userDescID is the schema descriptor for id field.
 	userDescID := userMixinFields0[0].Descriptor()
 	// user.DefaultID holds the default value on creation for the id field.

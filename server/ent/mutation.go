@@ -31,18 +31,21 @@ const (
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op               Op
-	typ              string
-	id               *string
-	username         *string
-	password         *string
-	clearedFields    map[string]struct{}
-	oidcLinks        map[int]struct{}
-	removedoidcLinks map[int]struct{}
-	clearedoidcLinks bool
-	done             bool
-	oldValue         func(context.Context) (*User, error)
-	predicates       []predicate.User
+	op                Op
+	typ               string
+	id                *string
+	username          *string
+	password          *string
+	isAdmin           *bool
+	permissions       *[]string
+	appendpermissions []string
+	clearedFields     map[string]struct{}
+	oidcLinks         map[int]struct{}
+	removedoidcLinks  map[int]struct{}
+	clearedoidcLinks  bool
+	done              bool
+	oldValue          func(context.Context) (*User, error)
+	predicates        []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -221,6 +224,93 @@ func (m *UserMutation) ResetPassword() {
 	m.password = nil
 }
 
+// SetIsAdmin sets the "isAdmin" field.
+func (m *UserMutation) SetIsAdmin(b bool) {
+	m.isAdmin = &b
+}
+
+// IsAdmin returns the value of the "isAdmin" field in the mutation.
+func (m *UserMutation) IsAdmin() (r bool, exists bool) {
+	v := m.isAdmin
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsAdmin returns the old "isAdmin" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldIsAdmin(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsAdmin is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsAdmin requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsAdmin: %w", err)
+	}
+	return oldValue.IsAdmin, nil
+}
+
+// ResetIsAdmin resets all changes to the "isAdmin" field.
+func (m *UserMutation) ResetIsAdmin() {
+	m.isAdmin = nil
+}
+
+// SetPermissions sets the "permissions" field.
+func (m *UserMutation) SetPermissions(s []string) {
+	m.permissions = &s
+	m.appendpermissions = nil
+}
+
+// Permissions returns the value of the "permissions" field in the mutation.
+func (m *UserMutation) Permissions() (r []string, exists bool) {
+	v := m.permissions
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPermissions returns the old "permissions" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldPermissions(ctx context.Context) (v []string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPermissions is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPermissions requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPermissions: %w", err)
+	}
+	return oldValue.Permissions, nil
+}
+
+// AppendPermissions adds s to the "permissions" field.
+func (m *UserMutation) AppendPermissions(s []string) {
+	m.appendpermissions = append(m.appendpermissions, s...)
+}
+
+// AppendedPermissions returns the list of values that were appended to the "permissions" field in this mutation.
+func (m *UserMutation) AppendedPermissions() ([]string, bool) {
+	if len(m.appendpermissions) == 0 {
+		return nil, false
+	}
+	return m.appendpermissions, true
+}
+
+// ResetPermissions resets all changes to the "permissions" field.
+func (m *UserMutation) ResetPermissions() {
+	m.permissions = nil
+	m.appendpermissions = nil
+}
+
 // AddOidcLinkIDs adds the "oidcLinks" edge to the UserLinkedOIDC entity by ids.
 func (m *UserMutation) AddOidcLinkIDs(ids ...int) {
 	if m.oidcLinks == nil {
@@ -309,12 +399,18 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 4)
 	if m.username != nil {
 		fields = append(fields, user.FieldUsername)
 	}
 	if m.password != nil {
 		fields = append(fields, user.FieldPassword)
+	}
+	if m.isAdmin != nil {
+		fields = append(fields, user.FieldIsAdmin)
+	}
+	if m.permissions != nil {
+		fields = append(fields, user.FieldPermissions)
 	}
 	return fields
 }
@@ -328,6 +424,10 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Username()
 	case user.FieldPassword:
 		return m.Password()
+	case user.FieldIsAdmin:
+		return m.IsAdmin()
+	case user.FieldPermissions:
+		return m.Permissions()
 	}
 	return nil, false
 }
@@ -341,6 +441,10 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldUsername(ctx)
 	case user.FieldPassword:
 		return m.OldPassword(ctx)
+	case user.FieldIsAdmin:
+		return m.OldIsAdmin(ctx)
+	case user.FieldPermissions:
+		return m.OldPermissions(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -363,6 +467,20 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPassword(v)
+		return nil
+	case user.FieldIsAdmin:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsAdmin(v)
+		return nil
+	case user.FieldPermissions:
+		v, ok := value.([]string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPermissions(v)
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
@@ -418,6 +536,12 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldPassword:
 		m.ResetPassword()
+		return nil
+	case user.FieldIsAdmin:
+		m.ResetIsAdmin()
+		return nil
+	case user.FieldPermissions:
+		m.ResetPermissions()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)

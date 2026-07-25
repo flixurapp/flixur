@@ -13,6 +13,8 @@ var (
 		{Name: "id", Type: field.TypeString, Unique: true},
 		{Name: "username", Type: field.TypeString, Unique: true, Size: 64},
 		{Name: "password", Type: field.TypeString},
+		{Name: "is_admin", Type: field.TypeBool, Default: false},
+		{Name: "permissions", Type: field.TypeJSON},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{

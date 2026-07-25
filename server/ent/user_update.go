@@ -9,6 +9,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 	"forge.xela.codes/xela/flixur/ent/predicate"
 	"forge.xela.codes/xela/flixur/ent/user"
@@ -53,6 +54,32 @@ func (_u *UserUpdate) SetNillablePassword(v *string) *UserUpdate {
 	if v != nil {
 		_u.SetPassword(*v)
 	}
+	return _u
+}
+
+// SetIsAdmin sets the "isAdmin" field.
+func (_u *UserUpdate) SetIsAdmin(v bool) *UserUpdate {
+	_u.mutation.SetIsAdmin(v)
+	return _u
+}
+
+// SetNillableIsAdmin sets the "isAdmin" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableIsAdmin(v *bool) *UserUpdate {
+	if v != nil {
+		_u.SetIsAdmin(*v)
+	}
+	return _u
+}
+
+// SetPermissions sets the "permissions" field.
+func (_u *UserUpdate) SetPermissions(v []string) *UserUpdate {
+	_u.mutation.SetPermissions(v)
+	return _u
+}
+
+// AppendPermissions appends value to the "permissions" field.
+func (_u *UserUpdate) AppendPermissions(v []string) *UserUpdate {
+	_u.mutation.AppendPermissions(v)
 	return _u
 }
 
@@ -157,6 +184,17 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
 	}
+	if value, ok := _u.mutation.IsAdmin(); ok {
+		_spec.SetField(user.FieldIsAdmin, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.Permissions(); ok {
+		_spec.SetField(user.FieldPermissions, field.TypeJSON, value)
+	}
+	if value, ok := _u.mutation.AppendedPermissions(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, user.FieldPermissions, value)
+		})
+	}
 	if _u.mutation.OidcLinksCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -247,6 +285,32 @@ func (_u *UserUpdateOne) SetNillablePassword(v *string) *UserUpdateOne {
 	if v != nil {
 		_u.SetPassword(*v)
 	}
+	return _u
+}
+
+// SetIsAdmin sets the "isAdmin" field.
+func (_u *UserUpdateOne) SetIsAdmin(v bool) *UserUpdateOne {
+	_u.mutation.SetIsAdmin(v)
+	return _u
+}
+
+// SetNillableIsAdmin sets the "isAdmin" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableIsAdmin(v *bool) *UserUpdateOne {
+	if v != nil {
+		_u.SetIsAdmin(*v)
+	}
+	return _u
+}
+
+// SetPermissions sets the "permissions" field.
+func (_u *UserUpdateOne) SetPermissions(v []string) *UserUpdateOne {
+	_u.mutation.SetPermissions(v)
+	return _u
+}
+
+// AppendPermissions appends value to the "permissions" field.
+func (_u *UserUpdateOne) AppendPermissions(v []string) *UserUpdateOne {
+	_u.mutation.AppendPermissions(v)
 	return _u
 }
 
@@ -380,6 +444,17 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	}
 	if value, ok := _u.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.IsAdmin(); ok {
+		_spec.SetField(user.FieldIsAdmin, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.Permissions(); ok {
+		_spec.SetField(user.FieldPermissions, field.TypeJSON, value)
+	}
+	if value, ok := _u.mutation.AppendedPermissions(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, user.FieldPermissions, value)
+		})
 	}
 	if _u.mutation.OidcLinksCleared() {
 		edge := &sqlgraph.EdgeSpec{
