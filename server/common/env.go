@@ -35,7 +35,7 @@ type config struct {
 
 var Config config
 
-func ParseConfig() {
+func ParseConfig() error {
 	err := env.ParseWithOptions(&Config, env.Options{
 		Prefix: "FLIXUR_",
 		FuncMap: map[reflect.Type]env.ParserFunc{
@@ -53,7 +53,9 @@ func ParseConfig() {
 	})
 	if err != nil {
 		log.Err(err).Msg("Failed to parse env variables.")
+		return err
 	} else {
 		log.Trace().Msg("Successfully parsed env variables.")
+		return nil
 	}
 }
