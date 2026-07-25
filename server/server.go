@@ -34,33 +34,40 @@ func main() {
 	// ParseConfig will set the new log level from the config
 	common.ParseConfig()
 
+	// set up database
+	//TODO: eventually use postgres
+	// https://entgo.io/docs/getting-started/#create-your-first-entity
+	client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed opening connection to sqlite: %v")
+	}
+	defer client.Close()
+
 	// set up router and middlewares
 	router := chi.NewMux()
 	router.Use(middleware.Compress(5))
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.RequestID)
+
 	// init api
-	api.RegisterAPI(router)
+	api.RegisterAPI(router, client)
 
 	if common.Config.DevelopmentMode {
 		log.Info().Msg("Running in development mode.")
 	}
 
 	if !common.Config.GeneratorMode {
-		// set up database
-		//TODO: eventually use postgres
-		// https://entgo.io/docs/getting-started/#create-your-first-entity
-		client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
-		if err != nil {
-			log.Fatal().Err(err).Msg("failed opening connection to sqlite: %v")
-		}
-		defer client.Close()
-		// Run the auto migration tool.
-		log.Info().Msg("Running database migrations...")
+		// finish setting up the database
+		log.Info().Msg("Initializing database...")
+		// run migrations
 		if err := client.Schema.Create(context.Background()); err != nil {
 			log.Fatal().Err(err).Msg("failed creating schema resources: %v")
 		}
-		log.Info().Msg("Finished database migrations.")
+		// load setup state
+		if err := api.LoadServerSetupState(context.Background(), client); err != nil {
+			log.Fatal().Err(err).Msg("failed loading server setup state: %v")
+		}
+		log.Info().Msg("Finished database initialization.")
 
 		// load plugins
 		pluginDir, err := filepath.Abs(common.Config.PluginDir)

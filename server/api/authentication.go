@@ -4,8 +4,10 @@ package api
 import (
 	"context"
 	"net/http"
+	"sync/atomic"
 
 	"forge.xela.codes/xela/flixur/common"
+	"forge.xela.codes/xela/flixur/ent"
 	"github.com/danielgtaylor/huma/v2"
 )
 
@@ -31,8 +33,8 @@ type OIDCInitOutput struct {
 	}
 }
 
-func RegisterAuthenticationRoutes(api huma.API) {
-	huma.Register(api, huma.Operation{
+func RegisterAuthenticationRoutes(reg APIRegistry) {
+	huma.Register(reg.API, huma.Operation{
 		OperationID: "ping",
 		Method:      http.MethodGet,
 		Path:        "/ping",
@@ -44,14 +46,13 @@ func RegisterAuthenticationRoutes(api huma.API) {
 		//TODO: return an actual version
 		response.Body.Version = "0.0.0"
 		response.Body.ProtocolVersion = common.Version
-		//TODO: once setup is a thing change this
-		response.Body.IsSetup = true
+		response.Body.IsSetup = GetServerSetupState()
 		response.Body.SupportsOIDCLogin = "Pocket ID"
 		response.Body.SupportsPasswordLogin = true
 		return response, nil
 	})
 
-	huma.Register(api, huma.Operation{
+	huma.Register(reg.API, huma.Operation{
 		OperationID: "oidc_init",
 		Method:      http.MethodGet,
 		Path:        "/oidc_init",
@@ -64,4 +65,23 @@ func RegisterAuthenticationRoutes(api huma.API) {
 		response.Body.LoginURL = ""
 		return response, nil
 	})
+}
+
+// server setup state management
+var isServerSetup atomic.Bool
+
+func GetServerSetupState() bool {
+	return isServerSetup.Load()
+}
+func SetServerSetupState(state bool) {
+	isServerSetup.Store(state)
+}
+func LoadServerSetupState(ctx context.Context, client *ent.Client) error {
+	// just check that there is at least 1 user account
+	exists, err := client.User.Query().Exist(ctx)
+	if err != nil {
+		return err
+	}
+	SetServerSetupState(exists)
+	return nil
 }

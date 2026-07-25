@@ -1,6 +1,7 @@
 package api
 
 import (
+	"forge.xela.codes/xela/flixur/ent"
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/go-chi/chi/v5"
@@ -8,6 +9,14 @@ import (
 
 	_ "github.com/danielgtaylor/huma/v2/formats/cbor"
 )
+
+// struct of data passed to api builders
+type APIRegistry struct {
+	// Huma API instance.
+	API huma.API
+	// Database client.
+	DB *ent.Client
+}
 
 // base reusable structs
 
@@ -21,7 +30,7 @@ type InputPluginParamsOptional struct {
 	Plugin string `json:"plugin,omitempty" doc:"Plugin ID to use for the request. Omit to use the local server."`
 }
 
-func RegisterAPI(router chi.Router) {
+func RegisterAPI(router chi.Router, client *ent.Client) {
 	config := huma.DefaultConfig("Flixur API", "0.0.1")
 	config.Servers = []*huma.Server{{URL: "/api"}}
 
@@ -35,9 +44,13 @@ func RegisterAPI(router chi.Router) {
 		}))
 
 		api := humachi.New(r, config)
+		registry := APIRegistry{
+			API: api,
+			DB:  client,
+		}
 
-		RegisterAuthenticationRoutes(api)
-		RegisterMusicArtistsRoutes(api)
+		RegisterAuthenticationRoutes(registry)
+		RegisterMusicArtistsRoutes(registry)
 
 		//TODO:testing
 		/*
