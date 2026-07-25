@@ -42,9 +42,11 @@ func main() {
 	}
 	defer client.Close()
 	// Run the auto migration tool.
+	log.Info().Msg("Running database migrations...")
 	if err := client.Schema.Create(context.Background()); err != nil {
 		log.Fatal().Err(err).Msg("failed creating schema resources: %v")
 	}
+	log.Info().Msg("Finished database migrations.")
 
 	router := chi.NewMux()
 	router.Use(middleware.Compress(5))
