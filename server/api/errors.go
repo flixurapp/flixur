@@ -14,14 +14,27 @@ type APIErrorCode string
 
 type APIError struct {
 	APIErrorCodesMixin
+	// Details about what the error might be referring to.
+	Detail *string `json:"detail,omitempty"`
 }
 
 // implements huma.StatusError
 func (e *APIError) Error() string  { return string(e.Code) }
 func (e *APIError) GetStatus() int { return APIErrorCodeStatusMap[e.Code] }
 
+// Create a new APIError with error code.
 func NewAPIError(code APIErrorCode) *APIError {
-	return &APIError{APIErrorCodesMixin{Code: code}}
+	return &APIError{
+		APIErrorCodesMixin: APIErrorCodesMixin{Code: code},
+	}
+}
+
+// Create a new APIError with error code and details.
+func NewAPIErrorDetail(code APIErrorCode, detail string) *APIError {
+	return &APIError{
+		APIErrorCodesMixin: APIErrorCodesMixin{Code: code},
+		Detail:             &detail,
+	}
 }
 
 func APIErrorResponses(api huma.API, descriptions map[APIErrorCode]string) map[string]*huma.Response {

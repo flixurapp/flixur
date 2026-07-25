@@ -64,6 +64,8 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		Tags:        []string{"Authentication", "Setup"},
 		Responses: APIErrorResponses(reg.API, map[APIErrorCode]string{
 			CodeIncorrectPassword: "The setup code is incorrect.",
+			CodeTooLong:           "Username/password is too long.",
+			CodeTooShort:          "Username/password is too short.",
 		}),
 	}, func(ctx context.Context, input *struct {
 		Body struct {
@@ -83,8 +85,18 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			return nil, NewAPIError(CodeIncorrectPassword)
 		}
 
-		if common.USERNAME_MIN_LENGTH > len(input.Body.Username) || len(input.Body.Username) > common.USERNAME_MAX_LENGTH {
-			return nil, fmt.Errorf("username not %d-%d characters", common.USERNAME_MIN_LENGTH, common.USERNAME_MAX_LENGTH)
+		if len(input.Body.Username) < common.USERNAME_MIN_LENGTH {
+			return nil, NewAPIErrorDetail(CodeTooShort, "username")
+		}
+		if len(input.Body.Username) > common.USERNAME_MAX_LENGTH {
+			return nil, NewAPIErrorDetail(CodeTooLong, "username")
+		}
+
+		if len(input.Body.Password) < common.PASSWORD_MIN_LENGTH {
+			return nil, NewAPIErrorDetail(CodeTooShort, "password")
+		}
+		if len(input.Body.Password) > common.PASSWORD_MAX_LENGTH {
+			return nil, NewAPIErrorDetail(CodeTooLong, "password")
 		}
 
 		response := &OutputSuccess{}

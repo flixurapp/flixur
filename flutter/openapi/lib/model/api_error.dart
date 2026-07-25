@@ -15,6 +15,7 @@ class APIError {
   APIError({
     this.dollarSchema,
     required this.code,
+    this.detail,
   });
 
   /// A URL to the JSON Schema for this object.
@@ -28,20 +29,32 @@ class APIError {
 
   APIErrorCodeEnum code;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? detail;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is APIError &&
           other.dollarSchema == dollarSchema &&
-          other.code == code;
+          other.code == code &&
+          other.detail == detail;
 
   @override
   int get hashCode =>
       // ignore: unnecessary_parenthesis
-      (dollarSchema == null ? 0 : dollarSchema!.hashCode) + (code.hashCode);
+      (dollarSchema == null ? 0 : dollarSchema!.hashCode) +
+      (code.hashCode) +
+      (detail == null ? 0 : detail!.hashCode);
 
   @override
-  String toString() => 'APIError[dollarSchema=$dollarSchema, code=$code]';
+  String toString() =>
+      'APIError[dollarSchema=$dollarSchema, code=$code, detail=$detail]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -51,6 +64,11 @@ class APIError {
       json[r'$schema'] = null;
     }
     json[r'code'] = this.code;
+    if (this.detail != null) {
+      json[r'detail'] = this.detail;
+    } else {
+      json[r'detail'] = null;
+    }
     return json;
   }
 
@@ -75,6 +93,7 @@ class APIError {
       return APIError(
         dollarSchema: mapValueOfType<String>(json, r'$schema'),
         code: APIErrorCodeEnum.fromJson(json[r'code'])!,
+        detail: mapValueOfType<String>(json, r'detail'),
       );
     }
     return null;

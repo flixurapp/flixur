@@ -47,5 +47,3 @@ lib/model/output_success_body.dart
 lib/model/ping_output_body.dart
 lib/model/setup_request.dart
 pubspec.yaml
-test/api_error_test.dart
-test/setup_api_test.dart

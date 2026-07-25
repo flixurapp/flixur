@@ -19,10 +19,10 @@ type errCode struct {
 //
 //go:generate go run .
 var errorCodeList = []errCode{
-	{"INCORRECT_PASSWORD", http.StatusBadRequest},
-	{"INCORRECT_USERNAME", http.StatusBadRequest},
-	{"TOO_LONG", http.StatusUnauthorized},
-	{"TOO_SHORT", http.StatusUnauthorized},
+	{"INCORRECT_PASSWORD", http.StatusUnauthorized},
+	{"INCORRECT_USERNAME", http.StatusUnauthorized},
+	{"TOO_LONG", http.StatusBadRequest},
+	{"TOO_SHORT", http.StatusBadRequest},
 }
 
 // converts a SCREAMING_CASE string to PascalCase

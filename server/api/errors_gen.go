@@ -9,10 +9,10 @@ const (
 )
 
 var APIErrorCodeStatusMap = map[APIErrorCode]int{
-	CodeIncorrectPassword: 400,
-	CodeIncorrectUsername: 400,
-	CodeTooLong:           401,
-	CodeTooShort:          401,
+	CodeIncorrectPassword: 401,
+	CodeIncorrectUsername: 401,
+	CodeTooLong:           400,
+	CodeTooShort:          400,
 }
 
 type APIErrorCodesMixin struct {
