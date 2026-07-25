@@ -128,6 +128,8 @@
           generate = pkgs.writeShellApplication {
             name = "generate";
             runtimeInputs = [
+              pkgs.ent-go
+              pkgs.go
               pkgs.yq
               commands.govendor
               commands.proto
@@ -137,6 +139,9 @@
             text = ''
               ${setup}
               govendor
+
+              go generate ./server/...
+
               proto
               #tygo
               openapi

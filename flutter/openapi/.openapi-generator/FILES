@@ -39,5 +39,3 @@ lib/model/error_model.dart
 lib/model/oidc_init_output_body.dart
 lib/model/ping_output_body.dart
 pubspec.yaml
-test/login_api_test.dart
-test/oidc_init_output_body_test.dart

@@ -14,13 +14,14 @@ import (
 
 	"forge.xela.codes/xela/flixur/api"
 	"forge.xela.codes/xela/flixur/common"
+	"forge.xela.codes/xela/flixur/ent"
 	"forge.xela.codes/xela/flixur/plugins"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	_ "embed"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
@@ -32,6 +33,18 @@ func main() {
 	})
 	// ParseConfig will set the new log level from the config
 	common.ParseConfig()
+
+	//TODO: eventually use postgres
+	// https://entgo.io/docs/getting-started/#create-your-first-entity
+	client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed opening connection to sqlite: %v")
+	}
+	defer client.Close()
+	// Run the auto migration tool.
+	if err := client.Schema.Create(context.Background()); err != nil {
+		log.Fatal().Err(err).Msg("failed creating schema resources: %v")
+	}
 
 	router := chi.NewMux()
 	router.Use(middleware.Compress(5))
