@@ -45,7 +45,7 @@
           };
           openapi =
             let
-              openapi-port = "8787";
+              openapi-port = "18787";
               openapi-addr = "http://127.0.0.1:${openapi-port}/api/openapi.json";
               openapi-out = "flutter/openapi/";
             in
@@ -60,11 +60,13 @@
                 ${setup}
 
                 killport ${openapi-port}
-                go run ./server >/tmp/flixur-openapi-server.log 2>&1 &
+                export FLIXUR_DEVELOPMENT_RUN_AS_GENERATOR=true
+                export FLIXUR_PORT=${openapi-port}
+                go run ./server &
                 server_pid=$!
                 trap 'kill "$server_pid" >/dev/null 2>&1 || true' EXIT
 
-                for _ in $(seq 1 60); do
+                for _ in $(seq 1 120); do
                   if curl -fsS "${openapi-addr}" >/dev/null; then
                     break
                   fi

@@ -34,68 +34,73 @@ func main() {
 	// ParseConfig will set the new log level from the config
 	common.ParseConfig()
 
-	//TODO: eventually use postgres
-	// https://entgo.io/docs/getting-started/#create-your-first-entity
-	client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
-	if err != nil {
-		log.Fatal().Err(err).Msg("failed opening connection to sqlite: %v")
-	}
-	defer client.Close()
-	// Run the auto migration tool.
-	log.Info().Msg("Running database migrations...")
-	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Fatal().Err(err).Msg("failed creating schema resources: %v")
-	}
-	log.Info().Msg("Finished database migrations.")
-
+	// set up router and middlewares
 	router := chi.NewMux()
 	router.Use(middleware.Compress(5))
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.RequestID)
-
+	// init api
 	api.RegisterAPI(router)
 
 	if common.Config.DevelopmentMode {
 		log.Info().Msg("Running in development mode.")
 	}
 
-	pluginDir, err := filepath.Abs(common.Config.PluginDir)
-	if err != nil {
-		log.Err(err).Msg("Failed to resolve plugin directory.")
-	} else {
-		plugins.RegisterPlugins(pluginDir)
-	}
-	defer plugins.DestroyAllPlugins()
-
-	// serve the frontend if available
-	if dir := common.Config.FrontendDir; dir != "" {
-		// use root to prevent symlink traversal
-		root, err := os.OpenRoot(dir)
+	if !common.Config.GeneratorMode {
+		// set up database
+		//TODO: eventually use postgres
+		// https://entgo.io/docs/getting-started/#create-your-first-entity
+		client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
 		if err != nil {
-			log.Err(err).Msg("Failed to open frontend directory.")
+			log.Fatal().Err(err).Msg("failed opening connection to sqlite: %v")
 		}
-		defer root.Close()
+		defer client.Close()
+		// Run the auto migration tool.
+		log.Info().Msg("Running database migrations...")
+		if err := client.Schema.Create(context.Background()); err != nil {
+			log.Fatal().Err(err).Msg("failed creating schema resources: %v")
+		}
+		log.Info().Msg("Finished database migrations.")
 
-		fsys := root.FS()
-		fileServer := http.FileServer(http.FS(fsys))
-		router.NotFound(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			stat, err := fs.Stat(fsys, strings.TrimPrefix(r.URL.Path, "/"))
-			switch {
-			// serve actual files
-			case err == nil && !stat.IsDir():
-				fileServer.ServeHTTP(w, r)
-				return
-			case err == nil: // we arent listing directories
-			default:
-				// these just get the default index.html with the app
-				r.URL.Path = "/"
-				fileServer.ServeHTTP(w, r)
-				return
+		// load plugins
+		pluginDir, err := filepath.Abs(common.Config.PluginDir)
+		if err != nil {
+			log.Err(err).Msg("Failed to resolve plugin directory.")
+		} else {
+			plugins.RegisterPlugins(pluginDir)
+		}
+		defer plugins.DestroyAllPlugins()
+
+		// serve the frontend if available
+		if dir := common.Config.FrontendDir; dir != "" {
+			// use root to prevent symlink traversal
+			root, err := os.OpenRoot(dir)
+			if err != nil {
+				log.Err(err).Msg("Failed to open frontend directory.")
 			}
-		}))
-		log.Trace().Msgf("Serving frontend via '%s'.", dir)
-	} else {
-		log.Warn().Msg("Not serving the frontend as no frontend path was provided.")
+			defer root.Close()
+
+			fsys := root.FS()
+			fileServer := http.FileServer(http.FS(fsys))
+			router.NotFound(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				stat, err := fs.Stat(fsys, strings.TrimPrefix(r.URL.Path, "/"))
+				switch {
+				// serve actual files
+				case err == nil && !stat.IsDir():
+					fileServer.ServeHTTP(w, r)
+					return
+				case err == nil: // we arent listing directories
+				default:
+					// these just get the default index.html with the app
+					r.URL.Path = "/"
+					fileServer.ServeHTTP(w, r)
+					return
+				}
+			}))
+			log.Trace().Msgf("Serving frontend via '%s'.", dir)
+		} else {
+			log.Warn().Msg("Not serving the frontend as no frontend path was provided.")
+		}
 	}
 
 	// create http server/channel and listen

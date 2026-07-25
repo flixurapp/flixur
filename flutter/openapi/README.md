@@ -55,7 +55,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://127.0.0.1:8787/api*
+All URIs are relative to *http://127.0.0.1:18787/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------

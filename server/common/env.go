@@ -20,13 +20,17 @@ type config struct {
 	// The log level for both server and (most official) spawned plugins.
 	//TODO: change default to info for prod
 	LogLevel logLevel `env:"LOG_LEVEL" envDefault:"trace"` // realistically this should never change so plugins remain compatible
-	// Runs the server in development mode, some features may act differently.
-	DevelopmentMode bool `env:"DEVELOPMENT_MODE" envDefault:"false"`
 	// Path to the directory to serve the flutter frontend from.
 	// If omitted, the server will not serve a frontend.
 	FrontendDir string `env:"FRONTEND_DIR"`
 	// Path to the directory to scan for plugins.
 	PluginDir string `env:"PLUGIN_DIR" envDefault:"./plugins"`
+
+	/* These are more for development and not really for configuring the server itself. */
+	// Runs the server in development mode, some features may act differently.
+	DevelopmentMode bool `env:"DEVELOPMENT_MODE" envDefault:"false"`
+	// Runs the server in a minimal "generator" mode which is used for the OpenAPI spec generation. Most features are disabled.
+	GeneratorMode bool `env:"DEVELOPMENT_RUN_AS_GENERATOR" envDefault:"false"`
 }
 
 var Config config
