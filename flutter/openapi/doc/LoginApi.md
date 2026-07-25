@@ -9,11 +9,11 @@ All URIs are relative to *http://127.0.0.1:18787/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**oidcInit**](LoginApi.md#oidcinit) | **GET** /oidc_init | Initialize an OIDC login request.
+[**oidc**](LoginApi.md#oidc) | **GET** /auth/oidc | Initialize an OIDC login request.
 
 
-# **oidcInit**
-> OIDCInitOutputBody oidcInit()
+# **oidc**
+> OIDCInitOutputBody oidc()
 
 Initialize an OIDC login request.
 
@@ -26,10 +26,10 @@ import 'package:openapi/api.dart';
 final api_instance = LoginApi();
 
 try {
-    final result = api_instance.oidcInit();
+    final result = api_instance.oidc();
     print(result);
 } catch (e) {
-    print('Exception when calling LoginApi->oidcInit: $e\n');
+    print('Exception when calling LoginApi->oidc: $e\n');
 }
 ```
 

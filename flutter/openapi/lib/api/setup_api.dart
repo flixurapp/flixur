@@ -10,32 +10,38 @@
 
 part of openapi.api;
 
-class LoginApi {
-  LoginApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
+class SetupApi {
+  SetupApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
-  /// Initialize an OIDC login request.
+  /// Setup Server
   ///
-  /// Initializes an OIDC login request returning the URL for authorization.
+  /// Creates the initial admin account and sets up the server.
   ///
   /// Note: This method returns the HTTP [Response].
-  Future<Response> oidcWithHttpInfo() async {
+  ///
+  /// Parameters:
+  ///
+  /// * [SetupRequest] setupRequest (required):
+  Future<Response> setupWithHttpInfo(
+    SetupRequest setupRequest,
+  ) async {
     // ignore: prefer_const_declarations
-    final path = r'/auth/oidc';
+    final path = r'/auth/setup';
 
     // ignore: prefer_final_locals
-    Object? postBody;
+    Object? postBody = setupRequest;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>[];
+    const contentTypes = <String>['application/json'];
 
     return apiClient.invokeAPI(
       path,
-      'GET',
+      'POST',
       queryParams,
       postBody,
       headerParams,
@@ -44,11 +50,19 @@ class LoginApi {
     );
   }
 
-  /// Initialize an OIDC login request.
+  /// Setup Server
   ///
-  /// Initializes an OIDC login request returning the URL for authorization.
-  Future<OIDCInitOutputBody?> oidc() async {
-    final response = await oidcWithHttpInfo();
+  /// Creates the initial admin account and sets up the server.
+  ///
+  /// Parameters:
+  ///
+  /// * [SetupRequest] setupRequest (required):
+  Future<OutputSuccessBody?> setup(
+    SetupRequest setupRequest,
+  ) async {
+    final response = await setupWithHttpInfo(
+      setupRequest,
+    );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -59,8 +73,8 @@ class LoginApi {
         response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(
         await _decodeBodyBytes(response),
-        'OIDCInitOutputBody',
-      ) as OIDCInitOutputBody;
+        'OutputSuccessBody',
+      ) as OutputSuccessBody;
     }
     return null;
   }

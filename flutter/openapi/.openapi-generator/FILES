@@ -2,6 +2,7 @@
 .travis.yml
 README.md
 analysis_options.yaml
+doc/APIError.md
 doc/Artist.md
 doc/ArtistSearchOutputBody.md
 doc/ArtistSearchRequest.md
@@ -13,8 +14,11 @@ doc/ErrorModel.md
 doc/LoginApi.md
 doc/MusicApi.md
 doc/OIDCInitOutputBody.md
+doc/OutputSuccessBody.md
 doc/PingOutputBody.md
 doc/SearchApi.md
+doc/SetupApi.md
+doc/SetupRequest.md
 git_push.sh
 lib/api.dart
 lib/api/artists_api.dart
@@ -23,6 +27,7 @@ lib/api/connectivity_api.dart
 lib/api/login_api.dart
 lib/api/music_api.dart
 lib/api/search_api.dart
+lib/api/setup_api.dart
 lib/api_client.dart
 lib/api_exception.dart
 lib/api_helper.dart
@@ -31,11 +36,16 @@ lib/auth/authentication.dart
 lib/auth/http_basic_auth.dart
 lib/auth/http_bearer_auth.dart
 lib/auth/oauth.dart
+lib/model/api_error.dart
 lib/model/artist.dart
 lib/model/artist_search_output_body.dart
 lib/model/artist_search_request.dart
 lib/model/error_detail.dart
 lib/model/error_model.dart
 lib/model/oidc_init_output_body.dart
+lib/model/output_success_body.dart
 lib/model/ping_output_body.dart
+lib/model/setup_request.dart
 pubspec.yaml
+test/api_error_test.dart
+test/setup_api_test.dart

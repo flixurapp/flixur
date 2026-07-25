@@ -229,6 +229,8 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'DateTime':
           return value is DateTime ? value : DateTime.tryParse(value);
+        case 'APIError':
+          return APIError.fromJson(value);
         case 'Artist':
           return Artist.fromJson(value);
         case 'ArtistSearchOutputBody':
@@ -241,8 +243,12 @@ class ApiClient {
           return ErrorModel.fromJson(value);
         case 'OIDCInitOutputBody':
           return OIDCInitOutputBody.fromJson(value);
+        case 'OutputSuccessBody':
+          return OutputSuccessBody.fromJson(value);
         case 'PingOutputBody':
           return PingOutputBody.fromJson(value);
+        case 'SetupRequest':
+          return SetupRequest.fromJson(value);
         default:
           dynamic match;
           if (value is List &&

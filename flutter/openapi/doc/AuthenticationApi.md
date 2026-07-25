@@ -9,12 +9,13 @@ All URIs are relative to *http://127.0.0.1:18787/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**oidcInit**](AuthenticationApi.md#oidcinit) | **GET** /oidc_init | Initialize an OIDC login request.
+[**oidc**](AuthenticationApi.md#oidc) | **GET** /auth/oidc | Initialize an OIDC login request.
 [**ping**](AuthenticationApi.md#ping) | **GET** /ping | Test server connectivity.
+[**setup**](AuthenticationApi.md#setup) | **POST** /auth/setup | Setup Server
 
 
-# **oidcInit**
-> OIDCInitOutputBody oidcInit()
+# **oidc**
+> OIDCInitOutputBody oidc()
 
 Initialize an OIDC login request.
 
@@ -27,10 +28,10 @@ import 'package:openapi/api.dart';
 final api_instance = AuthenticationApi();
 
 try {
-    final result = api_instance.oidcInit();
+    final result = api_instance.oidc();
     print(result);
 } catch (e) {
-    print('Exception when calling AuthenticationApi->oidcInit: $e\n');
+    print('Exception when calling AuthenticationApi->oidc: $e\n');
 }
 ```
 
@@ -88,6 +89,49 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json, application/problem+json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **setup**
+> OutputSuccessBody setup(setupRequest)
+
+Setup Server
+
+Creates the initial admin account and sets up the server.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api_instance = AuthenticationApi();
+final setupRequest = SetupRequest(); // SetupRequest | 
+
+try {
+    final result = api_instance.setup(setupRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling AuthenticationApi->setup: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **setupRequest** | [**SetupRequest**](SetupRequest.md)|  | 
+
+### Return type
+
+[**OutputSuccessBody**](OutputSuccessBody.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

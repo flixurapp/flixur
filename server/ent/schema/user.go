@@ -19,6 +19,7 @@ func (User) Fields() []ent.Field {
 		field.String("password").NotEmpty(),
 		// If the user is an administrator, bypasses all permissions.
 		field.Bool("isAdmin").Default(false),
+		// Assigned permissions for this user.
 		field.Strings("permissions").Default([]string{}),
 	}
 }

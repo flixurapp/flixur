@@ -16,6 +16,8 @@ type APIRegistry struct {
 	API huma.API
 	// Database client.
 	DB *ent.Client
+	// Router instance.
+	Router chi.Router
 }
 
 // base reusable structs
@@ -28,6 +30,13 @@ type InputLimitParams struct {
 }
 type InputPluginParamsOptional struct {
 	Plugin string `json:"plugin,omitempty" doc:"Plugin ID to use for the request. Omit to use the local server."`
+}
+
+type OutputSuccess struct {
+	Body struct {
+		// If the request was successfully fulfilled.
+		Success bool `json:"success"`
+	}
 }
 
 func RegisterAPI(router chi.Router, client *ent.Client) {
@@ -45,8 +54,9 @@ func RegisterAPI(router chi.Router, client *ent.Client) {
 
 		api := humachi.New(r, config)
 		registry := APIRegistry{
-			API: api,
-			DB:  client,
+			API:    api,
+			DB:     client,
+			Router: router,
 		}
 
 		RegisterAuthenticationRoutes(registry)

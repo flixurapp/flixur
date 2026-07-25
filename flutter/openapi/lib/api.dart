@@ -34,14 +34,18 @@ part 'api/connectivity_api.dart';
 part 'api/login_api.dart';
 part 'api/music_api.dart';
 part 'api/search_api.dart';
+part 'api/setup_api.dart';
 
+part 'model/api_error.dart';
 part 'model/artist.dart';
 part 'model/artist_search_output_body.dart';
 part 'model/artist_search_request.dart';
 part 'model/error_detail.dart';
 part 'model/error_model.dart';
 part 'model/oidc_init_output_body.dart';
+part 'model/output_success_body.dart';
 part 'model/ping_output_body.dart';
+part 'model/setup_request.dart';
 
 /// An [ApiClient] instance that uses the default values obtained from
 /// the OpenAPI specification file.
