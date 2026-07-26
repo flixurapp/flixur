@@ -6,8 +6,10 @@ import "package:flutter_web_plugins/url_strategy.dart";
 void main() async {
   // enable path URLs
   usePathUrlStrategy();
-  // set up and use translations
+  // ensure flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // setup translations
   await LocaleSettings.useDeviceLocale();
 
   runApp(TranslationProvider(child: const MainApp()));
