@@ -14,6 +14,7 @@ import (
 	"forge.xela.codes/xela/flixur/ent/predicate"
 	"forge.xela.codes/xela/flixur/ent/user"
 	"forge.xela.codes/xela/flixur/ent/userlinkedoidc"
+	"forge.xela.codes/xela/flixur/ent/usersession"
 )
 
 // UserUpdate is the builder for updating User entities.
@@ -57,13 +58,13 @@ func (_u *UserUpdate) SetNillablePassword(v *string) *UserUpdate {
 	return _u
 }
 
-// SetIsAdmin sets the "isAdmin" field.
+// SetIsAdmin sets the "is_admin" field.
 func (_u *UserUpdate) SetIsAdmin(v bool) *UserUpdate {
 	_u.mutation.SetIsAdmin(v)
 	return _u
 }
 
-// SetNillableIsAdmin sets the "isAdmin" field if the given value is not nil.
+// SetNillableIsAdmin sets the "is_admin" field if the given value is not nil.
 func (_u *UserUpdate) SetNillableIsAdmin(v *bool) *UserUpdate {
 	if v != nil {
 		_u.SetIsAdmin(*v)
@@ -83,13 +84,13 @@ func (_u *UserUpdate) AppendPermissions(v []string) *UserUpdate {
 	return _u
 }
 
-// AddOidcLinkIDs adds the "oidcLinks" edge to the UserLinkedOIDC entity by IDs.
+// AddOidcLinkIDs adds the "oidc_links" edge to the UserLinkedOIDC entity by IDs.
 func (_u *UserUpdate) AddOidcLinkIDs(ids ...int) *UserUpdate {
 	_u.mutation.AddOidcLinkIDs(ids...)
 	return _u
 }
 
-// AddOidcLinks adds the "oidcLinks" edges to the UserLinkedOIDC entity.
+// AddOidcLinks adds the "oidc_links" edges to the UserLinkedOIDC entity.
 func (_u *UserUpdate) AddOidcLinks(v ...*UserLinkedOIDC) *UserUpdate {
 	ids := make([]int, len(v))
 	for i := range v {
@@ -98,30 +99,66 @@ func (_u *UserUpdate) AddOidcLinks(v ...*UserLinkedOIDC) *UserUpdate {
 	return _u.AddOidcLinkIDs(ids...)
 }
 
+// AddSessionIDs adds the "sessions" edge to the UserSession entity by IDs.
+func (_u *UserUpdate) AddSessionIDs(ids ...string) *UserUpdate {
+	_u.mutation.AddSessionIDs(ids...)
+	return _u
+}
+
+// AddSessions adds the "sessions" edges to the UserSession entity.
+func (_u *UserUpdate) AddSessions(v ...*UserSession) *UserUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddSessionIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdate) Mutation() *UserMutation {
 	return _u.mutation
 }
 
-// ClearOidcLinks clears all "oidcLinks" edges to the UserLinkedOIDC entity.
+// ClearOidcLinks clears all "oidc_links" edges to the UserLinkedOIDC entity.
 func (_u *UserUpdate) ClearOidcLinks() *UserUpdate {
 	_u.mutation.ClearOidcLinks()
 	return _u
 }
 
-// RemoveOidcLinkIDs removes the "oidcLinks" edge to UserLinkedOIDC entities by IDs.
+// RemoveOidcLinkIDs removes the "oidc_links" edge to UserLinkedOIDC entities by IDs.
 func (_u *UserUpdate) RemoveOidcLinkIDs(ids ...int) *UserUpdate {
 	_u.mutation.RemoveOidcLinkIDs(ids...)
 	return _u
 }
 
-// RemoveOidcLinks removes "oidcLinks" edges to UserLinkedOIDC entities.
+// RemoveOidcLinks removes "oidc_links" edges to UserLinkedOIDC entities.
 func (_u *UserUpdate) RemoveOidcLinks(v ...*UserLinkedOIDC) *UserUpdate {
 	ids := make([]int, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveOidcLinkIDs(ids...)
+}
+
+// ClearSessions clears all "sessions" edges to the UserSession entity.
+func (_u *UserUpdate) ClearSessions() *UserUpdate {
+	_u.mutation.ClearSessions()
+	return _u
+}
+
+// RemoveSessionIDs removes the "sessions" edge to UserSession entities by IDs.
+func (_u *UserUpdate) RemoveSessionIDs(ids ...string) *UserUpdate {
+	_u.mutation.RemoveSessionIDs(ids...)
+	return _u
+}
+
+// RemoveSessions removes "sessions" edges to UserSession entities.
+func (_u *UserUpdate) RemoveSessions(v ...*UserSession) *UserUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveSessionIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -240,6 +277,51 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if _u.mutation.SessionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SessionsTable,
+			Columns: []string{user.SessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usersession.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedSessionsIDs(); len(nodes) > 0 && !_u.mutation.SessionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SessionsTable,
+			Columns: []string{user.SessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usersession.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.SessionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SessionsTable,
+			Columns: []string{user.SessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usersession.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{user.Label}
@@ -288,13 +370,13 @@ func (_u *UserUpdateOne) SetNillablePassword(v *string) *UserUpdateOne {
 	return _u
 }
 
-// SetIsAdmin sets the "isAdmin" field.
+// SetIsAdmin sets the "is_admin" field.
 func (_u *UserUpdateOne) SetIsAdmin(v bool) *UserUpdateOne {
 	_u.mutation.SetIsAdmin(v)
 	return _u
 }
 
-// SetNillableIsAdmin sets the "isAdmin" field if the given value is not nil.
+// SetNillableIsAdmin sets the "is_admin" field if the given value is not nil.
 func (_u *UserUpdateOne) SetNillableIsAdmin(v *bool) *UserUpdateOne {
 	if v != nil {
 		_u.SetIsAdmin(*v)
@@ -314,13 +396,13 @@ func (_u *UserUpdateOne) AppendPermissions(v []string) *UserUpdateOne {
 	return _u
 }
 
-// AddOidcLinkIDs adds the "oidcLinks" edge to the UserLinkedOIDC entity by IDs.
+// AddOidcLinkIDs adds the "oidc_links" edge to the UserLinkedOIDC entity by IDs.
 func (_u *UserUpdateOne) AddOidcLinkIDs(ids ...int) *UserUpdateOne {
 	_u.mutation.AddOidcLinkIDs(ids...)
 	return _u
 }
 
-// AddOidcLinks adds the "oidcLinks" edges to the UserLinkedOIDC entity.
+// AddOidcLinks adds the "oidc_links" edges to the UserLinkedOIDC entity.
 func (_u *UserUpdateOne) AddOidcLinks(v ...*UserLinkedOIDC) *UserUpdateOne {
 	ids := make([]int, len(v))
 	for i := range v {
@@ -329,30 +411,66 @@ func (_u *UserUpdateOne) AddOidcLinks(v ...*UserLinkedOIDC) *UserUpdateOne {
 	return _u.AddOidcLinkIDs(ids...)
 }
 
+// AddSessionIDs adds the "sessions" edge to the UserSession entity by IDs.
+func (_u *UserUpdateOne) AddSessionIDs(ids ...string) *UserUpdateOne {
+	_u.mutation.AddSessionIDs(ids...)
+	return _u
+}
+
+// AddSessions adds the "sessions" edges to the UserSession entity.
+func (_u *UserUpdateOne) AddSessions(v ...*UserSession) *UserUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddSessionIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdateOne) Mutation() *UserMutation {
 	return _u.mutation
 }
 
-// ClearOidcLinks clears all "oidcLinks" edges to the UserLinkedOIDC entity.
+// ClearOidcLinks clears all "oidc_links" edges to the UserLinkedOIDC entity.
 func (_u *UserUpdateOne) ClearOidcLinks() *UserUpdateOne {
 	_u.mutation.ClearOidcLinks()
 	return _u
 }
 
-// RemoveOidcLinkIDs removes the "oidcLinks" edge to UserLinkedOIDC entities by IDs.
+// RemoveOidcLinkIDs removes the "oidc_links" edge to UserLinkedOIDC entities by IDs.
 func (_u *UserUpdateOne) RemoveOidcLinkIDs(ids ...int) *UserUpdateOne {
 	_u.mutation.RemoveOidcLinkIDs(ids...)
 	return _u
 }
 
-// RemoveOidcLinks removes "oidcLinks" edges to UserLinkedOIDC entities.
+// RemoveOidcLinks removes "oidc_links" edges to UserLinkedOIDC entities.
 func (_u *UserUpdateOne) RemoveOidcLinks(v ...*UserLinkedOIDC) *UserUpdateOne {
 	ids := make([]int, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveOidcLinkIDs(ids...)
+}
+
+// ClearSessions clears all "sessions" edges to the UserSession entity.
+func (_u *UserUpdateOne) ClearSessions() *UserUpdateOne {
+	_u.mutation.ClearSessions()
+	return _u
+}
+
+// RemoveSessionIDs removes the "sessions" edge to UserSession entities by IDs.
+func (_u *UserUpdateOne) RemoveSessionIDs(ids ...string) *UserUpdateOne {
+	_u.mutation.RemoveSessionIDs(ids...)
+	return _u
+}
+
+// RemoveSessions removes "sessions" edges to UserSession entities.
+func (_u *UserUpdateOne) RemoveSessions(v ...*UserSession) *UserUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveSessionIDs(ids...)
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -494,6 +612,51 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(userlinkedoidc.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.SessionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SessionsTable,
+			Columns: []string{user.SessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usersession.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedSessionsIDs(); len(nodes) > 0 && !_u.mutation.SessionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SessionsTable,
+			Columns: []string{user.SessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usersession.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.SessionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SessionsTable,
+			Columns: []string{user.SessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usersession.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

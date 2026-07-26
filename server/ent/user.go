@@ -17,13 +17,13 @@ type User struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID string `json:"id,omitempty"`
-	// Username holds the value of the "username" field.
+	// Username for this user.
 	Username string `json:"username,omitempty"`
-	// Password holds the value of the "password" field.
+	// Password for this user.
 	Password string `json:"-"`
-	// IsAdmin holds the value of the "isAdmin" field.
-	IsAdmin bool `json:"isAdmin,omitempty"`
-	// Permissions holds the value of the "permissions" field.
+	// If the user is an administrator, bypasses all permissions.
+	IsAdmin bool `json:"is_admin,omitempty"`
+	// Assigned permissions for this user.
 	Permissions []string `json:"permissions,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
@@ -33,11 +33,13 @@ type User struct {
 
 // UserEdges holds the relations/edges for other nodes in the graph.
 type UserEdges struct {
-	// OidcLinks holds the value of the oidcLinks edge.
-	OidcLinks []*UserLinkedOIDC `json:"oidcLinks,omitempty"`
+	// Linked OIDC providers for this account.
+	OidcLinks []*UserLinkedOIDC `json:"oidc_links,omitempty"`
+	// Sessions for this user.
+	Sessions []*UserSession `json:"sessions,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // OidcLinksOrErr returns the OidcLinks value or an error if the edge
@@ -46,7 +48,16 @@ func (e UserEdges) OidcLinksOrErr() ([]*UserLinkedOIDC, error) {
 	if e.loadedTypes[0] {
 		return e.OidcLinks, nil
 	}
-	return nil, &NotLoadedError{edge: "oidcLinks"}
+	return nil, &NotLoadedError{edge: "oidc_links"}
+}
+
+// SessionsOrErr returns the Sessions value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) SessionsOrErr() ([]*UserSession, error) {
+	if e.loadedTypes[1] {
+		return e.Sessions, nil
+	}
+	return nil, &NotLoadedError{edge: "sessions"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -95,7 +106,7 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			}
 		case user.FieldIsAdmin:
 			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field isAdmin", values[i])
+				return fmt.Errorf("unexpected type %T for field is_admin", values[i])
 			} else if value.Valid {
 				_m.IsAdmin = value.Bool
 			}
@@ -120,9 +131,14 @@ func (_m *User) Value(name string) (ent.Value, error) {
 	return _m.selectValues.Get(name)
 }
 
-// QueryOidcLinks queries the "oidcLinks" edge of the User entity.
+// QueryOidcLinks queries the "oidc_links" edge of the User entity.
 func (_m *User) QueryOidcLinks() *UserLinkedOIDCQuery {
 	return NewUserClient(_m.config).QueryOidcLinks(_m)
+}
+
+// QuerySessions queries the "sessions" edge of the User entity.
+func (_m *User) QuerySessions() *UserSessionQuery {
+	return NewUserClient(_m.config).QuerySessions(_m)
 }
 
 // Update returns a builder for updating this User.
@@ -153,7 +169,7 @@ func (_m *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("password=<sensitive>")
 	builder.WriteString(", ")
-	builder.WriteString("isAdmin=")
+	builder.WriteString("is_admin=")
 	builder.WriteString(fmt.Sprintf("%v", _m.IsAdmin))
 	builder.WriteString(", ")
 	builder.WriteString("permissions=")

@@ -73,7 +73,7 @@ func Password(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldPassword, v))
 }
 
-// IsAdmin applies equality check predicate on the "isAdmin" field. It's identical to IsAdminEQ.
+// IsAdmin applies equality check predicate on the "is_admin" field. It's identical to IsAdminEQ.
 func IsAdmin(v bool) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldIsAdmin, v))
 }
@@ -208,17 +208,17 @@ func PasswordContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldPassword, v))
 }
 
-// IsAdminEQ applies the EQ predicate on the "isAdmin" field.
+// IsAdminEQ applies the EQ predicate on the "is_admin" field.
 func IsAdminEQ(v bool) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldIsAdmin, v))
 }
 
-// IsAdminNEQ applies the NEQ predicate on the "isAdmin" field.
+// IsAdminNEQ applies the NEQ predicate on the "is_admin" field.
 func IsAdminNEQ(v bool) predicate.User {
 	return predicate.User(sql.FieldNEQ(FieldIsAdmin, v))
 }
 
-// HasOidcLinks applies the HasEdge predicate on the "oidcLinks" edge.
+// HasOidcLinks applies the HasEdge predicate on the "oidc_links" edge.
 func HasOidcLinks() predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
@@ -229,10 +229,33 @@ func HasOidcLinks() predicate.User {
 	})
 }
 
-// HasOidcLinksWith applies the HasEdge predicate on the "oidcLinks" edge with a given conditions (other predicates).
+// HasOidcLinksWith applies the HasEdge predicate on the "oidc_links" edge with a given conditions (other predicates).
 func HasOidcLinksWith(preds ...predicate.UserLinkedOIDC) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		step := newOidcLinksStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasSessions applies the HasEdge predicate on the "sessions" edge.
+func HasSessions() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, SessionsTable, SessionsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasSessionsWith applies the HasEdge predicate on the "sessions" edge with a given conditions (other predicates).
+func HasSessionsWith(preds ...predicate.UserSession) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := newSessionsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

@@ -3,9 +3,12 @@
 package runtime
 
 import (
+	"time"
+
 	"forge.xela.codes/xela/flixur/ent/schema"
 	"forge.xela.codes/xela/flixur/ent/user"
 	"forge.xela.codes/xela/flixur/ent/userlinkedoidc"
+	"forge.xela.codes/xela/flixur/ent/usersession"
 )
 
 // The init function reads all schema descriptors with runtime code
@@ -41,9 +44,9 @@ func init() {
 	userDescPassword := userFields[1].Descriptor()
 	// user.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	user.PasswordValidator = userDescPassword.Validators[0].(func(string) error)
-	// userDescIsAdmin is the schema descriptor for isAdmin field.
+	// userDescIsAdmin is the schema descriptor for is_admin field.
 	userDescIsAdmin := userFields[2].Descriptor()
-	// user.DefaultIsAdmin holds the default value on creation for the isAdmin field.
+	// user.DefaultIsAdmin holds the default value on creation for the is_admin field.
 	user.DefaultIsAdmin = userDescIsAdmin.Default.(bool)
 	// userDescPermissions is the schema descriptor for permissions field.
 	userDescPermissions := userFields[3].Descriptor()
@@ -63,6 +66,29 @@ func init() {
 	userlinkedoidcDescSubject := userlinkedoidcFields[1].Descriptor()
 	// userlinkedoidc.SubjectValidator is a validator for the "subject" field. It is called by the builders before save.
 	userlinkedoidc.SubjectValidator = userlinkedoidcDescSubject.Validators[0].(func(string) error)
+	usersessionMixin := schema.UserSession{}.Mixin()
+	usersessionMixinFields0 := usersessionMixin[0].Fields()
+	_ = usersessionMixinFields0
+	usersessionFields := schema.UserSession{}.Fields()
+	_ = usersessionFields
+	// usersessionDescIPAddress is the schema descriptor for ip_address field.
+	usersessionDescIPAddress := usersessionFields[0].Descriptor()
+	// usersession.IPAddressValidator is a validator for the "ip_address" field. It is called by the builders before save.
+	usersession.IPAddressValidator = usersessionDescIPAddress.Validators[0].(func(string) error)
+	// usersessionDescCreatedAt is the schema descriptor for created_at field.
+	usersessionDescCreatedAt := usersessionFields[2].Descriptor()
+	// usersession.DefaultCreatedAt holds the default value on creation for the created_at field.
+	usersession.DefaultCreatedAt = usersessionDescCreatedAt.Default.(func() time.Time)
+	// usersessionDescLastSeenAt is the schema descriptor for last_seen_at field.
+	usersessionDescLastSeenAt := usersessionFields[3].Descriptor()
+	// usersession.DefaultLastSeenAt holds the default value on creation for the last_seen_at field.
+	usersession.DefaultLastSeenAt = usersessionDescLastSeenAt.Default.(func() time.Time)
+	// usersession.UpdateDefaultLastSeenAt holds the default value on update for the last_seen_at field.
+	usersession.UpdateDefaultLastSeenAt = usersessionDescLastSeenAt.UpdateDefault.(func() time.Time)
+	// usersessionDescID is the schema descriptor for id field.
+	usersessionDescID := usersessionMixinFields0[0].Descriptor()
+	// usersession.DefaultID holds the default value on creation for the id field.
+	usersession.DefaultID = usersessionDescID.Default.(func() string)
 }
 
 const (

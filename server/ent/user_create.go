@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"forge.xela.codes/xela/flixur/ent/user"
 	"forge.xela.codes/xela/flixur/ent/userlinkedoidc"
+	"forge.xela.codes/xela/flixur/ent/usersession"
 )
 
 // UserCreate is the builder for creating a User entity.
@@ -32,13 +33,13 @@ func (_c *UserCreate) SetPassword(v string) *UserCreate {
 	return _c
 }
 
-// SetIsAdmin sets the "isAdmin" field.
+// SetIsAdmin sets the "is_admin" field.
 func (_c *UserCreate) SetIsAdmin(v bool) *UserCreate {
 	_c.mutation.SetIsAdmin(v)
 	return _c
 }
 
-// SetNillableIsAdmin sets the "isAdmin" field if the given value is not nil.
+// SetNillableIsAdmin sets the "is_admin" field if the given value is not nil.
 func (_c *UserCreate) SetNillableIsAdmin(v *bool) *UserCreate {
 	if v != nil {
 		_c.SetIsAdmin(*v)
@@ -66,19 +67,34 @@ func (_c *UserCreate) SetNillableID(v *string) *UserCreate {
 	return _c
 }
 
-// AddOidcLinkIDs adds the "oidcLinks" edge to the UserLinkedOIDC entity by IDs.
+// AddOidcLinkIDs adds the "oidc_links" edge to the UserLinkedOIDC entity by IDs.
 func (_c *UserCreate) AddOidcLinkIDs(ids ...int) *UserCreate {
 	_c.mutation.AddOidcLinkIDs(ids...)
 	return _c
 }
 
-// AddOidcLinks adds the "oidcLinks" edges to the UserLinkedOIDC entity.
+// AddOidcLinks adds the "oidc_links" edges to the UserLinkedOIDC entity.
 func (_c *UserCreate) AddOidcLinks(v ...*UserLinkedOIDC) *UserCreate {
 	ids := make([]int, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
 	return _c.AddOidcLinkIDs(ids...)
+}
+
+// AddSessionIDs adds the "sessions" edge to the UserSession entity by IDs.
+func (_c *UserCreate) AddSessionIDs(ids ...string) *UserCreate {
+	_c.mutation.AddSessionIDs(ids...)
+	return _c
+}
+
+// AddSessions adds the "sessions" edges to the UserSession entity.
+func (_c *UserCreate) AddSessions(v ...*UserSession) *UserCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddSessionIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -155,7 +171,7 @@ func (_c *UserCreate) check() error {
 		}
 	}
 	if _, ok := _c.mutation.IsAdmin(); !ok {
-		return &ValidationError{Name: "isAdmin", err: errors.New(`ent: missing required field "User.isAdmin"`)}
+		return &ValidationError{Name: "is_admin", err: errors.New(`ent: missing required field "User.is_admin"`)}
 	}
 	if _, ok := _c.mutation.Permissions(); !ok {
 		return &ValidationError{Name: "permissions", err: errors.New(`ent: missing required field "User.permissions"`)}
@@ -220,6 +236,22 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(userlinkedoidc.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.SessionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SessionsTable,
+			Columns: []string{user.SessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(usersession.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

@@ -25,7 +25,7 @@ var (
 	// UserLinkedOidCsColumns holds the columns for the "user_linked_oid_cs" table.
 	UserLinkedOidCsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "issuer", Type: field.TypeString},
+		{Name: "issuer", Type: field.TypeString, Unique: true},
 		{Name: "subject", Type: field.TypeString},
 		{Name: "user_oidc_links", Type: field.TypeString},
 	}
@@ -36,7 +36,7 @@ var (
 		PrimaryKey: []*schema.Column{UserLinkedOidCsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "user_linked_oid_cs_users_oidcLinks",
+				Symbol:     "user_linked_oid_cs_users_oidc_links",
 				Columns:    []*schema.Column{UserLinkedOidCsColumns[3]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
@@ -50,13 +50,38 @@ var (
 			},
 		},
 	}
+	// UserSessionsColumns holds the columns for the "user_sessions" table.
+	UserSessionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true},
+		{Name: "ip_address", Type: field.TypeString},
+		{Name: "user_agent", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "last_seen_at", Type: field.TypeTime},
+		{Name: "user_sessions", Type: field.TypeString},
+	}
+	// UserSessionsTable holds the schema information for the "user_sessions" table.
+	UserSessionsTable = &schema.Table{
+		Name:       "user_sessions",
+		Columns:    UserSessionsColumns,
+		PrimaryKey: []*schema.Column{UserSessionsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "user_sessions_users_sessions",
+				Columns:    []*schema.Column{UserSessionsColumns[5]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		UsersTable,
 		UserLinkedOidCsTable,
+		UserSessionsTable,
 	}
 )
 
 func init() {
 	UserLinkedOidCsTable.ForeignKeys[0].RefTable = UsersTable
+	UserSessionsTable.ForeignKeys[0].RefTable = UsersTable
 }

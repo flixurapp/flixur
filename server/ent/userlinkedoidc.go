@@ -17,9 +17,9 @@ type UserLinkedOIDC struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Issuer holds the value of the "issuer" field.
+	// Issuer URL for the OIDC provider.
 	Issuer string `json:"issuer,omitempty"`
-	// Subject holds the value of the "subject" field.
+	// Subject returned from provider that identifies the user.
 	Subject string `json:"subject,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserLinkedOIDCQuery when eager-loading is set.

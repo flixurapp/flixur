@@ -11,3 +11,6 @@ type User func(*sql.Selector)
 
 // UserLinkedOIDC is the predicate function for userlinkedoidc builders.
 type UserLinkedOIDC func(*sql.Selector)
+
+// UserSession is the predicate function for usersession builders.
+type UserSession func(*sql.Selector)

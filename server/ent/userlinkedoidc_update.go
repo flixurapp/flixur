@@ -28,34 +28,6 @@ func (_u *UserLinkedOIDCUpdate) Where(ps ...predicate.UserLinkedOIDC) *UserLinke
 	return _u
 }
 
-// SetIssuer sets the "issuer" field.
-func (_u *UserLinkedOIDCUpdate) SetIssuer(v string) *UserLinkedOIDCUpdate {
-	_u.mutation.SetIssuer(v)
-	return _u
-}
-
-// SetNillableIssuer sets the "issuer" field if the given value is not nil.
-func (_u *UserLinkedOIDCUpdate) SetNillableIssuer(v *string) *UserLinkedOIDCUpdate {
-	if v != nil {
-		_u.SetIssuer(*v)
-	}
-	return _u
-}
-
-// SetSubject sets the "subject" field.
-func (_u *UserLinkedOIDCUpdate) SetSubject(v string) *UserLinkedOIDCUpdate {
-	_u.mutation.SetSubject(v)
-	return _u
-}
-
-// SetNillableSubject sets the "subject" field if the given value is not nil.
-func (_u *UserLinkedOIDCUpdate) SetNillableSubject(v *string) *UserLinkedOIDCUpdate {
-	if v != nil {
-		_u.SetSubject(*v)
-	}
-	return _u
-}
-
 // SetUserID sets the "user" edge to the User entity by ID.
 func (_u *UserLinkedOIDCUpdate) SetUserID(id string) *UserLinkedOIDCUpdate {
 	_u.mutation.SetUserID(id)
@@ -107,16 +79,6 @@ func (_u *UserLinkedOIDCUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *UserLinkedOIDCUpdate) check() error {
-	if v, ok := _u.mutation.Issuer(); ok {
-		if err := userlinkedoidc.IssuerValidator(v); err != nil {
-			return &ValidationError{Name: "issuer", err: fmt.Errorf(`ent: validator failed for field "UserLinkedOIDC.issuer": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Subject(); ok {
-		if err := userlinkedoidc.SubjectValidator(v); err != nil {
-			return &ValidationError{Name: "subject", err: fmt.Errorf(`ent: validator failed for field "UserLinkedOIDC.subject": %w`, err)}
-		}
-	}
 	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserLinkedOIDC.user"`)
 	}
@@ -134,12 +96,6 @@ func (_u *UserLinkedOIDCUpdate) sqlSave(ctx context.Context) (_node int, err err
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := _u.mutation.Issuer(); ok {
-		_spec.SetField(userlinkedoidc.FieldIssuer, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Subject(); ok {
-		_spec.SetField(userlinkedoidc.FieldSubject, field.TypeString, value)
 	}
 	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -188,34 +144,6 @@ type UserLinkedOIDCUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *UserLinkedOIDCMutation
-}
-
-// SetIssuer sets the "issuer" field.
-func (_u *UserLinkedOIDCUpdateOne) SetIssuer(v string) *UserLinkedOIDCUpdateOne {
-	_u.mutation.SetIssuer(v)
-	return _u
-}
-
-// SetNillableIssuer sets the "issuer" field if the given value is not nil.
-func (_u *UserLinkedOIDCUpdateOne) SetNillableIssuer(v *string) *UserLinkedOIDCUpdateOne {
-	if v != nil {
-		_u.SetIssuer(*v)
-	}
-	return _u
-}
-
-// SetSubject sets the "subject" field.
-func (_u *UserLinkedOIDCUpdateOne) SetSubject(v string) *UserLinkedOIDCUpdateOne {
-	_u.mutation.SetSubject(v)
-	return _u
-}
-
-// SetNillableSubject sets the "subject" field if the given value is not nil.
-func (_u *UserLinkedOIDCUpdateOne) SetNillableSubject(v *string) *UserLinkedOIDCUpdateOne {
-	if v != nil {
-		_u.SetSubject(*v)
-	}
-	return _u
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
@@ -282,16 +210,6 @@ func (_u *UserLinkedOIDCUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *UserLinkedOIDCUpdateOne) check() error {
-	if v, ok := _u.mutation.Issuer(); ok {
-		if err := userlinkedoidc.IssuerValidator(v); err != nil {
-			return &ValidationError{Name: "issuer", err: fmt.Errorf(`ent: validator failed for field "UserLinkedOIDC.issuer": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Subject(); ok {
-		if err := userlinkedoidc.SubjectValidator(v); err != nil {
-			return &ValidationError{Name: "subject", err: fmt.Errorf(`ent: validator failed for field "UserLinkedOIDC.subject": %w`, err)}
-		}
-	}
 	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserLinkedOIDC.user"`)
 	}
@@ -326,12 +244,6 @@ func (_u *UserLinkedOIDCUpdateOne) sqlSave(ctx context.Context) (_node *UserLink
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := _u.mutation.Issuer(); ok {
-		_spec.SetField(userlinkedoidc.FieldIssuer, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Subject(); ok {
-		_spec.SetField(userlinkedoidc.FieldSubject, field.TypeString, value)
 	}
 	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{

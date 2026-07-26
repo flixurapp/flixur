@@ -17,21 +17,30 @@ const (
 	FieldUsername = "username"
 	// FieldPassword holds the string denoting the password field in the database.
 	FieldPassword = "password"
-	// FieldIsAdmin holds the string denoting the isadmin field in the database.
+	// FieldIsAdmin holds the string denoting the is_admin field in the database.
 	FieldIsAdmin = "is_admin"
 	// FieldPermissions holds the string denoting the permissions field in the database.
 	FieldPermissions = "permissions"
-	// EdgeOidcLinks holds the string denoting the oidclinks edge name in mutations.
-	EdgeOidcLinks = "oidcLinks"
+	// EdgeOidcLinks holds the string denoting the oidc_links edge name in mutations.
+	EdgeOidcLinks = "oidc_links"
+	// EdgeSessions holds the string denoting the sessions edge name in mutations.
+	EdgeSessions = "sessions"
 	// Table holds the table name of the user in the database.
 	Table = "users"
-	// OidcLinksTable is the table that holds the oidcLinks relation/edge.
+	// OidcLinksTable is the table that holds the oidc_links relation/edge.
 	OidcLinksTable = "user_linked_oid_cs"
 	// OidcLinksInverseTable is the table name for the UserLinkedOIDC entity.
 	// It exists in this package in order to avoid circular dependency with the "userlinkedoidc" package.
 	OidcLinksInverseTable = "user_linked_oid_cs"
-	// OidcLinksColumn is the table column denoting the oidcLinks relation/edge.
+	// OidcLinksColumn is the table column denoting the oidc_links relation/edge.
 	OidcLinksColumn = "user_oidc_links"
+	// SessionsTable is the table that holds the sessions relation/edge.
+	SessionsTable = "user_sessions"
+	// SessionsInverseTable is the table name for the UserSession entity.
+	// It exists in this package in order to avoid circular dependency with the "usersession" package.
+	SessionsInverseTable = "user_sessions"
+	// SessionsColumn is the table column denoting the sessions relation/edge.
+	SessionsColumn = "user_sessions"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -64,7 +73,7 @@ var (
 	UsernameValidator func(string) error
 	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	PasswordValidator func(string) error
-	// DefaultIsAdmin holds the default value on creation for the "isAdmin" field.
+	// DefaultIsAdmin holds the default value on creation for the "is_admin" field.
 	DefaultIsAdmin bool
 	// DefaultPermissions holds the default value on creation for the "permissions" field.
 	DefaultPermissions []string
@@ -90,22 +99,36 @@ func ByPassword(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPassword, opts...).ToFunc()
 }
 
-// ByIsAdmin orders the results by the isAdmin field.
+// ByIsAdmin orders the results by the is_admin field.
 func ByIsAdmin(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIsAdmin, opts...).ToFunc()
 }
 
-// ByOidcLinksCount orders the results by oidcLinks count.
+// ByOidcLinksCount orders the results by oidc_links count.
 func ByOidcLinksCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
 		sqlgraph.OrderByNeighborsCount(s, newOidcLinksStep(), opts...)
 	}
 }
 
-// ByOidcLinks orders the results by oidcLinks terms.
+// ByOidcLinks orders the results by oidc_links terms.
 func ByOidcLinks(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
 		sqlgraph.OrderByNeighborTerms(s, newOidcLinksStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// BySessionsCount orders the results by sessions count.
+func BySessionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newSessionsStep(), opts...)
+	}
+}
+
+// BySessions orders the results by sessions terms.
+func BySessions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newSessionsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
 func newOidcLinksStep() *sqlgraph.Step {
@@ -113,5 +136,12 @@ func newOidcLinksStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(OidcLinksInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, OidcLinksTable, OidcLinksColumn),
+	)
+}
+func newSessionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(SessionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, SessionsTable, SessionsColumn),
 	)
 }

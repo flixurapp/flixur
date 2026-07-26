@@ -15,15 +15,20 @@ type UserLinkedOIDC struct {
 // Fields of the UserLinkedOIDC.
 func (UserLinkedOIDC) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("issuer").NotEmpty(),
-		field.String("subject").NotEmpty(),
+		field.String("issuer").
+			NotEmpty().Unique().Immutable().
+			Comment("Issuer URL for the OIDC provider."),
+		field.String("subject").
+			NotEmpty().Immutable().
+			Comment("Subject returned from provider that identifies the user."),
 	}
 }
 
 // Edges of the UserLinkedOIDC.
 func (UserLinkedOIDC) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("user", User.Type).Ref("oidcLinks").Required().Unique(),
+		edge.From("user", User.Type).Ref("oidc_links").
+			Required().Unique(),
 	}
 }
 

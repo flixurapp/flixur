@@ -16,6 +16,8 @@ type Tx struct {
 	User *UserClient
 	// UserLinkedOIDC is the client for interacting with the UserLinkedOIDC builders.
 	UserLinkedOIDC *UserLinkedOIDCClient
+	// UserSession is the client for interacting with the UserSession builders.
+	UserSession *UserSessionClient
 
 	// lazily loaded.
 	client     *Client
@@ -149,6 +151,7 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.User = NewUserClient(tx.config)
 	tx.UserLinkedOIDC = NewUserLinkedOIDCClient(tx.config)
+	tx.UserSession = NewUserSessionClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

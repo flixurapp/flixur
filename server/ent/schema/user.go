@@ -17,18 +17,28 @@ type User struct {
 
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("username").Unique().MinLen(common.USERNAME_MIN_LENGTH).MaxLen(common.USERNAME_MAX_LENGTH),
-		field.String("password").NotEmpty().Sensitive(),
-		// If the user is an administrator, bypasses all permissions.
-		field.Bool("isAdmin").Default(false),
-		// Assigned permissions for this user.
-		field.Strings("permissions").Default([]string{}),
+		field.String("username").
+			Unique().
+			MinLen(common.USERNAME_MIN_LENGTH).MaxLen(common.USERNAME_MAX_LENGTH).
+			Comment("Username for this user."),
+		field.String("password").
+			NotEmpty().Sensitive().
+			Comment("Password for this user."),
+		field.Bool("is_admin").
+			Default(false).
+			Comment("If the user is an administrator, bypasses all permissions."),
+		field.Strings("permissions").
+			Default([]string{}).
+			Comment("Assigned permissions for this user."),
 	}
 }
 
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("oidcLinks", UserLinkedOIDC.Type),
+		edge.To("oidc_links", UserLinkedOIDC.Type).
+			Comment("Linked OIDC providers for this account."),
+		edge.To("sessions", UserSession.Type).
+			Comment("Sessions for this user."),
 	}
 }
 
