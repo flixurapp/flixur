@@ -19,9 +19,9 @@ func (UserSession) Fields() []ent.Field {
 		field.String("ip_address").
 			NotEmpty().Immutable().
 			Comment("IP address at the time of login."),
-		field.String("user_agent").
+		field.String("platform").
 			Immutable().
-			Comment("User agent that made the login request."),
+			Comment("The platform the session was created on. Usually name + version."),
 		field.Time("created_at").
 			Default(time.Now).Immutable().
 			Comment("Timestamp this session was created at."),

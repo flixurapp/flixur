@@ -70,9 +70,9 @@ func IPAddress(v string) predicate.UserSession {
 	return predicate.UserSession(sql.FieldEQ(FieldIPAddress, v))
 }
 
-// UserAgent applies equality check predicate on the "user_agent" field. It's identical to UserAgentEQ.
-func UserAgent(v string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldEQ(FieldUserAgent, v))
+// Platform applies equality check predicate on the "platform" field. It's identical to PlatformEQ.
+func Platform(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldEQ(FieldPlatform, v))
 }
 
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
@@ -150,69 +150,69 @@ func IPAddressContainsFold(v string) predicate.UserSession {
 	return predicate.UserSession(sql.FieldContainsFold(FieldIPAddress, v))
 }
 
-// UserAgentEQ applies the EQ predicate on the "user_agent" field.
-func UserAgentEQ(v string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldEQ(FieldUserAgent, v))
+// PlatformEQ applies the EQ predicate on the "platform" field.
+func PlatformEQ(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldEQ(FieldPlatform, v))
 }
 
-// UserAgentNEQ applies the NEQ predicate on the "user_agent" field.
-func UserAgentNEQ(v string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldNEQ(FieldUserAgent, v))
+// PlatformNEQ applies the NEQ predicate on the "platform" field.
+func PlatformNEQ(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldNEQ(FieldPlatform, v))
 }
 
-// UserAgentIn applies the In predicate on the "user_agent" field.
-func UserAgentIn(vs ...string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldIn(FieldUserAgent, vs...))
+// PlatformIn applies the In predicate on the "platform" field.
+func PlatformIn(vs ...string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldIn(FieldPlatform, vs...))
 }
 
-// UserAgentNotIn applies the NotIn predicate on the "user_agent" field.
-func UserAgentNotIn(vs ...string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldNotIn(FieldUserAgent, vs...))
+// PlatformNotIn applies the NotIn predicate on the "platform" field.
+func PlatformNotIn(vs ...string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldNotIn(FieldPlatform, vs...))
 }
 
-// UserAgentGT applies the GT predicate on the "user_agent" field.
-func UserAgentGT(v string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldGT(FieldUserAgent, v))
+// PlatformGT applies the GT predicate on the "platform" field.
+func PlatformGT(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldGT(FieldPlatform, v))
 }
 
-// UserAgentGTE applies the GTE predicate on the "user_agent" field.
-func UserAgentGTE(v string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldGTE(FieldUserAgent, v))
+// PlatformGTE applies the GTE predicate on the "platform" field.
+func PlatformGTE(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldGTE(FieldPlatform, v))
 }
 
-// UserAgentLT applies the LT predicate on the "user_agent" field.
-func UserAgentLT(v string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldLT(FieldUserAgent, v))
+// PlatformLT applies the LT predicate on the "platform" field.
+func PlatformLT(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldLT(FieldPlatform, v))
 }
 
-// UserAgentLTE applies the LTE predicate on the "user_agent" field.
-func UserAgentLTE(v string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldLTE(FieldUserAgent, v))
+// PlatformLTE applies the LTE predicate on the "platform" field.
+func PlatformLTE(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldLTE(FieldPlatform, v))
 }
 
-// UserAgentContains applies the Contains predicate on the "user_agent" field.
-func UserAgentContains(v string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldContains(FieldUserAgent, v))
+// PlatformContains applies the Contains predicate on the "platform" field.
+func PlatformContains(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldContains(FieldPlatform, v))
 }
 
-// UserAgentHasPrefix applies the HasPrefix predicate on the "user_agent" field.
-func UserAgentHasPrefix(v string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldHasPrefix(FieldUserAgent, v))
+// PlatformHasPrefix applies the HasPrefix predicate on the "platform" field.
+func PlatformHasPrefix(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldHasPrefix(FieldPlatform, v))
 }
 
-// UserAgentHasSuffix applies the HasSuffix predicate on the "user_agent" field.
-func UserAgentHasSuffix(v string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldHasSuffix(FieldUserAgent, v))
+// PlatformHasSuffix applies the HasSuffix predicate on the "platform" field.
+func PlatformHasSuffix(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldHasSuffix(FieldPlatform, v))
 }
 
-// UserAgentEqualFold applies the EqualFold predicate on the "user_agent" field.
-func UserAgentEqualFold(v string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldEqualFold(FieldUserAgent, v))
+// PlatformEqualFold applies the EqualFold predicate on the "platform" field.
+func PlatformEqualFold(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldEqualFold(FieldPlatform, v))
 }
 
-// UserAgentContainsFold applies the ContainsFold predicate on the "user_agent" field.
-func UserAgentContainsFold(v string) predicate.UserSession {
-	return predicate.UserSession(sql.FieldContainsFold(FieldUserAgent, v))
+// PlatformContainsFold applies the ContainsFold predicate on the "platform" field.
+func PlatformContainsFold(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldContainsFold(FieldPlatform, v))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.

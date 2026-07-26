@@ -27,9 +27,9 @@ func (_c *UserSessionCreate) SetIPAddress(v string) *UserSessionCreate {
 	return _c
 }
 
-// SetUserAgent sets the "user_agent" field.
-func (_c *UserSessionCreate) SetUserAgent(v string) *UserSessionCreate {
-	_c.mutation.SetUserAgent(v)
+// SetPlatform sets the "platform" field.
+func (_c *UserSessionCreate) SetPlatform(v string) *UserSessionCreate {
+	_c.mutation.SetPlatform(v)
 	return _c
 }
 
@@ -145,8 +145,8 @@ func (_c *UserSessionCreate) check() error {
 			return &ValidationError{Name: "ip_address", err: fmt.Errorf(`ent: validator failed for field "UserSession.ip_address": %w`, err)}
 		}
 	}
-	if _, ok := _c.mutation.UserAgent(); !ok {
-		return &ValidationError{Name: "user_agent", err: errors.New(`ent: missing required field "UserSession.user_agent"`)}
+	if _, ok := _c.mutation.Platform(); !ok {
+		return &ValidationError{Name: "platform", err: errors.New(`ent: missing required field "UserSession.platform"`)}
 	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "UserSession.created_at"`)}
@@ -196,9 +196,9 @@ func (_c *UserSessionCreate) createSpec() (*UserSession, *sqlgraph.CreateSpec) {
 		_spec.SetField(usersession.FieldIPAddress, field.TypeString, value)
 		_node.IPAddress = value
 	}
-	if value, ok := _c.mutation.UserAgent(); ok {
-		_spec.SetField(usersession.FieldUserAgent, field.TypeString, value)
-		_node.UserAgent = value
+	if value, ok := _c.mutation.Platform(); ok {
+		_spec.SetField(usersession.FieldPlatform, field.TypeString, value)
+		_node.Platform = value
 	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(usersession.FieldCreatedAt, field.TypeTime, value)

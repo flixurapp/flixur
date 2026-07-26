@@ -20,8 +20,8 @@ type UserSession struct {
 	ID string `json:"id,omitempty"`
 	// IP address at the time of login.
 	IPAddress string `json:"ip_address,omitempty"`
-	// User agent that made the login request.
-	UserAgent string `json:"user_agent,omitempty"`
+	// The platform the session was created on. Usually name + version.
+	Platform string `json:"platform,omitempty"`
 	// Timestamp this session was created at.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Last time this session was used — update on each authenticated request, or throttle to e.g. once per hour
@@ -58,7 +58,7 @@ func (*UserSession) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case usersession.FieldID, usersession.FieldIPAddress, usersession.FieldUserAgent:
+		case usersession.FieldID, usersession.FieldIPAddress, usersession.FieldPlatform:
 			values[i] = new(sql.NullString)
 		case usersession.FieldCreatedAt, usersession.FieldLastSeenAt:
 			values[i] = new(sql.NullTime)
@@ -91,11 +91,11 @@ func (_m *UserSession) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.IPAddress = value.String
 			}
-		case usersession.FieldUserAgent:
+		case usersession.FieldPlatform:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field user_agent", values[i])
+				return fmt.Errorf("unexpected type %T for field platform", values[i])
 			} else if value.Valid {
-				_m.UserAgent = value.String
+				_m.Platform = value.String
 			}
 		case usersession.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -160,8 +160,8 @@ func (_m *UserSession) String() string {
 	builder.WriteString("ip_address=")
 	builder.WriteString(_m.IPAddress)
 	builder.WriteString(", ")
-	builder.WriteString("user_agent=")
-	builder.WriteString(_m.UserAgent)
+	builder.WriteString("platform=")
+	builder.WriteString(_m.Platform)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))

@@ -54,7 +54,7 @@ var (
 	UserSessionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true},
 		{Name: "ip_address", Type: field.TypeString},
-		{Name: "user_agent", Type: field.TypeString},
+		{Name: "platform", Type: field.TypeString},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "last_seen_at", Type: field.TypeTime},
 		{Name: "user_sessions", Type: field.TypeString},

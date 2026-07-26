@@ -16,8 +16,8 @@ const (
 	FieldID = "id"
 	// FieldIPAddress holds the string denoting the ip_address field in the database.
 	FieldIPAddress = "ip_address"
-	// FieldUserAgent holds the string denoting the user_agent field in the database.
-	FieldUserAgent = "user_agent"
+	// FieldPlatform holds the string denoting the platform field in the database.
+	FieldPlatform = "platform"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldLastSeenAt holds the string denoting the last_seen_at field in the database.
@@ -39,7 +39,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldIPAddress,
-	FieldUserAgent,
+	FieldPlatform,
 	FieldCreatedAt,
 	FieldLastSeenAt,
 }
@@ -91,9 +91,9 @@ func ByIPAddress(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIPAddress, opts...).ToFunc()
 }
 
-// ByUserAgent orders the results by the user_agent field.
-func ByUserAgent(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldUserAgent, opts...).ToFunc()
+// ByPlatform orders the results by the platform field.
+func ByPlatform(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPlatform, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.

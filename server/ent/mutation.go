@@ -1171,7 +1171,7 @@ type UserSessionMutation struct {
 	typ           string
 	id            *string
 	ip_address    *string
-	user_agent    *string
+	platform      *string
 	created_at    *time.Time
 	last_seen_at  *time.Time
 	clearedFields map[string]struct{}
@@ -1322,40 +1322,40 @@ func (m *UserSessionMutation) ResetIPAddress() {
 	m.ip_address = nil
 }
 
-// SetUserAgent sets the "user_agent" field.
-func (m *UserSessionMutation) SetUserAgent(s string) {
-	m.user_agent = &s
+// SetPlatform sets the "platform" field.
+func (m *UserSessionMutation) SetPlatform(s string) {
+	m.platform = &s
 }
 
-// UserAgent returns the value of the "user_agent" field in the mutation.
-func (m *UserSessionMutation) UserAgent() (r string, exists bool) {
-	v := m.user_agent
+// Platform returns the value of the "platform" field in the mutation.
+func (m *UserSessionMutation) Platform() (r string, exists bool) {
+	v := m.platform
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldUserAgent returns the old "user_agent" field's value of the UserSession entity.
+// OldPlatform returns the old "platform" field's value of the UserSession entity.
 // If the UserSession object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserSessionMutation) OldUserAgent(ctx context.Context) (v string, err error) {
+func (m *UserSessionMutation) OldPlatform(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUserAgent is only allowed on UpdateOne operations")
+		return v, errors.New("OldPlatform is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUserAgent requires an ID field in the mutation")
+		return v, errors.New("OldPlatform requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUserAgent: %w", err)
+		return v, fmt.Errorf("querying old value for OldPlatform: %w", err)
 	}
-	return oldValue.UserAgent, nil
+	return oldValue.Platform, nil
 }
 
-// ResetUserAgent resets all changes to the "user_agent" field.
-func (m *UserSessionMutation) ResetUserAgent() {
-	m.user_agent = nil
+// ResetPlatform resets all changes to the "platform" field.
+func (m *UserSessionMutation) ResetPlatform() {
+	m.platform = nil
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -1507,8 +1507,8 @@ func (m *UserSessionMutation) Fields() []string {
 	if m.ip_address != nil {
 		fields = append(fields, usersession.FieldIPAddress)
 	}
-	if m.user_agent != nil {
-		fields = append(fields, usersession.FieldUserAgent)
+	if m.platform != nil {
+		fields = append(fields, usersession.FieldPlatform)
 	}
 	if m.created_at != nil {
 		fields = append(fields, usersession.FieldCreatedAt)
@@ -1526,8 +1526,8 @@ func (m *UserSessionMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case usersession.FieldIPAddress:
 		return m.IPAddress()
-	case usersession.FieldUserAgent:
-		return m.UserAgent()
+	case usersession.FieldPlatform:
+		return m.Platform()
 	case usersession.FieldCreatedAt:
 		return m.CreatedAt()
 	case usersession.FieldLastSeenAt:
@@ -1543,8 +1543,8 @@ func (m *UserSessionMutation) OldField(ctx context.Context, name string) (ent.Va
 	switch name {
 	case usersession.FieldIPAddress:
 		return m.OldIPAddress(ctx)
-	case usersession.FieldUserAgent:
-		return m.OldUserAgent(ctx)
+	case usersession.FieldPlatform:
+		return m.OldPlatform(ctx)
 	case usersession.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case usersession.FieldLastSeenAt:
@@ -1565,12 +1565,12 @@ func (m *UserSessionMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetIPAddress(v)
 		return nil
-	case usersession.FieldUserAgent:
+	case usersession.FieldPlatform:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetUserAgent(v)
+		m.SetPlatform(v)
 		return nil
 	case usersession.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -1638,8 +1638,8 @@ func (m *UserSessionMutation) ResetField(name string) error {
 	case usersession.FieldIPAddress:
 		m.ResetIPAddress()
 		return nil
-	case usersession.FieldUserAgent:
-		m.ResetUserAgent()
+	case usersession.FieldPlatform:
+		m.ResetPlatform()
 		return nil
 	case usersession.FieldCreatedAt:
 		m.ResetCreatedAt()

@@ -12,7 +12,6 @@ type UserLinkedOIDC struct {
 	ent.Schema
 }
 
-// Fields of the UserLinkedOIDC.
 func (UserLinkedOIDC) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("issuer").
@@ -24,7 +23,6 @@ func (UserLinkedOIDC) Fields() []ent.Field {
 	}
 }
 
-// Edges of the UserLinkedOIDC.
 func (UserLinkedOIDC) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("user", User.Type).Ref("oidc_links").
@@ -32,7 +30,6 @@ func (UserLinkedOIDC) Edges() []ent.Edge {
 	}
 }
 
-// Indexes of the UserLinkedOIDC.
 func (UserLinkedOIDC) Indexes() []ent.Index {
 	return []ent.Index{
 		// these are used to lookup a login
