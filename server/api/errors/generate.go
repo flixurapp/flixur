@@ -19,8 +19,10 @@ type errCode struct {
 //
 //go:generate go run .
 var errorCodeList = []errCode{
+	{"DATABASE_ERROR", http.StatusInternalServerError},
 	{"INCORRECT_PASSWORD", http.StatusUnauthorized},
 	{"INCORRECT_USERNAME", http.StatusUnauthorized},
+	{"INVALID_INPUT", http.StatusBadRequest},
 	{"TOO_LONG", http.StatusBadRequest},
 	{"TOO_SHORT", http.StatusBadRequest},
 }

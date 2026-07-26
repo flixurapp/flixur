@@ -63,7 +63,9 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		Description: "Creates the initial admin account and sets up the server.",
 		Tags:        []string{"Authentication", "Setup"},
 		Responses: APIErrorResponses(reg.API, map[APIErrorCode]string{
+			CodeDatabaseError:     "Failed to write to database.",
 			CodeIncorrectPassword: "The setup code is incorrect.",
+			CodeInvalidInput:      "Username contains non-ASCII character.",
 			CodeTooLong:           "Username/password is too long.",
 			CodeTooShort:          "Username/password is too short.",
 		}),
@@ -85,13 +87,18 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			return nil, NewAPIError(CodeIncorrectPassword)
 		}
 
+		// validate username
 		if len(input.Body.Username) < common.USERNAME_MIN_LENGTH {
 			return nil, NewAPIErrorDetail(CodeTooShort, "username")
 		}
 		if len(input.Body.Username) > common.USERNAME_MAX_LENGTH {
 			return nil, NewAPIErrorDetail(CodeTooLong, "username")
 		}
+		if !common.IsValidUsername(input.Body.Username) {
+			return nil, NewAPIErrorDetail(CodeInvalidInput, "username")
+		}
 
+		// validate password
 		if len(input.Body.Password) < common.PASSWORD_MIN_LENGTH {
 			return nil, NewAPIErrorDetail(CodeTooShort, "password")
 		}
@@ -99,6 +106,20 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			return nil, NewAPIErrorDetail(CodeTooLong, "password")
 		}
 
+		// create user in database
+		_, err := reg.DB.User.Create().
+			SetUsername(input.Body.Username).
+			SetPassword(input.Body.Password).
+			SetIsAdmin(true).
+			Save(ctx)
+		if err != nil {
+			return nil, NewAPIError(CodeDatabaseError)
+		}
+
+		// create new user session
+		//TODO:
+
+		// success
 		response := &OutputSuccess{}
 		response.Body.Success = true
 		return response, nil

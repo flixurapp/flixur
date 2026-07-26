@@ -3,6 +3,7 @@
 package user
 
 import (
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 )
@@ -52,7 +53,13 @@ func ValidColumn(column string) bool {
 	return false
 }
 
+// Note that the variables below are initialized by the runtime
+// package on the initialization of the application. Therefore,
+// it should be imported in the main as follows:
+//
+//	import _ "forge.xela.codes/xela/flixur/ent/runtime"
 var (
+	Hooks [1]ent.Hook
 	// UsernameValidator is a validator for the "username" field. It is called by the builders before save.
 	UsernameValidator func(string) error
 	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.

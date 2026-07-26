@@ -20,7 +20,7 @@ type User struct {
 	// Username holds the value of the "username" field.
 	Username string `json:"username,omitempty"`
 	// Password holds the value of the "password" field.
-	Password string `json:"password,omitempty"`
+	Password string `json:"-"`
 	// IsAdmin holds the value of the "isAdmin" field.
 	IsAdmin bool `json:"isAdmin,omitempty"`
 	// Permissions holds the value of the "permissions" field.
@@ -151,8 +151,7 @@ func (_m *User) String() string {
 	builder.WriteString("username=")
 	builder.WriteString(_m.Username)
 	builder.WriteString(", ")
-	builder.WriteString("password=")
-	builder.WriteString(_m.Password)
+	builder.WriteString("password=<sensitive>")
 	builder.WriteString(", ")
 	builder.WriteString("isAdmin=")
 	builder.WriteString(fmt.Sprintf("%v", _m.IsAdmin))

@@ -166,15 +166,19 @@ class APIErrorCodeEnum {
 
   String toJson() => value;
 
+  static const DATABASE_ERROR = APIErrorCodeEnum._(r'DATABASE_ERROR');
   static const INCORRECT_PASSWORD = APIErrorCodeEnum._(r'INCORRECT_PASSWORD');
   static const INCORRECT_USERNAME = APIErrorCodeEnum._(r'INCORRECT_USERNAME');
+  static const INVALID_INPUT = APIErrorCodeEnum._(r'INVALID_INPUT');
   static const TOO_LONG = APIErrorCodeEnum._(r'TOO_LONG');
   static const TOO_SHORT = APIErrorCodeEnum._(r'TOO_SHORT');
 
   /// List of all possible values in this [enum][APIErrorCodeEnum].
   static const values = <APIErrorCodeEnum>[
+    DATABASE_ERROR,
     INCORRECT_PASSWORD,
     INCORRECT_USERNAME,
+    INVALID_INPUT,
     TOO_LONG,
     TOO_SHORT,
   ];
@@ -220,10 +224,14 @@ class APIErrorCodeEnumTypeTransformer {
   APIErrorCodeEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
+        case r'DATABASE_ERROR':
+          return APIErrorCodeEnum.DATABASE_ERROR;
         case r'INCORRECT_PASSWORD':
           return APIErrorCodeEnum.INCORRECT_PASSWORD;
         case r'INCORRECT_USERNAME':
           return APIErrorCodeEnum.INCORRECT_USERNAME;
+        case r'INVALID_INPUT':
+          return APIErrorCodeEnum.INVALID_INPUT;
         case r'TOO_LONG':
           return APIErrorCodeEnum.TOO_LONG;
         case r'TOO_SHORT':

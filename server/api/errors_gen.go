@@ -2,19 +2,23 @@
 package api
 
 const (
+	CodeDatabaseError     APIErrorCode = "DATABASE_ERROR"
 	CodeIncorrectPassword APIErrorCode = "INCORRECT_PASSWORD"
 	CodeIncorrectUsername APIErrorCode = "INCORRECT_USERNAME"
+	CodeInvalidInput      APIErrorCode = "INVALID_INPUT"
 	CodeTooLong           APIErrorCode = "TOO_LONG"
 	CodeTooShort          APIErrorCode = "TOO_SHORT"
 )
 
 var APIErrorCodeStatusMap = map[APIErrorCode]int{
+	CodeDatabaseError:     500,
 	CodeIncorrectPassword: 401,
 	CodeIncorrectUsername: 401,
+	CodeInvalidInput:      400,
 	CodeTooLong:           400,
 	CodeTooShort:          400,
 }
 
 type APIErrorCodesMixin struct {
-	Code APIErrorCode `json:"code" enum:"INCORRECT_PASSWORD,INCORRECT_USERNAME,TOO_LONG,TOO_SHORT"`
+	Code APIErrorCode `json:"code" enum:"DATABASE_ERROR,INCORRECT_PASSWORD,INCORRECT_USERNAME,INVALID_INPUT,TOO_LONG,TOO_SHORT"`
 }
