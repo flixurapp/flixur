@@ -1,7 +1,10 @@
 package common
 
 import (
+	"fmt"
+	"net"
 	"reflect"
+	"strings"
 
 	"github.com/caarlos0/env/v11"
 	"github.com/rs/zerolog"
@@ -11,6 +14,7 @@ import (
 type logLevel struct {
 	Value zerolog.Level
 }
+type ipCIDRs = []*net.IPNet
 
 type config struct {
 	// IP address for the server to listen on.
@@ -25,6 +29,13 @@ type config struct {
 	FrontendDir string `env:"FRONTEND_DIR"`
 	// Path to the directory to scan for plugins.
 	PluginDir string `env:"PLUGIN_DIR" envDefault:"./plugins"`
+
+	// Trust reverse proxy IP headers.
+	TrustProxy bool `env:"TRUST_PROXY" envDefault:"false"`
+	// If TrustProxy is enabled, the header to use to get the client IP.
+	TrustProxyHeader string `env:"TRUST_PROXY_HEADER" envDefault:"X-Forwarded-For"`
+	// If TrustProxy is enabled, the comma-separated list of CIDRs to trust. Defaults to all trusted.
+	TrustedProxyCIDRs ipCIDRs `env:"TRUSTED_PROXY_CIDRS" envSeparator:","`
 
 	/* These are more for development and not really for configuring the server itself. */
 	// Runs the server in development mode, some features may act differently.
@@ -48,6 +59,23 @@ func ParseConfig() error {
 				// set the log level here so the config trace is properly recorded
 				zerolog.SetGlobalLevel(lvl)
 				return logLevel{Value: lvl}, nil
+			},
+			// parse IP CIDRs
+			reflect.TypeFor[ipCIDRs](): func(v string) (any, error) {
+				if v == "" {
+					return ipCIDRs{}, nil
+				}
+				parts := strings.Split(v, ",")
+				nets := make(ipCIDRs, 0, len(parts))
+				for _, p := range parts {
+					p = strings.TrimSpace(p)
+					_, ipNet, err := net.ParseCIDR(p)
+					if err != nil {
+						return nil, fmt.Errorf("invalid CIDR %q: %w", p, err)
+					}
+					nets = append(nets, ipNet)
+				}
+				return nets, nil
 			},
 		},
 	})

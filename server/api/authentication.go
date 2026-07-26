@@ -14,6 +14,10 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type UserAgentHeaderMixin struct {
+	UserAgent string `header:"User-Agent" required:"true" minLength:"1" doc:"User-Agent is required for platform determination."`
+}
+
 type PingOutput struct {
 	Body struct {
 		// SemVer version of the server.
@@ -70,6 +74,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			CodeTooShort:          "Username/password is too short.",
 		}),
 	}, func(ctx context.Context, input *struct {
+		UserAgentHeaderMixin
 		Body struct {
 			// Setup code for the server. This is logged in the console.
 			Code string `json:"code" example:"XXXXXX"`

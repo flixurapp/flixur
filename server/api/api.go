@@ -1,6 +1,11 @@
 package api
 
 import (
+	"context"
+	"net"
+	"strings"
+
+	"forge.xela.codes/xela/flixur/common"
 	"forge.xela.codes/xela/flixur/ent"
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
@@ -39,6 +44,59 @@ type OutputSuccess struct {
 	}
 }
 
+/*
+func GetClientIP(remoteAddr string, headerValue string) string {
+	directIP := stripPort(remoteAddr)
+
+	// If the immediate connection isn't from a trusted proxy, don't trust
+	// the header at all — use the direct connection IP.
+	if !isTrustedProxy(cfg, directIP) {
+		return directIP
+	}
+
+	if headerValue == "" {
+		return directIP
+	}
+
+	// Single-value headers (e.g. CF-Connecting-IP) — just use it directly
+	if !strings.Contains(headerValue, ",") {
+		if net.ParseIP(headerValue) != nil {
+			return headerValue
+		}
+		return directIP
+	}
+
+	// Comma-separated (e.g. X-Forwarded-For) — take the Nth from the end
+	parts := strings.Split(headerValue, ",")
+	for i := range parts {
+		parts[i] = strings.TrimSpace(parts[i])
+	}
+	idx := len(parts) - cfg.TrustedHops
+	if idx < 0 || idx >= len(parts) {
+		return directIP
+	}
+	if net.ParseIP(parts[idx]) == nil {
+		return directIP
+	}
+	return parts[idx]
+}
+
+func isTrustedProxy(cfg *ProxyConfig, ip string) bool {
+	if len(cfg.TrustedProxyCIDRs) == 0 {
+		return true // no restriction configured — trust header unconditionally
+	}
+	parsed := net.ParseIP(ip)
+	if parsed == nil {
+		return false
+	}
+	for _, cidr := range cfg.TrustedProxyCIDRs {
+		if cidr.Contains(parsed) {
+			return true
+		}
+	}
+	return false
+}*/
+
 func RegisterAPI(router chi.Router, client *ent.Client) {
 	config := huma.DefaultConfig("Flixur API", "0.0.1")
 	config.Servers = []*huma.Server{{URL: "/api"}}
@@ -53,6 +111,7 @@ func RegisterAPI(router chi.Router, client *ent.Client) {
 		}))
 
 		api := humachi.New(r, config)
+		api.UseMiddleware(ipMiddleware)
 		registry := APIRegistry{
 			API:    api,
 			DB:     client,
@@ -73,4 +132,51 @@ func RegisterAPI(router chi.Router, client *ent.Client) {
 			})
 		*/
 	})
+}
+
+// key identifying the client IP
+type ctxKeyClientIP struct{}
+
+func isTrustedProxy(ip string) bool {
+	if len(common.Config.TrustedProxyCIDRs) == 0 {
+		return true
+	}
+	parsed := net.ParseIP(ip)
+	if parsed == nil {
+		return false
+	}
+	for _, cidr := range common.Config.TrustedProxyCIDRs {
+		if cidr.Contains(parsed) {
+			return true
+		}
+	}
+	return false
+}
+func ipMiddleware(ctx huma.Context, next func(huma.Context)) {
+	clientIP, _, err := net.SplitHostPort(ctx.RemoteAddr())
+	// on failure just use raw addr
+	if err != nil {
+		clientIP = ctx.RemoteAddr()
+	}
+
+	// if we trust the proxy, then use its header for IP
+	if common.Config.TrustProxy && isTrustedProxy(clientIP) {
+		headerVal := ctx.Header(common.Config.TrustProxyHeader)
+		if headerVal != "" {
+			parts := strings.Split(headerVal, ",")
+			// first proxy ip, ignoring any hops
+			first := strings.TrimSpace(parts[0])
+			if net.ParseIP(first) != nil {
+				clientIP = first
+			}
+		}
+	}
+
+	next(huma.WithValue(ctx, ctxKeyClientIP{}, clientIP))
+}
+
+// Returns the resolved client IP taking into account proxies.
+func GetClientIP(ctx context.Context) string {
+	ip, _ := ctx.Value(ctxKeyClientIP{}).(string)
+	return ip
 }
