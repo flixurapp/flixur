@@ -112,7 +112,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		}
 
 		// create user in database
-		_, err := reg.DB.User.Create().
+		user, err := reg.DB.User.Create().
 			SetUsername(input.Body.Username).
 			SetPassword(input.Body.Password).
 			SetIsAdmin(true).
@@ -122,7 +122,10 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		}
 
 		// create new user session
-		//TODO:
+		reg.DB.UserSession.Create().
+			SetIPAddress(GetClientIP(ctx)).
+			//TODO: platform
+			SetUser(user).Save(ctx)
 
 		// success
 		response := &OutputSuccess{}

@@ -26,8 +26,7 @@ func (UserSession) Fields() []ent.Field {
 			Default(time.Now).Immutable().
 			Comment("Timestamp this session was created at."),
 		field.Time("last_seen_at").
-			Default(time.Now).
-			UpdateDefault(time.Now).
+			Default(time.Now).UpdateDefault(time.Now).
 			Comment("Last time this session was used — update on each authenticated request, or throttle to e.g. once per hour"),
 	}
 }
