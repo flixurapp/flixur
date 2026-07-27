@@ -10,7 +10,7 @@ All URIs are relative to *http://127.0.0.1:18787/api*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**oidc**](AuthenticationApi.md#oidc) | **GET** /auth/oidc | Initialize an OIDC login request.
-[**ping**](AuthenticationApi.md#ping) | **GET** /ping | Test server connectivity.
+[**ping**](AuthenticationApi.md#ping) | **GET** /ping | Ping Server
 [**setup**](AuthenticationApi.md#setup) | **POST** /auth/setup | Setup Server
 
 
@@ -56,9 +56,9 @@ No authorization required
 # **ping**
 > PingOutputBody ping()
 
-Test server connectivity.
+Ping Server
 
-Can be used to test the server connectivity and version.
+Can be used to test the server connectivity and return version/feature info.
 
 ### Example
 ```dart

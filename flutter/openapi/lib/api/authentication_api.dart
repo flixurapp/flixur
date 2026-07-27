@@ -66,9 +66,9 @@ class AuthenticationApi {
     return null;
   }
 
-  /// Test server connectivity.
+  /// Ping Server
   ///
-  /// Can be used to test the server connectivity and version.
+  /// Can be used to test the server connectivity and return version/feature info.
   ///
   /// Note: This method returns the HTTP [Response].
   Future<Response> pingWithHttpInfo() async {
@@ -95,9 +95,9 @@ class AuthenticationApi {
     );
   }
 
-  /// Test server connectivity.
+  /// Ping Server
   ///
-  /// Can be used to test the server connectivity and version.
+  /// Can be used to test the server connectivity and return version/feature info.
   Future<PingOutputBody?> ping() async {
     final response = await pingWithHttpInfo();
     if (response.statusCode >= HttpStatus.badRequest) {

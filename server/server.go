@@ -21,6 +21,8 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
+	// ent isnt importing its runtime for some reason automatically
+	_ "forge.xela.codes/xela/flixur/ent/runtime"
 	_ "github.com/mattn/go-sqlite3"
 )
 

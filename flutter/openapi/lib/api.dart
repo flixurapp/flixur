@@ -30,11 +30,8 @@ part 'auth/http_bearer_auth.dart';
 
 part 'api/artists_api.dart';
 part 'api/authentication_api.dart';
-part 'api/connectivity_api.dart';
-part 'api/login_api.dart';
 part 'api/music_api.dart';
 part 'api/search_api.dart';
-part 'api/setup_api.dart';
 
 part 'model/api_error.dart';
 part 'model/artist.dart';

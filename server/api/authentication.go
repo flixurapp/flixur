@@ -15,6 +15,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+var tags = []string{"Authentication"}
+
 type PlatformHeadersMixin struct {
 	PlatformClient string `header:"X-Platform-Client" required:"true" minLength:"1" doc:"Client Name/Version"`
 	PlatformDevice string `header:"X-Platform-Device" required:"true" minLength:"1" doc:"Device Name"`
@@ -54,9 +56,9 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		OperationID: "ping",
 		Method:      http.MethodGet,
 		Path:        "/ping",
-		Summary:     "Test server connectivity.",
-		Description: "Can be used to test the server connectivity and version.",
-		Tags:        []string{"Authentication", "Connectivity"},
+		Summary:     "Ping Server",
+		Description: "Can be used to test the server connectivity and return version/feature info.",
+		Tags:        tags,
 	}, func(ctx context.Context, _ *struct{}) (*PingOutput, error) {
 		response := &PingOutput{}
 		//TODO: return an actual version
@@ -74,7 +76,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		Path:        "/auth/setup",
 		Summary:     "Setup Server",
 		Description: "Creates the initial admin account and sets up the server.",
-		Tags:        []string{"Authentication", "Setup"},
+		Tags:        tags,
 		Responses: APIErrorResponses(reg.API, map[APIErrorCode]string{
 			CodeDatabaseError:     "Failed to write to database.",
 			CodeIncorrectPassword: "The setup code is incorrect.",
@@ -181,7 +183,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		Path:        "/auth/oidc",
 		Summary:     "Initialize an OIDC login request.",
 		Description: "Initializes an OIDC login request returning the URL for authorization.",
-		Tags:        []string{"Authentication", "Login"},
+		Tags:        tags,
 	}, func(ctx context.Context, _ *struct{}) (*OIDCInitOutput, error) {
 		response := &OIDCInitOutput{}
 		//TODO: oidc

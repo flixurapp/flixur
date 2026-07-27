@@ -143,5 +143,14 @@ class _SetupViewState extends State<SetupView> {
         ),
       ),
     );
+    setState(() => _isLoading = false);
+
+    switch (response) {
+      case ApiSuccess(:final data):
+        //TODO:
+        print(data);
+      case ApiFailure(:final err):
+        print(err.message);
+    }
   }
 }

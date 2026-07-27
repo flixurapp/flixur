@@ -61,13 +61,10 @@ Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *ArtistsApi* | [**artistSearch**](doc//ArtistsApi.md#artistsearch) | **POST** /music/artists/search | Search for artists.
 *AuthenticationApi* | [**oidc**](doc//AuthenticationApi.md#oidc) | **GET** /auth/oidc | Initialize an OIDC login request.
-*AuthenticationApi* | [**ping**](doc//AuthenticationApi.md#ping) | **GET** /ping | Test server connectivity.
+*AuthenticationApi* | [**ping**](doc//AuthenticationApi.md#ping) | **GET** /ping | Ping Server
 *AuthenticationApi* | [**setup**](doc//AuthenticationApi.md#setup) | **POST** /auth/setup | Setup Server
-*ConnectivityApi* | [**ping**](doc//ConnectivityApi.md#ping) | **GET** /ping | Test server connectivity.
-*LoginApi* | [**oidc**](doc//LoginApi.md#oidc) | **GET** /auth/oidc | Initialize an OIDC login request.
 *MusicApi* | [**artistSearch**](doc//MusicApi.md#artistsearch) | **POST** /music/artists/search | Search for artists.
 *SearchApi* | [**artistSearch**](doc//SearchApi.md#artistsearch) | **POST** /music/artists/search | Search for artists.
-*SetupApi* | [**setup**](doc//SetupApi.md#setup) | **POST** /auth/setup | Setup Server
 
 
 ## Documentation For Models
