@@ -19,18 +19,19 @@ class _LoginViewState extends State<LoginView> {
   final _passwordController = TextEditingController();
   final _passwordFocus = FocusNode();
 
-  PingOutputBody get serverResponseBody => widget.serverInfo.body;
+  PingOutputBody get _serverResponseBody => widget.serverInfo.body;
 
-  AuthenticationApi? api;
+  AuthenticationApi? _api;
   @override
   void initState() {
     super.initState();
-    api = AuthenticationApi(ApiClient(basePath: widget.serverInfo.url));
+    _api = AuthenticationApi(ApiClient(basePath: widget.serverInfo.url));
   }
 
-  String? errorText;
-  bool isPasswordLoading = false;
-  bool isOidcLoading = false;
+  String? _usernameError;
+  String? _passwordError;
+  bool _isPasswordLoading = false;
+  bool _isOidcLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -53,17 +54,18 @@ class _LoginViewState extends State<LoginView> {
             crossAxisAlignment: .stretch,
             spacing: 14,
             children: [
-              if (serverResponseBody.supportsPasswordLogin) ...[
+              if (_serverResponseBody.supportsPasswordLogin) ...[
                 FlixurInput(
                   label: t.username.toUpperCase(),
                   hintText: "peppa.pig",
+                  errorText: _usernameError,
                   textController: _usernameController,
                   onSubmitted: (_) => _passwordFocus.requestFocus(),
                 ),
                 FlixurInput(
                   label: t.password.toUpperCase(),
                   hintText: "*" * 12,
-                  errorText: errorText,
+                  errorText: _passwordError,
                   textController: _passwordController,
                   onSubmitted: (_) => _passwordSubmit(),
                   focusNode: _passwordFocus,
@@ -71,20 +73,20 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 SetupButton(
                   text: t.routes.startup.login.login,
-                  isLoading: isPasswordLoading,
+                  isLoading: _isPasswordLoading,
                   // disable button if OIDC is loading
-                  onPressed: isOidcLoading ? null : _passwordSubmit,
+                  onPressed: _isOidcLoading ? null : _passwordSubmit,
                 ),
               ],
               // only show the "OR" line if both methods are allowed
-              if (serverResponseBody.supportsPasswordLogin &&
-                  serverResponseBody.supportsOIDCLogin != "")
+              if (_serverResponseBody.supportsPasswordLogin &&
+                  _serverResponseBody.supportsOIDCLogin != "")
                 const OrLine(),
-              if (serverResponseBody.supportsOIDCLogin != "")
+              if (_serverResponseBody.supportsOIDCLogin != "")
                 SetupButton(
-                  text: serverResponseBody.supportsOIDCLogin,
-                  isLoading: isOidcLoading,
-                  onPressed: isPasswordLoading ? null : _oidcSubmit,
+                  text: _serverResponseBody.supportsOIDCLogin,
+                  isLoading: _isOidcLoading,
+                  onPressed: _isPasswordLoading ? null : _oidcSubmit,
                 ),
             ],
           ),
@@ -93,19 +95,18 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  void setLoginError(String? text) {
-    setState(() => errorText = text);
-  }
-
   Future<void> _passwordSubmit() async {
-    if (isPasswordLoading || isOidcLoading || api == null) return;
+    if (_isPasswordLoading || _isOidcLoading || _api == null) return;
 
-    setState(() => isPasswordLoading = true);
+    setState(() {
+      _usernameError = _passwordError = null;
+      _isPasswordLoading = true;
+    });
   }
 
   Future<void> _oidcSubmit() async {
-    if (isOidcLoading || isPasswordLoading || api == null) return;
+    if (_isOidcLoading || _isPasswordLoading || _api == null) return;
 
-    setState(() => isOidcLoading = true);
+    setState(() => _isOidcLoading = true);
   }
 }

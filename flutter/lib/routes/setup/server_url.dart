@@ -14,8 +14,8 @@ class ServerUrlView extends StatefulWidget {
 class _ServerUrlViewState extends State<ServerUrlView> {
   final _serverUrlController = TextEditingController();
 
-  String? errorText;
-  bool isLoading = false;
+  String? _errorText;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -61,13 +61,13 @@ class _ServerUrlViewState extends State<ServerUrlView> {
                     FlixurInput(
                       label: t.routes.startup.server_url.url.toUpperCase(),
                       hintText: "https://demo.flixur.app",
-                      errorText: errorText,
+                      errorText: _errorText,
                       textController: _serverUrlController,
                       onSubmitted: (_) => _serverUrlSubmit(),
                     ),
                     SetupButton(
                       text: t.routes.startup.server_url.connect,
-                      isLoading: isLoading,
+                      isLoading: _isLoading,
                       onPressed: _serverUrlSubmit,
                     ),
                   ],
@@ -80,21 +80,21 @@ class _ServerUrlViewState extends State<ServerUrlView> {
     );
   }
 
-  void setServerUrlError(String? text) {
-    setState(() => errorText = text);
+  void _setServerUrlError(String? text) {
+    setState(() => _errorText = text);
   }
 
   Future<void> _serverUrlSubmit() async {
-    if (isLoading) return;
+    if (_isLoading) return;
 
-    setServerUrlError(null);
+    _setServerUrlError(null);
     final serverUrl = Uri.tryParse(_serverUrlController.text);
     if (serverUrl == null ||
         // must be an HTTP url
         (serverUrl.scheme != "http" && serverUrl.scheme != "https") ||
         // and have a host
         serverUrl.authority == "") {
-      setServerUrlError(t.routes.startup.server_url.url_error);
+      _setServerUrlError(t.routes.startup.server_url.url_error);
       return;
     }
 
@@ -108,10 +108,10 @@ class _ServerUrlViewState extends State<ServerUrlView> {
     );
     final api = AuthenticationApi(apiClient);
 
-    setState(() => isLoading = true);
+    setState(() => _isLoading = true);
     final pingResponse = await safeGet(api.ping);
     if (!mounted) return;
-    setState(() => isLoading = false);
+    setState(() => _isLoading = false);
 
     switch (pingResponse) {
       case ApiSuccess(:final data):
@@ -124,7 +124,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
           //TODO: setup screen
         }
       case ApiFailure(:final err):
-        setServerUrlError(
+        _setServerUrlError(
           err.message ?? t.routes.startup.server_url.server_ping_error,
         );
     }
