@@ -101,6 +101,16 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			return nil, NewAPIError(CodeIncorrectPassword)
 		}
 
+		var err error = fmt.Errorf("error")
+		// disable setups in-memory (prevent concurrent requests, albeit rare)
+		SetServerSetupCode(nil)
+		defer func() {
+			// reset setup code on error
+			if err != nil {
+				SetServerSetupCode(setupCode)
+			}
+		}()
+
 		// validate username
 		if len(input.Body.Username) < common.USERNAME_MIN_LENGTH {
 			return nil, NewAPIErrorDetail(CodeTooShort, "username")
@@ -120,8 +130,23 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			return nil, NewAPIErrorDetail(CodeTooLong, "password")
 		}
 
+		tx, err := reg.DB.Tx(ctx)
+		if err != nil {
+			log.Err(err).Msg("Failed to start transaction for initial admin user creation.")
+			return nil, NewAPIError(CodeDatabaseError)
+		}
+
+		// roll back on error path
+		defer func() {
+			if err != nil {
+				if rerr := tx.Rollback(); rerr != nil {
+					log.Err(rerr).Msg("Failed to rollback transaction.")
+				}
+			}
+		}()
+
 		// create user in database
-		user, err := reg.DB.User.Create().
+		user, err := tx.User.Create().
 			SetUsername(input.Body.Username).
 			SetPassword(input.Body.Password).
 			SetIsAdmin(true).
@@ -132,13 +157,15 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		}
 
 		// create new user session
-		sessionToken, err := CreateUserSessionToken(ctx, reg.DB, user, input.PlatformHeadersMixin)
+		sessionToken, err := CreateUserSessionToken(ctx, tx.Client(), user, input.PlatformHeadersMixin)
 		if err != nil {
 			log.Err(err).Msg("Failed to create session for initial admin user.")
-			// cancel the whole process by deleting the created user
-			if err = reg.DB.User.DeleteOne(user).Exec(ctx); err != nil {
-				log.Err(err).Msg("Failed to undo creation of initial admin user. Server will be in an undefined state!")
-			}
+			return nil, NewAPIError(CodeDatabaseError)
+		}
+
+		// all done with database work
+		if err = tx.Commit(); err != nil {
+			log.Err(err).Msg("Failed to commit initial admin user creation.")
 			return nil, NewAPIError(CodeDatabaseError)
 		}
 
