@@ -658,7 +658,8 @@ func (c *UserSessionClient) QueryUser(_m *UserSession) *UserQuery {
 
 // Hooks returns the client hooks.
 func (c *UserSessionClient) Hooks() []Hook {
-	return c.hooks.UserSession
+	hooks := c.hooks.UserSession
+	return append(hooks[:len(hooks):len(hooks)], usersession.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.

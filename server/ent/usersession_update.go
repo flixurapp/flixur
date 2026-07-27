@@ -41,7 +41,9 @@ func (_u *UserSessionUpdate) Mutation() *UserSessionMutation {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *UserSessionUpdate) Save(ctx context.Context) (int, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return 0, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -68,11 +70,15 @@ func (_u *UserSessionUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *UserSessionUpdate) defaults() {
+func (_u *UserSessionUpdate) defaults() error {
 	if _, ok := _u.mutation.LastSeenAt(); !ok {
+		if usersession.UpdateDefaultLastSeenAt == nil {
+			return fmt.Errorf("ent: uninitialized usersession.UpdateDefaultLastSeenAt (forgotten import ent/runtime?)")
+		}
 		v := usersession.UpdateDefaultLastSeenAt()
 		_u.mutation.SetLastSeenAt(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -144,7 +150,9 @@ func (_u *UserSessionUpdateOne) Select(field string, fields ...string) *UserSess
 
 // Save executes the query and returns the updated UserSession entity.
 func (_u *UserSessionUpdateOne) Save(ctx context.Context) (*UserSession, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -171,11 +179,15 @@ func (_u *UserSessionUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *UserSessionUpdateOne) defaults() {
+func (_u *UserSessionUpdateOne) defaults() error {
 	if _, ok := _u.mutation.LastSeenAt(); !ok {
+		if usersession.UpdateDefaultLastSeenAt == nil {
+			return fmt.Errorf("ent: uninitialized usersession.UpdateDefaultLastSeenAt (forgotten import ent/runtime?)")
+		}
 		v := usersession.UpdateDefaultLastSeenAt()
 		_u.mutation.SetLastSeenAt(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.

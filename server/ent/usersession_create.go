@@ -21,6 +21,12 @@ type UserSessionCreate struct {
 	hooks    []Hook
 }
 
+// SetToken sets the "token" field.
+func (_c *UserSessionCreate) SetToken(v string) *UserSessionCreate {
+	_c.mutation.SetToken(v)
+	return _c
+}
+
 // SetIPAddress sets the "ip_address" field.
 func (_c *UserSessionCreate) SetIPAddress(v string) *UserSessionCreate {
 	_c.mutation.SetIPAddress(v)
@@ -93,7 +99,9 @@ func (_c *UserSessionCreate) Mutation() *UserSessionMutation {
 
 // Save creates the UserSession in the database.
 func (_c *UserSessionCreate) Save(ctx context.Context) (*UserSession, error) {
-	_c.defaults()
+	if err := _c.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
@@ -120,23 +128,41 @@ func (_c *UserSessionCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_c *UserSessionCreate) defaults() {
+func (_c *UserSessionCreate) defaults() error {
 	if _, ok := _c.mutation.CreatedAt(); !ok {
+		if usersession.DefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized usersession.DefaultCreatedAt (forgotten import ent/runtime?)")
+		}
 		v := usersession.DefaultCreatedAt()
 		_c.mutation.SetCreatedAt(v)
 	}
 	if _, ok := _c.mutation.LastSeenAt(); !ok {
+		if usersession.DefaultLastSeenAt == nil {
+			return fmt.Errorf("ent: uninitialized usersession.DefaultLastSeenAt (forgotten import ent/runtime?)")
+		}
 		v := usersession.DefaultLastSeenAt()
 		_c.mutation.SetLastSeenAt(v)
 	}
 	if _, ok := _c.mutation.ID(); !ok {
+		if usersession.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized usersession.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := usersession.DefaultID()
 		_c.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *UserSessionCreate) check() error {
+	if _, ok := _c.mutation.Token(); !ok {
+		return &ValidationError{Name: "token", err: errors.New(`ent: missing required field "UserSession.token"`)}
+	}
+	if v, ok := _c.mutation.Token(); ok {
+		if err := usersession.TokenValidator(v); err != nil {
+			return &ValidationError{Name: "token", err: fmt.Errorf(`ent: validator failed for field "UserSession.token": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.IPAddress(); !ok {
 		return &ValidationError{Name: "ip_address", err: errors.New(`ent: missing required field "UserSession.ip_address"`)}
 	}
@@ -191,6 +217,10 @@ func (_c *UserSessionCreate) createSpec() (*UserSession, *sqlgraph.CreateSpec) {
 	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
+	}
+	if value, ok := _c.mutation.Token(); ok {
+		_spec.SetField(usersession.FieldToken, field.TypeString, value)
+		_node.Token = value
 	}
 	if value, ok := _c.mutation.IPAddress(); ok {
 		_spec.SetField(usersession.FieldIPAddress, field.TypeString, value)

@@ -1170,6 +1170,7 @@ type UserSessionMutation struct {
 	op            Op
 	typ           string
 	id            *string
+	token         *string
 	ip_address    *string
 	platform      *string
 	created_at    *time.Time
@@ -1284,6 +1285,42 @@ func (m *UserSessionMutation) IDs(ctx context.Context) ([]string, error) {
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
+}
+
+// SetToken sets the "token" field.
+func (m *UserSessionMutation) SetToken(s string) {
+	m.token = &s
+}
+
+// Token returns the value of the "token" field in the mutation.
+func (m *UserSessionMutation) Token() (r string, exists bool) {
+	v := m.token
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldToken returns the old "token" field's value of the UserSession entity.
+// If the UserSession object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserSessionMutation) OldToken(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldToken is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldToken requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldToken: %w", err)
+	}
+	return oldValue.Token, nil
+}
+
+// ResetToken resets all changes to the "token" field.
+func (m *UserSessionMutation) ResetToken() {
+	m.token = nil
 }
 
 // SetIPAddress sets the "ip_address" field.
@@ -1503,7 +1540,10 @@ func (m *UserSessionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserSessionMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
+	if m.token != nil {
+		fields = append(fields, usersession.FieldToken)
+	}
 	if m.ip_address != nil {
 		fields = append(fields, usersession.FieldIPAddress)
 	}
@@ -1524,6 +1564,8 @@ func (m *UserSessionMutation) Fields() []string {
 // schema.
 func (m *UserSessionMutation) Field(name string) (ent.Value, bool) {
 	switch name {
+	case usersession.FieldToken:
+		return m.Token()
 	case usersession.FieldIPAddress:
 		return m.IPAddress()
 	case usersession.FieldPlatform:
@@ -1541,6 +1583,8 @@ func (m *UserSessionMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *UserSessionMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
+	case usersession.FieldToken:
+		return m.OldToken(ctx)
 	case usersession.FieldIPAddress:
 		return m.OldIPAddress(ctx)
 	case usersession.FieldPlatform:
@@ -1558,6 +1602,13 @@ func (m *UserSessionMutation) OldField(ctx context.Context, name string) (ent.Va
 // type.
 func (m *UserSessionMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case usersession.FieldToken:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetToken(v)
+		return nil
 	case usersession.FieldIPAddress:
 		v, ok := value.(string)
 		if !ok {
@@ -1635,6 +1686,9 @@ func (m *UserSessionMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *UserSessionMutation) ResetField(name string) error {
 	switch name {
+	case usersession.FieldToken:
+		m.ResetToken()
+		return nil
 	case usersession.FieldIPAddress:
 		m.ResetIPAddress()
 		return nil

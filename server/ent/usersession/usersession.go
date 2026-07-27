@@ -5,6 +5,7 @@ package usersession
 import (
 	"time"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 )
@@ -14,6 +15,8 @@ const (
 	Label = "user_session"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldToken holds the string denoting the token field in the database.
+	FieldToken = "token"
 	// FieldIPAddress holds the string denoting the ip_address field in the database.
 	FieldIPAddress = "ip_address"
 	// FieldPlatform holds the string denoting the platform field in the database.
@@ -38,6 +41,7 @@ const (
 // Columns holds all SQL columns for usersession fields.
 var Columns = []string{
 	FieldID,
+	FieldToken,
 	FieldIPAddress,
 	FieldPlatform,
 	FieldCreatedAt,
@@ -65,7 +69,15 @@ func ValidColumn(column string) bool {
 	return false
 }
 
+// Note that the variables below are initialized by the runtime
+// package on the initialization of the application. Therefore,
+// it should be imported in the main as follows:
+//
+//	import _ "forge.xela.codes/xela/flixur/ent/runtime"
 var (
+	Hooks [1]ent.Hook
+	// TokenValidator is a validator for the "token" field. It is called by the builders before save.
+	TokenValidator func(string) error
 	// IPAddressValidator is a validator for the "ip_address" field. It is called by the builders before save.
 	IPAddressValidator func(string) error
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
@@ -84,6 +96,11 @@ type OrderOption func(*sql.Selector)
 // ByID orders the results by the id field.
 func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByToken orders the results by the token field.
+func ByToken(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldToken, opts...).ToFunc()
 }
 
 // ByIPAddress orders the results by the ip_address field.

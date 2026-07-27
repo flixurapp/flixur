@@ -93,7 +93,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **setup**
-> OutputSuccessBody setup(setupRequest)
+> SessionTokenOutputBody setup(xPlatformClient, xPlatformDevice, xPlatformOS, setupRequest)
 
 Setup Server
 
@@ -104,10 +104,13 @@ Creates the initial admin account and sets up the server.
 import 'package:openapi/api.dart';
 
 final api_instance = AuthenticationApi();
+final xPlatformClient = xPlatformClient_example; // String | Client Name/Version
+final xPlatformDevice = xPlatformDevice_example; // String | Device Name
+final xPlatformOS = xPlatformOS_example; // String | Operating System/Version
 final setupRequest = SetupRequest(); // SetupRequest | 
 
 try {
-    final result = api_instance.setup(setupRequest);
+    final result = api_instance.setup(xPlatformClient, xPlatformDevice, xPlatformOS, setupRequest);
     print(result);
 } catch (e) {
     print('Exception when calling AuthenticationApi->setup: $e\n');
@@ -118,11 +121,14 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **xPlatformClient** | **String**| Client Name/Version | 
+ **xPlatformDevice** | **String**| Device Name | 
+ **xPlatformOS** | **String**| Operating System/Version | 
  **setupRequest** | [**SetupRequest**](SetupRequest.md)|  | 
 
 ### Return type
 
-[**OutputSuccessBody**](OutputSuccessBody.md)
+[**SessionTokenOutputBody**](SessionTokenOutputBody.md)
 
 ### Authorization
 

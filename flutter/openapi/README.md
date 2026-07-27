@@ -79,8 +79,8 @@ Class | Method | HTTP request | Description
  - [ErrorDetail](doc//ErrorDetail.md)
  - [ErrorModel](doc//ErrorModel.md)
  - [OIDCInitOutputBody](doc//OIDCInitOutputBody.md)
- - [OutputSuccessBody](doc//OutputSuccessBody.md)
  - [PingOutputBody](doc//PingOutputBody.md)
+ - [SessionTokenOutputBody](doc//SessionTokenOutputBody.md)
  - [SetupRequest](doc//SetupRequest.md)
 
 

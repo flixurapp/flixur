@@ -67,20 +67,26 @@ func init() {
 	// userlinkedoidc.SubjectValidator is a validator for the "subject" field. It is called by the builders before save.
 	userlinkedoidc.SubjectValidator = userlinkedoidcDescSubject.Validators[0].(func(string) error)
 	usersessionMixin := schema.UserSession{}.Mixin()
+	usersessionHooks := schema.UserSession{}.Hooks()
+	usersession.Hooks[0] = usersessionHooks[0]
 	usersessionMixinFields0 := usersessionMixin[0].Fields()
 	_ = usersessionMixinFields0
 	usersessionFields := schema.UserSession{}.Fields()
 	_ = usersessionFields
+	// usersessionDescToken is the schema descriptor for token field.
+	usersessionDescToken := usersessionFields[0].Descriptor()
+	// usersession.TokenValidator is a validator for the "token" field. It is called by the builders before save.
+	usersession.TokenValidator = usersessionDescToken.Validators[0].(func(string) error)
 	// usersessionDescIPAddress is the schema descriptor for ip_address field.
-	usersessionDescIPAddress := usersessionFields[0].Descriptor()
+	usersessionDescIPAddress := usersessionFields[1].Descriptor()
 	// usersession.IPAddressValidator is a validator for the "ip_address" field. It is called by the builders before save.
 	usersession.IPAddressValidator = usersessionDescIPAddress.Validators[0].(func(string) error)
 	// usersessionDescCreatedAt is the schema descriptor for created_at field.
-	usersessionDescCreatedAt := usersessionFields[2].Descriptor()
+	usersessionDescCreatedAt := usersessionFields[3].Descriptor()
 	// usersession.DefaultCreatedAt holds the default value on creation for the created_at field.
 	usersession.DefaultCreatedAt = usersessionDescCreatedAt.Default.(func() time.Time)
 	// usersessionDescLastSeenAt is the schema descriptor for last_seen_at field.
-	usersessionDescLastSeenAt := usersessionFields[3].Descriptor()
+	usersessionDescLastSeenAt := usersessionFields[4].Descriptor()
 	// usersession.DefaultLastSeenAt holds the default value on creation for the last_seen_at field.
 	usersession.DefaultLastSeenAt = usersessionDescLastSeenAt.Default.(func() time.Time)
 	// usersession.UpdateDefaultLastSeenAt holds the default value on update for the last_seen_at field.

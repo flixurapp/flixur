@@ -65,6 +65,11 @@ func IDContainsFold(id string) predicate.UserSession {
 	return predicate.UserSession(sql.FieldContainsFold(FieldID, id))
 }
 
+// Token applies equality check predicate on the "token" field. It's identical to TokenEQ.
+func Token(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldEQ(FieldToken, v))
+}
+
 // IPAddress applies equality check predicate on the "ip_address" field. It's identical to IPAddressEQ.
 func IPAddress(v string) predicate.UserSession {
 	return predicate.UserSession(sql.FieldEQ(FieldIPAddress, v))
@@ -83,6 +88,71 @@ func CreatedAt(v time.Time) predicate.UserSession {
 // LastSeenAt applies equality check predicate on the "last_seen_at" field. It's identical to LastSeenAtEQ.
 func LastSeenAt(v time.Time) predicate.UserSession {
 	return predicate.UserSession(sql.FieldEQ(FieldLastSeenAt, v))
+}
+
+// TokenEQ applies the EQ predicate on the "token" field.
+func TokenEQ(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldEQ(FieldToken, v))
+}
+
+// TokenNEQ applies the NEQ predicate on the "token" field.
+func TokenNEQ(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldNEQ(FieldToken, v))
+}
+
+// TokenIn applies the In predicate on the "token" field.
+func TokenIn(vs ...string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldIn(FieldToken, vs...))
+}
+
+// TokenNotIn applies the NotIn predicate on the "token" field.
+func TokenNotIn(vs ...string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldNotIn(FieldToken, vs...))
+}
+
+// TokenGT applies the GT predicate on the "token" field.
+func TokenGT(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldGT(FieldToken, v))
+}
+
+// TokenGTE applies the GTE predicate on the "token" field.
+func TokenGTE(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldGTE(FieldToken, v))
+}
+
+// TokenLT applies the LT predicate on the "token" field.
+func TokenLT(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldLT(FieldToken, v))
+}
+
+// TokenLTE applies the LTE predicate on the "token" field.
+func TokenLTE(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldLTE(FieldToken, v))
+}
+
+// TokenContains applies the Contains predicate on the "token" field.
+func TokenContains(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldContains(FieldToken, v))
+}
+
+// TokenHasPrefix applies the HasPrefix predicate on the "token" field.
+func TokenHasPrefix(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldHasPrefix(FieldToken, v))
+}
+
+// TokenHasSuffix applies the HasSuffix predicate on the "token" field.
+func TokenHasSuffix(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldHasSuffix(FieldToken, v))
+}
+
+// TokenEqualFold applies the EqualFold predicate on the "token" field.
+func TokenEqualFold(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldEqualFold(FieldToken, v))
+}
+
+// TokenContainsFold applies the ContainsFold predicate on the "token" field.
+func TokenContainsFold(v string) predicate.UserSession {
+	return predicate.UserSession(sql.FieldContainsFold(FieldToken, v))
 }
 
 // IPAddressEQ applies the EQ predicate on the "ip_address" field.

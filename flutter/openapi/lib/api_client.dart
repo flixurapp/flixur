@@ -243,10 +243,10 @@ class ApiClient {
           return ErrorModel.fromJson(value);
         case 'OIDCInitOutputBody':
           return OIDCInitOutputBody.fromJson(value);
-        case 'OutputSuccessBody':
-          return OutputSuccessBody.fromJson(value);
         case 'PingOutputBody':
           return PingOutputBody.fromJson(value);
+        case 'SessionTokenOutputBody':
+          return SessionTokenOutputBody.fromJson(value);
         case 'SetupRequest':
           return SetupRequest.fromJson(value);
         default:

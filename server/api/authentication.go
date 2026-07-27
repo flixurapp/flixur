@@ -3,6 +3,7 @@ package api
 
 import (
 	"context"
+	"crypto/rand"
 	"fmt"
 	"net/http"
 	"sync/atomic"
@@ -14,8 +15,10 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-type UserAgentHeaderMixin struct {
-	UserAgent string `header:"User-Agent" required:"true" minLength:"1" doc:"User-Agent is required for platform determination."`
+type PlatformHeadersMixin struct {
+	PlatformClient string `header:"X-Platform-Client" required:"true" minLength:"1" doc:"Client Name/Version"`
+	PlatformDevice string `header:"X-Platform-Device" required:"true" minLength:"1" doc:"Device Name"`
+	PlatformOS     string `header:"X-Platform-OS" required:"true" minLength:"1" doc:"Operating System/Version"`
 }
 
 type PingOutput struct {
@@ -37,6 +40,12 @@ type OIDCInitOutput struct {
 	Body struct {
 		// The URL to use for logging in via OIDC.
 		LoginURL string `json:"loginURL"`
+	}
+}
+
+type SessionTokenOutput struct {
+	Body struct {
+		SessionToken string `json:"sessionToken"`
 	}
 }
 
@@ -74,7 +83,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			CodeTooShort:          "Username/password is too short.",
 		}),
 	}, func(ctx context.Context, input *struct {
-		UserAgentHeaderMixin
+		PlatformHeadersMixin
 		Body struct {
 			// Setup code for the server. This is logged in the console.
 			Code string `json:"code" example:"XXXXXX"`
@@ -83,7 +92,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			// Password for the initial admin account.
 			Password string `json:"password"`
 		}
-	}) (*OutputSuccess, error) {
+	}) (*SessionTokenOutput, error) {
 		setupCode := GetServerSetupCode()
 		if setupCode == nil {
 			return nil, fmt.Errorf("server is already setup")
@@ -118,18 +127,24 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			SetIsAdmin(true).
 			Save(ctx)
 		if err != nil {
+			log.Err(err).Msg("Failed to create initial admin user.")
 			return nil, NewAPIError(CodeDatabaseError)
 		}
 
 		// create new user session
-		reg.DB.UserSession.Create().
-			SetIPAddress(GetClientIP(ctx)).
-			//TODO: platform
-			SetUser(user).Save(ctx)
+		sessionToken, err := CreateUserSessionToken(ctx, reg.DB, user, input.PlatformHeadersMixin)
+		if err != nil {
+			log.Err(err).Msg("Failed to create session for initial admin user.")
+			// cancel the whole process by deleting the created user
+			if err = reg.DB.User.DeleteOne(user).Exec(ctx); err != nil {
+				log.Err(err).Msg("Failed to undo creation of initial admin user. Server will be in an undefined state!")
+			}
+			return nil, NewAPIError(CodeDatabaseError)
+		}
 
 		// success
-		response := &OutputSuccess{}
-		response.Body.Success = true
+		response := &SessionTokenOutput{}
+		response.Body.SessionToken = sessionToken
 		return response, nil
 	})
 
@@ -146,6 +161,20 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		response.Body.LoginURL = ""
 		return response, nil
 	})
+}
+
+func CreateUserSessionToken(ctx context.Context, client *ent.Client, user *ent.User, headers PlatformHeadersMixin) (string, error) {
+	token := rand.Text()
+
+	_, err := client.UserSession.Create().
+		SetToken(token).
+		SetIPAddress(GetClientIP(ctx)).
+		SetPlatform(fmt.Sprintf("%s on %s running %s", headers.PlatformClient, headers.PlatformDevice, headers.PlatformOS)).
+		SetUser(user).Save(ctx)
+	if err != nil {
+		return "", err
+	}
+	return token, nil
 }
 
 // server setup state management

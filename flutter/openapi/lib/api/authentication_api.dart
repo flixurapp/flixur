@@ -124,8 +124,20 @@ class AuthenticationApi {
   ///
   /// Parameters:
   ///
+  /// * [String] xPlatformClient (required):
+  ///   Client Name/Version
+  ///
+  /// * [String] xPlatformDevice (required):
+  ///   Device Name
+  ///
+  /// * [String] xPlatformOS (required):
+  ///   Operating System/Version
+  ///
   /// * [SetupRequest] setupRequest (required):
   Future<Response> setupWithHttpInfo(
+    String xPlatformClient,
+    String xPlatformDevice,
+    String xPlatformOS,
     SetupRequest setupRequest,
   ) async {
     // ignore: prefer_const_declarations
@@ -137,6 +149,10 @@ class AuthenticationApi {
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
+
+    headerParams[r'X-Platform-Client'] = parameterToString(xPlatformClient);
+    headerParams[r'X-Platform-Device'] = parameterToString(xPlatformDevice);
+    headerParams[r'X-Platform-OS'] = parameterToString(xPlatformOS);
 
     const contentTypes = <String>['application/json'];
 
@@ -157,11 +173,26 @@ class AuthenticationApi {
   ///
   /// Parameters:
   ///
+  /// * [String] xPlatformClient (required):
+  ///   Client Name/Version
+  ///
+  /// * [String] xPlatformDevice (required):
+  ///   Device Name
+  ///
+  /// * [String] xPlatformOS (required):
+  ///   Operating System/Version
+  ///
   /// * [SetupRequest] setupRequest (required):
-  Future<OutputSuccessBody?> setup(
+  Future<SessionTokenOutputBody?> setup(
+    String xPlatformClient,
+    String xPlatformDevice,
+    String xPlatformOS,
     SetupRequest setupRequest,
   ) async {
     final response = await setupWithHttpInfo(
+      xPlatformClient,
+      xPlatformDevice,
+      xPlatformOS,
       setupRequest,
     );
     if (response.statusCode >= HttpStatus.badRequest) {
@@ -174,8 +205,8 @@ class AuthenticationApi {
         response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(
         await _decodeBodyBytes(response),
-        'OutputSuccessBody',
-      ) as OutputSuccessBody;
+        'SessionTokenOutputBody',
+      ) as SessionTokenOutputBody;
     }
     return null;
   }

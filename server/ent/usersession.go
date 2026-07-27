@@ -18,9 +18,11 @@ type UserSession struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID string `json:"id,omitempty"`
+	// The hashed session token string.
+	Token string `json:"-"`
 	// IP address at the time of login.
 	IPAddress string `json:"ip_address,omitempty"`
-	// The platform the session was created on. Usually name + version.
+	// The platform string the session was created on.
 	Platform string `json:"platform,omitempty"`
 	// Timestamp this session was created at.
 	CreatedAt time.Time `json:"created_at,omitempty"`
@@ -58,7 +60,7 @@ func (*UserSession) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case usersession.FieldID, usersession.FieldIPAddress, usersession.FieldPlatform:
+		case usersession.FieldID, usersession.FieldToken, usersession.FieldIPAddress, usersession.FieldPlatform:
 			values[i] = new(sql.NullString)
 		case usersession.FieldCreatedAt, usersession.FieldLastSeenAt:
 			values[i] = new(sql.NullTime)
@@ -84,6 +86,12 @@ func (_m *UserSession) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
 				_m.ID = value.String
+			}
+		case usersession.FieldToken:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field token", values[i])
+			} else if value.Valid {
+				_m.Token = value.String
 			}
 		case usersession.FieldIPAddress:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -157,6 +165,8 @@ func (_m *UserSession) String() string {
 	var builder strings.Builder
 	builder.WriteString("UserSession(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	builder.WriteString("token=<sensitive>")
+	builder.WriteString(", ")
 	builder.WriteString("ip_address=")
 	builder.WriteString(_m.IPAddress)
 	builder.WriteString(", ")

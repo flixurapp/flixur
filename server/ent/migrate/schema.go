@@ -53,6 +53,7 @@ var (
 	// UserSessionsColumns holds the columns for the "user_sessions" table.
 	UserSessionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true},
+		{Name: "token", Type: field.TypeString, Unique: true},
 		{Name: "ip_address", Type: field.TypeString},
 		{Name: "platform", Type: field.TypeString},
 		{Name: "created_at", Type: field.TypeTime},
@@ -67,7 +68,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "user_sessions_users_sessions",
-				Columns:    []*schema.Column{UserSessionsColumns[5]},
+				Columns:    []*schema.Column{UserSessionsColumns[6]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},

@@ -14,9 +14,9 @@ doc/ErrorModel.md
 doc/LoginApi.md
 doc/MusicApi.md
 doc/OIDCInitOutputBody.md
-doc/OutputSuccessBody.md
 doc/PingOutputBody.md
 doc/SearchApi.md
+doc/SessionTokenOutputBody.md
 doc/SetupApi.md
 doc/SetupRequest.md
 git_push.sh
@@ -43,7 +43,8 @@ lib/model/artist_search_request.dart
 lib/model/error_detail.dart
 lib/model/error_model.dart
 lib/model/oidc_init_output_body.dart
-lib/model/output_success_body.dart
 lib/model/ping_output_body.dart
+lib/model/session_token_output_body.dart
 lib/model/setup_request.dart
 pubspec.yaml
+test/session_token_output_body_test.dart

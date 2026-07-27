@@ -299,12 +299,12 @@ func (_q *UserSessionQuery) WithUser(opts ...func(*UserQuery)) *UserSessionQuery
 // Example:
 //
 //	var v []struct {
-//		IPAddress string `json:"ip_address,omitempty"`
+//		Token string `json:"token,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.UserSession.Query().
-//		GroupBy(usersession.FieldIPAddress).
+//		GroupBy(usersession.FieldToken).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *UserSessionQuery) GroupBy(field string, fields ...string) *UserSessionGroupBy {
@@ -322,11 +322,11 @@ func (_q *UserSessionQuery) GroupBy(field string, fields ...string) *UserSession
 // Example:
 //
 //	var v []struct {
-//		IPAddress string `json:"ip_address,omitempty"`
+//		Token string `json:"token,omitempty"`
 //	}
 //
 //	client.UserSession.Query().
-//		Select(usersession.FieldIPAddress).
+//		Select(usersession.FieldToken).
 //		Scan(ctx, &v)
 func (_q *UserSessionQuery) Select(fields ...string) *UserSessionSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)

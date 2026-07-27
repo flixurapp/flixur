@@ -43,8 +43,8 @@ part 'model/artist_search_request.dart';
 part 'model/error_detail.dart';
 part 'model/error_model.dart';
 part 'model/oidc_init_output_body.dart';
-part 'model/output_success_body.dart';
 part 'model/ping_output_body.dart';
+part 'model/session_token_output_body.dart';
 part 'model/setup_request.dart';
 
 /// An [ApiClient] instance that uses the default values obtained from
