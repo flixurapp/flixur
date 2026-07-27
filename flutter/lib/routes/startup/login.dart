@@ -57,19 +57,23 @@ class _LoginViewState extends State<LoginView> {
               if (_serverResponseBody.supportsPasswordLogin) ...[
                 FlixurInput(
                   label: t.username.toUpperCase(),
-                  hintText: "peppa.pig",
                   errorText: _usernameError,
-                  textController: _usernameController,
-                  onSubmitted: (_) => _passwordFocus.requestFocus(),
+                  textField: (deco) => TextField(
+                    decoration: deco.copyWith(hintText: "peppa.pig"),
+                    controller: _usernameController,
+                    onSubmitted: (_) => _passwordFocus.requestFocus(),
+                  ),
                 ),
                 FlixurInput(
                   label: t.password.toUpperCase(),
-                  hintText: "*" * 12,
                   errorText: _passwordError,
-                  textController: _passwordController,
-                  onSubmitted: (_) => _passwordSubmit(),
-                  focusNode: _passwordFocus,
-                  obscureText: true,
+                  textField: (deco) => TextField(
+                    decoration: deco.copyWith(hintText: "*" * 12),
+                    controller: _passwordController,
+                    onSubmitted: (_) => _passwordSubmit(),
+                    focusNode: _passwordFocus,
+                    obscureText: true,
+                  ),
                 ),
                 StartupButton(
                   text: t.routes.startup.login.login,

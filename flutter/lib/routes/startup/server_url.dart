@@ -60,10 +60,14 @@ class _ServerUrlViewState extends State<ServerUrlView> {
                   children: [
                     FlixurInput(
                       label: t.routes.startup.server_url.url.toUpperCase(),
-                      hintText: "https://demo.flixur.app",
                       errorText: _errorText,
-                      textController: _serverUrlController,
-                      onSubmitted: (_) => _serverUrlSubmit(),
+                      textField: (deco) => TextField(
+                        decoration: deco.copyWith(
+                          hintText: "https://demo.flixur.app",
+                        ),
+                        controller: _serverUrlController,
+                        onSubmitted: (_) => _serverUrlSubmit(),
+                      ),
                     ),
                     StartupButton(
                       text: t.routes.startup.server_url.connect,

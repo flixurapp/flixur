@@ -76,27 +76,38 @@ class _SetupViewState extends State<SetupView> {
               ),
               FlixurInput(
                 label: t.routes.startup.setup.code.toUpperCase(),
-                hintText: "X" * 6,
                 errorText: _codeError,
-                textController: _codeController,
-                onSubmitted: (_) => _usernameFocus.requestFocus(),
+                textField: (deco) => TextField(
+                  decoration: deco.copyWith(
+                    hintText: "X" * 6,
+                  ),
+                  controller: _codeController,
+                  onSubmitted: (_) => _usernameFocus.requestFocus(),
+                  maxLength: 6,
+                ),
               ),
               FlixurInput(
                 label: t.username.toUpperCase(),
-                hintText: "peppa.pig",
                 errorText: _usernameError,
-                textController: _usernameController,
-                onSubmitted: (_) => _passwordFocus.requestFocus(),
-                focusNode: _usernameFocus,
+                textField: (deco) => TextField(
+                  decoration: deco.copyWith(hintText: "peppa.pig"),
+                  controller: _usernameController,
+                  onSubmitted: (_) => _passwordFocus.requestFocus(),
+                  focusNode: _usernameFocus,
+                ),
               ),
               FlixurInput(
                 label: t.password.toUpperCase(),
-                hintText: "*" * 12,
                 errorText: _passwordError,
-                textController: _passwordController,
-                onSubmitted: (_) => _completeSetup(),
-                focusNode: _passwordFocus,
-                obscureText: true,
+                textField: (deco) => TextField(
+                  decoration: deco.copyWith(
+                    hintText: "*" * 12,
+                  ),
+                  controller: _passwordController,
+                  onSubmitted: (_) => _completeSetup(),
+                  focusNode: _passwordFocus,
+                  obscureText: true,
+                ),
               ),
               StartupButton(
                 text: t.routes.startup.setup.complete,

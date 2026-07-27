@@ -61,23 +61,16 @@ class OrLine extends StatelessWidget {
 class FlixurInput extends StatelessWidget {
   const FlixurInput({
     required this.label,
-    super.key,
-    this.hintText,
+    required this.textField,
     this.errorText,
-    this.obscureText = false,
-    this.textController,
-    this.focusNode,
-    this.onSubmitted,
+    super.key,
   });
   final String label;
+  // TextField builder. Supplied an InputDecoration to use.
+  final Widget Function(InputDecoration decoration) textField;
 
-  // passed to TextField
-  final String? hintText;
+  // Forwarded errorText to the input decoration. Used for error colors.
   final String? errorText;
-  final bool obscureText;
-  final TextEditingController? textController;
-  final FocusNode? focusNode;
-  final ValueChanged<String>? onSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +82,8 @@ class FlixurInput extends StatelessWidget {
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
-        TextField(
-          decoration: InputDecoration(
-            hintText: hintText,
+        textField(
+          InputDecoration(
             errorText: errorText,
             hintStyle: .new(
               color:
@@ -106,10 +98,6 @@ class FlixurInput extends StatelessWidget {
               vertical: 10,
             ),
           ),
-          obscureText: obscureText,
-          controller: textController,
-          onSubmitted: onSubmitted,
-          focusNode: focusNode,
         ),
       ],
     );
