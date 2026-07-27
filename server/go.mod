@@ -12,7 +12,6 @@ require (
 	github.com/hashicorp/go-hclog v1.6.3
 	github.com/hashicorp/go-plugin v1.8.0
 	github.com/mattn/go-sqlite3 v1.14.48
-	github.com/medama-io/go-useragent v1.2.4
 	github.com/oklog/ulid/v2 v2.1.2
 	github.com/rs/zerolog v1.35.1
 	github.com/samber/lo v1.53.0
@@ -27,7 +26,6 @@ require (
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/apparentlymart/go-textseg/v17 v17.0.1 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
-	github.com/boyter/go-string v1.0.5 // indirect
 	github.com/fatih/color v1.19.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.9.2 // indirect
 	github.com/go-openapi/inflect v1.0.0 // indirect

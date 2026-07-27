@@ -47,4 +47,3 @@ lib/model/ping_output_body.dart
 lib/model/session_token_output_body.dart
 lib/model/setup_request.dart
 pubspec.yaml
-test/session_token_output_body_test.dart
