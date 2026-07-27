@@ -1,8 +1,8 @@
 import "package:flixur/ui/inputs.dart";
 import "package:flutter/material.dart";
 
-class SetupButton extends StatelessWidget {
-  const SetupButton({
+class StartupButton extends StatelessWidget {
+  const StartupButton({
     required this.text,
     super.key,
     this.onPressed,

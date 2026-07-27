@@ -1,5 +1,5 @@
-import "package:flixur/routes/setup/components.dart";
-import "package:flixur/routes/setup/server_url.dart";
+import "package:flixur/routes/startup/components.dart";
+import "package:flixur/routes/startup/server_url.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
@@ -68,7 +68,7 @@ class _SetupViewState extends State<SetupView> {
                 focusNode: _passwordFocus,
                 obscureText: true,
               ),
-              SetupButton(
+              StartupButton(
                 text: t.routes.startup.setup.complete,
                 isLoading: isPasswordLoading,
                 // disable button if OIDC is loading

@@ -1,4 +1,4 @@
-import "package:flixur/routes/setup/components.dart";
+import "package:flixur/routes/startup/components.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
@@ -65,7 +65,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
                       textController: _serverUrlController,
                       onSubmitted: (_) => _serverUrlSubmit(),
                     ),
-                    SetupButton(
+                    StartupButton(
                       text: t.routes.startup.server_url.connect,
                       isLoading: _isLoading,
                       onPressed: _serverUrlSubmit,

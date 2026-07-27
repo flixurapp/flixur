@@ -1,5 +1,5 @@
-import "package:flixur/routes/setup/components.dart";
-import "package:flixur/routes/setup/server_url.dart";
+import "package:flixur/routes/startup/components.dart";
+import "package:flixur/routes/startup/server_url.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
@@ -71,7 +71,7 @@ class _LoginViewState extends State<LoginView> {
                   focusNode: _passwordFocus,
                   obscureText: true,
                 ),
-                SetupButton(
+                StartupButton(
                   text: t.routes.startup.login.login,
                   isLoading: _isPasswordLoading,
                   // disable button if OIDC is loading
@@ -83,7 +83,7 @@ class _LoginViewState extends State<LoginView> {
                   _serverResponseBody.supportsOIDCLogin != "")
                 const OrLine(),
               if (_serverResponseBody.supportsOIDCLogin != "")
-                SetupButton(
+                StartupButton(
                   text: _serverResponseBody.supportsOIDCLogin,
                   isLoading: _isOidcLoading,
                   onPressed: _isPasswordLoading ? null : _oidcSubmit,
