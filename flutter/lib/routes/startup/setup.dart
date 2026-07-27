@@ -86,6 +86,7 @@ class _SetupViewState extends State<SetupView> {
                   maxLength: 6,
                 ),
               ),
+              const SizedBox(height: 6),
               FlixurInput(
                 label: t.username.toUpperCase(),
                 errorText: _usernameError,
