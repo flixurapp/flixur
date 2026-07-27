@@ -47,7 +47,13 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	/// en: 'OR'
 	String get or_line => 'OR';
 
+	/// en: 'Password'
+	String get password => 'Password';
+
 	late final Translations$routes$en routes = Translations$routes$en._(_root);
+
+	/// en: 'Username'
+	String get username => 'Username';
 }
 
 // Path: routes
@@ -57,41 +63,39 @@ class Translations$routes$en {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	late final Translations$routes$setup$en setup = Translations$routes$setup$en._(_root);
+	late final Translations$routes$startup$en startup = Translations$routes$startup$en._(_root);
 }
 
-// Path: routes.setup
-class Translations$routes$setup$en {
-	Translations$routes$setup$en._(this._root);
+// Path: routes.startup
+class Translations$routes$startup$en {
+	Translations$routes$startup$en._(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	late final Translations$routes$setup$login$en login = Translations$routes$setup$login$en._(_root);
-	late final Translations$routes$setup$server_url$en server_url = Translations$routes$setup$server_url$en._(_root);
+	late final Translations$routes$startup$login$en login = Translations$routes$startup$login$en._(_root);
+	late final Translations$routes$startup$server_url$en server_url = Translations$routes$startup$server_url$en._(_root);
+	late final Translations$routes$startup$setup$en setup = Translations$routes$startup$setup$en._(_root);
 }
 
-// Path: routes.setup.login
-class Translations$routes$setup$login$en {
-	Translations$routes$setup$login$en._(this._root);
+// Path: routes.startup.login
+class Translations$routes$startup$login$en {
+	Translations$routes$startup$login$en._(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
 
 	/// en: 'Log In'
+	String get app_bar => 'Log In';
+
+	/// en: 'Log In'
 	String get login => 'Log In';
-
-	/// en: 'Password'
-	String get password => 'Password';
-
-	/// en: 'Username'
-	String get username => 'Username';
 }
 
-// Path: routes.setup.server_url
-class Translations$routes$setup$server_url$en {
-	Translations$routes$setup$server_url$en._(this._root);
+// Path: routes.startup.server_url
+class Translations$routes$startup$server_url$en {
+	Translations$routes$startup$server_url$en._(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -113,6 +117,27 @@ class Translations$routes$setup$server_url$en {
 	String get welcome => 'Welcome!';
 }
 
+// Path: routes.startup.setup
+class Translations$routes$startup$setup$en {
+	Translations$routes$startup$setup$en._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Server Setup'
+	String get app_bar => 'Server Setup';
+
+	/// en: 'To get started, enter the credentials for the initial admin user. You will be automatically logged in.'
+	String get body => 'To get started, enter the credentials for the initial admin user. You will be automatically logged in.';
+
+	/// en: 'Complete Setup'
+	String get complete => 'Complete Setup';
+
+	/// en: 'Welcome to Flixur!'
+	String get title => 'Welcome to ${_root.app_name}!';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -123,14 +148,19 @@ extension on Translations {
 		return switch (path) {
 			'app_name' => 'Flixur',
 			'or_line' => 'OR',
-			'routes.setup.login.login' => 'Log In',
-			'routes.setup.login.password' => 'Password',
-			'routes.setup.login.username' => 'Username',
-			'routes.setup.server_url.connect' => 'Connect',
-			'routes.setup.server_url.server_ping_error' => 'Failed to connect to server.',
-			'routes.setup.server_url.url' => 'Server URL',
-			'routes.setup.server_url.url_error' => 'Server URL is not valid!',
-			'routes.setup.server_url.welcome' => 'Welcome!',
+			'password' => 'Password',
+			'routes.startup.login.app_bar' => 'Log In',
+			'routes.startup.login.login' => 'Log In',
+			'routes.startup.server_url.connect' => 'Connect',
+			'routes.startup.server_url.server_ping_error' => 'Failed to connect to server.',
+			'routes.startup.server_url.url' => 'Server URL',
+			'routes.startup.server_url.url_error' => 'Server URL is not valid!',
+			'routes.startup.server_url.welcome' => 'Welcome!',
+			'routes.startup.setup.app_bar' => 'Server Setup',
+			'routes.startup.setup.body' => 'To get started, enter the credentials for the initial admin user. You will be automatically logged in.',
+			'routes.startup.setup.complete' => 'Complete Setup',
+			'routes.startup.setup.title' => 'Welcome to ${_root.app_name}!',
+			'username' => 'Username',
 			_ => null,
 		};
 	}

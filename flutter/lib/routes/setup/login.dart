@@ -42,7 +42,7 @@ class _LoginViewState extends State<LoginView> {
           padding: const .symmetric(vertical: 6),
           child: Images.logo,
         ),
-        title: Text(t.routes.setup.login.login),
+        title: Text(t.routes.startup.login.app_bar),
         toolbarHeight: 60,
       ),
       body: Center(
@@ -55,13 +55,13 @@ class _LoginViewState extends State<LoginView> {
             children: [
               if (serverResponseBody.supportsPasswordLogin) ...[
                 FlixurInput(
-                  label: t.routes.setup.login.username.toUpperCase(),
+                  label: t.username.toUpperCase(),
                   hintText: "peppa.pig",
                   textController: _usernameController,
                   onSubmitted: (_) => _passwordFocus.requestFocus(),
                 ),
                 FlixurInput(
-                  label: t.routes.setup.login.password.toUpperCase(),
+                  label: t.password.toUpperCase(),
                   hintText: "*" * 12,
                   errorText: errorText,
                   textController: _passwordController,
@@ -70,7 +70,7 @@ class _LoginViewState extends State<LoginView> {
                   obscureText: true,
                 ),
                 SetupButton(
-                  text: t.routes.setup.login.login,
+                  text: t.routes.startup.login.login,
                   isLoading: isPasswordLoading,
                   // disable button if OIDC is loading
                   onPressed: isOidcLoading ? null : _passwordSubmit,

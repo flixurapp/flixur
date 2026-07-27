@@ -1,15 +1,21 @@
 ---
 app_name: "Flixur"
 or_line: "OR"
+password: "Password"
 routes:
-  setup:
+  startup:
     login:
+      app_bar: "Log In"
       login: "Log In"
-      password: "Password"
-      username: "Username"
     server_url:
       connect: "Connect"
       server_ping_error: "Failed to connect to server."
       url: "Server URL"
       url_error: "Server URL is not valid!"
       welcome: "Welcome!"
+    setup:
+      app_bar: "Server Setup"
+      body: "To get started, enter the credentials for the initial admin user. You will be automatically logged in."
+      complete: "Complete Setup"
+      title: "Welcome to @:app_name!"
+username: "Username"

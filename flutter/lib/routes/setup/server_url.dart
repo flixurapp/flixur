@@ -44,7 +44,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
                     child: Images.logo,
                   ),
                   Text(
-                    t.routes.setup.server_url.welcome,
+                    t.routes.startup.server_url.welcome,
                     style: const TextStyle(fontSize: 56),
                   ),
                 ],
@@ -59,14 +59,14 @@ class _ServerUrlViewState extends State<ServerUrlView> {
                   spacing: 14,
                   children: [
                     FlixurInput(
-                      label: t.routes.setup.server_url.url.toUpperCase(),
+                      label: t.routes.startup.server_url.url.toUpperCase(),
                       hintText: "https://demo.flixur.app",
                       errorText: errorText,
                       textController: _serverUrlController,
                       onSubmitted: (_) => _serverUrlSubmit(),
                     ),
                     SetupButton(
-                      text: t.routes.setup.server_url.connect,
+                      text: t.routes.startup.server_url.connect,
                       isLoading: isLoading,
                       onPressed: _serverUrlSubmit,
                     ),
@@ -94,7 +94,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
         (serverUrl.scheme != "http" && serverUrl.scheme != "https") ||
         // and have a host
         serverUrl.authority == "") {
-      setServerUrlError(t.routes.setup.server_url.url_error);
+      setServerUrlError(t.routes.startup.server_url.url_error);
       return;
     }
 
@@ -125,7 +125,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
         }
       case ApiFailure(:final err):
         setServerUrlError(
-          err.message ?? t.routes.setup.server_url.server_ping_error,
+          err.message ?? t.routes.startup.server_url.server_ping_error,
         );
     }
   }
