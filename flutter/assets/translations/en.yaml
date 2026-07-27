@@ -16,6 +16,8 @@ routes:
     setup:
       app_bar: "Server Setup"
       body: "To get started, enter the credentials for the initial admin user. You will be automatically logged in."
+      code: "Setup Code"
+      code_info: "You can get the setup code from the server console. You only need to do this once to set up the server."
       complete: "Complete Setup"
       title: "Welcome to @:app_name!"
 username: "Username"

@@ -30,6 +30,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color textMuted;
 
   Color get onPrimary => text;
+  Color get onSecondary => text;
 
   // idc about these
   @override

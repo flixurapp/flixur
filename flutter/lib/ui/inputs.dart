@@ -98,7 +98,7 @@ class FlixurInput extends StatelessWidget {
                   (errorText != null
                           ? context.colors.error
                           : context.colors.text)
-                      .withAlpha(255 ~/ 2),
+                      .withValues(alpha: 0.5),
             ),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             contentPadding: const EdgeInsets.symmetric(

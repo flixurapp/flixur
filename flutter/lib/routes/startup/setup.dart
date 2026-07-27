@@ -15,22 +15,23 @@ class SetupView extends StatefulWidget {
 }
 
 class _SetupViewState extends State<SetupView> {
+  final _codeController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _usernameFocus = FocusNode();
   final _passwordFocus = FocusNode();
 
-  PingOutputBody get serverResponseBody => widget.serverInfo.body;
-
-  AuthenticationApi? api;
+  AuthenticationApi? _api;
   @override
   void initState() {
     super.initState();
-    api = AuthenticationApi(ApiClient(basePath: widget.serverInfo.url));
+    _api = AuthenticationApi(ApiClient(basePath: widget.serverInfo.url));
   }
 
-  String? errorText;
-  bool isPasswordLoading = false;
-  bool isOidcLoading = false;
+  String? _codeError;
+  String? _usernameError;
+  String? _passwordError;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -53,16 +54,45 @@ class _SetupViewState extends State<SetupView> {
             crossAxisAlignment: .stretch,
             spacing: 14,
             children: [
+              Container(
+                padding: const .all(12),
+                decoration: BoxDecoration(
+                  color: context.colors.secondary.withValues(alpha: 0.6),
+                  border: .all(color: context.colors.secondary),
+                  borderRadius: .circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: context.colors.onSecondary),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        t.routes.startup.setup.code_info,
+                        style: .new(color: context.colors.onSecondary),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              FlixurInput(
+                label: t.routes.startup.setup.code.toUpperCase(),
+                hintText: "X" * 6,
+                errorText: _codeError,
+                textController: _codeController,
+                onSubmitted: (_) => _usernameFocus.requestFocus(),
+              ),
               FlixurInput(
                 label: t.username.toUpperCase(),
                 hintText: "peppa.pig",
+                errorText: _usernameError,
                 textController: _usernameController,
                 onSubmitted: (_) => _passwordFocus.requestFocus(),
+                focusNode: _usernameFocus,
               ),
               FlixurInput(
                 label: t.password.toUpperCase(),
                 hintText: "*" * 12,
-                errorText: errorText,
+                errorText: _passwordError,
                 textController: _passwordController,
                 onSubmitted: (_) => _completeSetup(),
                 focusNode: _passwordFocus,
@@ -70,9 +100,8 @@ class _SetupViewState extends State<SetupView> {
               ),
               StartupButton(
                 text: t.routes.startup.setup.complete,
-                isLoading: isPasswordLoading,
-                // disable button if OIDC is loading
-                onPressed: isOidcLoading ? null : _completeSetup,
+                isLoading: _isLoading,
+                onPressed: _completeSetup,
               ),
             ],
           ),
@@ -81,14 +110,26 @@ class _SetupViewState extends State<SetupView> {
     );
   }
 
-  void _setError(String? text) {
-    setState(() => errorText = text);
-  }
-
   Future<void> _completeSetup() async {
-    if (isPasswordLoading || isOidcLoading || api == null) return;
-    _setError(null);
+    final api = _api;
+    if (_isLoading || api == null) return;
 
-    setState(() => isPasswordLoading = true);
+    setState(() {
+      _usernameError = _passwordError = null;
+      _isLoading = true;
+    });
+
+    final response = await safeGet(
+      () => api.setup(
+        AppInfo.clientIdentifier,
+        AppInfo.deviceName,
+        AppInfo.deviceOS,
+        SetupRequest(
+          code: _codeController.text,
+          password: _passwordController.text,
+          username: _usernameController.text,
+        ),
+      ),
+    );
   }
 }

@@ -18,7 +18,7 @@ final router = GoRouter(
       builder: (context, state) => Center(
         child: MaterialButton(
           onPressed: () {
-            context.go("/startup/url");
+            context.goNamed("startup_home");
           },
           child: const Text("login"),
         ),
@@ -70,7 +70,7 @@ GoRoute _startupRoute(
           final tween = Tween(
             begin: const Offset(0, 1),
             end: Offset.zero,
-          ).chain(CurveTween(curve: Curves.easeInOut));
+          ).chain(CurveTween(curve: Curves.linearToEaseOut));
 
           return SlideTransition(
             position: animation.drive(tween),

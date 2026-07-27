@@ -131,6 +131,12 @@ class Translations$routes$startup$setup$en {
 	/// en: 'To get started, enter the credentials for the initial admin user. You will be automatically logged in.'
 	String get body => 'To get started, enter the credentials for the initial admin user. You will be automatically logged in.';
 
+	/// en: 'Setup Code'
+	String get code => 'Setup Code';
+
+	/// en: 'You can get the setup code from the server console. You only need to do this once to set up the server.'
+	String get code_info => 'You can get the setup code from the server console. You only need to do this once to set up the server.';
+
 	/// en: 'Complete Setup'
 	String get complete => 'Complete Setup';
 
@@ -158,6 +164,8 @@ extension on Translations {
 			'routes.startup.server_url.welcome' => 'Welcome!',
 			'routes.startup.setup.app_bar' => 'Server Setup',
 			'routes.startup.setup.body' => 'To get started, enter the credentials for the initial admin user. You will be automatically logged in.',
+			'routes.startup.setup.code' => 'Setup Code',
+			'routes.startup.setup.code_info' => 'You can get the setup code from the server console. You only need to do this once to set up the server.',
 			'routes.startup.setup.complete' => 'Complete Setup',
 			'routes.startup.setup.title' => 'Welcome to ${_root.app_name}!',
 			'username' => 'Username',

@@ -12,6 +12,9 @@ void main() async {
   // setup translations
   await LocaleSettings.useDeviceLocale();
 
+  // get package info
+  await AppInfo.init();
+
   runApp(TranslationProvider(child: const MainApp()));
 }
 

@@ -115,14 +115,10 @@ class _ServerUrlViewState extends State<ServerUrlView> {
 
     switch (pingResponse) {
       case ApiSuccess(:final data):
-        if (data.isSetup) {
-          context.go(
-            "/setup/login",
-            extra: ServerLoginPayload(url: apiClient.basePath, body: data),
-          );
-        } else {
-          //TODO: setup screen
-        }
+        context.goNamed(
+          data.isSetup ? "startup_login" : "startup_setup",
+          extra: ServerLoginPayload(url: apiClient.basePath, body: data),
+        );
       case ApiFailure(:final err):
         _setServerUrlError(
           err.message ?? t.routes.startup.server_url.server_ping_error,
