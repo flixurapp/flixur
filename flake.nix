@@ -158,7 +158,7 @@
             text = ''
               ${setup}
               cd server
-              go test -coverprofile=coverage.out -coverpkg=$(go list ./... | grep -v '/ent' | tr '\n' ',' | sed 's/,$//') ./...
+              go test -coverprofile=coverage.out -coverpkg="$(go list ./... | grep -v '/ent' | tr '\n' ',' | sed 's/,$//')" ./...
               go tool cover -html=coverage.out # open coverage HTML
             '';
           };
