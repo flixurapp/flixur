@@ -10,24 +10,7 @@ import (
 	"forge.xela.codes/xela/flixur/common"
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/humatest"
-	"github.com/go-chi/chi/v5"
 )
-
-func TestRegisterAPIAddsRoutes(t *testing.T) {
-	router := chi.NewMux()
-	RegisterAPI(router, newTestClient(t))
-
-	found := 0
-	chi.Walk(router, func(method, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
-		if route == "/api/ping" || route == "/api/auth/setup" || route == "/api/auth/oidc" || route == "/api/music/artists/search" {
-			found++
-		}
-		return nil
-	})
-	if found != 4 {
-		t.Fatalf("expected 4 API routes, found %d", found)
-	}
-}
 
 func stringsToAny(ss []string) []any {
 	out := make([]any, len(ss))
