@@ -24,18 +24,20 @@ type PlatformHeadersMixin struct {
 }
 
 type PingOutput struct {
-	Body struct {
-		// SemVer version of the server.
-		Version string `json:"version"`
-		// Current numeric protocol version of the server.
-		ProtocolVersion int32 `json:"protocolVersion"`
-		// Whether the server has been set up already. Used to redirect to server setup screen.
-		IsSetup bool `json:"isSetup"`
-		// Whether the server supports logging in via username/password.
-		SupportsPasswordLogin bool `json:"supportsPasswordLogin"`
-		// If set, the server supports logging in via a configured OIDC provider with this name.
-		SupportsOIDCLogin string `json:"supportsOIDCLogin"`
-	} // additional auth methods could be added in the future
+	Body PingOutputBody
+}
+type PingOutputBody struct {
+	// SemVer version of the server.
+	Version string `json:"version"`
+	// Current numeric protocol version of the server.
+	ProtocolVersion int32 `json:"protocolVersion"`
+	// Whether the server has been set up already. Used to redirect to server setup screen.
+	IsSetup bool `json:"isSetup"`
+	// Whether the server supports logging in via username/password.
+	SupportsPasswordLogin bool `json:"supportsPasswordLogin"`
+	// If set, the server supports logging in via a configured OIDC provider with this name.
+	SupportsOIDCLogin string `json:"supportsOIDCLogin"`
+	// ^^ additional auth methods could be added in the future
 }
 
 type OIDCInitOutput struct {
@@ -60,14 +62,16 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		Description: "Can be used to test the server connectivity and return version/feature info.",
 		Tags:        tags,
 	}, func(ctx context.Context, _ *struct{}) (*PingOutput, error) {
-		response := &PingOutput{}
-		//TODO: return an actual version
-		response.Body.Version = "0.0.0"
-		response.Body.ProtocolVersion = common.Version
-		response.Body.IsSetup = GetServerSetupCode() == nil
-		response.Body.SupportsOIDCLogin = "Pocket ID"
-		response.Body.SupportsPasswordLogin = true
-		return response, nil
+		return &PingOutput{
+			Body: PingOutputBody{
+				//TODO: return an actual version
+				Version:               "0.0.0",
+				ProtocolVersion:       common.Version,
+				IsSetup:               GetServerSetupCode() == nil,
+				SupportsOIDCLogin:     "Pocket ID",
+				SupportsPasswordLogin: true,
+			},
+		}, nil
 	})
 
 	huma.Register(reg.API, huma.Operation{

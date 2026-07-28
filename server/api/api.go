@@ -44,63 +44,15 @@ type OutputSuccess struct {
 	}
 }
 
-/*
-func GetClientIP(remoteAddr string, headerValue string) string {
-	directIP := stripPort(remoteAddr)
-
-	// If the immediate connection isn't from a trusted proxy, don't trust
-	// the header at all — use the direct connection IP.
-	if !isTrustedProxy(cfg, directIP) {
-		return directIP
-	}
-
-	if headerValue == "" {
-		return directIP
-	}
-
-	// Single-value headers (e.g. CF-Connecting-IP) — just use it directly
-	if !strings.Contains(headerValue, ",") {
-		if net.ParseIP(headerValue) != nil {
-			return headerValue
-		}
-		return directIP
-	}
-
-	// Comma-separated (e.g. X-Forwarded-For) — take the Nth from the end
-	parts := strings.Split(headerValue, ",")
-	for i := range parts {
-		parts[i] = strings.TrimSpace(parts[i])
-	}
-	idx := len(parts) - cfg.TrustedHops
-	if idx < 0 || idx >= len(parts) {
-		return directIP
-	}
-	if net.ParseIP(parts[idx]) == nil {
-		return directIP
-	}
-	return parts[idx]
-}
-
-func isTrustedProxy(cfg *ProxyConfig, ip string) bool {
-	if len(cfg.TrustedProxyCIDRs) == 0 {
-		return true // no restriction configured — trust header unconditionally
-	}
-	parsed := net.ParseIP(ip)
-	if parsed == nil {
-		return false
-	}
-	for _, cidr := range cfg.TrustedProxyCIDRs {
-		if cidr.Contains(parsed) {
-			return true
-		}
-	}
-	return false
-}*/
-
-func RegisterAPI(router chi.Router, client *ent.Client) {
+func RegisterAPI(router chi.Router, client *ent.Client) APIRegistry {
 	config := huma.DefaultConfig("Flixur API", "0.0.1")
 	config.Servers = []*huma.Server{{URL: "/api"}}
 
+	// Saved registry to be returned for tests.
+	var registry = APIRegistry{
+		DB:     client,
+		Router: router,
+	}
 	router.Route("/api", func(r chi.Router) {
 		// allow CORS on api routes (so other clients can connect)
 		r.Use(cors.Handler(cors.Options{
@@ -110,13 +62,8 @@ func RegisterAPI(router chi.Router, client *ent.Client) {
 			MaxAge:         300,
 		}))
 
-		api := humachi.New(r, config)
-		api.UseMiddleware(ipMiddleware)
-		registry := APIRegistry{
-			API:    api,
-			DB:     client,
-			Router: router,
-		}
+		registry.API = humachi.New(r, config)
+		registry.API.UseMiddleware(ipMiddleware)
 
 		RegisterAuthenticationRoutes(registry)
 		RegisterMusicArtistsRoutes(registry)
@@ -132,6 +79,7 @@ func RegisterAPI(router chi.Router, client *ent.Client) {
 			})
 		*/
 	})
+	return registry
 }
 
 // key identifying the client IP

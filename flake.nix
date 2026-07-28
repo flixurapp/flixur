@@ -152,6 +152,16 @@
               yq . flutter/pubspec.lock > flutter/pubspec.lock.json
             '';
           };
+          test-server = pkgs.writeShellApplication {
+            name = "test-server";
+            runtimeInputs = [ pkgs.go ];
+            text = ''
+              ${setup}
+              cd server
+              go test -coverprofile=coverage.out -coverpkg=$(go list ./... | grep -v '/ent' | tr '\n' ',' | sed 's/,$//') ./...
+              go tool cover -html=coverage.out # open coverage HTML
+            '';
+          };
         };
 
       in

@@ -15,29 +15,15 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func RegisterPlugins(pluginPath string) {
-	dir, err := os.ReadDir(pluginPath)
-	if err != nil {
-		log.Err(err).Str("path", pluginPath).Msg("Failed to read plugin directory.")
-		return
-	}
-
-	for _, file := range dir {
-		name := file.Name()
-		// ignore `.disabled` files
-		if strings.HasSuffix(name, ".disabled") {
-			continue
-		}
-		bin := filepath.Join(pluginPath, name)
-		InitPlugin(bin)
-	}
-	log.Info().Msgf("Loaded %d plugins.", len(Plugins))
+// Base plugin client for test implementation.
+type pluginClient interface {
+	Client() (plugin.ClientProtocol, error)
+	Kill()
 }
 
-func InitPlugin(bin string) {
-	log.Debug().Str("path", bin).Msg("Loading plugin binary...")
-
-	client := plugin.NewClient(&plugin.ClientConfig{
+// Create a production plugin client.
+func newPluginClient(bin string) pluginClient {
+	return plugin.NewClient(&plugin.ClientConfig{
 		HandshakeConfig:  pluginkit.HandshakeConfig,
 		Plugins:          map[string]plugin.Plugin{"flixur_plugin": &pluginkit.FlixurGRPCPlugin{}},
 		Cmd:              exec.Command(bin),
@@ -58,6 +44,38 @@ func InitPlugin(bin string) {
 			},
 		}),
 	})
+}
+
+// Creates a pluginClient for a given binary path, overridable for tests.
+var pluginClientFactory = newPluginClient
+
+func RegisterPlugins(pluginPath string) {
+	dir, err := os.ReadDir(pluginPath)
+	if err != nil {
+		log.Err(err).Str("path", pluginPath).Msg("Failed to read plugin directory.")
+		return
+	}
+
+	for _, file := range dir {
+		name := file.Name()
+		// ignore `.disabled` files
+		if strings.HasSuffix(name, ".disabled") {
+			continue
+		}
+		bin := filepath.Join(pluginPath, name)
+		InitPlugin(bin)
+	}
+	log.Info().Msgf("Loaded %d plugins.", len(Plugins))
+}
+
+func InitPlugin(bin string) {
+	initPlugin(bin, pluginClientFactory)
+}
+
+func initPlugin(bin string, factory func(string) pluginClient) {
+	log.Debug().Str("path", bin).Msg("Loading plugin binary...")
+
+	client := factory(bin)
 
 	// Connect to the plugin
 	rpcClient, err := client.Client()
