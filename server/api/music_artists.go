@@ -23,7 +23,7 @@ func RegisterMusicArtistsRoutes(reg APIRegistry) {
 		Path:        "/music/artists/search",
 		Summary:     "Search for artists.",
 		Description: "Search for an artist by name.",
-		Tags:        []string{"Music", "Artists", "Search"},
+		Tags:        []string{"Artists"},
 	}, func(ctx context.Context, input *struct {
 		Body struct {
 			InputLimitParams
