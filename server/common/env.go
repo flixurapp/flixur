@@ -23,12 +23,27 @@ type config struct {
 	Port int `env:"PORT" envDefault:"8787"`
 	// The log level for both server and (most official) spawned plugins.
 	//TODO: change default to info for prod
-	LogLevel logLevel `env:"LOG_LEVEL" envDefault:"trace"` // realistically this should never change so plugins remain compatible
+	LogLevel logLevel `env:"LOG_LEVEL" envDefault:"trace"` // realistically the name of this should never change so plugins remain compatible
 	// Path to the directory to serve the flutter frontend from.
 	// If omitted, the server will not serve a frontend.
 	FrontendDir string `env:"FRONTEND_DIR"`
 	// Path to the directory to scan for plugins.
 	PluginDir string `env:"PLUGIN_DIR" envDefault:"./plugins"`
+
+	// Enable OIDC signin. Should also configure issuer/client.
+	OidcEnabled bool `env:"OIDC_ENABLED"`
+	// The name of the OIDC provider to show in the UI.
+	OidcName string `env:"OIDC_NAME" envDefault:"OpenID Connect"`
+	// Issuer URL for the OIDC provider. Required if OIDC is enabled.
+	OidcIssuerURL string `env:"OIDC_ISSUER_URL"`
+	// Client  for the OIDC provider. Required if OIDC is enabled.
+	OidcClientID string `env:"OIDC_CLIENT_ID"`
+	// Client  for the OIDC provider. Required if OIDC is enabled.
+	OidcClientSecret string `env:"OIDC_CLIENT_SECRET"`
+	// Scopes to use when obtaining authorization from the OIDC provider.
+	OidcScopes []string `env:"OIDC_SCOPES" envDefault:"openid,profile,email"`
+	// Whether to enable PKCE for the OIDC provider. Leave this enabled unless your provider doesn't support it.
+	OidcUsePkce bool `env:"OIDC_ENABLE_PKCE" envDefault:"true"`
 
 	// Trust reverse proxy IP headers.
 	TrustProxy bool `env:"TRUST_PROXY" envDefault:"false"`
