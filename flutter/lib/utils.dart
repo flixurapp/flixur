@@ -19,12 +19,10 @@ class AppInfo {
     _info = await PackageInfo.fromPlatform();
     if (Platform.isWindows) {
       final device = await _deviceInfo.windowsInfo;
-      machineID = device.deviceId;
       deviceName = device.computerName;
       deviceOS = "${device.productName} Build ${device.displayVersion}";
     } else if (Platform.isMacOS) {
       final device = await _deviceInfo.macOsInfo;
-      machineID = device.systemGUID ?? "${device.model}_${device.computerName}";
       deviceName = device.modelName;
       final macVersion = [
         device.majorVersion,
@@ -34,8 +32,6 @@ class AppInfo {
       deviceOS = "macOS $macVersion";
     } else if (Platform.isLinux) {
       final device = await _deviceInfo.linuxInfo;
-      machineID =
-          device.machineId ?? "${device.id}_${device.buildId ?? "unknown"}";
       deviceName = Platform.localHostname;
       deviceOS = device.prettyName;
     } else if (Platform.isIOS) {
@@ -51,11 +47,11 @@ class AppInfo {
       // unknown platform
       deviceName = "Unknown Device";
       deviceOS = "Unknown";
-      machineID = "unknown";
     }
   }
 
-  static late String machineID;
+  //TODO: machine id
+  static String machineID = "";
   static late String deviceName;
   static late String deviceOS;
 
