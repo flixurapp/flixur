@@ -1,8 +1,11 @@
 import "package:flixur/routes/startup/components.dart";
 import "package:flixur/routes/startup/server_url.dart";
+import "package:flixur/storage.dart";
+import "package:flixur/ui/dialogs.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:openapi/api.dart";
 
 class SetupView extends StatefulWidget {
@@ -144,13 +147,28 @@ class _SetupViewState extends State<SetupView> {
       ),
     );
     setState(() => _isLoading = false);
+    if (!mounted) return;
 
     switch (response) {
       case ApiSuccess(:final data):
-        //TODO:
-        print(data);
+        try {
+          await saveSessionToken(data.sessionToken);
+        } on PlatformException catch (e) {
+          if (!mounted) return;
+          await showErrorDialog(
+            context,
+            title: t.storage.store_fail_title,
+            message: e.message ?? t.storage.store_fail,
+          );
+          return;
+        }
+      // save was successful, so continue
       case ApiFailure(:final err):
-        print(err.message);
+        await showErrorDialog(
+          context,
+          title: t.api_request_fail,
+          message: err.message ?? "API Error",
+        );
     }
   }
 }

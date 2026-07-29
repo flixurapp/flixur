@@ -41,8 +41,17 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 
 	// Translations
 
+	/// en: 'API Request Failed'
+	String get api_request_fail => 'API Request Failed';
+
 	/// en: 'Flixur'
 	String get app_name => 'Flixur';
+
+	/// en: 'Cancel'
+	String get btn_cancel => 'Cancel';
+
+	/// en: 'OK'
+	String get btn_ok => 'OK';
 
 	/// en: 'OR'
 	String get or_line => 'OR';
@@ -51,6 +60,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	String get password => 'Password';
 
 	late final Translations$routes$en routes = Translations$routes$en._(_root);
+	late final Translations$storage$en storage = Translations$storage$en._(_root);
 
 	/// en: 'Username'
 	String get username => 'Username';
@@ -64,6 +74,21 @@ class Translations$routes$en {
 
 	// Translations
 	late final Translations$routes$startup$en startup = Translations$routes$startup$en._(_root);
+}
+
+// Path: storage
+class Translations$storage$en {
+	Translations$storage$en._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Failed to store secure value.'
+	String get store_fail => 'Failed to store secure value.';
+
+	/// en: 'Storage Failure'
+	String get store_fail_title => 'Storage Failure';
 }
 
 // Path: routes.startup
@@ -152,7 +177,10 @@ class Translations$routes$startup$setup$en {
 extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
+			'api_request_fail' => 'API Request Failed',
 			'app_name' => 'Flixur',
+			'btn_cancel' => 'Cancel',
+			'btn_ok' => 'OK',
 			'or_line' => 'OR',
 			'password' => 'Password',
 			'routes.startup.login.app_bar' => 'Log In',
@@ -168,6 +196,8 @@ extension on Translations {
 			'routes.startup.setup.code_info' => 'You can get the setup code from the server console. You only need to do this once to set up the server.',
 			'routes.startup.setup.complete' => 'Complete Setup',
 			'routes.startup.setup.title' => 'Welcome to ${_root.app_name}!',
+			'storage.store_fail' => 'Failed to store secure value.',
+			'storage.store_fail_title' => 'Storage Failure',
 			'username' => 'Username',
 			_ => null,
 		};

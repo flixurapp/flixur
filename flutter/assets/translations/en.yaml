@@ -1,5 +1,8 @@
 ---
+api_request_fail: "API Request Failed"
 app_name: "Flixur"
+btn_cancel: "Cancel"
+btn_ok: "OK"
 or_line: "OR"
 password: "Password"
 routes:
@@ -20,4 +23,7 @@ routes:
       code_info: "You can get the setup code from the server console. You only need to do this once to set up the server."
       complete: "Complete Setup"
       title: "Welcome to @:app_name!"
+storage:
+  store_fail: "Failed to store secure value."
+  store_fail_title: "Storage Failure"
 username: "Username"
