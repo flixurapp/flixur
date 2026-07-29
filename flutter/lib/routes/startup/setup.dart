@@ -152,7 +152,7 @@ class _SetupViewState extends State<SetupView> {
     switch (response) {
       case ApiSuccess(:final data):
         try {
-          await saveSessionToken(data.sessionToken);
+          await Storage.saveSessionToken(data.sessionToken);
         } on PlatformException catch (e) {
           if (!mounted) return;
           await showErrorDialog(

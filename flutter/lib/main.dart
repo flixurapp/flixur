@@ -1,4 +1,5 @@
 import "package:flixur/router.dart";
+import "package:flixur/storage.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
 import "package:flutter_web_plugins/url_strategy.dart";
@@ -14,6 +15,9 @@ void main() async {
 
   // get package info
   await AppInfo.init();
+
+  // init persistent storage
+  await Storage.init();
 
   runApp(TranslationProvider(child: const MainApp()));
 }
