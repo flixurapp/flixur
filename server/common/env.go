@@ -62,9 +62,6 @@ func ParseConfig() error {
 			},
 			// parse IP CIDRs
 			reflect.TypeFor[ipCIDRs](): func(v string) (any, error) {
-				if v == "" {
-					return ipCIDRs{}, nil
-				}
 				parts := strings.Split(v, ",")
 				nets := make(ipCIDRs, 0, len(parts))
 				for _, p := range parts {

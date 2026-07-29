@@ -91,15 +91,15 @@ func TestParseConfigDefaults(t *testing.T) {
 func TestParseConfigOverrides(t *testing.T) {
 	resetConfig(t)
 	setEnvs(t, map[string]string{
-		"FLIXUR_ADDRESS":                "127.0.0.1",
-		"FLIXUR_PORT":                   "9999",
-		"FLIXUR_LOG_LEVEL":              "info",
-		"FLIXUR_FRONTEND_DIR":           "/tmp/front",
-		"FLIXUR_PLUGIN_DIR":             "/tmp/plugs",
-		"FLIXUR_TRUST_PROXY":            "true",
-		"FLIXUR_TRUST_PROXY_HEADER":     "X-Real-IP",
-		"FLIXUR_TRUSTED_PROXY_CIDRS":    "10.0.0.0/8, 192.168.0.0/16",
-		"FLIXUR_DEVELOPMENT_MODE":       "true",
+		"FLIXUR_ADDRESS":                      "127.0.0.1",
+		"FLIXUR_PORT":                         "9999",
+		"FLIXUR_LOG_LEVEL":                    "info",
+		"FLIXUR_FRONTEND_DIR":                 "/tmp/front",
+		"FLIXUR_PLUGIN_DIR":                   "/tmp/plugs",
+		"FLIXUR_TRUST_PROXY":                  "true",
+		"FLIXUR_TRUST_PROXY_HEADER":           "X-Real-IP",
+		"FLIXUR_TRUSTED_PROXY_CIDRS":          "10.0.0.0/8, 192.168.0.0/16",
+		"FLIXUR_DEVELOPMENT_MODE":             "true",
 		"FLIXUR_DEVELOPMENT_RUN_AS_GENERATOR": "true",
 	})
 
