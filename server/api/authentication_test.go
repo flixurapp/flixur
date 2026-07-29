@@ -51,7 +51,7 @@ func TestPing(t *testing.T) {
 	if resp.Code != http.StatusOK {
 		t.Fatalf("status = %d", resp.Code)
 	}
-	body := decode[PingOutputBody](t, resp)
+	body := decode[PingBody](t, resp)
 
 	if body.Version != "0.0.0" {
 		t.Errorf("Version = %q", body.Version)

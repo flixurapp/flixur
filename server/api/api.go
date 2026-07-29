@@ -37,10 +37,18 @@ type InputPluginParamsOptional struct {
 	Plugin string `json:"plugin,omitempty" doc:"Plugin ID to use for the request. Omit to use the local server."`
 }
 
-type OutputSuccess struct {
-	Body struct {
-		// If the request was successfully fulfilled.
-		Success bool `json:"success"`
+type Output[T any] struct {
+	Body T
+}
+type OutputSuccessBody struct {
+	// If the request was successfully fulfilled.
+	Success bool `json:"success"`
+}
+
+// Shorthand to create an output body struct.
+func CreateOutput[T any](payload T) *Output[T] {
+	return &Output[T]{
+		Body: payload,
 	}
 }
 

@@ -23,10 +23,7 @@ type PlatformHeadersMixin struct {
 	PlatformOS     string `header:"X-Platform-OS" required:"true" minLength:"1" doc:"Operating System/Version"`
 }
 
-type PingOutput struct {
-	Body PingOutputBody
-}
-type PingOutputBody struct {
+type PingBody struct {
 	// SemVer version of the server.
 	Version string `json:"version"`
 	// Current numeric protocol version of the server.
@@ -40,17 +37,13 @@ type PingOutputBody struct {
 	// ^^ additional auth methods could be added in the future
 }
 
-type OIDCInitOutput struct {
-	Body struct {
-		// The URL to use for logging in via OIDC.
-		LoginURL string `json:"loginURL"`
-	}
+type OIDCInitBody struct {
+	// The URL to use for logging in via OIDC.
+	LoginURL string `json:"loginURL"`
 }
 
-type SessionTokenOutput struct {
-	Body struct {
-		SessionToken string `json:"sessionToken"`
-	}
+type SessionTokenBody struct {
+	SessionToken string `json:"sessionToken"`
 }
 
 func RegisterAuthenticationRoutes(reg APIRegistry) {
@@ -61,17 +54,15 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		Summary:     "Ping Server",
 		Description: "Can be used to test the server connectivity and return version/feature info.",
 		Tags:        tags,
-	}, func(ctx context.Context, _ *struct{}) (*PingOutput, error) {
-		return &PingOutput{
-			Body: PingOutputBody{
-				//TODO: return an actual version
-				Version:               "0.0.0",
-				ProtocolVersion:       common.Version,
-				IsSetup:               GetServerSetupCode() == nil,
-				SupportsOIDCLogin:     "Pocket ID",
-				SupportsPasswordLogin: true,
-			},
-		}, nil
+	}, func(ctx context.Context, _ *struct{}) (*Output[PingBody], error) {
+		return CreateOutput(PingBody{
+			//TODO: return an actual version
+			Version:               "0.0.0",
+			ProtocolVersion:       common.Version,
+			IsSetup:               GetServerSetupCode() == nil,
+			SupportsOIDCLogin:     "Pocket ID",
+			SupportsPasswordLogin: true,
+		}), nil
 	})
 
 	huma.Register(reg.API, huma.Operation{
@@ -98,7 +89,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			// Password for the initial admin account.
 			Password string `json:"password"`
 		}
-	}) (*SessionTokenOutput, error) {
+	}) (*Output[SessionTokenBody], error) {
 		setupCode := GetServerSetupCode()
 		if setupCode == nil {
 			return nil, fmt.Errorf("server is already setup")
@@ -176,9 +167,9 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		}
 
 		// success
-		response := &SessionTokenOutput{}
-		response.Body.SessionToken = sessionToken
-		return response, nil
+		return CreateOutput(SessionTokenBody{
+			SessionToken: sessionToken,
+		}), nil
 	})
 
 	huma.Register(reg.API, huma.Operation{
@@ -188,11 +179,11 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		Summary:     "Initialize an OIDC login request.",
 		Description: "Initializes an OIDC login request returning the URL for authorization.",
 		Tags:        tags,
-	}, func(ctx context.Context, _ *struct{}) (*OIDCInitOutput, error) {
-		response := &OIDCInitOutput{}
+	}, func(ctx context.Context, _ *struct{}) (*Output[OIDCInitBody], error) {
 		//TODO: oidc
-		response.Body.LoginURL = ""
-		return response, nil
+		return CreateOutput(OIDCInitBody{
+			LoginURL: "",
+		}), nil
 	})
 }
 
