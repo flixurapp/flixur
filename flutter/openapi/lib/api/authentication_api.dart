@@ -48,7 +48,7 @@ class AuthenticationApi {
   /// Initialize an OIDC login request.
   ///
   /// Initializes an OIDC login request returning the URL for authorization.
-  Future<OIDCInitOutputBody?> oidc() async {
+  Future<OIDCInitBody?> oidc() async {
     final response = await oidcWithHttpInfo();
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -60,8 +60,8 @@ class AuthenticationApi {
         response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(
         await _decodeBodyBytes(response),
-        'OIDCInitOutputBody',
-      ) as OIDCInitOutputBody;
+        'OIDCInitBody',
+      ) as OIDCInitBody;
     }
     return null;
   }
@@ -98,7 +98,7 @@ class AuthenticationApi {
   /// Ping Server
   ///
   /// Can be used to test the server connectivity and return version/feature info.
-  Future<PingOutputBody?> ping() async {
+  Future<PingBody?> ping() async {
     final response = await pingWithHttpInfo();
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -110,8 +110,8 @@ class AuthenticationApi {
         response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(
         await _decodeBodyBytes(response),
-        'PingOutputBody',
-      ) as PingOutputBody;
+        'PingBody',
+      ) as PingBody;
     }
     return null;
   }
@@ -183,7 +183,7 @@ class AuthenticationApi {
   ///   Operating System/Version
   ///
   /// * [SetupRequest] setupRequest (required):
-  Future<SessionTokenOutputBody?> setup(
+  Future<SessionTokenBody?> setup(
     String xPlatformClient,
     String xPlatformDevice,
     String xPlatformOS,
@@ -205,8 +205,8 @@ class AuthenticationApi {
         response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(
         await _decodeBodyBytes(response),
-        'SessionTokenOutputBody',
-      ) as SessionTokenOutputBody;
+        'SessionTokenBody',
+      ) as SessionTokenBody;
     }
     return null;
   }

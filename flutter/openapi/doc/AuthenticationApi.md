@@ -15,7 +15,7 @@ Method | HTTP request | Description
 
 
 # **oidc**
-> OIDCInitOutputBody oidc()
+> OIDCInitBody oidc()
 
 Initialize an OIDC login request.
 
@@ -40,7 +40,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**OIDCInitOutputBody**](OIDCInitOutputBody.md)
+[**OIDCInitBody**](OIDCInitBody.md)
 
 ### Authorization
 
@@ -54,7 +54,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **ping**
-> PingOutputBody ping()
+> PingBody ping()
 
 Ping Server
 
@@ -79,7 +79,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**PingOutputBody**](PingOutputBody.md)
+[**PingBody**](PingBody.md)
 
 ### Authorization
 
@@ -93,7 +93,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **setup**
-> SessionTokenOutputBody setup(xPlatformClient, xPlatformDevice, xPlatformOS, setupRequest)
+> SessionTokenBody setup(xPlatformClient, xPlatformDevice, xPlatformOS, setupRequest)
 
 Setup Server
 
@@ -128,7 +128,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**SessionTokenOutputBody**](SessionTokenOutputBody.md)
+[**SessionTokenBody**](SessionTokenBody.md)
 
 ### Authorization
 

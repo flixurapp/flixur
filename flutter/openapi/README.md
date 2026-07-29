@@ -75,9 +75,9 @@ Class | Method | HTTP request | Description
  - [ArtistSearchRequest](doc//ArtistSearchRequest.md)
  - [ErrorDetail](doc//ErrorDetail.md)
  - [ErrorModel](doc//ErrorModel.md)
- - [OIDCInitOutputBody](doc//OIDCInitOutputBody.md)
- - [PingOutputBody](doc//PingOutputBody.md)
- - [SessionTokenOutputBody](doc//SessionTokenOutputBody.md)
+ - [OIDCInitBody](doc//OIDCInitBody.md)
+ - [PingBody](doc//PingBody.md)
+ - [SessionTokenBody](doc//SessionTokenBody.md)
  - [SetupRequest](doc//SetupRequest.md)
 
 
