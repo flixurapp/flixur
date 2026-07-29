@@ -152,6 +152,21 @@
               yq . flutter/pubspec.lock > flutter/pubspec.lock.json
             '';
           };
+          # wrapped flutter command for debug builds with libsecret included
+          flutter-wrapped = pkgs.writeShellApplication {
+            name = "flutter";
+            runtimeInputs = with pkgs; [
+              flutter
+              pkg-config # so flutter can find packages
+              libsysprof-capture # flutter requires this for some reason
+              libsecret.dev # for flutter_secure_storage
+            ];
+            text = ''
+              # we arent appending to the variable because there is no variable to append to
+              export PKG_CONFIG_PATH="${pkgs.lib.makeSearchPath "lib/pkgconfig" [ pkgs.libsecret.dev ]}"
+              exec flutter "$@"
+            '';
+          };
           test-server = pkgs.writeShellApplication {
             name = "test-server";
             runtimeInputs = [ pkgs.go ];
@@ -173,6 +188,10 @@
 
         apps = (builtins.mapAttrs (_: drv: flake-utils.lib.mkApp { inherit drv; }) commands) // {
           default = flake-utils.lib.mkApp { drv = flixur-server; };
+        };
+
+        devShells.default = pkgs.mkShell {
+          buildInputs = [ commands.flutter-wrapped ];
         };
       }
     );
