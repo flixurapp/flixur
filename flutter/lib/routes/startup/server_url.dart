@@ -137,5 +137,5 @@ class ServerLoginPayload {
   // Full basePath of the api client.
   final String url;
   // Server ping response body.
-  final PingOutputBody body;
+  final PingBody body;
 }

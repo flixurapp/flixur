@@ -19,7 +19,7 @@ class _LoginViewState extends State<LoginView> {
   final _passwordController = TextEditingController();
   final _passwordFocus = FocusNode();
 
-  PingOutputBody get _serverResponseBody => widget.serverInfo.body;
+  PingBody get _serverResponseBody => widget.serverInfo.body;
 
   AuthenticationApi? _api;
   @override
