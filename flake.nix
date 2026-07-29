@@ -82,6 +82,8 @@
 
                 export DART_POST_PROCESS_FILE="${pkgs.dart}/bin/dart format"  
 
+                rm -rf ${openapi-out}
+
                 openapi-generator-cli generate \
                   -i ${openapi-addr} \
                   -g dart \
