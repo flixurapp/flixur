@@ -5,7 +5,6 @@ import (
 	"context"
 	"crypto/rand"
 	"fmt"
-	"net/http"
 	"sync/atomic"
 
 	"forge.xela.codes/xela/flixur/common"
@@ -51,10 +50,12 @@ type SessionTokenBody struct {
 func RegisterAuthenticationRoutes(reg APIRegistry) {
 	api := reg.API.AddOpHandler(op_handler.AddTags("Authentication"))
 
-	hureg.Get(WithDocs(api, huma.Operation{
-		Summary:     "Ping Server",
+	hureg.Get(WithDocs(api, APIRoute{
+		Name:        "Ping Server",
 		Description: "Can be used to test the server connectivity and return version/feature info.",
-	}, nil), "/ping", func(ctx context.Context, _ *struct{}) (*Output[PingBody], error) {
+		NoSetup:     true,
+		NoAuth:      true,
+	}), "/ping", func(ctx context.Context, _ *struct{}) (*Output[PingBody], error) {
 		return CreateOutput(PingBody{
 			//TODO: return an actual version
 			Version:               "0.0.0",
@@ -68,17 +69,18 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 	// all following routes are at /auth
 	api = api.AddBasePath("/auth")
 
-	hureg.Post(WithDocs(api, huma.Operation{
-		Path:        "/setup",
-		Summary:     "Setup Server",
+	hureg.Post(WithDocs(api, APIRoute{
+		Name:        "Setup Server",
 		Description: "Creates the initial admin account and sets up the server.",
-	}, &APIErrorCodes{
-		CodeDatabaseError:     "Failed to write to database.",
-		CodeIncorrectPassword: "The setup code is incorrect.",
-		CodeInvalidInput:      "Username contains non-ASCII character.",
-		CodeTooLong:           "Username/password is too long.",
-		CodeTooShort:          "Username/password is too short.",
-	}), "/setup", func(ctx context.Context, input *struct {
+		NoSetup:     true,
+		NoAuth:      true,
+		Errors: APIErrorCodes{
+			CodeDatabaseError:     "Failed to write to database.",
+			CodeIncorrectPassword: "The setup code is incorrect.",
+			CodeInvalidInput:      "Username contains non-ASCII character.",
+			CodeTooLong:           "Username/password is too long.",
+			CodeTooShort:          "Username/password is too short.",
+		}}), "/setup", func(ctx context.Context, input *struct {
 		PlatformHeadersMixin
 		Body struct {
 			// Setup code for the server. This is logged in the console.
@@ -173,23 +175,14 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		}), nil
 	})
 
-	// we really only need to block the login routes from working without the server being set up
-	// the above methods don't really matter as they require authentication
-	api = api.AddMiddlewares(func(ctx huma.Context, next func(huma.Context)) {
-		if GetServerSetupCode() != nil {
-			huma.WriteErr(api.GetHumaAPI(), ctx, http.StatusServiceUnavailable, "server not set up")
-			return
-		}
-		next(ctx)
-	})
-
-	hureg.Post(WithDocs(api, huma.Operation{
-		Summary:     "Login",
+	hureg.Post(WithDocs(api, APIRoute{
+		Name:        "Login",
 		Description: "Login with username/password.",
-	}, &APIErrorCodes{
-		CodeIncorrectUsername: "Username not found.",
-		CodeIncorrectPassword: "Incorrect password.",
-	}), "/login", func(ctx context.Context, input *struct {
+		NoAuth:      true,
+		Errors: APIErrorCodes{
+			CodeIncorrectUsername: "Username not found.",
+			CodeIncorrectPassword: "Incorrect password.",
+		}}), "/login", func(ctx context.Context, input *struct {
 		PlatformHeadersMixin
 		Body struct {
 			Username string `json:"username"`
@@ -213,10 +206,11 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		}), nil
 	})
 
-	hureg.Get(WithDocs(api, huma.Operation{
-		Summary:     "OIDC Login",
+	hureg.Get(WithDocs(api, APIRoute{
+		Name:        "OIDC Login",
 		Description: "Initializes an OIDC login request returning the URL for authorization.",
-	}, nil), "/oidc_url", func(ctx context.Context, _ *struct{}) (*Output[OIDCInitBody], error) {
+		NoAuth:      true,
+	}), "/oidc_url", func(ctx context.Context, _ *struct{}) (*Output[OIDCInitBody], error) {
 		//TODO: oidc
 		return CreateOutput(OIDCInitBody{
 			LoginURL: "",

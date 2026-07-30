@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"net"
+	"net/http"
 	"strings"
 
 	"forge.xela.codes/xela/flixur/common"
@@ -47,32 +48,64 @@ type OutputSuccessBody struct {
 	Success bool `json:"success"`
 }
 
+type APIRoute struct {
+	// Set custom operation ID.
+	OperationID string
+	// Sets the `summary`, functions as an operation name.
+	Name string
+	// Sets the operation `description`.
+	Description string
+	// Sets operation non-200 `responses` to the unpacked error codes.
+	Errors APIErrorCodes
+	// If true, endpoint will not require the server to be set up to be called.
+	NoSetup bool
+	// If true, endpoint will not require bearer token to be called.
+	NoAuth bool
+}
+
 // Sets ID/summary/description/responses on an APIGen instance.
-func WithDocs(api hureg.APIGen, op huma.Operation, errorCodes *map[APIErrorCode]string) hureg.APIGen {
+func WithDocs(api hureg.APIGen, opts APIRoute) hureg.APIGen {
 	handlers := []op_handler.OperationHandler{}
-	if op.OperationID != "" {
+	middlewares := []func(huma.Context, func(huma.Context)){}
+
+	if opts.OperationID != "" {
 		handlers = append(handlers, func(o *huma.Operation) {
-			o.OperationID = op.OperationID
+			o.OperationID = opts.OperationID
 		})
 	}
-	if op.Summary != "" {
-		handlers = append(handlers, op_handler.SetSummary(op.Summary, true))
+	if opts.Name != "" {
+		handlers = append(handlers, op_handler.SetSummary(opts.Name, true))
 	}
-	if op.Description != "" {
-		handlers = append(handlers, op_handler.SetDescription(op.Description, true))
+	if opts.Description != "" {
+		handlers = append(handlers, op_handler.SetDescription(opts.Description, true))
 	}
 
 	// unpack error codes
-	if errorCodes != nil {
-		op.Responses = APIErrorResponses(api, *errorCodes)
-	}
-	if len(op.Responses) > 0 {
+	if len(opts.Errors) > 0 {
+		responses := APIErrorResponses(api, opts.Errors)
 		handlers = append(handlers, func(o *huma.Operation) {
-			o.Responses = op.Responses
+			o.Responses = responses
 		})
 	}
 
-	return api.AddOpHandler(handlers...)
+	// require server to be set up
+	if !opts.NoSetup {
+		middlewares = append(middlewares, (func(ctx huma.Context, next func(huma.Context)) {
+			if GetServerSetupCode() != nil {
+				huma.WriteErr(api.GetHumaAPI(), ctx, http.StatusServiceUnavailable, "server not set up")
+				return
+			}
+			next(ctx)
+		}))
+	}
+
+	if !opts.NoAuth {
+		//TODO: auth middleware
+	}
+
+	return api.
+		AddOpHandler(handlers...).
+		AddMiddlewares(middlewares...)
 }
 
 // Shorthand to create an output body struct.
