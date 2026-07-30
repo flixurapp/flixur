@@ -155,7 +155,9 @@ func RegisterAPI(router chi.Router, client *ent.Client) APIRegistry {
 
 // key identifying the client IP
 type ctxKeyClientIP struct{}
+type ctxKeyAuthorizedUser struct{}
 
+// Determines if a proxy IP should be trusted.
 func isTrustedProxy(ip string) bool {
 	if len(common.Config.TrustedProxyCIDRs) == 0 {
 		return true
@@ -171,6 +173,8 @@ func isTrustedProxy(ip string) bool {
 	}
 	return false
 }
+
+// Attaches the client IP to the context for [GetClientIP] to use.
 func ipMiddleware(ctx huma.Context, next func(huma.Context)) {
 	clientIP, _, err := net.SplitHostPort(ctx.RemoteAddr())
 	// on failure just use raw addr
