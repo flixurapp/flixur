@@ -3,36 +3,31 @@ package api
 import (
 	"context"
 	"fmt"
-	"net/http"
 
 	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 	"forge.xela.codes/xela/flixur/plugins"
-	"github.com/danielgtaylor/huma/v2"
+	"github.com/cardinalby/hureg"
+	"github.com/cardinalby/hureg/pkg/huma/op_handler"
 )
 
-type ArtistSearchOutput struct {
-	Body struct {
-		List []*pb.Artist `json:"list" nullable:"false"`
-	}
+type ArtistSearchBody struct {
+	List []*pb.Artist `json:"list" nullable:"false"`
 }
 
 func RegisterMusicArtistsRoutes(reg APIRegistry) {
-	huma.Register(reg.API.GetHumaAPI(), huma.Operation{
-		OperationID: "artist-search",
-		Method:      http.MethodPost,
-		Path:        "/music/artists/search",
-		Summary:     "Search for artists.",
+	api := reg.API.AddOpHandler(op_handler.AddTags("Artists"))
+
+	hureg.Post(WithOptions(api, APIRoute{
+		OperationID: "search_artists",
+		Name:        "Search Artists",
 		Description: "Search for an artist by name.",
-		Tags:        []string{"Artists"},
-	}, func(ctx context.Context, input *struct {
+	}), "/artists/search", func(ctx context.Context, input *struct {
 		Body struct {
 			InputLimitParams
 			InputPluginParamsOptional
 			InputSearchParams
 		}
-	}) (*ArtistSearchOutput, error) {
-		response := &ArtistSearchOutput{}
-
+	}) (*Output[ArtistSearchBody], error) {
 		if input.Body.Plugin != "" {
 			plugin := plugins.FindPluginByID(input.Body.Plugin)
 			if plugin == nil {
@@ -49,8 +44,9 @@ func RegisterMusicArtistsRoutes(reg APIRegistry) {
 			if err != nil {
 				return nil, err
 			}
-			response.Body.List = res.Results
-			return response, nil
+			return CreateOutput(ArtistSearchBody{
+				List: res.Results,
+			}), nil
 		} else {
 			return nil, fmt.Errorf("not implemented")
 		}

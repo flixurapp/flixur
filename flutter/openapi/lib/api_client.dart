@@ -233,10 +233,8 @@ class ApiClient {
           return APIError.fromJson(value);
         case 'Artist':
           return Artist.fromJson(value);
-        case 'ArtistSearchOutputBody':
-          return ArtistSearchOutputBody.fromJson(value);
-        case 'ArtistSearchRequest':
-          return ArtistSearchRequest.fromJson(value);
+        case 'ArtistSearchBody':
+          return ArtistSearchBody.fromJson(value);
         case 'ErrorDetail':
           return ErrorDetail.fromJson(value);
         case 'ErrorModel':
@@ -249,6 +247,8 @@ class ApiClient {
           return PostAuthLoginRequest.fromJson(value);
         case 'PostAuthSetupRequest':
           return PostAuthSetupRequest.fromJson(value);
+        case 'SearchArtistsRequest':
+          return SearchArtistsRequest.fromJson(value);
         case 'SessionTokenBody':
           return SessionTokenBody.fromJson(value);
         default:

@@ -42,13 +42,13 @@ import 'package:openapi/api.dart';
 
 
 final api_instance = ArtistsApi();
-final artistSearchRequest = ArtistSearchRequest(); // ArtistSearchRequest | 
+final searchArtistsRequest = SearchArtistsRequest(); // SearchArtistsRequest | 
 
 try {
-    final result = api_instance.artistSearch(artistSearchRequest);
+    final result = api_instance.searchArtists(searchArtistsRequest);
     print(result);
 } catch (e) {
-    print('Exception when calling ArtistsApi->artistSearch: $e\n');
+    print('Exception when calling ArtistsApi->searchArtists: $e\n');
 }
 
 ```
@@ -59,7 +59,7 @@ All URIs are relative to *http://127.0.0.1:18787/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*ArtistsApi* | [**artistSearch**](doc//ArtistsApi.md#artistsearch) | **POST** /music/artists/search | Search for artists.
+*ArtistsApi* | [**searchArtists**](doc//ArtistsApi.md#searchartists) | **POST** /artists/search | Search Artists
 *AuthenticationApi* | [**getAuthOidcUrl**](doc//AuthenticationApi.md#getauthoidcurl) | **GET** /auth/oidc_url | OIDC Login
 *AuthenticationApi* | [**getPing**](doc//AuthenticationApi.md#getping) | **GET** /ping | Ping Server
 *AuthenticationApi* | [**postAuthLogin**](doc//AuthenticationApi.md#postauthlogin) | **POST** /auth/login | Login
@@ -70,14 +70,14 @@ Class | Method | HTTP request | Description
 
  - [APIError](doc//APIError.md)
  - [Artist](doc//Artist.md)
- - [ArtistSearchOutputBody](doc//ArtistSearchOutputBody.md)
- - [ArtistSearchRequest](doc//ArtistSearchRequest.md)
+ - [ArtistSearchBody](doc//ArtistSearchBody.md)
  - [ErrorDetail](doc//ErrorDetail.md)
  - [ErrorModel](doc//ErrorModel.md)
  - [OIDCInitBody](doc//OIDCInitBody.md)
  - [PingBody](doc//PingBody.md)
  - [PostAuthLoginRequest](doc//PostAuthLoginRequest.md)
  - [PostAuthSetupRequest](doc//PostAuthSetupRequest.md)
+ - [SearchArtistsRequest](doc//SearchArtistsRequest.md)
  - [SessionTokenBody](doc//SessionTokenBody.md)
 
 

@@ -1,4 +1,4 @@
-# openapi.model.ArtistSearchOutputBody
+# openapi.model.ArtistSearchBody
 
 ## Load the model package
 ```dart

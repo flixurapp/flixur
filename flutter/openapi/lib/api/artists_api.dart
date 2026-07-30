@@ -16,7 +16,7 @@ class ArtistsApi {
 
   final ApiClient apiClient;
 
-  /// Search for artists.
+  /// Search Artists
   ///
   /// Search for an artist by name.
   ///
@@ -24,15 +24,15 @@ class ArtistsApi {
   ///
   /// Parameters:
   ///
-  /// * [ArtistSearchRequest] artistSearchRequest (required):
-  Future<Response> artistSearchWithHttpInfo(
-    ArtistSearchRequest artistSearchRequest,
+  /// * [SearchArtistsRequest] searchArtistsRequest (required):
+  Future<Response> searchArtistsWithHttpInfo(
+    SearchArtistsRequest searchArtistsRequest,
   ) async {
     // ignore: prefer_const_declarations
-    final path = r'/music/artists/search';
+    final path = r'/artists/search';
 
     // ignore: prefer_final_locals
-    Object? postBody = artistSearchRequest;
+    Object? postBody = searchArtistsRequest;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
@@ -51,18 +51,18 @@ class ArtistsApi {
     );
   }
 
-  /// Search for artists.
+  /// Search Artists
   ///
   /// Search for an artist by name.
   ///
   /// Parameters:
   ///
-  /// * [ArtistSearchRequest] artistSearchRequest (required):
-  Future<ArtistSearchOutputBody?> artistSearch(
-    ArtistSearchRequest artistSearchRequest,
+  /// * [SearchArtistsRequest] searchArtistsRequest (required):
+  Future<ArtistSearchBody?> searchArtists(
+    SearchArtistsRequest searchArtistsRequest,
   ) async {
-    final response = await artistSearchWithHttpInfo(
-      artistSearchRequest,
+    final response = await searchArtistsWithHttpInfo(
+      searchArtistsRequest,
     );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -74,8 +74,8 @@ class ArtistsApi {
         response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(
         await _decodeBodyBytes(response),
-        'ArtistSearchOutputBody',
-      ) as ArtistSearchOutputBody;
+        'ArtistSearchBody',
+      ) as ArtistSearchBody;
     }
     return null;
   }

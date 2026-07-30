@@ -33,14 +33,14 @@ part 'api/authentication_api.dart';
 
 part 'model/api_error.dart';
 part 'model/artist.dart';
-part 'model/artist_search_output_body.dart';
-part 'model/artist_search_request.dart';
+part 'model/artist_search_body.dart';
 part 'model/error_detail.dart';
 part 'model/error_model.dart';
 part 'model/oidc_init_body.dart';
 part 'model/ping_body.dart';
 part 'model/post_auth_login_request.dart';
 part 'model/post_auth_setup_request.dart';
+part 'model/search_artists_request.dart';
 part 'model/session_token_body.dart';
 
 /// An [ApiClient] instance that uses the default values obtained from

@@ -5,8 +5,7 @@ README.md
 analysis_options.yaml
 doc/APIError.md
 doc/Artist.md
-doc/ArtistSearchOutputBody.md
-doc/ArtistSearchRequest.md
+doc/ArtistSearchBody.md
 doc/ArtistsApi.md
 doc/AuthenticationApi.md
 doc/ErrorDetail.md
@@ -15,6 +14,7 @@ doc/OIDCInitBody.md
 doc/PingBody.md
 doc/PostAuthLoginRequest.md
 doc/PostAuthSetupRequest.md
+doc/SearchArtistsRequest.md
 doc/SessionTokenBody.md
 git_push.sh
 lib/api.dart
@@ -30,19 +30,18 @@ lib/auth/http_bearer_auth.dart
 lib/auth/oauth.dart
 lib/model/api_error.dart
 lib/model/artist.dart
-lib/model/artist_search_output_body.dart
-lib/model/artist_search_request.dart
+lib/model/artist_search_body.dart
 lib/model/error_detail.dart
 lib/model/error_model.dart
 lib/model/oidc_init_body.dart
 lib/model/ping_body.dart
 lib/model/post_auth_login_request.dart
 lib/model/post_auth_setup_request.dart
+lib/model/search_artists_request.dart
 lib/model/session_token_body.dart
 pubspec.yaml
 test/api_error_test.dart
-test/artist_search_output_body_test.dart
-test/artist_search_request_test.dart
+test/artist_search_body_test.dart
 test/artist_test.dart
 test/artists_api_test.dart
 test/authentication_api_test.dart
@@ -52,4 +51,5 @@ test/oidc_init_body_test.dart
 test/ping_body_test.dart
 test/post_auth_login_request_test.dart
 test/post_auth_setup_request_test.dart
+test/search_artists_request_test.dart
 test/session_token_body_test.dart

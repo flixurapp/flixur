@@ -1,4 +1,4 @@
-# openapi.model.ArtistSearchRequest
+# openapi.model.SearchArtistsRequest
 
 ## Load the model package
 ```dart

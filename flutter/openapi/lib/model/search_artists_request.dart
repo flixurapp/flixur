@@ -10,11 +10,13 @@
 
 part of openapi.api;
 
-class ArtistSearchOutputBody {
-  /// Returns a new [ArtistSearchOutputBody] instance.
-  ArtistSearchOutputBody({
+class SearchArtistsRequest {
+  /// Returns a new [SearchArtistsRequest] instance.
+  SearchArtistsRequest({
     this.dollarSchema,
-    this.list = const [],
+    this.limit = 10,
+    this.plugin,
+    required this.query,
   });
 
   /// A URL to the JSON Schema for this object.
@@ -26,23 +28,41 @@ class ArtistSearchOutputBody {
   ///
   String? dollarSchema;
 
-  List<Artist> list;
+  /// Minimum value: 1
+  /// Maximum value: 100
+  int limit;
+
+  /// Plugin ID to use for the request. Omit to use the local server.
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? plugin;
+
+  String query;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ArtistSearchOutputBody &&
+      other is SearchArtistsRequest &&
           other.dollarSchema == dollarSchema &&
-          _deepEquality.equals(other.list, list);
+          other.limit == limit &&
+          other.plugin == plugin &&
+          other.query == query;
 
   @override
   int get hashCode =>
       // ignore: unnecessary_parenthesis
-      (dollarSchema == null ? 0 : dollarSchema!.hashCode) + (list.hashCode);
+      (dollarSchema == null ? 0 : dollarSchema!.hashCode) +
+      (limit.hashCode) +
+      (plugin == null ? 0 : plugin!.hashCode) +
+      (query.hashCode);
 
   @override
   String toString() =>
-      'ArtistSearchOutputBody[dollarSchema=$dollarSchema, list=$list]';
+      'SearchArtistsRequest[dollarSchema=$dollarSchema, limit=$limit, plugin=$plugin, query=$query]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -51,14 +71,20 @@ class ArtistSearchOutputBody {
     } else {
       json[r'$schema'] = null;
     }
-    json[r'list'] = this.list;
+    json[r'limit'] = this.limit;
+    if (this.plugin != null) {
+      json[r'plugin'] = this.plugin;
+    } else {
+      json[r'plugin'] = null;
+    }
+    json[r'query'] = this.query;
     return json;
   }
 
-  /// Returns a new [ArtistSearchOutputBody] instance and imports its values from
+  /// Returns a new [SearchArtistsRequest] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static ArtistSearchOutputBody? fromJson(dynamic value) {
+  static SearchArtistsRequest? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -66,29 +92,31 @@ class ArtistSearchOutputBody {
       // Note 1: the values aren't checked for validity beyond being non-null.
       // Note 2: this code is stripped in release mode!
       assert(() {
-        assert(json.containsKey(r'list'),
-            'Required key "ArtistSearchOutputBody[list]" is missing from JSON.');
-        assert(json[r'list'] != null,
-            'Required key "ArtistSearchOutputBody[list]" has a null value in JSON.');
+        assert(json.containsKey(r'query'),
+            'Required key "SearchArtistsRequest[query]" is missing from JSON.');
+        assert(json[r'query'] != null,
+            'Required key "SearchArtistsRequest[query]" has a null value in JSON.');
         return true;
       }());
 
-      return ArtistSearchOutputBody(
+      return SearchArtistsRequest(
         dollarSchema: mapValueOfType<String>(json, r'$schema'),
-        list: Artist.listFromJson(json[r'list']),
+        limit: mapValueOfType<int>(json, r'limit') ?? 10,
+        plugin: mapValueOfType<String>(json, r'plugin'),
+        query: mapValueOfType<String>(json, r'query')!,
       );
     }
     return null;
   }
 
-  static List<ArtistSearchOutputBody> listFromJson(
+  static List<SearchArtistsRequest> listFromJson(
     dynamic json, {
     bool growable = false,
   }) {
-    final result = <ArtistSearchOutputBody>[];
+    final result = <SearchArtistsRequest>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = ArtistSearchOutputBody.fromJson(row);
+        final value = SearchArtistsRequest.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -97,12 +125,12 @@ class ArtistSearchOutputBody {
     return result.toList(growable: growable);
   }
 
-  static Map<String, ArtistSearchOutputBody> mapFromJson(dynamic json) {
-    final map = <String, ArtistSearchOutputBody>{};
+  static Map<String, SearchArtistsRequest> mapFromJson(dynamic json) {
+    final map = <String, SearchArtistsRequest>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = ArtistSearchOutputBody.fromJson(entry.value);
+        final value = SearchArtistsRequest.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -111,17 +139,17 @@ class ArtistSearchOutputBody {
     return map;
   }
 
-  // maps a json object with a list of ArtistSearchOutputBody-objects as value to a dart map
-  static Map<String, List<ArtistSearchOutputBody>> mapListFromJson(
+  // maps a json object with a list of SearchArtistsRequest-objects as value to a dart map
+  static Map<String, List<SearchArtistsRequest>> mapListFromJson(
     dynamic json, {
     bool growable = false,
   }) {
-    final map = <String, List<ArtistSearchOutputBody>>{};
+    final map = <String, List<SearchArtistsRequest>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = ArtistSearchOutputBody.listFromJson(
+        map[entry.key] = SearchArtistsRequest.listFromJson(
           entry.value,
           growable: growable,
         );
@@ -132,6 +160,6 @@ class ArtistSearchOutputBody {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
-    'list',
+    'query',
   };
 }

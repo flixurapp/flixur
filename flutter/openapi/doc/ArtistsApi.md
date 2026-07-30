@@ -9,13 +9,13 @@ All URIs are relative to *http://127.0.0.1:18787/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**artistSearch**](ArtistsApi.md#artistsearch) | **POST** /music/artists/search | Search for artists.
+[**searchArtists**](ArtistsApi.md#searchartists) | **POST** /artists/search | Search Artists
 
 
-# **artistSearch**
-> ArtistSearchOutputBody artistSearch(artistSearchRequest)
+# **searchArtists**
+> ArtistSearchBody searchArtists(searchArtistsRequest)
 
-Search for artists.
+Search Artists
 
 Search for an artist by name.
 
@@ -24,13 +24,13 @@ Search for an artist by name.
 import 'package:openapi/api.dart';
 
 final api_instance = ArtistsApi();
-final artistSearchRequest = ArtistSearchRequest(); // ArtistSearchRequest | 
+final searchArtistsRequest = SearchArtistsRequest(); // SearchArtistsRequest | 
 
 try {
-    final result = api_instance.artistSearch(artistSearchRequest);
+    final result = api_instance.searchArtists(searchArtistsRequest);
     print(result);
 } catch (e) {
-    print('Exception when calling ArtistsApi->artistSearch: $e\n');
+    print('Exception when calling ArtistsApi->searchArtists: $e\n');
 }
 ```
 
@@ -38,11 +38,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **artistSearchRequest** | [**ArtistSearchRequest**](ArtistSearchRequest.md)|  | 
+ **searchArtistsRequest** | [**SearchArtistsRequest**](SearchArtistsRequest.md)|  | 
 
 ### Return type
 
-[**ArtistSearchOutputBody**](ArtistSearchOutputBody.md)
+[**ArtistSearchBody**](ArtistSearchBody.md)
 
 ### Authorization
 
