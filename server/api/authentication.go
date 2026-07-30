@@ -10,6 +10,7 @@ import (
 
 	"forge.xela.codes/xela/flixur/common"
 	"forge.xela.codes/xela/flixur/ent"
+	"forge.xela.codes/xela/flixur/ent/user"
 	"github.com/cardinalby/hureg"
 	"github.com/cardinalby/hureg/pkg/huma/op_handler"
 	"github.com/danielgtaylor/huma/v2"
@@ -185,13 +186,28 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 	hureg.Post(WithDocs(api, huma.Operation{
 		Summary:     "Login",
 		Description: "Login with username/password.",
-	}, nil), "/login", func(ctx context.Context, _ *struct {
+	}, &APIErrorCodes{
+		CodeIncorrectUsername: "Username not found.",
+		CodeIncorrectPassword: "Incorrect password.",
+	}), "/login", func(ctx context.Context, input *struct {
 		PlatformHeadersMixin
 		Body struct {
 			Username string `json:"username"`
 			Password string `json:"password"`
 		}
 	}) (*Output[SessionTokenBody], error) {
+		user, err := reg.DB.User.Query().
+			Where(user.UsernameEqualFold(input.Body.Username)).
+			First(ctx)
+		if err != nil {
+			return nil, CreateAPIError(CodeIncorrectUsername)
+		}
+
+		//TODO:
+		if user != nil {
+			return nil, nil
+		}
+
 		return CreateOutput(SessionTokenBody{
 			SessionToken: "",
 		}), nil
