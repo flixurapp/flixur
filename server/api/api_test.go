@@ -181,3 +181,30 @@ func TestCORSHeaders(t *testing.T) {
 		t.Errorf("Access-Control-Allow-Origin = %q", got)
 	}
 }
+
+func TestNoSetupMiddleware(t *testing.T) {
+	code := "ABC123"
+	SetServerSetupCode(&code)
+	t.Cleanup(func() { SetServerSetupCode(nil) })
+
+	_, reg, api := newTestAPI(t)
+
+	// add a route without NoSetup (requires setup)
+	hureg.Get(WithOptions(reg.API, APIRoute{
+		NoSetup: false,
+	}), "/requires-setup", func(ctx context.Context, _ *struct{}) (*Output[string], error) {
+		return CreateOutput("ok"), nil
+	})
+
+	// route without NoSetup should return 503 when setup code exists
+	resp := api.Get("/requires-setup")
+	if resp.Code != http.StatusServiceUnavailable {
+		t.Errorf("no-NoSetup route: status = %d, want %d", resp.Code, http.StatusServiceUnavailable)
+	}
+
+	// /ping has NoSetup: true so it should still work
+	resp = api.Get("/ping")
+	if resp.Code != http.StatusOK {
+		t.Errorf("NoSetup route: status = %d, want %d", resp.Code, http.StatusOK)
+	}
+}

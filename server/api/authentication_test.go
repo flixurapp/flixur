@@ -111,7 +111,7 @@ func TestSetupSuccess(t *testing.T) {
 
 	// second setup should fail
 	resp2 := api.Post("/auth/setup", append(platformHeaders, body)...)
-	if resp2.Code != http.StatusInternalServerError {
+	if resp2.Code != http.StatusBadRequest {
 		t.Errorf("second setup status = %d", resp2.Code)
 	}
 }

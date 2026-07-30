@@ -50,7 +50,7 @@ type SessionTokenBody struct {
 func RegisterAuthenticationRoutes(reg APIRegistry) {
 	api := reg.API.AddOpHandler(op_handler.AddTags("Authentication"))
 
-	hureg.Get(WithDocs(api, APIRoute{
+	hureg.Get(WithOptions(api, APIRoute{
 		Name:        "Ping Server",
 		Description: "Can be used to test the server connectivity and return version/feature info.",
 		NoSetup:     true,
@@ -69,7 +69,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 	// all following routes are at /auth
 	api = api.AddBasePath("/auth")
 
-	hureg.Post(WithDocs(api, APIRoute{
+	hureg.Post(WithOptions(api, APIRoute{
 		Name:        "Setup Server",
 		Description: "Creates the initial admin account and sets up the server.",
 		NoSetup:     true,
@@ -175,7 +175,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		}), nil
 	})
 
-	hureg.Post(WithDocs(api, APIRoute{
+	hureg.Post(WithOptions(api, APIRoute{
 		Name:        "Login",
 		Description: "Login with username/password.",
 		NoAuth:      true,
@@ -206,7 +206,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		}), nil
 	})
 
-	hureg.Get(WithDocs(api, APIRoute{
+	hureg.Get(WithOptions(api, APIRoute{
 		Name:        "OIDC Login",
 		Description: "Initializes an OIDC login request returning the URL for authorization.",
 		NoAuth:      true,

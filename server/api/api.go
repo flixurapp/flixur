@@ -63,8 +63,8 @@ type APIRoute struct {
 	NoAuth bool
 }
 
-// Sets ID/summary/description/responses on an APIGen instance.
-func WithDocs(api hureg.APIGen, opts APIRoute) hureg.APIGen {
+// Sets various properties on a given API generator and returns it.
+func WithOptions(api hureg.APIGen, opts APIRoute) hureg.APIGen {
 	handlers := []op_handler.OperationHandler{}
 	middlewares := []func(huma.Context, func(huma.Context)){}
 
@@ -90,13 +90,13 @@ func WithDocs(api hureg.APIGen, opts APIRoute) hureg.APIGen {
 
 	// require server to be set up
 	if !opts.NoSetup {
-		middlewares = append(middlewares, (func(ctx huma.Context, next func(huma.Context)) {
+		middlewares = append(middlewares, func(ctx huma.Context, next func(huma.Context)) {
 			if GetServerSetupCode() != nil {
 				huma.WriteErr(api.GetHumaAPI(), ctx, http.StatusServiceUnavailable, "server not set up")
 				return
 			}
 			next(ctx)
-		}))
+		})
 	}
 
 	if !opts.NoAuth {
