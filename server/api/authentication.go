@@ -90,7 +90,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 	}) (*Output[SessionTokenBody], error) {
 		setupCode := GetServerSetupCode()
 		if setupCode == nil {
-			return nil, fmt.Errorf("server is already setup")
+			return nil, huma.Error400BadRequest("server is already setup")
 		}
 		if input.Body.Code != *setupCode {
 			return nil, CreateAPIError(CodeIncorrectPassword)
