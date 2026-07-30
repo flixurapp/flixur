@@ -9,11 +9,50 @@ All URIs are relative to *http://127.0.0.1:18787/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**getPing**](AuthenticationApi.md#getping) | **GET** /ping | Ping Server
 [**login**](AuthenticationApi.md#login) | **POST** /auth/login | Login
 [**oidc**](AuthenticationApi.md#oidc) | **GET** /auth/oidc | OIDC Login
-[**ping**](AuthenticationApi.md#ping) | **GET** /ping | Ping Server
 [**setup**](AuthenticationApi.md#setup) | **POST** /auth/setup | Setup Server
 
+
+# **getPing**
+> PingBody getPing()
+
+Ping Server
+
+Can be used to test the server connectivity and return version/feature info.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api_instance = AuthenticationApi();
+
+try {
+    final result = api_instance.getPing();
+    print(result);
+} catch (e) {
+    print('Exception when calling AuthenticationApi->getPing: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**PingBody**](PingBody.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json, application/problem+json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **login**
 > OIDCInitBody login(xPlatformClient, xPlatformDevice, xPlatformOS, loginRequest)
@@ -91,45 +130,6 @@ This endpoint does not need any parameter.
 ### Return type
 
 [**SessionTokenBody**](SessionTokenBody.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json, application/problem+json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **ping**
-> PingBody ping()
-
-Ping Server
-
-Can be used to test the server connectivity and return version/feature info.
-
-### Example
-```dart
-import 'package:openapi/api.dart';
-
-final api_instance = AuthenticationApi();
-
-try {
-    final result = api_instance.ping();
-    print(result);
-} catch (e) {
-    print('Exception when calling AuthenticationApi->ping: $e\n');
-}
-```
-
-### Parameters
-This endpoint does not need any parameter.
-
-### Return type
-
-[**PingBody**](PingBody.md)
 
 ### Authorization
 

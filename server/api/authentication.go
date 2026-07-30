@@ -10,12 +10,12 @@ import (
 
 	"forge.xela.codes/xela/flixur/common"
 	"forge.xela.codes/xela/flixur/ent"
+	"github.com/cardinalby/hureg"
+	"github.com/cardinalby/hureg/pkg/huma/op_handler"
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/oklog/ulid/v2"
 	"github.com/rs/zerolog/log"
 )
-
-var tags = []string{"Authentication"}
 
 // Platform headers used to
 type PlatformHeadersMixin struct {
@@ -48,14 +48,12 @@ type SessionTokenBody struct {
 }
 
 func RegisterAuthenticationRoutes(reg APIRegistry) {
-	huma.Register(reg.API, huma.Operation{
-		OperationID: "ping",
-		Method:      http.MethodGet,
-		Path:        "/ping",
+	api := reg.API.AddOpHandler(op_handler.AddTags("Authentication"))
+
+	hureg.Get(WithDocs(api, huma.Operation{
 		Summary:     "Ping Server",
 		Description: "Can be used to test the server connectivity and return version/feature info.",
-		Tags:        tags,
-	}, func(ctx context.Context, _ *struct{}) (*Output[PingBody], error) {
+	}), "/ping", func(ctx context.Context, _ *struct{}) (*Output[PingBody], error) {
 		return CreateOutput(PingBody{
 			//TODO: return an actual version
 			Version:               "0.0.0",
@@ -66,13 +64,12 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		}), nil
 	})
 
-	huma.Register(reg.API, huma.Operation{
+	hureg.Register(api, huma.Operation{
 		OperationID: "setup",
 		Method:      http.MethodPost,
 		Path:        "/auth/setup",
 		Summary:     "Setup Server",
 		Description: "Creates the initial admin account and sets up the server.",
-		Tags:        tags,
 		Responses: APIErrorResponses(reg.API, map[APIErrorCode]string{
 			CodeDatabaseError:     "Failed to write to database.",
 			CodeIncorrectPassword: "The setup code is incorrect.",
@@ -178,13 +175,12 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 	// we really only need to block the login routes from working without the server being set up
 	// the rest of the methods don't really matter as they require authentication
 
-	huma.Register(reg.API, huma.Operation{
+	hureg.Register(api, huma.Operation{
 		OperationID: "login",
 		Method:      http.MethodPost,
 		Path:        "/auth/login",
 		Summary:     "Login",
 		Description: "Login with username/password.",
-		Tags:        tags,
 	}, func(ctx context.Context, _ *struct {
 		PlatformHeadersMixin
 		Body struct {
@@ -202,13 +198,12 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		}), nil
 	})
 
-	huma.Register(reg.API, huma.Operation{
+	hureg.Register(api, huma.Operation{
 		OperationID: "oidc",
 		Method:      http.MethodGet,
 		Path:        "/auth/oidc",
 		Summary:     "OIDC Login",
 		Description: "Initializes an OIDC login request returning the URL for authorization.",
-		Tags:        tags,
 	}, func(ctx context.Context, _ *struct{}) (*Output[SessionTokenBody], error) {
 		if GetServerSetupCode() != nil {
 			return nil, fmt.Errorf("server not set up")

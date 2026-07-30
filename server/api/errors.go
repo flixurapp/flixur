@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/cardinalby/hureg"
 	"github.com/danielgtaylor/huma/v2"
 )
 
@@ -37,8 +38,8 @@ func CreateAPIErrorDetail(code APIErrorCode, detail string) *APIError {
 	}
 }
 
-func APIErrorResponses(api huma.API, descriptions map[APIErrorCode]string) map[string]*huma.Response {
-	schema := api.OpenAPI().Components.Schemas.Schema(reflect.TypeOf(APIError{}), true, "APIError")
+func APIErrorResponses(api hureg.APIGen, descriptions map[APIErrorCode]string) map[string]*huma.Response {
+	schema := api.GetHumaAPI().OpenAPI().Components.Schemas.Schema(reflect.TypeOf(APIError{}), true, "APIError")
 
 	// collect api error codes by their HTTP status
 	byStatus := map[int][]APIErrorCode{}

@@ -60,9 +60,9 @@ All URIs are relative to *http://127.0.0.1:18787/api*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *ArtistsApi* | [**artistSearch**](doc//ArtistsApi.md#artistsearch) | **POST** /music/artists/search | Search for artists.
+*AuthenticationApi* | [**getPing**](doc//AuthenticationApi.md#getping) | **GET** /ping | Ping Server
 *AuthenticationApi* | [**login**](doc//AuthenticationApi.md#login) | **POST** /auth/login | Login
 *AuthenticationApi* | [**oidc**](doc//AuthenticationApi.md#oidc) | **GET** /auth/oidc | OIDC Login
-*AuthenticationApi* | [**ping**](doc//AuthenticationApi.md#ping) | **GET** /ping | Ping Server
 *AuthenticationApi* | [**setup**](doc//AuthenticationApi.md#setup) | **POST** /auth/setup | Setup Server
 
 

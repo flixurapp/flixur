@@ -118,7 +118,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
     final api = AuthenticationApi(apiClient);
 
     setState(() => _isLoading = true);
-    final pingResponse = await safeGet(api.ping);
+    final pingResponse = await safeGet(api.getPing);
     if (!mounted) return;
     setState(() => _isLoading = false);
 

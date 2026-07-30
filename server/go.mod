@@ -6,6 +6,7 @@ require (
 	entgo.io/ent v0.14.6
 	forge.xela.codes/xela/flixur/pluginkit v0.0.0
 	github.com/caarlos0/env/v11 v11.4.1
+	github.com/cardinalby/hureg v1.0.2
 	github.com/danielgtaylor/huma/v2 v2.39.0
 	github.com/go-chi/chi/v5 v5.3.1
 	github.com/go-chi/cors v1.2.2

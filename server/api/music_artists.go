@@ -17,7 +17,7 @@ type ArtistSearchOutput struct {
 }
 
 func RegisterMusicArtistsRoutes(reg APIRegistry) {
-	huma.Register(reg.API, huma.Operation{
+	huma.Register(reg.API.GetHumaAPI(), huma.Operation{
 		OperationID: "artist-search",
 		Method:      http.MethodPost,
 		Path:        "/music/artists/search",

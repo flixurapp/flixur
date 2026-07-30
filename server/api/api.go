@@ -7,6 +7,8 @@ import (
 
 	"forge.xela.codes/xela/flixur/common"
 	"forge.xela.codes/xela/flixur/ent"
+	"github.com/cardinalby/hureg"
+	"github.com/cardinalby/hureg/pkg/huma/op_handler"
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/go-chi/chi/v5"
@@ -18,7 +20,7 @@ import (
 // struct of data passed to api builders
 type APIRegistry struct {
 	// Huma API instance.
-	API huma.API
+	API hureg.APIGen
 	// Database client.
 	DB *ent.Client
 	// Router instance.
@@ -43,6 +45,29 @@ type Output[T any] struct {
 type OutputSuccessBody struct {
 	// If the request was successfully fulfilled.
 	Success bool `json:"success"`
+}
+
+// Sets ID/summary/description/responses on an APIGen instance.
+func WithDocs(api hureg.APIGen, op huma.Operation) hureg.APIGen {
+	handlers := []op_handler.OperationHandler{}
+	if op.OperationID != "" {
+		handlers = append(handlers, func(o *huma.Operation) {
+			o.OperationID = op.OperationID
+		})
+	}
+	if op.Summary != "" {
+		handlers = append(handlers, op_handler.SetSummary(op.Summary, true))
+	}
+	if op.Description != "" {
+		handlers = append(handlers, op_handler.SetDescription(op.Description, true))
+	}
+	if len(op.Responses) > 0 {
+		handlers = append(handlers, func(o *huma.Operation) {
+			o.Responses = op.Responses
+		})
+	}
+
+	return api.AddOpHandler(handlers...)
 }
 
 // Shorthand to create an output body struct.
@@ -70,8 +95,8 @@ func RegisterAPI(router chi.Router, client *ent.Client) APIRegistry {
 			MaxAge:         300,
 		}))
 
-		registry.API = humachi.New(r, config)
-		registry.API.UseMiddleware(ipMiddleware)
+		registry.API = hureg.NewAPIGen(humachi.New(r, config)).
+			AddMiddlewares(ipMiddleware)
 
 		RegisterAuthenticationRoutes(registry)
 		RegisterMusicArtistsRoutes(registry)
