@@ -241,16 +241,16 @@ class ApiClient {
           return ErrorDetail.fromJson(value);
         case 'ErrorModel':
           return ErrorModel.fromJson(value);
-        case 'LoginRequest':
-          return LoginRequest.fromJson(value);
         case 'OIDCInitBody':
           return OIDCInitBody.fromJson(value);
         case 'PingBody':
           return PingBody.fromJson(value);
+        case 'PostAuthLoginRequest':
+          return PostAuthLoginRequest.fromJson(value);
+        case 'PostAuthSetupRequest':
+          return PostAuthSetupRequest.fromJson(value);
         case 'SessionTokenBody':
           return SessionTokenBody.fromJson(value);
-        case 'SetupRequest':
-          return SetupRequest.fromJson(value);
         default:
           dynamic match;
           if (value is List &&

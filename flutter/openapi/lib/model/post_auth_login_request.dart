@@ -10,11 +10,10 @@
 
 part of openapi.api;
 
-class SetupRequest {
-  /// Returns a new [SetupRequest] instance.
-  SetupRequest({
+class PostAuthLoginRequest {
+  /// Returns a new [PostAuthLoginRequest] instance.
+  PostAuthLoginRequest({
     this.dollarSchema,
-    required this.code,
     required this.password,
     required this.username,
   });
@@ -28,8 +27,6 @@ class SetupRequest {
   ///
   String? dollarSchema;
 
-  String code;
-
   String password;
 
   String username;
@@ -37,9 +34,8 @@ class SetupRequest {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SetupRequest &&
+      other is PostAuthLoginRequest &&
           other.dollarSchema == dollarSchema &&
-          other.code == code &&
           other.password == password &&
           other.username == username;
 
@@ -47,13 +43,12 @@ class SetupRequest {
   int get hashCode =>
       // ignore: unnecessary_parenthesis
       (dollarSchema == null ? 0 : dollarSchema!.hashCode) +
-      (code.hashCode) +
       (password.hashCode) +
       (username.hashCode);
 
   @override
   String toString() =>
-      'SetupRequest[dollarSchema=$dollarSchema, code=$code, password=$password, username=$username]';
+      'PostAuthLoginRequest[dollarSchema=$dollarSchema, password=$password, username=$username]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -62,16 +57,15 @@ class SetupRequest {
     } else {
       json[r'$schema'] = null;
     }
-    json[r'code'] = this.code;
     json[r'password'] = this.password;
     json[r'username'] = this.username;
     return json;
   }
 
-  /// Returns a new [SetupRequest] instance and imports its values from
+  /// Returns a new [PostAuthLoginRequest] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static SetupRequest? fromJson(dynamic value) {
+  static PostAuthLoginRequest? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -79,24 +73,19 @@ class SetupRequest {
       // Note 1: the values aren't checked for validity beyond being non-null.
       // Note 2: this code is stripped in release mode!
       assert(() {
-        assert(json.containsKey(r'code'),
-            'Required key "SetupRequest[code]" is missing from JSON.');
-        assert(json[r'code'] != null,
-            'Required key "SetupRequest[code]" has a null value in JSON.');
         assert(json.containsKey(r'password'),
-            'Required key "SetupRequest[password]" is missing from JSON.');
+            'Required key "PostAuthLoginRequest[password]" is missing from JSON.');
         assert(json[r'password'] != null,
-            'Required key "SetupRequest[password]" has a null value in JSON.');
+            'Required key "PostAuthLoginRequest[password]" has a null value in JSON.');
         assert(json.containsKey(r'username'),
-            'Required key "SetupRequest[username]" is missing from JSON.');
+            'Required key "PostAuthLoginRequest[username]" is missing from JSON.');
         assert(json[r'username'] != null,
-            'Required key "SetupRequest[username]" has a null value in JSON.');
+            'Required key "PostAuthLoginRequest[username]" has a null value in JSON.');
         return true;
       }());
 
-      return SetupRequest(
+      return PostAuthLoginRequest(
         dollarSchema: mapValueOfType<String>(json, r'$schema'),
-        code: mapValueOfType<String>(json, r'code')!,
         password: mapValueOfType<String>(json, r'password')!,
         username: mapValueOfType<String>(json, r'username')!,
       );
@@ -104,14 +93,14 @@ class SetupRequest {
     return null;
   }
 
-  static List<SetupRequest> listFromJson(
+  static List<PostAuthLoginRequest> listFromJson(
     dynamic json, {
     bool growable = false,
   }) {
-    final result = <SetupRequest>[];
+    final result = <PostAuthLoginRequest>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = SetupRequest.fromJson(row);
+        final value = PostAuthLoginRequest.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -120,12 +109,12 @@ class SetupRequest {
     return result.toList(growable: growable);
   }
 
-  static Map<String, SetupRequest> mapFromJson(dynamic json) {
-    final map = <String, SetupRequest>{};
+  static Map<String, PostAuthLoginRequest> mapFromJson(dynamic json) {
+    final map = <String, PostAuthLoginRequest>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = SetupRequest.fromJson(entry.value);
+        final value = PostAuthLoginRequest.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -134,17 +123,17 @@ class SetupRequest {
     return map;
   }
 
-  // maps a json object with a list of SetupRequest-objects as value to a dart map
-  static Map<String, List<SetupRequest>> mapListFromJson(
+  // maps a json object with a list of PostAuthLoginRequest-objects as value to a dart map
+  static Map<String, List<PostAuthLoginRequest>> mapListFromJson(
     dynamic json, {
     bool growable = false,
   }) {
-    final map = <String, List<SetupRequest>>{};
+    final map = <String, List<PostAuthLoginRequest>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = SetupRequest.listFromJson(
+        map[entry.key] = PostAuthLoginRequest.listFromJson(
           entry.value,
           growable: growable,
         );
@@ -155,7 +144,6 @@ class SetupRequest {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
-    'code',
     'password',
     'username',
   };

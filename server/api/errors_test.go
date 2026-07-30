@@ -36,7 +36,7 @@ func TestAPIErrorDetail(t *testing.T) {
 func TestAPIErrorResponses(t *testing.T) {
 	_, hapi := humatest.New(t)
 
-	descriptions := map[APIErrorCode]string{
+	descriptions := APIErrorCodes{
 		CodeDatabaseError:     "db",
 		CodeIncorrectPassword: "bad password",
 		CodeInvalidInput:      "bad input",

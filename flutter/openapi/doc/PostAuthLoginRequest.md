@@ -1,4 +1,4 @@
-# openapi.model.SetupRequest
+# openapi.model.PostAuthLoginRequest
 
 ## Load the model package
 ```dart
@@ -9,7 +9,6 @@ import 'package:openapi/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **dollarSchema** | **String** | A URL to the JSON Schema for this object. | [optional] [readonly] 
-**code** | **String** |  | 
 **password** | **String** |  | 
 **username** | **String** |  | 
 

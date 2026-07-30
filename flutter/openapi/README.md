@@ -60,10 +60,10 @@ All URIs are relative to *http://127.0.0.1:18787/api*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *ArtistsApi* | [**artistSearch**](doc//ArtistsApi.md#artistsearch) | **POST** /music/artists/search | Search for artists.
+*AuthenticationApi* | [**getAuthOidcUrl**](doc//AuthenticationApi.md#getauthoidcurl) | **GET** /auth/oidc_url | OIDC Login
 *AuthenticationApi* | [**getPing**](doc//AuthenticationApi.md#getping) | **GET** /ping | Ping Server
-*AuthenticationApi* | [**login**](doc//AuthenticationApi.md#login) | **POST** /auth/login | Login
-*AuthenticationApi* | [**oidc**](doc//AuthenticationApi.md#oidc) | **GET** /auth/oidc | OIDC Login
-*AuthenticationApi* | [**setup**](doc//AuthenticationApi.md#setup) | **POST** /auth/setup | Setup Server
+*AuthenticationApi* | [**postAuthLogin**](doc//AuthenticationApi.md#postauthlogin) | **POST** /auth/login | Login
+*AuthenticationApi* | [**postAuthSetup**](doc//AuthenticationApi.md#postauthsetup) | **POST** /auth/setup | Setup Server
 
 
 ## Documentation For Models
@@ -74,11 +74,11 @@ Class | Method | HTTP request | Description
  - [ArtistSearchRequest](doc//ArtistSearchRequest.md)
  - [ErrorDetail](doc//ErrorDetail.md)
  - [ErrorModel](doc//ErrorModel.md)
- - [LoginRequest](doc//LoginRequest.md)
  - [OIDCInitBody](doc//OIDCInitBody.md)
  - [PingBody](doc//PingBody.md)
+ - [PostAuthLoginRequest](doc//PostAuthLoginRequest.md)
+ - [PostAuthSetupRequest](doc//PostAuthSetupRequest.md)
  - [SessionTokenBody](doc//SessionTokenBody.md)
- - [SetupRequest](doc//SetupRequest.md)
 
 
 ## Documentation For Authorization

@@ -135,11 +135,11 @@ class _SetupViewState extends State<SetupView> {
     });
 
     final response = await safeGet(
-      () => api.setup(
+      () => api.postAuthSetup(
         AppInfo.clientIdentifier,
         AppInfo.deviceName,
         AppInfo.deviceOS,
-        SetupRequest(
+        PostAuthSetupRequest(
           code: _codeController.text,
           password: _passwordController.text,
           username: _usernameController.text,

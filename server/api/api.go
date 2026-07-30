@@ -48,7 +48,7 @@ type OutputSuccessBody struct {
 }
 
 // Sets ID/summary/description/responses on an APIGen instance.
-func WithDocs(api hureg.APIGen, op huma.Operation) hureg.APIGen {
+func WithDocs(api hureg.APIGen, op huma.Operation, errorCodes *map[APIErrorCode]string) hureg.APIGen {
 	handlers := []op_handler.OperationHandler{}
 	if op.OperationID != "" {
 		handlers = append(handlers, func(o *huma.Operation) {
@@ -60,6 +60,11 @@ func WithDocs(api hureg.APIGen, op huma.Operation) hureg.APIGen {
 	}
 	if op.Description != "" {
 		handlers = append(handlers, op_handler.SetDescription(op.Description, true))
+	}
+
+	// unpack error codes
+	if errorCodes != nil {
+		op.Responses = APIErrorResponses(api, *errorCodes)
 	}
 	if len(op.Responses) > 0 {
 		handlers = append(handlers, func(o *huma.Operation) {

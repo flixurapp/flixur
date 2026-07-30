@@ -9,11 +9,50 @@ All URIs are relative to *http://127.0.0.1:18787/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**getAuthOidcUrl**](AuthenticationApi.md#getauthoidcurl) | **GET** /auth/oidc_url | OIDC Login
 [**getPing**](AuthenticationApi.md#getping) | **GET** /ping | Ping Server
-[**login**](AuthenticationApi.md#login) | **POST** /auth/login | Login
-[**oidc**](AuthenticationApi.md#oidc) | **GET** /auth/oidc | OIDC Login
-[**setup**](AuthenticationApi.md#setup) | **POST** /auth/setup | Setup Server
+[**postAuthLogin**](AuthenticationApi.md#postauthlogin) | **POST** /auth/login | Login
+[**postAuthSetup**](AuthenticationApi.md#postauthsetup) | **POST** /auth/setup | Setup Server
 
+
+# **getAuthOidcUrl**
+> OIDCInitBody getAuthOidcUrl()
+
+OIDC Login
+
+Initializes an OIDC login request returning the URL for authorization.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api_instance = AuthenticationApi();
+
+try {
+    final result = api_instance.getAuthOidcUrl();
+    print(result);
+} catch (e) {
+    print('Exception when calling AuthenticationApi->getAuthOidcUrl: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**OIDCInitBody**](OIDCInitBody.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json, application/problem+json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getPing**
 > PingBody getPing()
@@ -54,8 +93,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **login**
-> OIDCInitBody login(xPlatformClient, xPlatformDevice, xPlatformOS, loginRequest)
+# **postAuthLogin**
+> SessionTokenBody postAuthLogin(xPlatformClient, xPlatformDevice, xPlatformOS, postAuthLoginRequest)
 
 Login
 
@@ -69,13 +108,13 @@ final api_instance = AuthenticationApi();
 final xPlatformClient = xPlatformClient_example; // String | Client Name/Version
 final xPlatformDevice = xPlatformDevice_example; // String | Device Name
 final xPlatformOS = xPlatformOS_example; // String | Operating System/Version
-final loginRequest = LoginRequest(); // LoginRequest | 
+final postAuthLoginRequest = PostAuthLoginRequest(); // PostAuthLoginRequest | 
 
 try {
-    final result = api_instance.login(xPlatformClient, xPlatformDevice, xPlatformOS, loginRequest);
+    final result = api_instance.postAuthLogin(xPlatformClient, xPlatformDevice, xPlatformOS, postAuthLoginRequest);
     print(result);
 } catch (e) {
-    print('Exception when calling AuthenticationApi->login: $e\n');
+    print('Exception when calling AuthenticationApi->postAuthLogin: $e\n');
 }
 ```
 
@@ -86,11 +125,11 @@ Name | Type | Description  | Notes
  **xPlatformClient** | **String**| Client Name/Version | 
  **xPlatformDevice** | **String**| Device Name | 
  **xPlatformOS** | **String**| Operating System/Version | 
- **loginRequest** | [**LoginRequest**](LoginRequest.md)|  | 
+ **postAuthLoginRequest** | [**PostAuthLoginRequest**](PostAuthLoginRequest.md)|  | 
 
 ### Return type
 
-[**OIDCInitBody**](OIDCInitBody.md)
+[**SessionTokenBody**](SessionTokenBody.md)
 
 ### Authorization
 
@@ -103,47 +142,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **oidc**
-> SessionTokenBody oidc()
-
-OIDC Login
-
-Initializes an OIDC login request returning the URL for authorization.
-
-### Example
-```dart
-import 'package:openapi/api.dart';
-
-final api_instance = AuthenticationApi();
-
-try {
-    final result = api_instance.oidc();
-    print(result);
-} catch (e) {
-    print('Exception when calling AuthenticationApi->oidc: $e\n');
-}
-```
-
-### Parameters
-This endpoint does not need any parameter.
-
-### Return type
-
-[**SessionTokenBody**](SessionTokenBody.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json, application/problem+json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **setup**
-> SessionTokenBody setup(xPlatformClient, xPlatformDevice, xPlatformOS, setupRequest)
+# **postAuthSetup**
+> SessionTokenBody postAuthSetup(xPlatformClient, xPlatformDevice, xPlatformOS, postAuthSetupRequest)
 
 Setup Server
 
@@ -157,13 +157,13 @@ final api_instance = AuthenticationApi();
 final xPlatformClient = xPlatformClient_example; // String | Client Name/Version
 final xPlatformDevice = xPlatformDevice_example; // String | Device Name
 final xPlatformOS = xPlatformOS_example; // String | Operating System/Version
-final setupRequest = SetupRequest(); // SetupRequest | 
+final postAuthSetupRequest = PostAuthSetupRequest(); // PostAuthSetupRequest | 
 
 try {
-    final result = api_instance.setup(xPlatformClient, xPlatformDevice, xPlatformOS, setupRequest);
+    final result = api_instance.postAuthSetup(xPlatformClient, xPlatformDevice, xPlatformOS, postAuthSetupRequest);
     print(result);
 } catch (e) {
-    print('Exception when calling AuthenticationApi->setup: $e\n');
+    print('Exception when calling AuthenticationApi->postAuthSetup: $e\n');
 }
 ```
 
@@ -174,7 +174,7 @@ Name | Type | Description  | Notes
  **xPlatformClient** | **String**| Client Name/Version | 
  **xPlatformDevice** | **String**| Device Name | 
  **xPlatformOS** | **String**| Operating System/Version | 
- **setupRequest** | [**SetupRequest**](SetupRequest.md)|  | 
+ **postAuthSetupRequest** | [**PostAuthSetupRequest**](PostAuthSetupRequest.md)|  | 
 
 ### Return type
 
