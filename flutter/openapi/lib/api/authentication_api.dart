@@ -16,7 +16,102 @@ class AuthenticationApi {
 
   final ApiClient apiClient;
 
-  /// Initialize an OIDC login request.
+  /// Login
+  ///
+  /// Login with username/password.
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] xPlatformClient (required):
+  ///   Client Name/Version
+  ///
+  /// * [String] xPlatformDevice (required):
+  ///   Device Name
+  ///
+  /// * [String] xPlatformOS (required):
+  ///   Operating System/Version
+  ///
+  /// * [LoginRequest] loginRequest (required):
+  Future<Response> loginWithHttpInfo(
+    String xPlatformClient,
+    String xPlatformDevice,
+    String xPlatformOS,
+    LoginRequest loginRequest,
+  ) async {
+    // ignore: prefer_const_declarations
+    final path = r'/auth/login';
+
+    // ignore: prefer_final_locals
+    Object? postBody = loginRequest;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    headerParams[r'X-Platform-Client'] = parameterToString(xPlatformClient);
+    headerParams[r'X-Platform-Device'] = parameterToString(xPlatformDevice);
+    headerParams[r'X-Platform-OS'] = parameterToString(xPlatformOS);
+
+    const contentTypes = <String>['application/json'];
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Login
+  ///
+  /// Login with username/password.
+  ///
+  /// Parameters:
+  ///
+  /// * [String] xPlatformClient (required):
+  ///   Client Name/Version
+  ///
+  /// * [String] xPlatformDevice (required):
+  ///   Device Name
+  ///
+  /// * [String] xPlatformOS (required):
+  ///   Operating System/Version
+  ///
+  /// * [LoginRequest] loginRequest (required):
+  Future<OIDCInitBody?> login(
+    String xPlatformClient,
+    String xPlatformDevice,
+    String xPlatformOS,
+    LoginRequest loginRequest,
+  ) async {
+    final response = await loginWithHttpInfo(
+      xPlatformClient,
+      xPlatformDevice,
+      xPlatformOS,
+      loginRequest,
+    );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'OIDCInitBody',
+      ) as OIDCInitBody;
+    }
+    return null;
+  }
+
+  /// OIDC Login
   ///
   /// Initializes an OIDC login request returning the URL for authorization.
   ///
@@ -45,10 +140,10 @@ class AuthenticationApi {
     );
   }
 
-  /// Initialize an OIDC login request.
+  /// OIDC Login
   ///
   /// Initializes an OIDC login request returning the URL for authorization.
-  Future<OIDCInitBody?> oidc() async {
+  Future<SessionTokenBody?> oidc() async {
     final response = await oidcWithHttpInfo();
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -60,8 +155,8 @@ class AuthenticationApi {
         response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(
         await _decodeBodyBytes(response),
-        'OIDCInitBody',
-      ) as OIDCInitBody;
+        'SessionTokenBody',
+      ) as SessionTokenBody;
     }
     return null;
   }

@@ -241,6 +241,8 @@ class ApiClient {
           return ErrorDetail.fromJson(value);
         case 'ErrorModel':
           return ErrorModel.fromJson(value);
+        case 'LoginRequest':
+          return LoginRequest.fromJson(value);
         case 'OIDCInitBody':
           return OIDCInitBody.fromJson(value);
         case 'PingBody':

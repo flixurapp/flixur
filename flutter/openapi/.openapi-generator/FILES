@@ -11,6 +11,7 @@ doc/ArtistsApi.md
 doc/AuthenticationApi.md
 doc/ErrorDetail.md
 doc/ErrorModel.md
+doc/LoginRequest.md
 doc/OIDCInitBody.md
 doc/PingBody.md
 doc/SessionTokenBody.md
@@ -33,6 +34,7 @@ lib/model/artist_search_output_body.dart
 lib/model/artist_search_request.dart
 lib/model/error_detail.dart
 lib/model/error_model.dart
+lib/model/login_request.dart
 lib/model/oidc_init_body.dart
 lib/model/ping_body.dart
 lib/model/session_token_body.dart
@@ -46,6 +48,7 @@ test/artists_api_test.dart
 test/authentication_api_test.dart
 test/error_detail_test.dart
 test/error_model_test.dart
+test/login_request_test.dart
 test/oidc_init_body_test.dart
 test/ping_body_test.dart
 test/session_token_body_test.dart

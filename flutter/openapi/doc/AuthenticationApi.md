@@ -9,15 +9,65 @@ All URIs are relative to *http://127.0.0.1:18787/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**oidc**](AuthenticationApi.md#oidc) | **GET** /auth/oidc | Initialize an OIDC login request.
+[**login**](AuthenticationApi.md#login) | **POST** /auth/login | Login
+[**oidc**](AuthenticationApi.md#oidc) | **GET** /auth/oidc | OIDC Login
 [**ping**](AuthenticationApi.md#ping) | **GET** /ping | Ping Server
 [**setup**](AuthenticationApi.md#setup) | **POST** /auth/setup | Setup Server
 
 
-# **oidc**
-> OIDCInitBody oidc()
+# **login**
+> OIDCInitBody login(xPlatformClient, xPlatformDevice, xPlatformOS, loginRequest)
 
-Initialize an OIDC login request.
+Login
+
+Login with username/password.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api_instance = AuthenticationApi();
+final xPlatformClient = xPlatformClient_example; // String | Client Name/Version
+final xPlatformDevice = xPlatformDevice_example; // String | Device Name
+final xPlatformOS = xPlatformOS_example; // String | Operating System/Version
+final loginRequest = LoginRequest(); // LoginRequest | 
+
+try {
+    final result = api_instance.login(xPlatformClient, xPlatformDevice, xPlatformOS, loginRequest);
+    print(result);
+} catch (e) {
+    print('Exception when calling AuthenticationApi->login: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **xPlatformClient** | **String**| Client Name/Version | 
+ **xPlatformDevice** | **String**| Device Name | 
+ **xPlatformOS** | **String**| Operating System/Version | 
+ **loginRequest** | [**LoginRequest**](LoginRequest.md)|  | 
+
+### Return type
+
+[**OIDCInitBody**](OIDCInitBody.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json, application/problem+json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **oidc**
+> SessionTokenBody oidc()
+
+OIDC Login
 
 Initializes an OIDC login request returning the URL for authorization.
 
@@ -40,7 +90,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**OIDCInitBody**](OIDCInitBody.md)
+[**SessionTokenBody**](SessionTokenBody.md)
 
 ### Authorization
 

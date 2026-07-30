@@ -23,14 +23,14 @@ func (e *APIError) Error() string  { return string(e.Code) }
 func (e *APIError) GetStatus() int { return APIErrorCodeStatusMap[e.Code] }
 
 // Create a new APIError with error code.
-func NewAPIError(code APIErrorCode) *APIError {
+func CreateAPIError(code APIErrorCode) *APIError {
 	return &APIError{
 		APIErrorCodesMixin: APIErrorCodesMixin{Code: code},
 	}
 }
 
 // Create a new APIError with error code and details.
-func NewAPIErrorDetail(code APIErrorCode, detail string) *APIError {
+func CreateAPIErrorDetail(code APIErrorCode, detail string) *APIError {
 	return &APIError{
 		APIErrorCodesMixin: APIErrorCodesMixin{Code: code},
 		Detail:             &detail,

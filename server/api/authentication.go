@@ -17,6 +17,7 @@ import (
 
 var tags = []string{"Authentication"}
 
+// Platform headers used to
 type PlatformHeadersMixin struct {
 	PlatformClient string `header:"X-Platform-Client" required:"true" minLength:"1" doc:"Client Name/Version"`
 	PlatformDevice string `header:"X-Platform-Device" required:"true" minLength:"1" doc:"Device Name"`
@@ -95,7 +96,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			return nil, fmt.Errorf("server is already setup")
 		}
 		if input.Body.Code != *setupCode {
-			return nil, NewAPIError(CodeIncorrectPassword)
+			return nil, CreateAPIError(CodeIncorrectPassword)
 		}
 
 		var err error = fmt.Errorf("error")
@@ -110,27 +111,27 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 
 		// validate username
 		if len(input.Body.Username) < common.USERNAME_MIN_LENGTH {
-			return nil, NewAPIErrorDetail(CodeTooShort, "username")
+			return nil, CreateAPIErrorDetail(CodeTooShort, "username")
 		}
 		if len(input.Body.Username) > common.USERNAME_MAX_LENGTH {
-			return nil, NewAPIErrorDetail(CodeTooLong, "username")
+			return nil, CreateAPIErrorDetail(CodeTooLong, "username")
 		}
 		if !common.IsValidUsername(input.Body.Username) {
-			return nil, NewAPIErrorDetail(CodeInvalidInput, "username")
+			return nil, CreateAPIErrorDetail(CodeInvalidInput, "username")
 		}
 
 		// validate password
 		if len(input.Body.Password) < common.PASSWORD_MIN_LENGTH {
-			return nil, NewAPIErrorDetail(CodeTooShort, "password")
+			return nil, CreateAPIErrorDetail(CodeTooShort, "password")
 		}
 		if len(input.Body.Password) > common.PASSWORD_MAX_LENGTH {
-			return nil, NewAPIErrorDetail(CodeTooLong, "password")
+			return nil, CreateAPIErrorDetail(CodeTooLong, "password")
 		}
 
 		tx, err := reg.DB.Tx(ctx)
 		if err != nil {
 			log.Err(err).Msg("Failed to start transaction for initial admin user creation.")
-			return nil, NewAPIError(CodeDatabaseError)
+			return nil, CreateAPIError(CodeDatabaseError)
 		}
 
 		// roll back on error path
@@ -150,20 +151,20 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			Save(ctx)
 		if err != nil {
 			log.Err(err).Msg("Failed to create initial admin user.")
-			return nil, NewAPIError(CodeDatabaseError)
+			return nil, CreateAPIError(CodeDatabaseError)
 		}
 
 		// create new user session
 		sessionToken, err := CreateUserSessionToken(ctx, tx.Client(), user, input.PlatformHeadersMixin)
 		if err != nil {
 			log.Err(err).Msg("Failed to create session for initial admin user.")
-			return nil, NewAPIError(CodeDatabaseError)
+			return nil, CreateAPIError(CodeDatabaseError)
 		}
 
 		// all done with database work
 		if err = tx.Commit(); err != nil {
 			log.Err(err).Msg("Failed to commit initial admin user creation.")
-			return nil, NewAPIError(CodeDatabaseError)
+			return nil, CreateAPIError(CodeDatabaseError)
 		}
 
 		log.Info().Msg("Successfully set up server!")
@@ -174,17 +175,48 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		}), nil
 	})
 
+	// we really only need to block the login routes from working without the server being set up
+	// the rest of the methods don't really matter as they require authentication
+
+	huma.Register(reg.API, huma.Operation{
+		OperationID: "login",
+		Method:      http.MethodPost,
+		Path:        "/auth/login",
+		Summary:     "Login",
+		Description: "Login with username/password.",
+		Tags:        tags,
+	}, func(ctx context.Context, _ *struct {
+		PlatformHeadersMixin
+		Body struct {
+			Username string `json:"username"`
+			Password string `json:"password"`
+		}
+	}) (*Output[OIDCInitBody], error) {
+		if GetServerSetupCode() != nil {
+			return nil, fmt.Errorf("server not set up")
+		}
+
+		//TODO: oidc
+		return CreateOutput(OIDCInitBody{
+			LoginURL: "",
+		}), nil
+	})
+
 	huma.Register(reg.API, huma.Operation{
 		OperationID: "oidc",
 		Method:      http.MethodGet,
 		Path:        "/auth/oidc",
-		Summary:     "Initialize an OIDC login request.",
+		Summary:     "OIDC Login",
 		Description: "Initializes an OIDC login request returning the URL for authorization.",
 		Tags:        tags,
-	}, func(ctx context.Context, _ *struct{}) (*Output[OIDCInitBody], error) {
+	}, func(ctx context.Context, _ *struct{}) (*Output[SessionTokenBody], error) {
+		if GetServerSetupCode() != nil {
+			return nil, fmt.Errorf("server not set up")
+		}
+
 		//TODO: oidc
-		return CreateOutput(OIDCInitBody{
-			LoginURL: "",
+		return CreateOutput(SessionTokenBody{
+			SessionToken: "",
 		}), nil
 	})
 }

@@ -2,6 +2,7 @@ package common
 
 import "regexp"
 
+// ! if any of these are changed they should be updated in the translations too
 const (
 	USERNAME_MAX_LENGTH = 64
 	USERNAME_MIN_LENGTH = 2

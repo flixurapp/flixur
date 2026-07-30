@@ -37,6 +37,7 @@ part 'model/artist_search_output_body.dart';
 part 'model/artist_search_request.dart';
 part 'model/error_detail.dart';
 part 'model/error_model.dart';
+part 'model/login_request.dart';
 part 'model/oidc_init_body.dart';
 part 'model/ping_body.dart';
 part 'model/session_token_body.dart';

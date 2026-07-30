@@ -8,7 +8,7 @@ import (
 )
 
 func TestAPIError(t *testing.T) {
-	err := NewAPIError(CodeInvalidInput)
+	err := CreateAPIError(CodeInvalidInput)
 	if err.Error() != string(CodeInvalidInput) {
 		t.Errorf("Error() = %q, want %q", err.Error(), CodeInvalidInput)
 	}
@@ -21,7 +21,7 @@ func TestAPIError(t *testing.T) {
 }
 
 func TestAPIErrorDetail(t *testing.T) {
-	err := NewAPIErrorDetail(CodeTooShort, "username")
+	err := CreateAPIErrorDetail(CodeTooShort, "username")
 	if err.Error() != string(CodeTooShort) {
 		t.Errorf("Error() = %q", err.Error())
 	}
