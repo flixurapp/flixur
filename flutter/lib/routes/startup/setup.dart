@@ -152,7 +152,8 @@ class _SetupViewState extends State<SetupView> {
     switch (response) {
       case ApiSuccess(:final data):
         try {
-          await Storage.saveSessionToken(data.sessionToken);
+          await Storage.setServerUrl(widget.serverInfo.url);
+          await Storage.setSessionToken(data.sessionToken);
         } on PlatformException catch (e) {
           if (!mounted) return;
           await showErrorDialog(
@@ -162,7 +163,9 @@ class _SetupViewState extends State<SetupView> {
           );
           return;
         }
-      // save was successful, so continue
+        if (!mounted) return;
+        // save was successful, so continue
+        context.goNamed("home");
       case ApiFailure(:final err):
         await showErrorDialog(
           context,

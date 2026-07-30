@@ -1,4 +1,5 @@
 import "package:flixur/routes/startup/components.dart";
+import "package:flixur/storage.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
@@ -12,7 +13,7 @@ class ServerUrlView extends StatefulWidget {
 }
 
 class _ServerUrlViewState extends State<ServerUrlView> {
-  final _serverUrlController = TextEditingController();
+  final _serverUrlController = TextEditingController(text: Storage.serverUrl);
 
   String? _errorText;
   bool _isLoading = false;
@@ -92,7 +93,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
     if (_isLoading) return;
 
     _setServerUrlError(null);
-    final serverUrl = Uri.tryParse(_serverUrlController.text);
+    var serverUrl = Uri.tryParse(_serverUrlController.text);
     if (serverUrl == null ||
         // must be an HTTP url
         (serverUrl.scheme != "http" && serverUrl.scheme != "https") ||
@@ -102,13 +103,17 @@ class _ServerUrlViewState extends State<ServerUrlView> {
       return;
     }
 
+    //TODO: maybe dont hardcode this eventually?
+    const apiPath = "api";
+
+    // append the `api` path to the URL
+    if (serverUrl.pathSegments.lastOrNull?.endsWith(apiPath) != true) {
+      serverUrl = serverUrl.replace(
+        pathSegments: [...serverUrl.pathSegments, apiPath],
+      );
+    }
     final apiClient = ApiClient(
-      // append the `api` path to the URL
-      basePath: serverUrl
-          .replace(
-            pathSegments: [...serverUrl.pathSegments, "api"],
-          )
-          .toString(),
+      basePath: serverUrl.toString(),
     );
     final api = AuthenticationApi(apiClient);
 

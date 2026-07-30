@@ -1,3 +1,4 @@
+import "package:flixur/routes/home/index.dart";
 import "package:flixur/routes/startup/login.dart";
 import "package:flixur/routes/startup/server_url.dart";
 import "package:flixur/routes/startup/setup.dart";
@@ -38,6 +39,11 @@ final router = GoRouter(
           (serverInfo) => SetupView(serverInfo: serverInfo),
         ),
       ],
+    ),
+    GoRoute(
+      name: "home",
+      path: "/home",
+      builder: (context, state) => const HomeView(),
     ),
   ],
 );
