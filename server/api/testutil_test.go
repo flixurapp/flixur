@@ -24,10 +24,10 @@ func newTestClient(t *testing.T) *ent.Client {
 	return enttest.Open(t, "sqlite3", common.TestDSN(t))
 }
 
-func newTestAPI(t *testing.T) (*ent.Client, humatest.TestAPI) {
+func newTestAPI(t *testing.T) (*ent.Client, APIRegistry, humatest.TestAPI) {
 	t.Helper()
 	client := newTestClient(t)
 	router := chi.NewMux()
 	reg := RegisterAPI(router, client)
-	return client, humatest.Wrap(t, reg.API)
+	return client, reg, humatest.Wrap(t, reg.API.GetHumaAPI())
 }

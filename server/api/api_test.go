@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"forge.xela.codes/xela/flixur/common"
-	"github.com/danielgtaylor/huma/v2"
+	"github.com/cardinalby/hureg"
 	"github.com/danielgtaylor/huma/v2/humatest"
 	"github.com/go-chi/chi/v5"
 )
@@ -37,13 +37,9 @@ func getIP(t *testing.T, api humatest.TestAPI, headers ...string) string {
 	return body.IP
 }
 
-func addIPTestRoute(t *testing.T, api huma.API) {
+func addIPTestRoute(t *testing.T, api hureg.API) {
 	t.Helper()
-	huma.Register(api, huma.Operation{
-		OperationID: "ip-test",
-		Method:      http.MethodGet,
-		Path:        "/ip-test",
-	}, func(ctx context.Context, _ *struct{}) (*struct {
+	hureg.Get(api, "/ip-test", func(ctx context.Context, _ *struct{}) (*struct {
 		Body struct {
 			IP string `json:"ip"`
 		}
@@ -62,8 +58,8 @@ func TestIPMiddlewareDirect(t *testing.T) {
 	resetConfig(t)
 	common.Config.TrustProxy = false
 
-	_, api := newTestAPI(t)
-	addIPTestRoute(t, api)
+	_, reg, api := newTestAPI(t)
+	addIPTestRoute(t, reg.API)
 
 	if ip := getIP(t, api); ip != "127.0.0.1" {
 		t.Errorf("ip = %q, want 127.0.0.1", ip)
@@ -77,8 +73,8 @@ func TestIPMiddlewareTrustedProxy(t *testing.T) {
 	common.Config.TrustedProxyCIDRs = []*net.IPNet{cidr}
 	common.Config.TrustProxyHeader = "X-Forwarded-For"
 
-	_, api := newTestAPI(t)
-	addIPTestRoute(t, api)
+	_, reg, api := newTestAPI(t)
+	addIPTestRoute(t, reg.API)
 
 	ip := getIP(t, api, "X-Forwarded-For: 1.2.3.4, 5.6.7.8")
 	if ip != "1.2.3.4" {
@@ -93,8 +89,8 @@ func TestIPMiddlewareUntrustedProxy(t *testing.T) {
 	common.Config.TrustedProxyCIDRs = []*net.IPNet{cidr}
 	common.Config.TrustProxyHeader = "X-Forwarded-For"
 
-	_, api := newTestAPI(t)
-	addIPTestRoute(t, api)
+	_, reg, api := newTestAPI(t)
+	addIPTestRoute(t, reg.API)
 
 	ip := getIP(t, api, "X-Forwarded-For: 1.2.3.4")
 	if ip != "127.0.0.1" {
@@ -108,8 +104,8 @@ func TestIPMiddlewareBadHeader(t *testing.T) {
 	common.Config.TrustedProxyCIDRs = nil
 	common.Config.TrustProxyHeader = "X-Forwarded-For"
 
-	_, api := newTestAPI(t)
-	addIPTestRoute(t, api)
+	_, reg, api := newTestAPI(t)
+	addIPTestRoute(t, reg.API)
 
 	ip := getIP(t, api, "X-Forwarded-For: not-an-ip")
 	if ip != "127.0.0.1" {
@@ -171,7 +167,7 @@ func TestIsTrustedProxy(t *testing.T) {
 }
 
 func TestCORSHeaders(t *testing.T) {
-	_, api := newTestAPI(t)
+	_, _, api := newTestAPI(t)
 
 	resp := api.Do(http.MethodOptions, "/ping",
 		"Origin: http://example.com",

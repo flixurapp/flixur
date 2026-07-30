@@ -16,7 +16,7 @@ import (
 
 func setupAuthTest(t *testing.T) humatest.TestAPI {
 	t.Helper()
-	_, api := newTestAPI(t)
+	_, _, api := newTestAPI(t)
 	return api
 }
 
@@ -161,7 +161,7 @@ func TestSetupValidation(t *testing.T) {
 
 func TestOIDCInit(t *testing.T) {
 	api := setupAuthTest(t)
-	resp := api.Get("/auth/oidc")
+	resp := api.Get("/auth/oidc_url")
 	if resp.Code != http.StatusOK {
 		t.Fatalf("status = %d", resp.Code)
 	}

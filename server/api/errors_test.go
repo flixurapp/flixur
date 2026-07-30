@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/cardinalby/hureg"
 	"github.com/danielgtaylor/huma/v2/humatest"
 )
 
@@ -44,7 +45,7 @@ func TestAPIErrorResponses(t *testing.T) {
 		CodeTooShort:          "too short",
 	}
 
-	responses := APIErrorResponses(hapi, descriptions)
+	responses := APIErrorResponses(hureg.NewAPIGen(hapi), descriptions)
 
 	if responses["500"] == nil {
 		t.Fatal("expected 500 response")
