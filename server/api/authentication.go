@@ -166,6 +166,8 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			return nil, NewAPIError(CodeDatabaseError)
 		}
 
+		log.Info().Msg("Successfully set up server!")
+
 		// success
 		return CreateOutput(SessionTokenBody{
 			SessionToken: sessionToken,
