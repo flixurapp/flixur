@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/rand"
 	"fmt"
+	"net/http"
 	"sync/atomic"
 
 	"forge.xela.codes/xela/flixur/common"
@@ -172,7 +173,14 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 	})
 
 	// we really only need to block the login routes from working without the server being set up
-	// the rest of the methods don't really matter as they require authentication
+	// the above methods don't really matter as they require authentication
+	api = api.AddMiddlewares(func(ctx huma.Context, next func(huma.Context)) {
+		if GetServerSetupCode() != nil {
+			huma.WriteErr(api.GetHumaAPI(), ctx, http.StatusServiceUnavailable, "server not set up")
+			return
+		}
+		next(ctx)
+	})
 
 	hureg.Post(WithDocs(api, huma.Operation{
 		Summary:     "Login",
@@ -184,9 +192,6 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			Password string `json:"password"`
 		}
 	}) (*Output[SessionTokenBody], error) {
-		if GetServerSetupCode() != nil {
-			return nil, fmt.Errorf("server not set up")
-		}
 		return CreateOutput(SessionTokenBody{
 			SessionToken: "",
 		}), nil
@@ -196,10 +201,6 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		Summary:     "OIDC Login",
 		Description: "Initializes an OIDC login request returning the URL for authorization.",
 	}, nil), "/oidc_url", func(ctx context.Context, _ *struct{}) (*Output[OIDCInitBody], error) {
-		if GetServerSetupCode() != nil {
-			return nil, fmt.Errorf("server not set up")
-		}
-
 		//TODO: oidc
 		return CreateOutput(OIDCInitBody{
 			LoginURL: "",
