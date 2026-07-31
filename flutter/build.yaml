@@ -6,3 +6,5 @@ targets:
           base_locale: en
           input_directory: assets/translations
           input_file_pattern: .yaml
+          maps:
+            - routes.startup.setup.failed_codes

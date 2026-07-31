@@ -25,9 +25,6 @@ class _SetupViewState extends State<SetupView> {
   final _usernameFocus = FocusNode();
   final _passwordFocus = FocusNode();
 
-  String? _codeError;
-  String? _usernameError;
-  String? _passwordError;
   bool _isLoading = false;
 
   @override
@@ -61,19 +58,20 @@ class _SetupViewState extends State<SetupView> {
                 child: Row(
                   children: [
                     Icon(Icons.info_outline, color: context.colors.onSecondary),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        t.routes.startup.setup.code_info,
+                        "${t.routes.startup.setup.body}\n"
+                        "${t.routes.startup.setup.code_info}",
                         style: .new(color: context.colors.onSecondary),
                       ),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(height: 8),
               FlixurInput(
                 label: t.routes.startup.setup.code.toUpperCase(),
-                errorText: _codeError,
                 textField: (deco) => TextField(
                   decoration: deco.copyWith(
                     hintText: "X" * 6,
@@ -83,20 +81,18 @@ class _SetupViewState extends State<SetupView> {
                   maxLength: 6,
                 ),
               ),
-              const SizedBox(height: 6),
               FlixurInput(
                 label: t.username.toUpperCase(),
-                errorText: _usernameError,
                 textField: (deco) => TextField(
                   decoration: deco.copyWith(hintText: "peppa.pig"),
                   controller: _usernameController,
                   onSubmitted: (_) => _passwordFocus.requestFocus(),
                   focusNode: _usernameFocus,
+                  maxLength: 64,
                 ),
               ),
               FlixurInput(
                 label: t.password.toUpperCase(),
-                errorText: _passwordError,
                 textField: (deco) => TextField(
                   decoration: deco.copyWith(
                     hintText: "*" * 12,
@@ -105,6 +101,7 @@ class _SetupViewState extends State<SetupView> {
                   onSubmitted: (_) => _completeSetup(),
                   focusNode: _passwordFocus,
                   obscureText: true,
+                  maxLength: 72,
                 ),
               ),
               StartupButton(
@@ -122,10 +119,7 @@ class _SetupViewState extends State<SetupView> {
   Future<void> _completeSetup() async {
     if (_isLoading) return;
 
-    setState(() {
-      _usernameError = _passwordError = null;
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     final response = await Api.request(
       (a) => a.getAuthenticationApi().postAuthSetup(
@@ -160,11 +154,11 @@ class _SetupViewState extends State<SetupView> {
         if (!mounted) return;
         // save was successful, so continue
         context.goNamed("home");
-      case ApiFailure(:final message):
+      case ApiFailure(:final err, :final message):
         await showErrorDialog(
           context,
-          title: t.api_request_fail,
-          message: message,
+          title: t.routes.startup.setup.failed,
+          message: t.routes.startup.setup.failed_codes[err?.key] ?? message,
         );
     }
   }

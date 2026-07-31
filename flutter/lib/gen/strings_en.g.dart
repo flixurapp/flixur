@@ -129,9 +129,6 @@ class Translations$routes$startup$server_url$en {
 	/// en: 'Connect'
 	String get connect => 'Connect';
 
-	/// en: 'Failed to connect to server.'
-	String get server_ping_error => 'Failed to connect to server.';
-
 	/// en: 'Server URL'
 	String get url => 'Server URL';
 
@@ -165,6 +162,16 @@ class Translations$routes$startup$setup$en {
 	/// en: 'Complete Setup'
 	String get complete => 'Complete Setup';
 
+	/// en: 'Setup Failed'
+	String get failed => 'Setup Failed';
+
+	Map<String, String> get failed_codes => {
+		'INCORRECT_PASSWORD': 'Invalid setup code! Make sure you copied it from the server console.',
+		'INVALID_INPUT.username': 'Username must contain printable ASCII characters only.',
+		'TOO_SHORT.password': 'Password must be at least 12 characters.',
+		'TOO_SHORT.username': 'Username must be at least 2 characters.',
+	};
+
 	/// en: 'Welcome to Flixur!'
 	String get title => 'Welcome to ${_root.app_name}!';
 }
@@ -186,7 +193,6 @@ extension on Translations {
 			'routes.startup.login.app_bar' => 'Log In',
 			'routes.startup.login.login' => 'Log In',
 			'routes.startup.server_url.connect' => 'Connect',
-			'routes.startup.server_url.server_ping_error' => 'Failed to connect to server.',
 			'routes.startup.server_url.url' => 'Server URL',
 			'routes.startup.server_url.url_error' => 'Server URL is not valid!',
 			'routes.startup.server_url.welcome' => 'Welcome!',
@@ -195,6 +201,11 @@ extension on Translations {
 			'routes.startup.setup.code' => 'Setup Code',
 			'routes.startup.setup.code_info' => 'You can get the setup code from the server console. You only need to do this once to set up the server.',
 			'routes.startup.setup.complete' => 'Complete Setup',
+			'routes.startup.setup.failed' => 'Setup Failed',
+			'routes.startup.setup.failed_codes.INCORRECT_PASSWORD' => 'Invalid setup code! Make sure you copied it from the server console.',
+			'routes.startup.setup.failed_codes."INVALID_INPUT.username"' => 'Username must contain printable ASCII characters only.',
+			'routes.startup.setup.failed_codes."TOO_SHORT.password"' => 'Password must be at least 12 characters.',
+			'routes.startup.setup.failed_codes."TOO_SHORT.username"' => 'Username must be at least 2 characters.',
 			'routes.startup.setup.title' => 'Welcome to ${_root.app_name}!',
 			'storage.store_fail' => 'Failed to store secure value.',
 			'storage.store_fail_title' => 'Storage Failure',
