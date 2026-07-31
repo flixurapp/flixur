@@ -3,7 +3,7 @@ import "package:flixur/routes/startup/server_url.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
-import "package:openapi/api.dart";
+import "package:openapi/openapi.dart";
 
 class LoginView extends StatefulWidget {
   const LoginView({required this.serverInfo, super.key});
@@ -20,13 +20,6 @@ class _LoginViewState extends State<LoginView> {
   final _passwordFocus = FocusNode();
 
   PingBody get _serverResponseBody => widget.serverInfo.body;
-
-  AuthenticationApi? _api;
-  @override
-  void initState() {
-    super.initState();
-    _api = AuthenticationApi(ApiClient(basePath: widget.serverInfo.url));
-  }
 
   String? _usernameError;
   String? _passwordError;
@@ -100,7 +93,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   Future<void> _passwordSubmit() async {
-    if (_isPasswordLoading || _isOidcLoading || _api == null) return;
+    if (_isPasswordLoading || _isOidcLoading) return;
 
     setState(() {
       _usernameError = _passwordError = null;
@@ -109,7 +102,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   Future<void> _oidcSubmit() async {
-    if (_isOidcLoading || _isPasswordLoading || _api == null) return;
+    if (_isOidcLoading || _isPasswordLoading) return;
 
     setState(() => _isOidcLoading = true);
   }

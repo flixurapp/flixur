@@ -2,7 +2,6 @@ import "dart:io";
 
 import "package:device_info_plus/device_info_plus.dart";
 import "package:flutter/material.dart";
-import "package:openapi/api.dart";
 import "package:package_info_plus/package_info_plus.dart";
 
 // re-export several extensions on the context so we arent duplicating
@@ -50,8 +49,6 @@ class AppInfo {
     }
   }
 
-  //TODO: machine id
-  static String machineID = "";
   static late String deviceName;
   static late String deviceOS;
 
@@ -61,32 +58,7 @@ class AppInfo {
   static String get clientIdentifier => "$name/$versionString";
 }
 
-sealed class ApiResult<T> {
-  const ApiResult();
-}
-
-class ApiSuccess<T> extends ApiResult<T> {
-  const ApiSuccess(this.data);
-  final T data;
-}
-
-class ApiFailure<T> extends ApiResult<T> {
-  const ApiFailure(this.err);
-  final ApiException err;
-}
-
 class Images {
   // App logo.
   static Image get logo => Image.asset("assets/logo.png", fit: .contain);
-}
-
-// safely make a request and return the error if it occurs
-Future<ApiResult<T>> safeGet<T>(Future<T?> Function() request) async {
-  try {
-    final result = await request();
-    if (result == null) throw ApiException(0, "No request body was returned.");
-    return ApiSuccess(result);
-  } on ApiException catch (err) {
-    return ApiFailure(err);
-  }
 }

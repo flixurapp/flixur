@@ -1,3 +1,4 @@
+import "package:flixur/api.dart";
 import "package:flixur/router.dart";
 import "package:flixur/storage.dart";
 import "package:flixur/utils.dart";
@@ -15,6 +16,9 @@ void main() async {
 
   // get package info
   await AppInfo.init();
+
+  // init API client before storage so that it can listen for `Storage` URL
+  Api.init();
 
   // init persistent storage
   await Storage.init();

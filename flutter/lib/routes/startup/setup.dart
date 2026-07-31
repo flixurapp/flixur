@@ -1,3 +1,4 @@
+import "package:flixur/api.dart";
 import "package:flixur/routes/startup/components.dart";
 import "package:flixur/routes/startup/server_url.dart";
 import "package:flixur/storage.dart";
@@ -6,7 +7,7 @@ import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:openapi/api.dart";
+import "package:openapi/openapi.dart";
 
 class SetupView extends StatefulWidget {
   const SetupView({required this.serverInfo, super.key});
@@ -23,13 +24,6 @@ class _SetupViewState extends State<SetupView> {
   final _passwordController = TextEditingController();
   final _usernameFocus = FocusNode();
   final _passwordFocus = FocusNode();
-
-  AuthenticationApi? _api;
-  @override
-  void initState() {
-    super.initState();
-    _api = AuthenticationApi(ApiClient(basePath: widget.serverInfo.url));
-  }
 
   String? _codeError;
   String? _usernameError;
@@ -126,24 +120,24 @@ class _SetupViewState extends State<SetupView> {
   }
 
   Future<void> _completeSetup() async {
-    final api = _api;
-    if (_isLoading || api == null) return;
+    if (_isLoading) return;
 
     setState(() {
       _usernameError = _passwordError = null;
       _isLoading = true;
     });
 
-    final response = await safeGet(
-      () => api.postAuthSetup(
-        AppInfo.clientIdentifier,
-        AppInfo.deviceName,
-        AppInfo.deviceOS,
-        PostAuthSetupRequest(
-          code: _codeController.text,
-          password: _passwordController.text,
-          username: _usernameController.text,
+    final response = await Api.request(
+      (a) => a.getAuthenticationApi().postAuthSetup(
+        postAuthSetupRequest: PostAuthSetupRequest(
+          (b) => b
+            ..code = _codeController.text
+            ..password = _passwordController.text
+            ..username = _usernameController.text,
         ),
+        xPlatformClient: AppInfo.clientIdentifier,
+        xPlatformDevice: AppInfo.deviceName,
+        xPlatformOS: AppInfo.deviceOS,
       ),
     );
     setState(() => _isLoading = false);
@@ -166,11 +160,11 @@ class _SetupViewState extends State<SetupView> {
         if (!mounted) return;
         // save was successful, so continue
         context.goNamed("home");
-      case ApiFailure(:final err):
+      case ApiFailure(:final message):
         await showErrorDialog(
           context,
           title: t.api_request_fail,
-          message: err.message ?? "API Error",
+          message: message,
         );
     }
   }

@@ -1,9 +1,10 @@
+import "package:flixur/api.dart";
 import "package:flixur/routes/startup/components.dart";
 import "package:flixur/storage.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
-import "package:openapi/api.dart";
+import "package:openapi/openapi.dart";
 
 class ServerUrlView extends StatefulWidget {
   const ServerUrlView({super.key});
@@ -13,7 +14,9 @@ class ServerUrlView extends StatefulWidget {
 }
 
 class _ServerUrlViewState extends State<ServerUrlView> {
-  final _serverUrlController = TextEditingController(text: Storage.serverUrl);
+  final _serverUrlController = TextEditingController(
+    text: Storage.serverUrl.value,
+  );
 
   String? _errorText;
   bool _isLoading = false;
@@ -112,26 +115,31 @@ class _ServerUrlViewState extends State<ServerUrlView> {
         pathSegments: [...serverUrl.pathSegments, apiPath],
       );
     }
-    final apiClient = ApiClient(
-      basePath: serverUrl.toString(),
-    );
-    final api = AuthenticationApi(apiClient);
+    final finalServerUrl = serverUrl.toString();
+    // we aren't going through `Storage` here since we don't want to persist
+    // an incorrect value
+    Api.setBaseUrl(finalServerUrl);
 
     setState(() => _isLoading = true);
-    final pingResponse = await safeGet(api.getPing);
+    final pingResponse = await Api.request(
+      (a) => a.getAuthenticationApi().getPing(),
+    );
     if (!mounted) return;
     setState(() => _isLoading = false);
 
     switch (pingResponse) {
       case ApiSuccess(:final data):
+        await Storage.setServerUrl(finalServerUrl);
+        if (!mounted) return;
         context.goNamed(
           data.isSetup ? "startup_login" : "startup_setup",
-          extra: ServerLoginPayload(url: apiClient.basePath, body: data),
+          extra: ServerLoginPayload(
+            url: finalServerUrl,
+            body: data,
+          ),
         );
-      case ApiFailure(:final err):
-        _setServerUrlError(
-          err.message ?? t.routes.startup.server_url.server_ping_error,
-        );
+      case ApiFailure(:final message):
+        _setServerUrlError(message);
     }
   }
 }

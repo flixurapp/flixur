@@ -12,7 +12,6 @@ routes:
       login: "Log In"
     server_url:
       connect: "Connect"
-      server_ping_error: "Failed to connect to server."
       url: "Server URL"
       url_error: "Server URL is not valid!"
       welcome: "Welcome!"
