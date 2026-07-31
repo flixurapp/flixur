@@ -8,7 +8,7 @@
 PRODUCT_NAME = flixur
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.flixur
+PRODUCT_BUNDLE_IDENTIFIER = app.flixur.flutter
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 flixur.app. All rights reserved.
