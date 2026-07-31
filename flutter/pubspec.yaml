@@ -19,6 +19,7 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   go_router: ^17.3.0
+  iconify_design: ^1.0.2
   openapi:
     path: ./openapi
   package_info_plus: ^10.2.1

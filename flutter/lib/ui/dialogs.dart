@@ -1,3 +1,4 @@
+import "package:flixur/ui/icons.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
 
@@ -10,7 +11,7 @@ Future<void> showErrorDialog(
     context: context,
     builder: (ctx) {
       return AlertDialog(
-        icon: Icon(Icons.error_outline, color: ctx.colors.error, size: 40),
+        icon: Iconify("x-circle-bold", color: ctx.colors.error, size: 40),
         title: Text(title),
         content: Text(message),
         actions: [

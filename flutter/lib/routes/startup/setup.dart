@@ -3,6 +3,7 @@ import "package:flixur/routes/startup/components.dart";
 import "package:flixur/routes/startup/server_url.dart";
 import "package:flixur/storage.dart";
 import "package:flixur/ui/dialogs.dart";
+import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
@@ -57,7 +58,11 @@ class _SetupViewState extends State<SetupView> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline, color: context.colors.onSecondary),
+                    Iconify(
+                      "info-bold",
+                      color: context.colors.onSecondary,
+                      size: 32,
+                    ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
