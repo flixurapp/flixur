@@ -18,6 +18,9 @@ import (
 	_ "github.com/danielgtaylor/huma/v2/formats/cbor"
 )
 
+// Scheme name for general session token auth.
+const AUTH_SCHEME_NAME = "bearerAuth"
+
 // struct of data passed to api builders
 type APIRegistry struct {
 	// Huma API instance.
@@ -100,7 +103,15 @@ func WithOptions(api hureg.APIGen, opts APIRoute) hureg.APIGen {
 	}
 
 	if !opts.NoAuth {
-		//TODO: auth middleware
+		handlers = append(handlers, op_handler.AddSecurity(map[string][]string{AUTH_SCHEME_NAME: {}}))
+		middlewares = append(middlewares, func(ctx huma.Context, next func(huma.Context)) {
+			header := ctx.Header("authorization")
+			if header == "" {
+				huma.WriteErr(api.GetHumaAPI(), ctx, http.StatusUnauthorized, "no token provided")
+				return
+			}
+			next(ctx)
+		})
 	}
 
 	return api.
@@ -118,6 +129,12 @@ func CreateOutput[T any](payload T) *Output[T] {
 func RegisterAPI(router chi.Router, client *ent.Client) APIRegistry {
 	config := huma.DefaultConfig("Flixur API", "0.0.1")
 	config.Servers = []*huma.Server{{URL: "/api"}}
+	config.Components.SecuritySchemes = map[string]*huma.SecurityScheme{
+		AUTH_SCHEME_NAME: {
+			Type:   "http",
+			Scheme: "bearer",
+		},
+	}
 
 	// Saved registry to be returned for tests.
 	var registry = APIRegistry{
