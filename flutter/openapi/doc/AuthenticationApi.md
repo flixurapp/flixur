@@ -26,12 +26,12 @@ Initializes an OIDC login request returning the URL for authorization.
 ```dart
 import 'package:openapi/api.dart';
 
-final api_instance = AuthenticationApi();
+final api = Openapi().getAuthenticationApi();
 
 try {
-    final result = api_instance.getAuthOidcUrl();
-    print(result);
-} catch (e) {
+    final response = api.getAuthOidcUrl();
+    print(response);
+} on DioException catch (e) {
     print('Exception when calling AuthenticationApi->getAuthOidcUrl: $e\n');
 }
 ```
@@ -65,12 +65,12 @@ Can be used to test the server connectivity and return version/feature info.
 ```dart
 import 'package:openapi/api.dart';
 
-final api_instance = AuthenticationApi();
+final api = Openapi().getAuthenticationApi();
 
 try {
-    final result = api_instance.getPing();
-    print(result);
-} catch (e) {
+    final response = api.getPing();
+    print(response);
+} on DioException catch (e) {
     print('Exception when calling AuthenticationApi->getPing: $e\n');
 }
 ```
@@ -104,16 +104,16 @@ Login with username/password.
 ```dart
 import 'package:openapi/api.dart';
 
-final api_instance = AuthenticationApi();
-final xPlatformClient = xPlatformClient_example; // String | Client Name/Version
-final xPlatformDevice = xPlatformDevice_example; // String | Device Name
-final xPlatformOS = xPlatformOS_example; // String | Operating System/Version
-final postAuthLoginRequest = PostAuthLoginRequest(); // PostAuthLoginRequest | 
+final api = Openapi().getAuthenticationApi();
+final String xPlatformClient = xPlatformClient_example; // String | Client Name/Version
+final String xPlatformDevice = xPlatformDevice_example; // String | Device Name
+final String xPlatformOS = xPlatformOS_example; // String | Operating System/Version
+final PostAuthLoginRequest postAuthLoginRequest = ; // PostAuthLoginRequest | 
 
 try {
-    final result = api_instance.postAuthLogin(xPlatformClient, xPlatformDevice, xPlatformOS, postAuthLoginRequest);
-    print(result);
-} catch (e) {
+    final response = api.postAuthLogin(xPlatformClient, xPlatformDevice, xPlatformOS, postAuthLoginRequest);
+    print(response);
+} on DioException catch (e) {
     print('Exception when calling AuthenticationApi->postAuthLogin: $e\n');
 }
 ```
@@ -153,16 +153,16 @@ Creates the initial admin account and sets up the server.
 ```dart
 import 'package:openapi/api.dart';
 
-final api_instance = AuthenticationApi();
-final xPlatformClient = xPlatformClient_example; // String | Client Name/Version
-final xPlatformDevice = xPlatformDevice_example; // String | Device Name
-final xPlatformOS = xPlatformOS_example; // String | Operating System/Version
-final postAuthSetupRequest = PostAuthSetupRequest(); // PostAuthSetupRequest | 
+final api = Openapi().getAuthenticationApi();
+final String xPlatformClient = xPlatformClient_example; // String | Client Name/Version
+final String xPlatformDevice = xPlatformDevice_example; // String | Device Name
+final String xPlatformOS = xPlatformOS_example; // String | Operating System/Version
+final PostAuthSetupRequest postAuthSetupRequest = ; // PostAuthSetupRequest | 
 
 try {
-    final result = api_instance.postAuthSetup(xPlatformClient, xPlatformDevice, xPlatformOS, postAuthSetupRequest);
-    print(result);
-} catch (e) {
+    final response = api.postAuthSetup(xPlatformClient, xPlatformDevice, xPlatformOS, postAuthSetupRequest);
+    print(response);
+} on DioException catch (e) {
     print('Exception when calling AuthenticationApi->postAuthSetup: $e\n');
 }
 ```

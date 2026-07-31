@@ -8,7 +8,7 @@ import 'package:openapi/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**dollarSchema** | **String** | A URL to the JSON Schema for this object. | [optional] [readonly] 
+**dollarSchema** | **String** | A URL to the JSON Schema for this object. | [optional] 
 **password** | **String** |  | 
 **username** | **String** |  | 
 

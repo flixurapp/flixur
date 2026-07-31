@@ -22,20 +22,14 @@ Search for an artist by name.
 ### Example
 ```dart
 import 'package:openapi/api.dart';
-// TODO Configure HTTP Bearer authorization: bearerAuth
-// Case 1. Use String Token
-//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken('YOUR_ACCESS_TOKEN');
-// Case 2. Use Function which generate token.
-// String yourTokenGeneratorFunction() { ... }
-//defaultApiClient.getAuthentication<HttpBearerAuth>('bearerAuth').setAccessToken(yourTokenGeneratorFunction);
 
-final api_instance = ArtistsApi();
-final searchArtistsRequest = SearchArtistsRequest(); // SearchArtistsRequest | 
+final api = Openapi().getArtistsApi();
+final SearchArtistsRequest searchArtistsRequest = ; // SearchArtistsRequest | 
 
 try {
-    final result = api_instance.searchArtists(searchArtistsRequest);
-    print(result);
-} catch (e) {
+    final response = api.searchArtists(searchArtistsRequest);
+    print(response);
+} on DioException catch (e) {
     print('Exception when calling ArtistsApi->searchArtists: $e\n');
 }
 ```

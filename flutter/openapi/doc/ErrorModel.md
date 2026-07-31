@@ -8,9 +8,9 @@ import 'package:openapi/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**dollarSchema** | **String** | A URL to the JSON Schema for this object. | [optional] [readonly] 
+**dollarSchema** | **String** | A URL to the JSON Schema for this object. | [optional] 
 **detail** | **String** | A human-readable explanation specific to this occurrence of the problem. | [optional] 
-**errors** | [**List<ErrorDetail>**](ErrorDetail.md) | Optional list of individual error details | [optional] [default to const []]
+**errors** | [**BuiltList&lt;ErrorDetail&gt;**](ErrorDetail.md) | Optional list of individual error details | [optional] 
 **instance** | **String** | A URI reference that identifies the specific occurrence of the problem. | [optional] 
 **status** | **int** | HTTP status code | [optional] 
 **title** | **String** | A short, human-readable summary of the problem type. This value should not change between occurrences of the error. | [optional] 

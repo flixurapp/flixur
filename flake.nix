@@ -53,6 +53,7 @@
               name = "openapi";
               runtimeInputs = with pkgs; [
                 curl
+                flutter
                 killport
                 openapi-generator-cli
               ];
@@ -86,11 +87,14 @@
 
                 openapi-generator-cli generate \
                   -i ${openapi-addr} \
-                  -g dart \
+                  -g dart-dio \
                   -o ${openapi-out} \
                   --enable-post-process-file
 
-                killport ${openapi-port}
+                killport ${openapi-port} || true
+
+                cd ${openapi-out}
+                dart run build_runner build
               '';
             };
           proto =
@@ -132,6 +136,7 @@
           generate = pkgs.writeShellApplication {
             name = "generate";
             runtimeInputs = [
+              pkgs.flutter
               pkgs.ent-go
               pkgs.go
               pkgs.yq
@@ -150,8 +155,12 @@
               #tygo
               openapi
 
-              # we also need to generate the JSON file for the flutter pubspec
-              yq . flutter/pubspec.lock > flutter/pubspec.lock.json
+              # flutter stuff
+              cd flutter
+              # we know its deprecated, but this is the only one that works on nixos
+              flutter pub run build_runner build
+              # we also need to generate the JSON file for the pubspec
+              yq . pubspec.lock > pubspec.lock.json
             '';
           };
           # wrapped flutter command for debug builds with libsecret included
