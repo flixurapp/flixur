@@ -392,10 +392,11 @@ packages:
   iconify_design:
     dependency: "direct main"
     description:
-      name: iconify_design
-      sha256: af32396f95bfc4099849aa9cc9af74dec02d023e18e64d70dac382d4ceb442b6
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "94dfdff42b2b2e1ba4e851b819626d6f77deec08"
+      resolved-ref: "94dfdff42b2b2e1ba4e851b819626d6f77deec08"
+      url: "https://github.com/itzTheMeow/iconify_design_flutter.git"
+    source: git
     version: "1.0.2"
   intl:
     dependency: transitive
