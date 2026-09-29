@@ -48,10 +48,24 @@
               openapi-port = "18787";
               openapi-addr = "http://127.0.0.1:${openapi-port}/api/openapi.json";
               openapi-out = "flutter/openapi/";
+              # re-applied after generation, which wipes the output dir
+              analysisOptions = pkgs.writeText "openapi-analysis_options.yaml" ''
+                analyzer:
+                  language:
+                    strict-inference: true
+                    strict-raw-types: true
+                    strict-casts: false
+                  exclude:
+                    - test/*.dart
+                    - lib/**
+                  errors:
+                    deprecated_member_use_from_same_package: ignore
+              '';
             in
             pkgs.writeShellApplication {
               name = "openapi";
               runtimeInputs = with pkgs; [
+                coreutils
                 curl
                 flutter
                 killport
@@ -90,6 +104,8 @@
                   -g dart-dio \
                   -o ${openapi-out} \
                   --enable-post-process-file
+
+                cp ${analysisOptions} ${openapi-out}/analysis_options.yaml
 
                 killport ${openapi-port} || true
 
