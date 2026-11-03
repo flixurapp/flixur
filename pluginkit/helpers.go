@@ -1,6 +1,8 @@
 package pluginkit
 
 import (
+	"embed"
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -8,6 +10,19 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
+
+// Convenience function to load the plugin manifest from a go:embed.
+func LoadPluginManifest(fs embed.FS) PluginManifest {
+	raw, err := fs.ReadFile("manifest.json")
+	if err != nil {
+		panic(fmt.Sprintf("reading embedded manifest.json: %v", err))
+	}
+	var m PluginManifest
+	if err := json.Unmarshal(raw, &m); err != nil {
+		panic(fmt.Sprintf("invalid manifest.json: %v", err))
+	}
+	return m
+}
 
 // Convenience function to set up a zerolog logger for the plugin.
 func SetupPluginLogger(manifest *PluginManifest) {
