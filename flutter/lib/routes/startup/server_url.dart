@@ -133,10 +133,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
         if (!mounted) return;
         context.goNamed(
           data.isSetup ? "startup_login" : "startup_setup",
-          extra: ServerLoginPayload(
-            url: finalServerUrl,
-            body: data,
-          ),
+          extra: ServerLoginPayload(url: finalServerUrl, body: data),
         );
       case ApiFailure(:final message):
         _setServerUrlError(message);
