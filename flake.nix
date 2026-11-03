@@ -95,7 +95,7 @@
                   exit 1
                 fi
 
-                export DART_POST_PROCESS_FILE="${pkgs.dart}/bin/dart format"  
+                export DART_POST_PROCESS_FILE="${pkgs.dart}/bin/dart format"
 
                 rm -rf ${openapi-out}
 
@@ -202,6 +202,15 @@
               cd server
               go test -coverprofile=coverage.out -coverpkg="$(go list ./... | grep -v '/ent' | tr '\n' ',' | sed 's/,$//')" ./...
               go tool cover -html=coverage.out # open coverage HTML
+            '';
+          };
+          # clean up stale flutter caches
+          flutter-clean = pkgs.writeShellApplication {
+            name = "flutter-clean";
+            runtimeInputs = [ commands.flutter-wrapped ];
+            text = ''
+              ${setup}
+              rm -rf flutter/build flutter/.dart_tool
             '';
           };
         };
