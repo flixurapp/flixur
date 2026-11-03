@@ -24,10 +24,7 @@ func (m *mockClientProtocol) Dispense(name string) (interface{}, error) {
 func (m *mockClientProtocol) Ping() error { return nil }
 
 // mockFlixurPlugin implements pluginkit.FlixurPlugin.
-type mockFlixurPlugin struct {
-	info *pluginkit.PluginManifest
-	err  error
-}
+type mockFlixurPlugin struct{}
 
 var _ pluginkit.FlixurPlugin = (*mockFlixurPlugin)(nil)
 
@@ -59,28 +56,86 @@ func TestRegisterPluginsMissingDir(t *testing.T) {
 	}
 }
 
-func TestRegisterPluginsIgnoresDisabled(t *testing.T) {
+func TestRegisterPluginsOnlyLoadsJSON(t *testing.T) {
 	resetPlugins(t, map[string]*Plugin{})
 
 	dir := t.TempDir()
-	if err := os.WriteFile(filepath.Join(dir, "plugin.disabled"), []byte(""), 0644); err != nil {
-		t.Fatal(err)
+	manifests := map[string]string{
+		"bar.json":         `{"id":"bar","name":"Bar","bin":"/tmp/bar"}`,
+		"baz.json.disabled": `{"id":"baz","name":"Baz","bin":"/tmp/baz"}`,
+		"qux.txt":          `{"id":"qux","name":"Qux","bin":"/tmp/qux"}`,
 	}
-	if err := os.WriteFile(filepath.Join(dir, "not-disabled"), []byte(""), 0644); err != nil {
+	for name, data := range manifests {
+		if err := os.WriteFile(filepath.Join(dir, name), []byte(data), 0644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := os.Mkdir(filepath.Join(dir, "sub.json"), 0755); err != nil {
 		t.Fatal(err)
 	}
 
-	called := false
+	var got []string
 	oldFactory := pluginClientFactory
 	pluginClientFactory = func(bin string) pluginClient {
-		called = true
+		got = append(got, bin)
 		return &mockPluginClient{err: errors.New("fail")}
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
 	RegisterPlugins(dir)
-	if !called {
-		t.Error("expected InitPlugin to be called for non-disabled file")
+	if len(got) != 1 || got[0] != "/tmp/bar" {
+		t.Errorf("expected factory to only be called for bar.json with /tmp/bar, got %v", got)
+	}
+}
+
+func TestRegisterPluginsInvalidJSON(t *testing.T) {
+	resetPlugins(t, map[string]*Plugin{})
+
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "bad.json"), []byte(`{not json`), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	oldFactory := pluginClientFactory
+	pluginClientFactory = func(bin string) pluginClient {
+		t.Error("expected factory to not be called for invalid manifest")
+		return &mockPluginClient{}
+	}
+	defer func() { pluginClientFactory = oldFactory }()
+
+	RegisterPlugins(dir)
+	if len(Plugins) != 0 {
+		t.Errorf("expected no plugins, got %d", len(Plugins))
+	}
+}
+
+func TestRegisterPluginsDuplicateID(t *testing.T) {
+	resetPlugins(t, map[string]*Plugin{})
+
+	dir := t.TempDir()
+	dup := `{"id":"dup","name":"Dup","bin":"/tmp/dup"}`
+	for _, name := range []string{"a.json", "b.json"} {
+		if err := os.WriteFile(filepath.Join(dir, name), []byte(dup), 0644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	oldFactory := pluginClientFactory
+	pluginClientFactory = func(bin string) pluginClient {
+		return &mockPluginClient{proto: &mockClientProtocol{
+			dispense: func(string) (interface{}, error) {
+				return &mockFlixurPlugin{}, nil
+			},
+		}}
+	}
+	defer func() { pluginClientFactory = oldFactory }()
+
+	RegisterPlugins(dir)
+	if len(Plugins) != 1 {
+		t.Errorf("expected 1 plugin, got %d", len(Plugins))
+	}
+	if Plugins["dup"] == nil {
+		t.Error("expected plugin dup to be registered")
 	}
 }
 
@@ -93,7 +148,7 @@ func TestInitPluginClientError(t *testing.T) {
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
-	InitPlugin("/tmp/fake")
+	InitPlugin(&pluginkit.PluginManifest{Id: "x", Binary: "/tmp/fake"})
 	if len(Plugins) != 0 {
 		t.Errorf("expected no plugins, got %d", len(Plugins))
 	}
@@ -114,28 +169,23 @@ func TestInitPluginDispenseError(t *testing.T) {
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
-	InitPlugin("/tmp/fake")
+	InitPlugin(&pluginkit.PluginManifest{Id: "x", Binary: "/tmp/fake"})
 	if len(Plugins) != 0 {
 		t.Errorf("expected no plugins, got %d", len(Plugins))
 	}
 }
 
-func TestInitPluginInfoError(t *testing.T) {
+func TestInitPluginMissingBinary(t *testing.T) {
 	resetPlugins(t, map[string]*Plugin{})
 
 	oldFactory := pluginClientFactory
 	pluginClientFactory = func(bin string) pluginClient {
-		return &mockPluginClient{
-			proto: &mockClientProtocol{
-				dispense: func(string) (interface{}, error) {
-					return &mockFlixurPlugin{err: errors.New("info failed")}, nil
-				},
-			},
-		}
+		t.Error("expected factory to not be called for manifest without binary")
+		return &mockPluginClient{}
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
-	InitPlugin("/tmp/fake")
+	InitPlugin(&pluginkit.PluginManifest{Id: "x"})
 	if len(Plugins) != 0 {
 		t.Errorf("expected no plugins, got %d", len(Plugins))
 	}
@@ -151,14 +201,14 @@ func TestInitPluginDuplicateID(t *testing.T) {
 		return &mockPluginClient{
 			proto: &mockClientProtocol{
 				dispense: func(string) (interface{}, error) {
-					return &mockFlixurPlugin{info: &pluginkit.PluginManifest{Id: "existing", Name: "Dup"}}, nil
+					return &mockFlixurPlugin{}, nil
 				},
 			},
 		}
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
-	InitPlugin("/tmp/fake")
+	InitPlugin(&pluginkit.PluginManifest{Id: "existing", Binary: "/tmp/fake"})
 	if len(Plugins) != 1 {
 		t.Errorf("expected 1 plugin, got %d", len(Plugins))
 	}
@@ -174,14 +224,14 @@ func TestInitPluginSuccess(t *testing.T) {
 			killFunc: func() { killed = true },
 			proto: &mockClientProtocol{
 				dispense: func(string) (interface{}, error) {
-					return &mockFlixurPlugin{info: &pluginkit.PluginManifest{Id: "new", Name: "New"}}, nil
+					return &mockFlixurPlugin{}, nil
 				},
 			},
 		}
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
-	InitPlugin("/tmp/fake")
+	InitPlugin(&pluginkit.PluginManifest{Id: "new", Binary: "/tmp/fake"})
 	if len(Plugins) != 1 {
 		t.Fatalf("expected 1 plugin, got %d", len(Plugins))
 	}

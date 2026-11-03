@@ -29,6 +29,8 @@ type PluginManifest struct {
 	Author string `json:"author"`
 	// Direct link to the source code of the plugin.
 	Url string `json:"url"`
+	// Absolute path to the binary file to run for the plugin. Only present on the server.
+	Binary string `json:"bin"`
 }
 
 // Custom unmarshal wrapper to decode features properly.

@@ -1,12 +1,10 @@
 package plugins
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 
 	"forge.xela.codes/xela/flixur/pluginkit"
 	"github.com/hashicorp/go-hclog"
@@ -58,29 +56,43 @@ func RegisterPlugins(pluginPath string) {
 
 	for _, file := range dir {
 		name := file.Name()
-		// ignore `.disabled` files
-		if strings.HasSuffix(name, ".disabled") {
+		// only load `.json` manifest files
+		if file.IsDir() || filepath.Ext(name) != ".json" {
 			continue
 		}
-		bin := filepath.Join(pluginPath, name)
-		InitPlugin(bin)
+		data, err := os.ReadFile(filepath.Join(pluginPath, name))
+		if err != nil {
+			log.Err(err).Str("path", name).Msg("Failed to read plugin manifest.")
+			continue
+		}
+		manifest, err := pluginkit.ParsePluginManifest(data)
+		if err != nil {
+			log.Err(err).Str("path", name).Msg("Failed to parse plugin manifest.")
+			continue
+		}
+		InitPlugin(manifest)
 	}
 	log.Info().Msgf("Loaded %d plugins.", len(Plugins))
 }
 
-func InitPlugin(bin string) {
-	initPlugin(bin, pluginClientFactory)
+func InitPlugin(manifest *pluginkit.PluginManifest) {
+	initPlugin(manifest, pluginClientFactory)
 }
 
-func initPlugin(bin string, factory func(string) pluginClient) {
-	log.Debug().Str("path", bin).Msg("Loading plugin binary...")
+func initPlugin(manifest *pluginkit.PluginManifest, factory func(string) pluginClient) {
+	if manifest.Binary == "" {
+		log.Warn().Str("id", manifest.Id).Str("name", manifest.Name).Msg("Plugin manifest has no binary path. Ignoring...")
+		return
+	}
 
-	client := factory(bin)
+	log.Debug().Str("id", manifest.Id).Str("path", manifest.Binary).Msg("Loading plugin binary...")
+
+	client := factory(manifest.Binary)
 
 	// Connect to the plugin
 	rpcClient, err := client.Client()
 	if err != nil {
-		log.Err(err).Str("path", bin).Msg("Failed to connect to plugin.")
+		log.Err(err).Str("path", manifest.Binary).Msg("Failed to connect to plugin.")
 		client.Kill()
 		return
 	}
@@ -88,33 +100,26 @@ func initPlugin(bin string, factory func(string) pluginClient) {
 	// Dispense the plugin
 	raw, err := rpcClient.Dispense("flixur_plugin")
 	if err != nil {
-		log.Err(err).Str("path", bin).Msg("Failed to dispense plugin.")
+		log.Err(err).Str("path", manifest.Binary).Msg("Failed to dispense plugin.")
 		client.Kill()
 		return
 	}
 
 	flixurPlugin := raw.(pluginkit.FlixurPlugin)
 
-	info, err := flixurPlugin.GetPluginInfo(context.Background())
-	if err != nil {
-		log.Err(err).Str("path", bin).Msg("Failed to get plugin info.")
-		client.Kill()
-		return
-	}
-
 	// Check if plugin with same ID already exists
-	if FindPluginByID(info.Id) != nil {
-		log.Warn().Str("id", info.Id).Str("name", info.Name).Msg("Plugin with the same ID already exists. Ignoring...")
+	if FindPluginByID(manifest.Id) != nil {
+		log.Warn().Str("id", manifest.Id).Str("name", manifest.Name).Msg("Plugin with the same ID already exists. Ignoring...")
 		client.Kill()
 		return
 	}
 
 	// Register the plugin
 	plugin := &Plugin{
-		Manifest: info,
+		Manifest: manifest,
 		RPC:      flixurPlugin,
 		destroy:  client.Kill,
 	}
-	Plugins[info.Id] = plugin
-	log.Info().Interface("info", info).Msg("Loaded plugin.")
+	Plugins[manifest.Id] = plugin
+	log.Info().Interface("info", manifest).Msg("Loaded plugin.")
 }
