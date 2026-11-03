@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"embed"
 
 	"forge.xela.codes/xela/flixur/pluginkit"
 	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
@@ -10,23 +11,12 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-var PluginInfo = &pb.PluginInfo{
-	Id:          "example",
-	Name:        "Example Plugin",
-	Version:     1,
-	Features:    []pb.Feature{pb.Feature_MUSIC_METADATA},
-	Icon:        "mdi:music",
-	Description: "Small example plugin.",
-	Author:      "You",
-	Url:         "https://forge.xela.codes/xela/flixur/src/branch/master/plugin-example",
-}
+//go:embed manifest.json
+var manifest embed.FS
+var Manifest = pluginkit.LoadPluginManifest(manifest)
 
 type Plugin struct {
 	pb.UnimplementedFlixurPluginServiceServer
-}
-
-func (p *Plugin) GetPluginInfo(ctx context.Context) (*pb.PluginInfo, error) {
-	return PluginInfo, nil
 }
 
 func (p *Plugin) ArtistGet(ctx context.Context, req *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error) {
@@ -52,7 +42,7 @@ func (p *Plugin) ArtistSearch(ctx context.Context, req *pb.ArtistSearchRequest) 
 }
 
 func main() {
-	pluginkit.SetupPluginLogger(PluginInfo)
+	pluginkit.SetupPluginLogger(Manifest)
 	log.Info().Msg("Example plugin starting...")
 
 	pluginkit.Serve(&Plugin{})

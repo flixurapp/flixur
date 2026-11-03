@@ -2,6 +2,8 @@ package pluginkit
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 
 	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 	"github.com/hashicorp/go-plugin"
@@ -27,6 +29,15 @@ type PluginManifest struct {
 	Author string `json:"author"`
 	// Direct link to the source code of the plugin.
 	Url string `json:"url"`
+}
+
+// Parse a raw plugin manifest into the struct.
+func ParsePluginManifest(data []byte) *PluginManifest {
+	var m PluginManifest
+	if err := json.Unmarshal(data, &m); err != nil {
+		panic(fmt.Sprintf("invalid manifest.json: %v", err))
+	}
+	return &m
 }
 
 var HandshakeConfig = plugin.HandshakeConfig{

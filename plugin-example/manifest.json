@@ -1,0 +1,10 @@
+{
+  "id": "example",
+  "name": "Example Plugin",
+  "version": "2026.11.03",
+  "features": ["MUSIC_METADATA"],
+  "icon": "mdi:music",
+  "description": "Small example plugin.",
+  "author": "You",
+  "url": "https://forge.xela.codes/xela/flixur/src/branch/master/plugin-example"
+}
