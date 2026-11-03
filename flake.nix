@@ -10,13 +10,19 @@
       inputs.flake-utils.follows = "flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     {
+      self,
       flake-utils,
       go-overlay,
       nixpkgs,
+      treefmt-nix,
       ...
     }:
     flake-utils.lib.eachDefaultSystem (
@@ -26,6 +32,8 @@
           inherit system;
           overlays = [ go-overlay.overlays.default ];
         };
+
+        treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
 
         flixur-flutter-linux = pkgs.callPackage ./nix/flutter.pkg.nix { };
         flixur-flutter-web = pkgs.callPackage ./nix/flutter.pkg.nix { targetFlutterPlatform = "web"; };
@@ -229,6 +237,9 @@
         devShells.default = pkgs.mkShell {
           buildInputs = [ commands.flutter-wrapped ];
         };
+
+        formatter = treefmtEval.config.build.wrapper;
+        checks.format = treefmtEval.config.build.check self;
       }
     );
 }
