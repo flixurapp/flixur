@@ -1,0 +1,12 @@
+[
+  {
+    "adapter": "Dart",
+    "type": "flutter",
+    "request": "launch",
+    "label": "flixur flutter",
+    "program": "lib/main.dart",
+    "cwd": "$ZED_WORKTREE_ROOT/flutter",
+    "flutterMode": "debug",
+    "toolArgs": ["-d", "linux"],
+  },
+]
