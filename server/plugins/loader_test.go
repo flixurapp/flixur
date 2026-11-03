@@ -61,9 +61,9 @@ func TestRegisterPluginsOnlyLoadsJSON(t *testing.T) {
 
 	dir := t.TempDir()
 	manifests := map[string]string{
-		"bar.json":         `{"id":"bar","name":"Bar","bin":"/tmp/bar"}`,
+		"bar.json":          `{"id":"bar","name":"Bar","bin":"/tmp/bar"}`,
 		"baz.json.disabled": `{"id":"baz","name":"Baz","bin":"/tmp/baz"}`,
-		"qux.txt":          `{"id":"qux","name":"Qux","bin":"/tmp/qux"}`,
+		"qux.txt":           `{"id":"qux","name":"Qux","bin":"/tmp/qux"}`,
 	}
 	for name, data := range manifests {
 		if err := os.WriteFile(filepath.Join(dir, name), []byte(data), 0644); err != nil {
