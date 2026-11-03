@@ -23,5 +23,6 @@
     clang-format.enable = true;
     prettier.enable = true;
     buf.enable = true;
+    just.enable = true;
   };
 }
