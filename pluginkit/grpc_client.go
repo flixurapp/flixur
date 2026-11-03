@@ -10,11 +10,11 @@ import (
 )
 
 type grpcClient struct {
-	client pb.FlixurPluginClient
+	client pb.FlixurPluginServiceClient
 }
 
 func (p *FlixurGRPCPlugin) GRPCClient(ctx context.Context, broker *plugin.GRPCBroker, c *grpc.ClientConn) (interface{}, error) {
-	return &grpcClient{client: pb.NewFlixurPluginClient(c)}, nil
+	return &grpcClient{client: pb.NewFlixurPluginServiceClient(c)}, nil
 }
 
 func (m *grpcClient) ArtistGet(ctx context.Context, req *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error) {

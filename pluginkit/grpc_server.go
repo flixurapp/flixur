@@ -10,12 +10,12 @@ import (
 )
 
 type grpcServer struct {
-	pb.UnimplementedFlixurPluginServer
+	pb.UnimplementedFlixurPluginServiceServer
 	Impl FlixurPlugin
 }
 
 func (p *FlixurGRPCPlugin) GRPCServer(broker *plugin.GRPCBroker, s *grpc.Server) error {
-	pb.RegisterFlixurPluginServer(s, &grpcServer{Impl: p.Impl})
+	pb.RegisterFlixurPluginServiceServer(s, &grpcServer{Impl: p.Impl})
 	return nil
 }
 

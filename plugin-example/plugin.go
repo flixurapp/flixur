@@ -22,7 +22,7 @@ var PluginInfo = &pb.PluginInfo{
 }
 
 type Plugin struct {
-	pb.UnimplementedFlixurPluginServer
+	pb.UnimplementedFlixurPluginServiceServer
 }
 
 func (p *Plugin) GetPluginInfo(ctx context.Context) (*pb.PluginInfo, error) {
