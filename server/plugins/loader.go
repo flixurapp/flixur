@@ -111,9 +111,9 @@ func initPlugin(bin string, factory func(string) pluginClient) {
 
 	// Register the plugin
 	plugin := &Plugin{
-		Info:    info,
-		RPC:     flixurPlugin,
-		destroy: client.Kill,
+		Manifest: info,
+		RPC:      flixurPlugin,
+		destroy:  client.Kill,
 	}
 	Plugins[info.Id] = plugin
 	log.Info().Interface("info", info).Msg("Loaded plugin.")

@@ -25,15 +25,12 @@ func (m *mockClientProtocol) Ping() error { return nil }
 
 // mockFlixurPlugin implements pluginkit.FlixurPlugin.
 type mockFlixurPlugin struct {
-	info *pb.PluginInfo
+	info *pluginkit.PluginManifest
 	err  error
 }
 
 var _ pluginkit.FlixurPlugin = (*mockFlixurPlugin)(nil)
 
-func (m *mockFlixurPlugin) GetPluginInfo(context.Context) (*pb.PluginInfo, error) {
-	return m.info, m.err
-}
 func (m *mockFlixurPlugin) ArtistGet(context.Context, *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error) {
 	return nil, nil
 }
@@ -146,7 +143,7 @@ func TestInitPluginInfoError(t *testing.T) {
 
 func TestInitPluginDuplicateID(t *testing.T) {
 	resetPlugins(t, map[string]*Plugin{
-		"existing": {Info: &pb.PluginInfo{Id: "existing"}},
+		"existing": {Manifest: &pluginkit.PluginManifest{Id: "existing"}},
 	})
 
 	oldFactory := pluginClientFactory
@@ -154,7 +151,7 @@ func TestInitPluginDuplicateID(t *testing.T) {
 		return &mockPluginClient{
 			proto: &mockClientProtocol{
 				dispense: func(string) (interface{}, error) {
-					return &mockFlixurPlugin{info: &pb.PluginInfo{Id: "existing", Name: "Dup"}}, nil
+					return &mockFlixurPlugin{info: &pluginkit.PluginManifest{Id: "existing", Name: "Dup"}}, nil
 				},
 			},
 		}
@@ -177,7 +174,7 @@ func TestInitPluginSuccess(t *testing.T) {
 			killFunc: func() { killed = true },
 			proto: &mockClientProtocol{
 				dispense: func(string) (interface{}, error) {
-					return &mockFlixurPlugin{info: &pb.PluginInfo{Id: "new", Name: "New"}}, nil
+					return &mockFlixurPlugin{info: &pluginkit.PluginManifest{Id: "new", Name: "New"}}, nil
 				},
 			},
 		}
