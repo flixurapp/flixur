@@ -7,6 +7,28 @@ import (
 	"github.com/hashicorp/go-plugin"
 )
 
+// Flixur plugin manifest JSON.
+type PluginManifest struct {
+	// Unique Plugin ID.
+	Id string `json:"id"`
+	// Name of the plugin.
+	Name string `json:"name"`
+	// Version string, formatted YYYY.MM.DD
+	Version string `json:"version"`
+	// List of plugin IDs that should be loaded before this plugin.
+	Dependencies []string `json:"dependencies"`
+	// List of feature IDs this plugin implements.
+	Features []string `json:"features"`
+	// Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
+	Icon string `json:"icon"`
+	// Short description of the plugin.
+	Description string `json:"description"`
+	// Name of the plugin author.
+	Author string `json:"author"`
+	// Direct link to the source code of the plugin.
+	Url string `json:"url"`
+}
+
 var HandshakeConfig = plugin.HandshakeConfig{
 	ProtocolVersion:  1,
 	MagicCookieKey:   "FLIXUR_PLUGIN_MAGIC",
@@ -17,9 +39,6 @@ var HandshakeConfig = plugin.HandshakeConfig{
 //
 //go:generate go run ./generator -dir .
 type FlixurPlugin interface {
-	// Get plugin metadata and capabilities.
-	GetPluginInfo(ctx context.Context) (*pb.PluginInfo, error)
-
 	// === Artist Methods ===
 
 	// Get a specific artist by ID.

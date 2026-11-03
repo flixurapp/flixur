@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"os"
 
-	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 	"github.com/hashicorp/go-hclog"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
 // Convenience function to set up a zerolog logger for the plugin.
-func SetupPluginLogger(info *pb.PluginInfo) {
+func SetupPluginLogger(manifest *PluginManifest) {
 	var logLevel zerolog.Level = zerolog.TraceLevel
 	// this should be kept up-to-date with the server env var
 	if env := os.Getenv("FLIXUR_LOG_LEVEL"); env != "" {
@@ -23,7 +22,7 @@ func SetupPluginLogger(info *pb.PluginInfo) {
 		Out:        os.Stderr,
 		TimeFormat: "3:04:05PM",
 		FormatMessage: func(i any) string {
-			return fmt.Sprintf("[%s] %v", info.Id, i)
+			return fmt.Sprintf("[%s] %v", manifest.Id, i)
 		},
 	})
 }

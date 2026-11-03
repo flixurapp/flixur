@@ -17,10 +17,6 @@ func (p *FlixurGRPCPlugin) GRPCClient(ctx context.Context, broker *plugin.GRPCBr
 	return &grpcClient{client: pb.NewFlixurPluginClient(c)}, nil
 }
 
-func (m *grpcClient) GetPluginInfo(ctx context.Context) (*pb.PluginInfo, error) {
-	return m.client.GetPluginInfo(ctx, &pb.EmptyRequest{})
-}
-
 func (m *grpcClient) ArtistGet(ctx context.Context, req *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error) {
 	return m.client.ArtistGet(ctx, req)
 }

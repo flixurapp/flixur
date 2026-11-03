@@ -24,19 +24,22 @@ const (
 type AlbumType int32
 
 const (
-	AlbumType_SINGLE AlbumType = 0
-	AlbumType_ALBUM  AlbumType = 1
+	AlbumType_ALBUM_TYPE_UNSPECIFIED AlbumType = 0
+	AlbumType_ALBUM_TYPE_SINGLE      AlbumType = 1
+	AlbumType_ALBUM_TYPE_ALBUM       AlbumType = 2
 )
 
 // Enum value maps for AlbumType.
 var (
 	AlbumType_name = map[int32]string{
-		0: "SINGLE",
-		1: "ALBUM",
+		0: "ALBUM_TYPE_UNSPECIFIED",
+		1: "ALBUM_TYPE_SINGLE",
+		2: "ALBUM_TYPE_ALBUM",
 	}
 	AlbumType_value = map[string]int32{
-		"SINGLE": 0,
-		"ALBUM":  1,
+		"ALBUM_TYPE_UNSPECIFIED": 0,
+		"ALBUM_TYPE_SINGLE":      1,
+		"ALBUM_TYPE_ALBUM":       2,
 	}
 )
 
@@ -70,25 +73,28 @@ func (AlbumType) EnumDescriptor() ([]byte, []int) {
 type TrackExplicitness int32
 
 const (
+	TrackExplicitness_TRACK_EXPLICITNESS_UNSPECIFIED TrackExplicitness = 0
 	// Normal
-	TrackExplicitness_CLEAN TrackExplicitness = 0
+	TrackExplicitness_TRACK_EXPLICITNESS_CLEAN TrackExplicitness = 1
 	// Explicit
-	TrackExplicitness_EXPLICIT TrackExplicitness = 1
+	TrackExplicitness_TRACK_EXPLICITNESS_EXPLICIT TrackExplicitness = 2
 	// Rated X
-	TrackExplicitness_RESTRICTED TrackExplicitness = 2
+	TrackExplicitness_TRACK_EXPLICITNESS_RESTRICTED TrackExplicitness = 3
 )
 
 // Enum value maps for TrackExplicitness.
 var (
 	TrackExplicitness_name = map[int32]string{
-		0: "CLEAN",
-		1: "EXPLICIT",
-		2: "RESTRICTED",
+		0: "TRACK_EXPLICITNESS_UNSPECIFIED",
+		1: "TRACK_EXPLICITNESS_CLEAN",
+		2: "TRACK_EXPLICITNESS_EXPLICIT",
+		3: "TRACK_EXPLICITNESS_RESTRICTED",
 	}
 	TrackExplicitness_value = map[string]int32{
-		"CLEAN":      0,
-		"EXPLICIT":   1,
-		"RESTRICTED": 2,
+		"TRACK_EXPLICITNESS_UNSPECIFIED": 0,
+		"TRACK_EXPLICITNESS_CLEAN":       1,
+		"TRACK_EXPLICITNESS_EXPLICIT":    2,
+		"TRACK_EXPLICITNESS_RESTRICTED":  3,
 	}
 )
 
@@ -376,7 +382,7 @@ func (x *Album) GetType() AlbumType {
 	if x != nil {
 		return x.Type
 	}
-	return AlbumType_SINGLE
+	return AlbumType_ALBUM_TYPE_UNSPECIFIED
 }
 
 func (x *Album) GetRating() int32 {
@@ -505,7 +511,7 @@ func (x *Track) GetExplicitness() TrackExplicitness {
 	if x != nil {
 		return x.Explicitness
 	}
-	return TrackExplicitness_CLEAN
+	return TrackExplicitness_TRACK_EXPLICITNESS_UNSPECIFIED
 }
 
 var File_music_proto protoreflect.FileDescriptor
@@ -553,16 +559,16 @@ const file_music_proto_rawDesc = "" +
 	"\bduration\x18\x05 \x01(\x03R\bduration\x12\x1b\n" +
 	"\x06rating\x18\x06 \x01(\x05H\x00R\x06rating\x88\x01\x01\x12C\n" +
 	"\fexplicitness\x18\a \x01(\x0e2\x1f.flixur.music.TrackExplicitnessR\fexplicitnessB\t\n" +
-	"\a_rating*\"\n" +
-	"\tAlbumType\x12\n" +
-	"\n" +
-	"\x06SINGLE\x10\x00\x12\t\n" +
-	"\x05ALBUM\x10\x01*<\n" +
-	"\x11TrackExplicitness\x12\t\n" +
-	"\x05CLEAN\x10\x00\x12\f\n" +
-	"\bEXPLICIT\x10\x01\x12\x0e\n" +
-	"\n" +
-	"RESTRICTED\x10\x02B.Z,forge.xela.codes/xela/flixur/pluginkit/protob\x06proto3"
+	"\a_rating*T\n" +
+	"\tAlbumType\x12\x1a\n" +
+	"\x16ALBUM_TYPE_UNSPECIFIED\x10\x00\x12\x15\n" +
+	"\x11ALBUM_TYPE_SINGLE\x10\x01\x12\x14\n" +
+	"\x10ALBUM_TYPE_ALBUM\x10\x02*\x99\x01\n" +
+	"\x11TrackExplicitness\x12\"\n" +
+	"\x1eTRACK_EXPLICITNESS_UNSPECIFIED\x10\x00\x12\x1c\n" +
+	"\x18TRACK_EXPLICITNESS_CLEAN\x10\x01\x12\x1f\n" +
+	"\x1bTRACK_EXPLICITNESS_EXPLICIT\x10\x02\x12!\n" +
+	"\x1dTRACK_EXPLICITNESS_RESTRICTED\x10\x03B.Z,forge.xela.codes/xela/flixur/pluginkit/protob\x06proto3"
 
 var (
 	file_music_proto_rawDescOnce sync.Once

@@ -19,10 +19,6 @@ func (p *FlixurGRPCPlugin) GRPCServer(broker *plugin.GRPCBroker, s *grpc.Server)
 	return nil
 }
 
-func (m *grpcServer) GetPluginInfo(ctx context.Context, _ *pb.EmptyRequest) (*pb.PluginInfo, error) {
-	return m.Impl.GetPluginInfo(ctx)
-}
-
 func (m *grpcServer) ArtistGet(ctx context.Context, req *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error) {
 	return m.Impl.ArtistGet(ctx, req)
 }

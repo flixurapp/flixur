@@ -25,17 +25,20 @@ const (
 type Feature int32
 
 const (
+	Feature_FEATURE_UNSPECIFIED Feature = 0
 	// Implements `Artist*`, `Album*`, `Track*` RPC calls
-	Feature_MUSIC_METADATA Feature = 0
+	Feature_FEATURE_MUSIC_METADATA Feature = 1
 )
 
 // Enum value maps for Feature.
 var (
 	Feature_name = map[int32]string{
-		0: "MUSIC_METADATA",
+		0: "FEATURE_UNSPECIFIED",
+		1: "FEATURE_MUSIC_METADATA",
 	}
 	Feature_value = map[string]int32{
-		"MUSIC_METADATA": 0,
+		"FEATURE_UNSPECIFIED":    0,
+		"FEATURE_MUSIC_METADATA": 1,
 	}
 )
 
@@ -103,145 +106,16 @@ func (*EmptyRequest) Descriptor() ([]byte, []int) {
 	return file_plugins_proto_rawDescGZIP(), []int{0}
 }
 
-// Plugin metadata returned by GetPluginInfo.
-type PluginInfo struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Unique Plugin ID.
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id"`
-	// Name of the plugin.
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name"`
-	// Numerical version of the plugin.
-	Version int32 `protobuf:"varint,3,opt,name=version,proto3" json:"version"`
-	// List of plugin IDs that should be loaded before this plugin.
-	Dependencies []string `protobuf:"bytes,4,rep,name=dependencies,proto3" json:"dependencies"`
-	// List of feature names this plugin implements.
-	Features []Feature `protobuf:"varint,5,rep,packed,name=features,proto3,enum=flixur.plugins.Feature" json:"features"`
-	// Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
-	Icon string `protobuf:"bytes,6,opt,name=icon,proto3" json:"icon"`
-	// Short description of the plugin.
-	Description string `protobuf:"bytes,7,opt,name=description,proto3" json:"description"`
-	// Name of the plugin author.
-	Author string `protobuf:"bytes,8,opt,name=author,proto3" json:"author"`
-	// Direct link to the source code of the plugin.
-	Url           string `protobuf:"bytes,9,opt,name=url,proto3" json:"url"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PluginInfo) Reset() {
-	*x = PluginInfo{}
-	mi := &file_plugins_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PluginInfo) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PluginInfo) ProtoMessage() {}
-
-func (x *PluginInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_plugins_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PluginInfo.ProtoReflect.Descriptor instead.
-func (*PluginInfo) Descriptor() ([]byte, []int) {
-	return file_plugins_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *PluginInfo) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *PluginInfo) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *PluginInfo) GetVersion() int32 {
-	if x != nil {
-		return x.Version
-	}
-	return 0
-}
-
-func (x *PluginInfo) GetDependencies() []string {
-	if x != nil {
-		return x.Dependencies
-	}
-	return nil
-}
-
-func (x *PluginInfo) GetFeatures() []Feature {
-	if x != nil {
-		return x.Features
-	}
-	return nil
-}
-
-func (x *PluginInfo) GetIcon() string {
-	if x != nil {
-		return x.Icon
-	}
-	return ""
-}
-
-func (x *PluginInfo) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *PluginInfo) GetAuthor() string {
-	if x != nil {
-		return x.Author
-	}
-	return ""
-}
-
-func (x *PluginInfo) GetUrl() string {
-	if x != nil {
-		return x.Url
-	}
-	return ""
-}
-
 var File_plugins_proto protoreflect.FileDescriptor
 
 const file_plugins_proto_rawDesc = "" +
 	"\n" +
 	"\rplugins.proto\x12\x0eflixur.plugins\x1a\x14music_features.proto\"\x0e\n" +
-	"\fEmptyRequest\"\x83\x02\n" +
-	"\n" +
-	"PluginInfo\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
-	"\aversion\x18\x03 \x01(\x05R\aversion\x12\"\n" +
-	"\fdependencies\x18\x04 \x03(\tR\fdependencies\x123\n" +
-	"\bfeatures\x18\x05 \x03(\x0e2\x17.flixur.plugins.FeatureR\bfeatures\x12\x12\n" +
-	"\x04icon\x18\x06 \x01(\tR\x04icon\x12 \n" +
-	"\vdescription\x18\a \x01(\tR\vdescription\x12\x16\n" +
-	"\x06author\x18\b \x01(\tR\x06author\x12\x10\n" +
-	"\x03url\x18\t \x01(\tR\x03url*\x1d\n" +
-	"\aFeature\x12\x12\n" +
-	"\x0eMUSIC_METADATA\x10\x002\xa8\x05\n" +
-	"\fFlixurPlugin\x12I\n" +
-	"\rGetPluginInfo\x12\x1c.flixur.plugins.EmptyRequest\x1a\x1a.flixur.plugins.PluginInfo\x12^\n" +
+	"\fEmptyRequest*>\n" +
+	"\aFeature\x12\x17\n" +
+	"\x13FEATURE_UNSPECIFIED\x10\x00\x12\x1a\n" +
+	"\x16FEATURE_MUSIC_METADATA\x10\x012\xe4\x04\n" +
+	"\x13FlixurPluginService\x12^\n" +
 	"\tArtistGet\x12'.flixur.music_features.ArtistGetRequest\x1a(.flixur.music_features.ArtistGetResponse\x12g\n" +
 	"\fArtistSearch\x12*.flixur.music_features.ArtistSearchRequest\x1a+.flixur.music_features.ArtistSearchResponse\x12[\n" +
 	"\bAlbumGet\x12&.flixur.music_features.AlbumGetRequest\x1a'.flixur.music_features.AlbumGetResponse\x12d\n" +
@@ -262,45 +136,41 @@ func file_plugins_proto_rawDescGZIP() []byte {
 }
 
 var file_plugins_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_plugins_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_plugins_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_plugins_proto_goTypes = []any{
 	(Feature)(0),                 // 0: flixur.plugins.Feature
 	(*EmptyRequest)(nil),         // 1: flixur.plugins.EmptyRequest
-	(*PluginInfo)(nil),           // 2: flixur.plugins.PluginInfo
-	(*ArtistGetRequest)(nil),     // 3: flixur.music_features.ArtistGetRequest
-	(*ArtistSearchRequest)(nil),  // 4: flixur.music_features.ArtistSearchRequest
-	(*AlbumGetRequest)(nil),      // 5: flixur.music_features.AlbumGetRequest
-	(*AlbumSearchRequest)(nil),   // 6: flixur.music_features.AlbumSearchRequest
-	(*TrackGetRequest)(nil),      // 7: flixur.music_features.TrackGetRequest
-	(*TrackSearchRequest)(nil),   // 8: flixur.music_features.TrackSearchRequest
-	(*ArtistGetResponse)(nil),    // 9: flixur.music_features.ArtistGetResponse
-	(*ArtistSearchResponse)(nil), // 10: flixur.music_features.ArtistSearchResponse
-	(*AlbumGetResponse)(nil),     // 11: flixur.music_features.AlbumGetResponse
-	(*AlbumSearchResponse)(nil),  // 12: flixur.music_features.AlbumSearchResponse
-	(*TrackGetResponse)(nil),     // 13: flixur.music_features.TrackGetResponse
-	(*TrackSearchResponse)(nil),  // 14: flixur.music_features.TrackSearchResponse
+	(*ArtistGetRequest)(nil),     // 2: flixur.music_features.ArtistGetRequest
+	(*ArtistSearchRequest)(nil),  // 3: flixur.music_features.ArtistSearchRequest
+	(*AlbumGetRequest)(nil),      // 4: flixur.music_features.AlbumGetRequest
+	(*AlbumSearchRequest)(nil),   // 5: flixur.music_features.AlbumSearchRequest
+	(*TrackGetRequest)(nil),      // 6: flixur.music_features.TrackGetRequest
+	(*TrackSearchRequest)(nil),   // 7: flixur.music_features.TrackSearchRequest
+	(*ArtistGetResponse)(nil),    // 8: flixur.music_features.ArtistGetResponse
+	(*ArtistSearchResponse)(nil), // 9: flixur.music_features.ArtistSearchResponse
+	(*AlbumGetResponse)(nil),     // 10: flixur.music_features.AlbumGetResponse
+	(*AlbumSearchResponse)(nil),  // 11: flixur.music_features.AlbumSearchResponse
+	(*TrackGetResponse)(nil),     // 12: flixur.music_features.TrackGetResponse
+	(*TrackSearchResponse)(nil),  // 13: flixur.music_features.TrackSearchResponse
 }
 var file_plugins_proto_depIdxs = []int32{
-	0,  // 0: flixur.plugins.PluginInfo.features:type_name -> flixur.plugins.Feature
-	1,  // 1: flixur.plugins.FlixurPlugin.GetPluginInfo:input_type -> flixur.plugins.EmptyRequest
-	3,  // 2: flixur.plugins.FlixurPlugin.ArtistGet:input_type -> flixur.music_features.ArtistGetRequest
-	4,  // 3: flixur.plugins.FlixurPlugin.ArtistSearch:input_type -> flixur.music_features.ArtistSearchRequest
-	5,  // 4: flixur.plugins.FlixurPlugin.AlbumGet:input_type -> flixur.music_features.AlbumGetRequest
-	6,  // 5: flixur.plugins.FlixurPlugin.AlbumSearch:input_type -> flixur.music_features.AlbumSearchRequest
-	7,  // 6: flixur.plugins.FlixurPlugin.TrackGet:input_type -> flixur.music_features.TrackGetRequest
-	8,  // 7: flixur.plugins.FlixurPlugin.TrackSearch:input_type -> flixur.music_features.TrackSearchRequest
-	2,  // 8: flixur.plugins.FlixurPlugin.GetPluginInfo:output_type -> flixur.plugins.PluginInfo
-	9,  // 9: flixur.plugins.FlixurPlugin.ArtistGet:output_type -> flixur.music_features.ArtistGetResponse
-	10, // 10: flixur.plugins.FlixurPlugin.ArtistSearch:output_type -> flixur.music_features.ArtistSearchResponse
-	11, // 11: flixur.plugins.FlixurPlugin.AlbumGet:output_type -> flixur.music_features.AlbumGetResponse
-	12, // 12: flixur.plugins.FlixurPlugin.AlbumSearch:output_type -> flixur.music_features.AlbumSearchResponse
-	13, // 13: flixur.plugins.FlixurPlugin.TrackGet:output_type -> flixur.music_features.TrackGetResponse
-	14, // 14: flixur.plugins.FlixurPlugin.TrackSearch:output_type -> flixur.music_features.TrackSearchResponse
-	8,  // [8:15] is the sub-list for method output_type
-	1,  // [1:8] is the sub-list for method input_type
-	1,  // [1:1] is the sub-list for extension type_name
-	1,  // [1:1] is the sub-list for extension extendee
-	0,  // [0:1] is the sub-list for field type_name
+	2,  // 0: flixur.plugins.FlixurPluginService.ArtistGet:input_type -> flixur.music_features.ArtistGetRequest
+	3,  // 1: flixur.plugins.FlixurPluginService.ArtistSearch:input_type -> flixur.music_features.ArtistSearchRequest
+	4,  // 2: flixur.plugins.FlixurPluginService.AlbumGet:input_type -> flixur.music_features.AlbumGetRequest
+	5,  // 3: flixur.plugins.FlixurPluginService.AlbumSearch:input_type -> flixur.music_features.AlbumSearchRequest
+	6,  // 4: flixur.plugins.FlixurPluginService.TrackGet:input_type -> flixur.music_features.TrackGetRequest
+	7,  // 5: flixur.plugins.FlixurPluginService.TrackSearch:input_type -> flixur.music_features.TrackSearchRequest
+	8,  // 6: flixur.plugins.FlixurPluginService.ArtistGet:output_type -> flixur.music_features.ArtistGetResponse
+	9,  // 7: flixur.plugins.FlixurPluginService.ArtistSearch:output_type -> flixur.music_features.ArtistSearchResponse
+	10, // 8: flixur.plugins.FlixurPluginService.AlbumGet:output_type -> flixur.music_features.AlbumGetResponse
+	11, // 9: flixur.plugins.FlixurPluginService.AlbumSearch:output_type -> flixur.music_features.AlbumSearchResponse
+	12, // 10: flixur.plugins.FlixurPluginService.TrackGet:output_type -> flixur.music_features.TrackGetResponse
+	13, // 11: flixur.plugins.FlixurPluginService.TrackSearch:output_type -> flixur.music_features.TrackSearchResponse
+	6,  // [6:12] is the sub-list for method output_type
+	0,  // [0:6] is the sub-list for method input_type
+	0,  // [0:0] is the sub-list for extension type_name
+	0,  // [0:0] is the sub-list for extension extendee
+	0,  // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_plugins_proto_init() }
@@ -315,7 +185,7 @@ func file_plugins_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_plugins_proto_rawDesc), len(file_plugins_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   2,
+			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

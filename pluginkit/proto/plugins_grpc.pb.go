@@ -19,353 +19,307 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FlixurPlugin_GetPluginInfo_FullMethodName = "/flixur.plugins.FlixurPlugin/GetPluginInfo"
-	FlixurPlugin_ArtistGet_FullMethodName     = "/flixur.plugins.FlixurPlugin/ArtistGet"
-	FlixurPlugin_ArtistSearch_FullMethodName  = "/flixur.plugins.FlixurPlugin/ArtistSearch"
-	FlixurPlugin_AlbumGet_FullMethodName      = "/flixur.plugins.FlixurPlugin/AlbumGet"
-	FlixurPlugin_AlbumSearch_FullMethodName   = "/flixur.plugins.FlixurPlugin/AlbumSearch"
-	FlixurPlugin_TrackGet_FullMethodName      = "/flixur.plugins.FlixurPlugin/TrackGet"
-	FlixurPlugin_TrackSearch_FullMethodName   = "/flixur.plugins.FlixurPlugin/TrackSearch"
+	FlixurPluginService_ArtistGet_FullMethodName    = "/flixur.plugins.FlixurPluginService/ArtistGet"
+	FlixurPluginService_ArtistSearch_FullMethodName = "/flixur.plugins.FlixurPluginService/ArtistSearch"
+	FlixurPluginService_AlbumGet_FullMethodName     = "/flixur.plugins.FlixurPluginService/AlbumGet"
+	FlixurPluginService_AlbumSearch_FullMethodName  = "/flixur.plugins.FlixurPluginService/AlbumSearch"
+	FlixurPluginService_TrackGet_FullMethodName     = "/flixur.plugins.FlixurPluginService/TrackGet"
+	FlixurPluginService_TrackSearch_FullMethodName  = "/flixur.plugins.FlixurPluginService/TrackSearch"
 )
 
-// FlixurPluginClient is the client API for FlixurPlugin service.
+// FlixurPluginServiceClient is the client API for FlixurPluginService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // The main plugin service. Plugins implement this gRPC service.
-type FlixurPluginClient interface {
-	// Get plugin metadata and capabilities.
-	GetPluginInfo(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*PluginInfo, error)
-	// === Artist Methods ===
+type FlixurPluginServiceClient interface {
 	// Get a specific artist by ID.
 	ArtistGet(ctx context.Context, in *ArtistGetRequest, opts ...grpc.CallOption) (*ArtistGetResponse, error)
 	// Search for artists by name.
 	ArtistSearch(ctx context.Context, in *ArtistSearchRequest, opts ...grpc.CallOption) (*ArtistSearchResponse, error)
-	// === Album Methods ===
 	// Get a specific album by ID.
 	AlbumGet(ctx context.Context, in *AlbumGetRequest, opts ...grpc.CallOption) (*AlbumGetResponse, error)
 	// Search for albums by name.
 	AlbumSearch(ctx context.Context, in *AlbumSearchRequest, opts ...grpc.CallOption) (*AlbumSearchResponse, error)
-	// === Track Methods ===
 	// Get a specific track by ID.
 	TrackGet(ctx context.Context, in *TrackGetRequest, opts ...grpc.CallOption) (*TrackGetResponse, error)
 	// Search for tracks by name.
 	TrackSearch(ctx context.Context, in *TrackSearchRequest, opts ...grpc.CallOption) (*TrackSearchResponse, error)
 }
 
-type flixurPluginClient struct {
+type flixurPluginServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewFlixurPluginClient(cc grpc.ClientConnInterface) FlixurPluginClient {
-	return &flixurPluginClient{cc}
+func NewFlixurPluginServiceClient(cc grpc.ClientConnInterface) FlixurPluginServiceClient {
+	return &flixurPluginServiceClient{cc}
 }
 
-func (c *flixurPluginClient) GetPluginInfo(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*PluginInfo, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PluginInfo)
-	err := c.cc.Invoke(ctx, FlixurPlugin_GetPluginInfo_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *flixurPluginClient) ArtistGet(ctx context.Context, in *ArtistGetRequest, opts ...grpc.CallOption) (*ArtistGetResponse, error) {
+func (c *flixurPluginServiceClient) ArtistGet(ctx context.Context, in *ArtistGetRequest, opts ...grpc.CallOption) (*ArtistGetResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ArtistGetResponse)
-	err := c.cc.Invoke(ctx, FlixurPlugin_ArtistGet_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, FlixurPluginService_ArtistGet_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *flixurPluginClient) ArtistSearch(ctx context.Context, in *ArtistSearchRequest, opts ...grpc.CallOption) (*ArtistSearchResponse, error) {
+func (c *flixurPluginServiceClient) ArtistSearch(ctx context.Context, in *ArtistSearchRequest, opts ...grpc.CallOption) (*ArtistSearchResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ArtistSearchResponse)
-	err := c.cc.Invoke(ctx, FlixurPlugin_ArtistSearch_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, FlixurPluginService_ArtistSearch_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *flixurPluginClient) AlbumGet(ctx context.Context, in *AlbumGetRequest, opts ...grpc.CallOption) (*AlbumGetResponse, error) {
+func (c *flixurPluginServiceClient) AlbumGet(ctx context.Context, in *AlbumGetRequest, opts ...grpc.CallOption) (*AlbumGetResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AlbumGetResponse)
-	err := c.cc.Invoke(ctx, FlixurPlugin_AlbumGet_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, FlixurPluginService_AlbumGet_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *flixurPluginClient) AlbumSearch(ctx context.Context, in *AlbumSearchRequest, opts ...grpc.CallOption) (*AlbumSearchResponse, error) {
+func (c *flixurPluginServiceClient) AlbumSearch(ctx context.Context, in *AlbumSearchRequest, opts ...grpc.CallOption) (*AlbumSearchResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AlbumSearchResponse)
-	err := c.cc.Invoke(ctx, FlixurPlugin_AlbumSearch_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, FlixurPluginService_AlbumSearch_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *flixurPluginClient) TrackGet(ctx context.Context, in *TrackGetRequest, opts ...grpc.CallOption) (*TrackGetResponse, error) {
+func (c *flixurPluginServiceClient) TrackGet(ctx context.Context, in *TrackGetRequest, opts ...grpc.CallOption) (*TrackGetResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TrackGetResponse)
-	err := c.cc.Invoke(ctx, FlixurPlugin_TrackGet_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, FlixurPluginService_TrackGet_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *flixurPluginClient) TrackSearch(ctx context.Context, in *TrackSearchRequest, opts ...grpc.CallOption) (*TrackSearchResponse, error) {
+func (c *flixurPluginServiceClient) TrackSearch(ctx context.Context, in *TrackSearchRequest, opts ...grpc.CallOption) (*TrackSearchResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TrackSearchResponse)
-	err := c.cc.Invoke(ctx, FlixurPlugin_TrackSearch_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, FlixurPluginService_TrackSearch_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// FlixurPluginServer is the server API for FlixurPlugin service.
-// All implementations must embed UnimplementedFlixurPluginServer
+// FlixurPluginServiceServer is the server API for FlixurPluginService service.
+// All implementations must embed UnimplementedFlixurPluginServiceServer
 // for forward compatibility.
 //
 // The main plugin service. Plugins implement this gRPC service.
-type FlixurPluginServer interface {
-	// Get plugin metadata and capabilities.
-	GetPluginInfo(context.Context, *EmptyRequest) (*PluginInfo, error)
-	// === Artist Methods ===
+type FlixurPluginServiceServer interface {
 	// Get a specific artist by ID.
 	ArtistGet(context.Context, *ArtistGetRequest) (*ArtistGetResponse, error)
 	// Search for artists by name.
 	ArtistSearch(context.Context, *ArtistSearchRequest) (*ArtistSearchResponse, error)
-	// === Album Methods ===
 	// Get a specific album by ID.
 	AlbumGet(context.Context, *AlbumGetRequest) (*AlbumGetResponse, error)
 	// Search for albums by name.
 	AlbumSearch(context.Context, *AlbumSearchRequest) (*AlbumSearchResponse, error)
-	// === Track Methods ===
 	// Get a specific track by ID.
 	TrackGet(context.Context, *TrackGetRequest) (*TrackGetResponse, error)
 	// Search for tracks by name.
 	TrackSearch(context.Context, *TrackSearchRequest) (*TrackSearchResponse, error)
-	mustEmbedUnimplementedFlixurPluginServer()
+	mustEmbedUnimplementedFlixurPluginServiceServer()
 }
 
-// UnimplementedFlixurPluginServer must be embedded to have
+// UnimplementedFlixurPluginServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedFlixurPluginServer struct{}
+type UnimplementedFlixurPluginServiceServer struct{}
 
-func (UnimplementedFlixurPluginServer) GetPluginInfo(context.Context, *EmptyRequest) (*PluginInfo, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetPluginInfo not implemented")
-}
-func (UnimplementedFlixurPluginServer) ArtistGet(context.Context, *ArtistGetRequest) (*ArtistGetResponse, error) {
+func (UnimplementedFlixurPluginServiceServer) ArtistGet(context.Context, *ArtistGetRequest) (*ArtistGetResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ArtistGet not implemented")
 }
-func (UnimplementedFlixurPluginServer) ArtistSearch(context.Context, *ArtistSearchRequest) (*ArtistSearchResponse, error) {
+func (UnimplementedFlixurPluginServiceServer) ArtistSearch(context.Context, *ArtistSearchRequest) (*ArtistSearchResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ArtistSearch not implemented")
 }
-func (UnimplementedFlixurPluginServer) AlbumGet(context.Context, *AlbumGetRequest) (*AlbumGetResponse, error) {
+func (UnimplementedFlixurPluginServiceServer) AlbumGet(context.Context, *AlbumGetRequest) (*AlbumGetResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AlbumGet not implemented")
 }
-func (UnimplementedFlixurPluginServer) AlbumSearch(context.Context, *AlbumSearchRequest) (*AlbumSearchResponse, error) {
+func (UnimplementedFlixurPluginServiceServer) AlbumSearch(context.Context, *AlbumSearchRequest) (*AlbumSearchResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AlbumSearch not implemented")
 }
-func (UnimplementedFlixurPluginServer) TrackGet(context.Context, *TrackGetRequest) (*TrackGetResponse, error) {
+func (UnimplementedFlixurPluginServiceServer) TrackGet(context.Context, *TrackGetRequest) (*TrackGetResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TrackGet not implemented")
 }
-func (UnimplementedFlixurPluginServer) TrackSearch(context.Context, *TrackSearchRequest) (*TrackSearchResponse, error) {
+func (UnimplementedFlixurPluginServiceServer) TrackSearch(context.Context, *TrackSearchRequest) (*TrackSearchResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TrackSearch not implemented")
 }
-func (UnimplementedFlixurPluginServer) mustEmbedUnimplementedFlixurPluginServer() {}
-func (UnimplementedFlixurPluginServer) testEmbeddedByValue()                      {}
+func (UnimplementedFlixurPluginServiceServer) mustEmbedUnimplementedFlixurPluginServiceServer() {}
+func (UnimplementedFlixurPluginServiceServer) testEmbeddedByValue()                             {}
 
-// UnsafeFlixurPluginServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to FlixurPluginServer will
+// UnsafeFlixurPluginServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to FlixurPluginServiceServer will
 // result in compilation errors.
-type UnsafeFlixurPluginServer interface {
-	mustEmbedUnimplementedFlixurPluginServer()
+type UnsafeFlixurPluginServiceServer interface {
+	mustEmbedUnimplementedFlixurPluginServiceServer()
 }
 
-func RegisterFlixurPluginServer(s grpc.ServiceRegistrar, srv FlixurPluginServer) {
-	// If the following call panics, it indicates UnimplementedFlixurPluginServer was
+func RegisterFlixurPluginServiceServer(s grpc.ServiceRegistrar, srv FlixurPluginServiceServer) {
+	// If the following call panics, it indicates UnimplementedFlixurPluginServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&FlixurPlugin_ServiceDesc, srv)
+	s.RegisterService(&FlixurPluginService_ServiceDesc, srv)
 }
 
-func _FlixurPlugin_GetPluginInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EmptyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FlixurPluginServer).GetPluginInfo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: FlixurPlugin_GetPluginInfo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FlixurPluginServer).GetPluginInfo(ctx, req.(*EmptyRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _FlixurPlugin_ArtistGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _FlixurPluginService_ArtistGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ArtistGetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FlixurPluginServer).ArtistGet(ctx, in)
+		return srv.(FlixurPluginServiceServer).ArtistGet(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FlixurPlugin_ArtistGet_FullMethodName,
+		FullMethod: FlixurPluginService_ArtistGet_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FlixurPluginServer).ArtistGet(ctx, req.(*ArtistGetRequest))
+		return srv.(FlixurPluginServiceServer).ArtistGet(ctx, req.(*ArtistGetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FlixurPlugin_ArtistSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _FlixurPluginService_ArtistSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ArtistSearchRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FlixurPluginServer).ArtistSearch(ctx, in)
+		return srv.(FlixurPluginServiceServer).ArtistSearch(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FlixurPlugin_ArtistSearch_FullMethodName,
+		FullMethod: FlixurPluginService_ArtistSearch_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FlixurPluginServer).ArtistSearch(ctx, req.(*ArtistSearchRequest))
+		return srv.(FlixurPluginServiceServer).ArtistSearch(ctx, req.(*ArtistSearchRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FlixurPlugin_AlbumGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _FlixurPluginService_AlbumGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AlbumGetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FlixurPluginServer).AlbumGet(ctx, in)
+		return srv.(FlixurPluginServiceServer).AlbumGet(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FlixurPlugin_AlbumGet_FullMethodName,
+		FullMethod: FlixurPluginService_AlbumGet_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FlixurPluginServer).AlbumGet(ctx, req.(*AlbumGetRequest))
+		return srv.(FlixurPluginServiceServer).AlbumGet(ctx, req.(*AlbumGetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FlixurPlugin_AlbumSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _FlixurPluginService_AlbumSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AlbumSearchRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FlixurPluginServer).AlbumSearch(ctx, in)
+		return srv.(FlixurPluginServiceServer).AlbumSearch(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FlixurPlugin_AlbumSearch_FullMethodName,
+		FullMethod: FlixurPluginService_AlbumSearch_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FlixurPluginServer).AlbumSearch(ctx, req.(*AlbumSearchRequest))
+		return srv.(FlixurPluginServiceServer).AlbumSearch(ctx, req.(*AlbumSearchRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FlixurPlugin_TrackGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _FlixurPluginService_TrackGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TrackGetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FlixurPluginServer).TrackGet(ctx, in)
+		return srv.(FlixurPluginServiceServer).TrackGet(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FlixurPlugin_TrackGet_FullMethodName,
+		FullMethod: FlixurPluginService_TrackGet_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FlixurPluginServer).TrackGet(ctx, req.(*TrackGetRequest))
+		return srv.(FlixurPluginServiceServer).TrackGet(ctx, req.(*TrackGetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FlixurPlugin_TrackSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _FlixurPluginService_TrackSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TrackSearchRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FlixurPluginServer).TrackSearch(ctx, in)
+		return srv.(FlixurPluginServiceServer).TrackSearch(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: FlixurPlugin_TrackSearch_FullMethodName,
+		FullMethod: FlixurPluginService_TrackSearch_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FlixurPluginServer).TrackSearch(ctx, req.(*TrackSearchRequest))
+		return srv.(FlixurPluginServiceServer).TrackSearch(ctx, req.(*TrackSearchRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// FlixurPlugin_ServiceDesc is the grpc.ServiceDesc for FlixurPlugin service.
+// FlixurPluginService_ServiceDesc is the grpc.ServiceDesc for FlixurPluginService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var FlixurPlugin_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "flixur.plugins.FlixurPlugin",
-	HandlerType: (*FlixurPluginServer)(nil),
+var FlixurPluginService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "flixur.plugins.FlixurPluginService",
+	HandlerType: (*FlixurPluginServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetPluginInfo",
-			Handler:    _FlixurPlugin_GetPluginInfo_Handler,
-		},
-		{
 			MethodName: "ArtistGet",
-			Handler:    _FlixurPlugin_ArtistGet_Handler,
+			Handler:    _FlixurPluginService_ArtistGet_Handler,
 		},
 		{
 			MethodName: "ArtistSearch",
-			Handler:    _FlixurPlugin_ArtistSearch_Handler,
+			Handler:    _FlixurPluginService_ArtistSearch_Handler,
 		},
 		{
 			MethodName: "AlbumGet",
-			Handler:    _FlixurPlugin_AlbumGet_Handler,
+			Handler:    _FlixurPluginService_AlbumGet_Handler,
 		},
 		{
 			MethodName: "AlbumSearch",
-			Handler:    _FlixurPlugin_AlbumSearch_Handler,
+			Handler:    _FlixurPluginService_AlbumSearch_Handler,
 		},
 		{
 			MethodName: "TrackGet",
-			Handler:    _FlixurPlugin_TrackGet_Handler,
+			Handler:    _FlixurPluginService_TrackGet_Handler,
 		},
 		{
 			MethodName: "TrackSearch",
-			Handler:    _FlixurPlugin_TrackSearch_Handler,
+			Handler:    _FlixurPluginService_TrackSearch_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

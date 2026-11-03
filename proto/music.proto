@@ -34,8 +34,9 @@ message LocalArtist {
 }
 
 enum AlbumType {
-  SINGLE = 0;
-  ALBUM  = 1;
+  ALBUM_TYPE_UNSPECIFIED = 0;
+  ALBUM_TYPE_SINGLE = 1;
+  ALBUM_TYPE_ALBUM  = 2;
 }
 
 message Album {
@@ -62,12 +63,13 @@ message Album {
 }
 
 enum TrackExplicitness {
+  TRACK_EXPLICITNESS_UNSPECIFIED = 0;
   // Normal
-  CLEAN = 0;
+  TRACK_EXPLICITNESS_CLEAN = 1;
   // Explicit
-  EXPLICIT = 1;
+  TRACK_EXPLICITNESS_EXPLICIT = 2;
   // Rated X
-  RESTRICTED = 2;
+  TRACK_EXPLICITNESS_RESTRICTED = 3;
 }
 
 message Track {
