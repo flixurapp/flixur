@@ -10,6 +10,8 @@ import (
 )
 
 // Flixur plugin manifest JSON.
+//
+//go:generate go run ./schemagen
 type PluginManifest struct {
 	// Unique Plugin ID.
 	Id string `json:"id"`

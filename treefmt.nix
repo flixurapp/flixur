@@ -5,6 +5,7 @@
     # generated code
     "server/ent/**"
     "pluginkit/proto/**"
+    "pluginkit/manifest.schema.json"
     "flutter/openapi/**"
     "flutter/build/**"
     "flutter/.dart_tool/**"

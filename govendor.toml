@@ -19,7 +19,7 @@ schema = 4
     packages = ["entgo.io/ent", "entgo.io/ent/dialect", "entgo.io/ent/dialect/entsql", "entgo.io/ent/dialect/sql", "entgo.io/ent/dialect/sql/schema", "entgo.io/ent/dialect/sql/sqlgraph", "entgo.io/ent/dialect/sql/sqljson", "entgo.io/ent/entql", "entgo.io/ent/schema", "entgo.io/ent/schema/edge", "entgo.io/ent/schema/field", "entgo.io/ent/schema/index", "entgo.io/ent/schema/mixin"]
   [mod."forge.xela.codes/xela/flixur/pluginkit"]
     version = "v0.0.0"
-    hash = "sha256-yWXV/x4LruMA6o666jteUNAX/pMbc47DF/eGJFkFudo="
+    hash = "sha256-Bas6tRL1G/1MoGi64LK1UjOdTjYrHTWZzFzBjj+4oA4="
     go = "1.26.4"
     local = "./pluginkit"
   [mod."github.com/agext/levenshtein"]
@@ -36,11 +36,21 @@ schema = 4
     hash = "sha256-7xfgjilHYPTTC0Xa7MWQOE8X/LbFmlGDXEu5+pzLn0k="
     go = "1.25"
     packages = ["github.com/apparentlymart/go-textseg/v17/textseg", "github.com/apparentlymart/go-textseg/v17/textseg/internal/charprops", "github.com/apparentlymart/go-textseg/v17/textseg/internal/machine"]
+  [mod."github.com/bahlo/generic-list-go"]
+    version = "v0.2.0"
+    hash = "sha256-BIzqwG61hnMDknZOn/5+VX09yemzFzMjhPF48XoALto="
+    go = "1.18"
+    packages = ["github.com/bahlo/generic-list-go"]
   [mod."github.com/bmatcuk/doublestar"]
     version = "v1.3.4"
     hash = "sha256-QcHL9WGVAH3vIs4FZH+w1DJxdCHnXkkzODtOfhKR0X0="
     go = "1.12"
     packages = ["github.com/bmatcuk/doublestar"]
+  [mod."github.com/buger/jsonparser"]
+    version = "v1.1.2"
+    hash = "sha256-zyB2AEJX1ZuXyZ6vh45KOe9NSyPNQBrqVs45e3mYjo4="
+    go = "1.13"
+    packages = ["github.com/buger/jsonparser"]
   [mod."github.com/caarlos0/env/v11"]
     version = "v11.4.1"
     hash = "sha256-E0gEzzlhRAO+bx7jALEtntzMnNaXWq07ev8VFoYmHeg="
@@ -118,6 +128,11 @@ schema = 4
     hash = "sha256-JvpgwhqKAaS0PSlU/obe4tDJ2LcR1pyWRmJTkmT7hrA="
     go = "1.20"
     packages = ["github.com/hashicorp/yamux"]
+  [mod."github.com/invopop/jsonschema"]
+    version = "v0.14.0"
+    hash = "sha256-gndZdk5eUqIsFMDsYjcDEbKpY5XCC4sLLZZ55Z4KCHk="
+    go = "1.24"
+    packages = ["github.com/invopop/jsonschema"]
   [mod."github.com/kr/pretty"]
     version = "v0.3.1"
     hash = "sha256-DlER7XM+xiaLjvebcIPiB12oVNjyZHuJHoRGITzzpKU="
@@ -152,6 +167,11 @@ schema = 4
     hash = "sha256-J4+O+1pQPAr+ieHBocT/AQ9kjmcU40RqRKMrS4qQxfc="
     go = "1.15"
     packages = ["github.com/oklog/ulid/v2"]
+  [mod."github.com/pb33f/ordered-map/v2"]
+    version = "v2.3.1"
+    hash = "sha256-eDCb6p/b7dhOB2YOshY/0EU+Do3eoUXFR9f1EMrCK8E="
+    go = "1.24"
+    packages = ["github.com/pb33f/ordered-map/v2"]
   [mod."github.com/pmezard/go-difflib"]
     version = "v1.0.1-0.20181226105442-5d4384ee4fb2"
     hash = "sha256-XA4Oj1gdmdV/F/+8kMI+DBxKPthZ768hbKsO3d9Gx90="
@@ -165,6 +185,11 @@ schema = 4
     hash = "sha256-RCf4Buf357TTWQnMPSWKrfdJ4L/RqOHNBD0g3+VpMw8="
     go = "1.18"
     packages = ["github.com/samber/lo", "github.com/samber/lo/internal/constraints", "github.com/samber/lo/internal/xrand", "github.com/samber/lo/internal/xtime", "github.com/samber/lo/mutable"]
+  [mod."github.com/santhosh-tekuri/jsonschema/v5"]
+    version = "v5.3.1"
+    hash = "sha256-G3shtLAutSrPjni+C9LAWDIeYfkr4R5pdKUVfAkB518="
+    go = "1.19"
+    packages = ["github.com/santhosh-tekuri/jsonschema/v5"]
   [mod."github.com/stretchr/testify"]
     version = "v1.11.1"
     hash = "sha256-sWfjkuKJyDllDEtnM8sb/pdLzPQmUYWYtmeWz/5suUc="
@@ -184,6 +209,11 @@ schema = 4
     hash = "sha256-lliQ86tVY4kLytlD3Qs0nMfA8/z0mai7gMrBaVquSso="
     go = "1.17"
     packages = ["github.com/zclconf/go-cty-yaml"]
+  [mod."go.yaml.in/yaml/v4"]
+    version = "v4.0.0-rc.2"
+    hash = "sha256-vLpe6QjO8zGBfBSCkWgrI8uPSABAF+Cc3PJNCcm4ylU="
+    go = "1.18"
+    packages = ["go.yaml.in/yaml/v4"]
   [mod."golang.org/x/crypto"]
     version = "v0.54.0"
     hash = "sha256-m8jsqlPuoPxGDjClzcAVbXf1aiU07L+9j7vYcqJu/0Q="
