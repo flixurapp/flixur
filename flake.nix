@@ -202,6 +202,16 @@
               exec flutter "$@"
             '';
           };
+          test-pluginkit = pkgs.writeShellApplication {
+            name = "test-pluginkit";
+            runtimeInputs = [ pkgs.go ];
+            text = ''
+              ${setup}
+              cd pluginkit
+              go test -coverprofile=coverage.out -coverpkg="$(go list ./... | grep -v '/ent' | tr '\n' ',' | sed 's/,$//')" ./...
+              go tool cover -html=coverage.out # open coverage HTML
+            '';
+          };
           test-server = pkgs.writeShellApplication {
             name = "test-server";
             runtimeInputs = [ pkgs.go ];
