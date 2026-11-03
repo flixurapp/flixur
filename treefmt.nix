@@ -22,5 +22,6 @@
     dart-format.enable = true;
     clang-format.enable = true;
     prettier.enable = true;
+    buf.enable = true;
   };
 }

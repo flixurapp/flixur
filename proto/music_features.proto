@@ -1,8 +1,9 @@
 syntax = "proto3";
 package flixur.music_features;
-option go_package = "forge.xela.codes/xela/flixur/pluginkit/proto";
 
 import "music.proto";
+
+option go_package = "forge.xela.codes/xela/flixur/pluginkit/proto";
 
 /* GetArtist */
 message ArtistGetRequest {

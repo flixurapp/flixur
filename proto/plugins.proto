@@ -1,8 +1,9 @@
 syntax = "proto3";
 package flixur.plugins;
-option go_package = "forge.xela.codes/xela/flixur/pluginkit/proto";
 
 import "music_features.proto";
+
+option go_package = "forge.xela.codes/xela/flixur/pluginkit/proto";
 
 // Used to test if a plugin supports certain features.
 enum Feature {
@@ -14,27 +15,26 @@ enum Feature {
 // Empty message for RPC calls that don't require input.
 message EmptyRequest {}
 
-
 // The main plugin service. Plugins implement this gRPC service.
 service FlixurPluginService {
   // === Artist Methods ===
 
   // Get a specific artist by ID.
-  rpc ArtistGet (music_features.ArtistGetRequest) returns (music_features.ArtistGetResponse);
+  rpc ArtistGet(music_features.ArtistGetRequest) returns (music_features.ArtistGetResponse);
   // Search for artists by name.
-  rpc ArtistSearch (music_features.ArtistSearchRequest) returns (music_features.ArtistSearchResponse);
+  rpc ArtistSearch(music_features.ArtistSearchRequest) returns (music_features.ArtistSearchResponse);
 
   // === Album Methods ===
 
   // Get a specific album by ID.
-  rpc AlbumGet (music_features.AlbumGetRequest) returns (music_features.AlbumGetResponse);
+  rpc AlbumGet(music_features.AlbumGetRequest) returns (music_features.AlbumGetResponse);
   // Search for albums by name.
-  rpc AlbumSearch (music_features.AlbumSearchRequest) returns (music_features.AlbumSearchResponse);
+  rpc AlbumSearch(music_features.AlbumSearchRequest) returns (music_features.AlbumSearchResponse);
 
   // === Track Methods ===
 
   // Get a specific track by ID.
-  rpc TrackGet (music_features.TrackGetRequest) returns (music_features.TrackGetResponse);
+  rpc TrackGet(music_features.TrackGetRequest) returns (music_features.TrackGetResponse);
   // Search for tracks by name.
-  rpc TrackSearch (music_features.TrackSearchRequest) returns (music_features.TrackSearchResponse);
+  rpc TrackSearch(music_features.TrackSearchRequest) returns (music_features.TrackSearchResponse);
 }

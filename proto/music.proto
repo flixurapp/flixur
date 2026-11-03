@@ -1,5 +1,6 @@
 syntax = "proto3";
 package flixur.music;
+
 option go_package = "forge.xela.codes/xela/flixur/pluginkit/proto";
 
 // Usually an artist returned from a provider.
@@ -36,7 +37,7 @@ message LocalArtist {
 enum AlbumType {
   ALBUM_TYPE_UNSPECIFIED = 0;
   ALBUM_TYPE_SINGLE = 1;
-  ALBUM_TYPE_ALBUM  = 2;
+  ALBUM_TYPE_ALBUM = 2;
 }
 
 message Album {
