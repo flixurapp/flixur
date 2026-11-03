@@ -1,4 +1,5 @@
 {
+  "$schema": "https://forge.xela.codes/xela/flixur/raw/branch/master/pluginkit/manifest.schema.json",
   "id": "example",
   "name": "Example Plugin",
   "version": "2023.10.19",
