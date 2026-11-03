@@ -25,7 +25,7 @@
       treefmt-nix,
       ...
     }:
-    flake-utils.lib.eachDefaultSystem (
+    (flake-utils.lib.eachDefaultSystem (
       system:
       let
         pkgs = import nixpkgs {
@@ -241,5 +241,9 @@
         formatter = treefmtEval.config.build.wrapper;
         checks.format = treefmtEval.config.build.check self;
       }
-    );
+    ))
+    // {
+      # NixOS module for the server
+      nixosModules.default = import ./nix/module.nix { flake = self; };
+    };
 }
