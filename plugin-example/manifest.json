@@ -1,7 +1,7 @@
 {
   "id": "example",
   "name": "Example Plugin",
-  "version": "2026.11.03",
+  "version": "2023.10.19",
   "features": ["MUSIC_METADATA"],
   "icon": "mdi:music",
   "description": "Small example plugin.",
