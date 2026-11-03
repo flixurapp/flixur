@@ -32,6 +32,7 @@
           inherit system;
           overlays = [ go-overlay.overlays.default ];
         };
+        lib = nixpkgs.lib;
 
         treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
 
@@ -125,6 +126,36 @@
             let
               proto-in = "./proto";
               proto-out = "./pluginkit/proto";
+
+              # Convert camelCase to SCREAMING_SNAKE_CASE
+              screamingSnake =
+                let
+                  go =
+                    s: acc:
+                    let
+                      m = builtins.match "([a-z0-9]*)([A-Z])(.*)" s;
+                    in
+                    if m == null then
+                      acc + s
+                    else
+                      go (builtins.elemAt m 2) (acc + (builtins.elemAt m 0) + "_" + (builtins.elemAt m 1));
+                in
+                s: lib.removePrefix "_" (lib.toUpper (go s ""));
+
+              # Enums whose generated Go values double the enum name
+              # `Feature_FEATURE_MUSIC_METADATA` => `Feature_MUSIC_METADATA`.
+              enumNames = [
+                "Feature"
+                "AlbumType"
+                "TrackExplicitness"
+              ];
+              dedupeEnums = lib.concatMapStrings (
+                enumName:
+                let
+                  prefix = screamingSnake enumName;
+                in
+                "-e \"s/${enumName}_${prefix}_/${enumName}_/g\" "
+              ) enumNames;
             in
             pkgs.writeShellApplication {
               name = "proto";
@@ -143,6 +174,8 @@
                   ${proto-in}/*.proto
                 # remove the omitempty flag from json that isnt "optional" (with *)
                 sed -i '/\*.*omitempty/!s/,omitempty//' ${proto-out}/*.pb.go
+                # dedupe enum value prefixes
+                sed -i ${dedupeEnums}${proto-out}/*.pb.go
 
                 cd pluginkit
                 go generate ./...

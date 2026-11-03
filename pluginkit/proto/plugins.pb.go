@@ -25,9 +25,9 @@ const (
 type Feature int32
 
 const (
-	Feature_FEATURE_UNSPECIFIED Feature = 0
+	Feature_UNSPECIFIED Feature = 0
 	// Implements `Artist*`, `Album*`, `Track*` RPC calls
-	Feature_FEATURE_MUSIC_METADATA Feature = 1
+	Feature_MUSIC_METADATA Feature = 1
 )
 
 // Enum value maps for Feature.

@@ -46,7 +46,7 @@ func TestParsePluginManifest(t *testing.T) {
 		t.Errorf("Dependencies = %v, want nil", m.Dependencies)
 	}
 
-	wantFeatures := []pb.Feature{pb.Feature_FEATURE_MUSIC_METADATA}
+	wantFeatures := []pb.Feature{pb.Feature_MUSIC_METADATA}
 	if len(m.Features) != len(wantFeatures) {
 		t.Fatalf("Features = %v, want %v", m.Features, wantFeatures)
 	}

@@ -8,8 +8,8 @@ import (
 )
 
 func TestPluginHasFeature(t *testing.T) {
-	p := &Plugin{Manifest: &pluginkit.PluginManifest{Features: []pb.Feature{pb.Feature_FEATURE_MUSIC_METADATA}}}
-	if !p.HasFeature(pb.Feature_FEATURE_MUSIC_METADATA) {
+	p := &Plugin{Manifest: &pluginkit.PluginManifest{Features: []pb.Feature{pb.Feature_MUSIC_METADATA}}}
+	if !p.HasFeature(pb.Feature_MUSIC_METADATA) {
 		t.Error("expected plugin to have MUSIC_METADATA")
 	}
 	if p.HasFeature(pb.Feature(-999)) {
@@ -32,11 +32,11 @@ func TestFindPluginByID(t *testing.T) {
 
 func TestFindPluginsByFeature(t *testing.T) {
 	resetPlugins(t, map[string]*Plugin{
-		"a": {Manifest: &pluginkit.PluginManifest{Id: "a", Features: []pb.Feature{pb.Feature_FEATURE_MUSIC_METADATA}}},
+		"a": {Manifest: &pluginkit.PluginManifest{Id: "a", Features: []pb.Feature{pb.Feature_MUSIC_METADATA}}},
 		"b": {Manifest: &pluginkit.PluginManifest{Id: "b", Features: []pb.Feature{}}},
 	})
 
-	found := FindPluginsByFeature(pb.Feature_FEATURE_MUSIC_METADATA)
+	found := FindPluginsByFeature(pb.Feature_MUSIC_METADATA)
 	if len(found) != 1 || found[0].Manifest.Id != "a" {
 		t.Errorf("expected 1 plugin with feature, got %v", found)
 	}

@@ -24,9 +24,9 @@ const (
 type AlbumType int32
 
 const (
-	AlbumType_ALBUM_TYPE_UNSPECIFIED AlbumType = 0
-	AlbumType_ALBUM_TYPE_SINGLE      AlbumType = 1
-	AlbumType_ALBUM_TYPE_ALBUM       AlbumType = 2
+	AlbumType_UNSPECIFIED AlbumType = 0
+	AlbumType_SINGLE      AlbumType = 1
+	AlbumType_ALBUM       AlbumType = 2
 )
 
 // Enum value maps for AlbumType.
@@ -73,13 +73,13 @@ func (AlbumType) EnumDescriptor() ([]byte, []int) {
 type TrackExplicitness int32
 
 const (
-	TrackExplicitness_TRACK_EXPLICITNESS_UNSPECIFIED TrackExplicitness = 0
+	TrackExplicitness_UNSPECIFIED TrackExplicitness = 0
 	// Normal
-	TrackExplicitness_TRACK_EXPLICITNESS_CLEAN TrackExplicitness = 1
+	TrackExplicitness_CLEAN TrackExplicitness = 1
 	// Explicit
-	TrackExplicitness_TRACK_EXPLICITNESS_EXPLICIT TrackExplicitness = 2
+	TrackExplicitness_EXPLICIT TrackExplicitness = 2
 	// Rated X
-	TrackExplicitness_TRACK_EXPLICITNESS_RESTRICTED TrackExplicitness = 3
+	TrackExplicitness_RESTRICTED TrackExplicitness = 3
 )
 
 // Enum value maps for TrackExplicitness.
@@ -382,7 +382,7 @@ func (x *Album) GetType() AlbumType {
 	if x != nil {
 		return x.Type
 	}
-	return AlbumType_ALBUM_TYPE_UNSPECIFIED
+	return AlbumType_UNSPECIFIED
 }
 
 func (x *Album) GetRating() int32 {
@@ -511,7 +511,7 @@ func (x *Track) GetExplicitness() TrackExplicitness {
 	if x != nil {
 		return x.Explicitness
 	}
-	return TrackExplicitness_TRACK_EXPLICITNESS_UNSPECIFIED
+	return TrackExplicitness_UNSPECIFIED
 }
 
 var File_music_proto protoreflect.FileDescriptor
