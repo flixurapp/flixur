@@ -29,20 +29,14 @@ class OrLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final line = Expanded(
-      child: Divider(
-        color: context.colors.textMuted,
-        thickness: 1,
-      ),
+      child: Divider(color: context.colors.textMuted, thickness: 1),
     );
 
     return Row(
       children: [
         line,
         Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: padding,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: padding),
           child: Text(
             t.or_line,
             style: TextStyle(

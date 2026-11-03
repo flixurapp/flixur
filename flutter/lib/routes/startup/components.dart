@@ -19,9 +19,7 @@ class StartupButton extends StatelessWidget {
       onPressed: isLoading ? null : onPressed,
       style: .new(
         padding: .all(const .symmetric(vertical: 18)),
-        textStyle: .all(
-          const .new(fontSize: 24, fontWeight: .w500),
-        ),
+        textStyle: .all(const .new(fontSize: 24, fontWeight: .w500)),
       ),
       child: isLoading ? const LoadingSpinner() : Text(text.toUpperCase()),
     );

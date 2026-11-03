@@ -78,9 +78,7 @@ class _SetupViewState extends State<SetupView> {
               FlixurInput(
                 label: t.routes.startup.setup.code.toUpperCase(),
                 textField: (deco) => TextField(
-                  decoration: deco.copyWith(
-                    hintText: "X" * 6,
-                  ),
+                  decoration: deco.copyWith(hintText: "X" * 6),
                   controller: _codeController,
                   onSubmitted: (_) => _usernameFocus.requestFocus(),
                   maxLength: 6,
@@ -99,9 +97,7 @@ class _SetupViewState extends State<SetupView> {
               FlixurInput(
                 label: t.password.toUpperCase(),
                 textField: (deco) => TextField(
-                  decoration: deco.copyWith(
-                    hintText: "*" * 12,
-                  ),
+                  decoration: deco.copyWith(hintText: "*" * 12),
                   controller: _passwordController,
                   onSubmitted: (_) => _completeSetup(),
                   focusNode: _passwordFocus,
