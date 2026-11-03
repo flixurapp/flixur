@@ -19,7 +19,7 @@ schema = 4
     packages = ["entgo.io/ent", "entgo.io/ent/dialect", "entgo.io/ent/dialect/entsql", "entgo.io/ent/dialect/sql", "entgo.io/ent/dialect/sql/schema", "entgo.io/ent/dialect/sql/sqlgraph", "entgo.io/ent/dialect/sql/sqljson", "entgo.io/ent/entql", "entgo.io/ent/schema", "entgo.io/ent/schema/edge", "entgo.io/ent/schema/field", "entgo.io/ent/schema/index", "entgo.io/ent/schema/mixin"]
   [mod."forge.xela.codes/xela/flixur/pluginkit"]
     version = "v0.0.0"
-    hash = "sha256-7C/IhihReF6RtSmY+KzUktFT9vWu/oeeKhvDoIYJWpE="
+    hash = "sha256-yWXV/x4LruMA6o666jteUNAX/pMbc47DF/eGJFkFudo="
     go = "1.26.4"
     local = "./pluginkit"
   [mod."github.com/agext/levenshtein"]
