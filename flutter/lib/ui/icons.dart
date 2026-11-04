@@ -21,36 +21,39 @@ class Iconify extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconifyIcon(
-      icon: icon,
-      size: size,
-      color: color,
-      placeholder: SizedBox(
-        width: size,
-        height: size,
-        child: CircularProgressIndicator(
-          strokeWidth: max(1, size / 12),
-          color: color,
+    // this keeps the icon in the center so it doesnt stretch
+    return Center(
+      child: IconifyIcon(
+        icon: icon,
+        size: size,
+        color: color,
+        placeholder: SizedBox(
+          width: size,
+          height: size,
+          child: CircularProgressIndicator(
+            strokeWidth: max(1, size / 12),
+            color: color,
+          ),
         ),
-      ),
-      errorWidget: icon != _errIcon
-          ? Iconify(_errIcon, size: size, color: context.colors.error)
-          // if we cant load icons AT ALL then fall back to a textual X
-          : Container(
-              alignment: .center,
-              width: size,
-              height: size,
-              child: Text(
-                "X",
-                textAlign: .center,
-                style: .new(
-                  fontWeight: .w900,
-                  color: context.colors.error,
-                  fontSize: size - 2,
-                  height: 1,
+        errorWidget: icon != _errIcon
+            ? Iconify(_errIcon, size: size, color: context.colors.error)
+            // if we cant load icons AT ALL then fall back to a textual X
+            : Container(
+                alignment: .center,
+                width: size,
+                height: size,
+                child: Text(
+                  "X",
+                  textAlign: .center,
+                  style: .new(
+                    fontWeight: .w900,
+                    color: context.colors.error,
+                    fontSize: size - 2,
+                    height: 1,
+                  ),
                 ),
               ),
-            ),
+      ),
     );
   }
 }
