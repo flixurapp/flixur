@@ -22,7 +22,7 @@ dependencies:
   iconify_design:
     git:
       url: https://github.com/itzTheMeow/iconify_design_flutter.git
-      ref: 94dfdff42b2b2e1ba4e851b819626d6f77deec08
+      ref: 3abf752d4ee351dad2e8ac746e27031500da94cf
   openapi:
     path: ./openapi
   package_info_plus: ^10.2.1
