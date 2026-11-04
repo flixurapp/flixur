@@ -93,6 +93,14 @@ ThemeData buildAppTheme(AppColors colors) {
       surface: colors.mantle,
       onSurface: colors.text,
     ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: colors.primary,
+        textStyle: const TextStyle(fontWeight: .w500),
+        enabledMouseCursor: SystemMouseCursors.click,
+        disabledMouseCursor: SystemMouseCursors.forbidden,
+      ),
+    ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         backgroundColor: colors.primary,
