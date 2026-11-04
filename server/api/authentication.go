@@ -15,6 +15,7 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/oklog/ulid/v2"
 	"github.com/rs/zerolog/log"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // Platform headers used to
@@ -180,6 +181,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		Description: "Login with username/password.",
 		NoAuth:      true,
 		Errors: APIErrorCodes{
+			CodeDatabaseError:     "Failed to write to database.",
 			CodeIncorrectUsername: "Username not found.",
 			CodeIncorrectPassword: "Incorrect password.",
 		}}), "/login", func(ctx context.Context, input *struct {
@@ -189,6 +191,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			Password string `json:"password"`
 		}
 	}) (*Output[SessionTokenBody], error) {
+		// grab user from db
 		user, err := reg.DB.User.Query().
 			Where(user.UsernameEqualFold(input.Body.Username)).
 			First(ctx)
@@ -196,13 +199,22 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 			return nil, CreateAPIError(CodeIncorrectUsername)
 		}
 
-		//TODO:
-		if user != nil {
-			return nil, nil
+		// check password validity
+		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Body.Password))
+		if err != nil {
+			log.Warn().Err(err).Str("userID", user.ID).Msg("User failed to authenticate.")
+			return nil, CreateAPIError(CodeIncorrectPassword)
+		}
+
+		// create new user session
+		sessionToken, err := CreateUserSessionToken(ctx, reg.DB, user, input.PlatformHeadersMixin)
+		if err != nil {
+			log.Err(err).Str("userID", user.ID).Msg("Failed to create session for user.")
+			return nil, CreateAPIError(CodeDatabaseError)
 		}
 
 		return CreateOutput(SessionTokenBody{
-			SessionToken: "",
+			SessionToken: sessionToken,
 		}), nil
 	})
 

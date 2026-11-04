@@ -10,6 +10,10 @@ routes:
     login:
       app_bar: "Log In"
       login: "Log In"
+      failed: "Login Failed"
+      failed_codes:
+        INCORRECT_USERNAME: "Username not found."
+        INCORRECT_PASSWORD: "Incorrect password."
     server_url:
       connect: "Connect"
       url: "Server URL"

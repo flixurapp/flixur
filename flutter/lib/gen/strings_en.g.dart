@@ -116,6 +116,14 @@ class Translations$routes$startup$login$en {
 
 	/// en: 'Log In'
 	String get login => 'Log In';
+
+	/// en: 'Login Failed'
+	String get failed => 'Login Failed';
+
+	Map<String, String> get failed_codes => {
+		'INCORRECT_USERNAME': 'Username not found.',
+		'INCORRECT_PASSWORD': 'Incorrect password.',
+	};
 }
 
 // Path: routes.startup.server_url
@@ -192,6 +200,9 @@ extension on Translations {
 			'password' => 'Password',
 			'routes.startup.login.app_bar' => 'Log In',
 			'routes.startup.login.login' => 'Log In',
+			'routes.startup.login.failed' => 'Login Failed',
+			'routes.startup.login.failed_codes.INCORRECT_USERNAME' => 'Username not found.',
+			'routes.startup.login.failed_codes.INCORRECT_PASSWORD' => 'Incorrect password.',
 			'routes.startup.server_url.connect' => 'Connect',
 			'routes.startup.server_url.url' => 'Server URL',
 			'routes.startup.server_url.url_error' => 'Server URL is not valid!',

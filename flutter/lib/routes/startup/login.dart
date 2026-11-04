@@ -1,8 +1,12 @@
+import "package:flixur/api.dart";
 import "package:flixur/routes/startup/components.dart";
 import "package:flixur/routes/startup/server_url.dart";
+import "package:flixur/storage.dart";
+import "package:flixur/ui/dialogs.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:openapi/openapi.dart";
 
 class LoginView extends StatefulWidget {
@@ -99,6 +103,44 @@ class _LoginViewState extends State<LoginView> {
       _usernameError = _passwordError = null;
       _isPasswordLoading = true;
     });
+
+    final response = await Api.request(
+      (a) => a.getAuthenticationApi().postAuthLogin(
+        postAuthLoginRequest: PostAuthLoginRequest(
+          (b) => b
+            ..username = _usernameController.text
+            ..password = _passwordController.text,
+        ),
+        xPlatformClient: AppInfo.clientIdentifier,
+        xPlatformDevice: AppInfo.deviceName,
+        xPlatformOS: AppInfo.deviceOS,
+      ),
+    );
+    setState(() => _isPasswordLoading = false);
+    if (!mounted) return;
+
+    switch (response) {
+      case ApiSuccess(:final data):
+        try {
+          await Storage.setSessionToken(data.sessionToken);
+        } on PlatformException catch (e) {
+          if (!mounted) return;
+          await showErrorDialog(
+            context,
+            title: t.storage.store_fail_title,
+            message: e.message ?? t.storage.store_fail,
+          );
+          return;
+        }
+        if (!mounted) return;
+        context.goNamed("home");
+      case ApiFailure(:final err, :final message):
+        await showErrorDialog(
+          context,
+          title: t.routes.startup.login.failed,
+          message: t.routes.startup.login.failed_codes[err?.key] ?? message,
+        );
+    }
   }
 
   Future<void> _oidcSubmit() async {
