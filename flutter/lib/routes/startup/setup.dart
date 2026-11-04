@@ -135,8 +135,8 @@ class _SetupViewState extends State<SetupView> {
         xPlatformOS: AppInfo.deviceOS,
       ),
     );
-    setState(() => _isLoading = false);
     if (!mounted) return;
+    setState(() => _isLoading = false);
 
     switch (response) {
       case ApiSuccess(:final data):

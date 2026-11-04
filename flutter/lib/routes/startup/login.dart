@@ -116,8 +116,8 @@ class _LoginViewState extends State<LoginView> {
         xPlatformOS: AppInfo.deviceOS,
       ),
     );
-    setState(() => _isPasswordLoading = false);
     if (!mounted) return;
+    setState(() => _isPasswordLoading = false);
 
     switch (response) {
       case ApiSuccess(:final data):
