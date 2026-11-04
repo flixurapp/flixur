@@ -19,7 +19,7 @@ schema = 4
     packages = ["entgo.io/ent", "entgo.io/ent/dialect", "entgo.io/ent/dialect/entsql", "entgo.io/ent/dialect/sql", "entgo.io/ent/dialect/sql/schema", "entgo.io/ent/dialect/sql/sqlgraph", "entgo.io/ent/dialect/sql/sqljson", "entgo.io/ent/entql", "entgo.io/ent/schema", "entgo.io/ent/schema/edge", "entgo.io/ent/schema/field", "entgo.io/ent/schema/index", "entgo.io/ent/schema/mixin"]
   [mod."forge.xela.codes/xela/flixur/pluginkit"]
     version = "v0.0.0"
-    hash = "sha256-Bas6tRL1G/1MoGi64LK1UjOdTjYrHTWZzFzBjj+4oA4="
+    hash = "sha256-2s/ZxBGKJiCLZypAn1wIo51LZ2y9PtFBQiTk58dT4lE="
     go = "1.26.4"
     local = "./pluginkit"
   [mod."github.com/agext/levenshtein"]
@@ -190,10 +190,6 @@ schema = 4
     hash = "sha256-G3shtLAutSrPjni+C9LAWDIeYfkr4R5pdKUVfAkB518="
     go = "1.19"
     packages = ["github.com/santhosh-tekuri/jsonschema/v5"]
-  [mod."github.com/stretchr/testify"]
-    version = "v1.11.1"
-    hash = "sha256-sWfjkuKJyDllDEtnM8sb/pdLzPQmUYWYtmeWz/5suUc="
-    go = "1.17"
   [mod."github.com/x448/float16"]
     version = "v0.8.4"
     hash = "sha256-VKzMTMS9pIB/cwe17xPftCSK9Mf4Y6EuBEJlB4by5mE="
