@@ -57,6 +57,7 @@
               openapi-port = "18787";
               openapi-addr = "http://127.0.0.1:${openapi-port}/api/openapi.json";
               openapi-out = "flutter/openapi/";
+              openapi-cache = ".openapi-spec.cache";
               # re-applied after generation, which wipes the output dir
               analysisOptions = pkgs.writeText "openapi-analysis_options.yaml" ''
                 analyzer:
@@ -76,35 +77,49 @@
               runtimeInputs = with pkgs; [
                 coreutils
                 curl
+                diffutils
                 flutter
                 killport
                 openapi-generator-cli
               ];
               text = ''
                 ${setup}
+                repo_root="$(pwd)"
 
                 killport ${openapi-port}
                 export FLIXUR_DEVELOPMENT_RUN_AS_GENERATOR=true
                 export FLIXUR_PORT=${openapi-port}
                 go run ./server &
                 server_pid=$!
-                trap 'kill "$server_pid" >/dev/null 2>&1 || true' EXIT
+                # move the dart-tool dir back
+                trap 'kill "$server_pid" >/dev/null 2>&1 || true; if [ -n "''${dart_tool_tmp:-}" ] && [ -d "$dart_tool_tmp/.dart_tool" ]; then mv "$dart_tool_tmp/.dart_tool" ${openapi-out} 2>/dev/null || true; fi' EXIT
 
+                spec_tmp="$(mktemp)"
                 for _ in $(seq 1 120); do
-                  if curl -fsS "${openapi-addr}" >/dev/null; then
+                  if curl -fsS "${openapi-addr}" > "$spec_tmp"; then
                     break
                   fi
                   echo "Waiting..."
                   sleep 1
                 done
 
-                if ! curl -fsS "${openapi-addr}" >/dev/null; then
+                if ! curl -fsS "${openapi-addr}" > "$spec_tmp"; then
                   echo "Server did not become ready on :${openapi-port}" >&2
                   echo "Check /tmp/flixur-openapi-server.log for details" >&2
                   exit 1
                 fi
 
+                if cmp -s "$spec_tmp" ${openapi-cache}; then
+                  echo "OpenAPI unchanged, skipping client regeneration"
+                  killport ${openapi-port} || true
+                  exit 0
+                fi
+
                 export DART_POST_PROCESS_FILE="${pkgs.dart}/bin/dart format"
+
+                # keep dart-tool dir
+                dart_tool_tmp="$(mktemp -d)"
+                mv ${openapi-out}/.dart_tool "$dart_tool_tmp" 2>/dev/null || true
 
                 rm -rf ${openapi-out}
 
@@ -116,10 +131,17 @@
 
                 cp ${analysisOptions} ${openapi-out}/analysis_options.yaml
 
+                # restore dart-tool dir
+                mv "$dart_tool_tmp/.dart_tool" ${openapi-out}
+                rm -rf "$dart_tool_tmp"
+
                 killport ${openapi-port} || true
 
                 cd ${openapi-out}
                 dart run build_runner build
+
+                # only record the cache after everything succeeded
+                cp "$spec_tmp" "$repo_root/${openapi-cache}"
               '';
             };
           proto =
