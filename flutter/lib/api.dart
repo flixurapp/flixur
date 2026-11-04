@@ -28,13 +28,16 @@ class Api {
       return ApiSuccess(data, response);
     } on DioException catch (err) {
       final dynamic data = err.response?.data;
-      // attempt to deseriaize API error
+      // attempt to deserialize API error
+      // this can fail if server doesnt return a proper response
       if (data != null) {
-        final apiError = standardSerializers.deserializeWith(
-          APIError.serializer,
-          data,
-        );
-        if (apiError != null) return ApiFailure(err, apiError);
+        try {
+          final apiError = standardSerializers.deserializeWith(
+            APIError.serializer,
+            data,
+          );
+          if (apiError != null) return ApiFailure(err, apiError);
+        } on Object catch (_) {}
       }
       // otherwise return a generic error
       return ApiFailure(err, null);
