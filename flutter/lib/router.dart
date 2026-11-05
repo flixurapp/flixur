@@ -42,9 +42,8 @@ final router = GoRouter(
     ),
     // nav shell for the main navigation bars
     StatefulShellRoute.indexedStack(
-      builder: (_, _, navigationShell) => MainNavWrapper(
-        navShell: navigationShell,
-      ),
+      builder: (_, _, navigationShell) =>
+          MainNavWrapper(navShell: navigationShell),
       branches: [for (final section in mainNavSections) section.toBranch()],
     ),
   ],

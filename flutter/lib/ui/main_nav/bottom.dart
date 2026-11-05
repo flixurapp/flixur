@@ -85,11 +85,7 @@ class MainNavBottomItem extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: Iconify(
-                  section.icon,
-                  size: 32,
-                  color: iconColor,
-                ),
+                child: Iconify(section.icon, size: 32, color: iconColor),
               ),
               if (parent.showLabels) ...[
                 Text(
