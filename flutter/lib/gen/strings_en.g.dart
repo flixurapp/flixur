@@ -53,6 +53,8 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	/// en: 'OK'
 	String get btn_ok => 'OK';
 
+	late final Translations$navigation$en navigation = Translations$navigation$en._(_root);
+
 	/// en: 'OR'
 	String get or_line => 'OR';
 
@@ -64,6 +66,25 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 
 	/// en: 'Username'
 	String get username => 'Username';
+}
+
+// Path: navigation
+class Translations$navigation$en {
+	Translations$navigation$en._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	Map<String, String> get section_titles => {
+		'activity': 'Activity',
+		'admin': 'Admin',
+		'downloads': 'Downloads',
+		'explore': 'Explore',
+		'home': 'Home',
+		'library': 'Library',
+		'search': 'Search',
+		'settings': 'Settings',
+	};
 }
 
 // Path: routes
@@ -114,16 +135,16 @@ class Translations$routes$startup$login$en {
 	/// en: 'Log In'
 	String get app_bar => 'Log In';
 
-	/// en: 'Log In'
-	String get login => 'Log In';
-
 	/// en: 'Login Failed'
 	String get failed => 'Login Failed';
 
 	Map<String, String> get failed_codes => {
-		'INCORRECT_USERNAME': 'Username not found.',
 		'INCORRECT_PASSWORD': 'Incorrect password.',
+		'INCORRECT_USERNAME': 'Username not found.',
 	};
+
+	/// en: 'Log In'
+	String get login => 'Log In';
 }
 
 // Path: routes.startup.server_url
@@ -196,13 +217,21 @@ extension on Translations {
 			'app_name' => 'Flixur',
 			'btn_cancel' => 'Cancel',
 			'btn_ok' => 'OK',
+			'navigation.section_titles.activity' => 'Activity',
+			'navigation.section_titles.admin' => 'Admin',
+			'navigation.section_titles.downloads' => 'Downloads',
+			'navigation.section_titles.explore' => 'Explore',
+			'navigation.section_titles.home' => 'Home',
+			'navigation.section_titles.library' => 'Library',
+			'navigation.section_titles.search' => 'Search',
+			'navigation.section_titles.settings' => 'Settings',
 			'or_line' => 'OR',
 			'password' => 'Password',
 			'routes.startup.login.app_bar' => 'Log In',
-			'routes.startup.login.login' => 'Log In',
 			'routes.startup.login.failed' => 'Login Failed',
-			'routes.startup.login.failed_codes.INCORRECT_USERNAME' => 'Username not found.',
 			'routes.startup.login.failed_codes.INCORRECT_PASSWORD' => 'Incorrect password.',
+			'routes.startup.login.failed_codes.INCORRECT_USERNAME' => 'Username not found.',
+			'routes.startup.login.login' => 'Log In',
 			'routes.startup.server_url.connect' => 'Connect',
 			'routes.startup.server_url.url' => 'Server URL',
 			'routes.startup.server_url.url_error' => 'Server URL is not valid!',

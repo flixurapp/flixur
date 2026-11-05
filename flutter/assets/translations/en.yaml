@@ -4,22 +4,15 @@ app_name: "Flixur"
 btn_cancel: "Cancel"
 btn_ok: "OK"
 navigation:
-  activity:
-    title: "Activity"
-  admin:
-    title: "Admin"
-  downloads:
-    title: "Downloads"
-  explore:
-    title: "Explore"
-  home:
-    title: "Home"
-  library:
-    title: "Library"
-  search:
-    title: "Search"
-  settings:
-    title: "Settings"
+  section_titles:
+    activity: "Activity"
+    admin: "Admin"
+    downloads: "Downloads"
+    explore: "Explore"
+    home: "Home"
+    library: "Library"
+    search: "Search"
+    settings: "Settings"
 or_line: "OR"
 password: "Password"
 routes:

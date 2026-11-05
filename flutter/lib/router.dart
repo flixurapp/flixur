@@ -1,7 +1,7 @@
-import "package:flixur/routes/home/index.dart";
 import "package:flixur/routes/startup/login.dart";
 import "package:flixur/routes/startup/server_url.dart";
 import "package:flixur/routes/startup/setup.dart";
+import "package:flixur/ui/main_nav/common.dart";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 
@@ -40,10 +40,12 @@ final router = GoRouter(
         ),
       ],
     ),
-    GoRoute(
-      name: "home",
-      path: "/home",
-      builder: (context, state) => const HomeView(),
+    // nav shell for the main navigation bars
+    StatefulShellRoute.indexedStack(
+      builder: (_, _, navigationShell) => MainNavWrapper(
+        navShell: navigationShell,
+      ),
+      branches: [for (final section in mainNavSections) section.toBranch()],
     ),
   ],
 );

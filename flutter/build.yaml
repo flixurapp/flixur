@@ -7,5 +7,6 @@ targets:
           input_directory: assets/translations
           input_file_pattern: .yaml
           maps:
+            - navigation.section_titles
             - routes.startup.login.failed_codes
             - routes.startup.setup.failed_codes
