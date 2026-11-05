@@ -1,6 +1,7 @@
 import "dart:io";
 
 import "package:device_info_plus/device_info_plus.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:package_info_plus/package_info_plus.dart";
 
@@ -16,7 +17,11 @@ class AppInfo {
 
   static Future<void> init() async {
     _info = await PackageInfo.fromPlatform();
-    if (Platform.isWindows) {
+    if (kIsWeb) {
+      final browser = await _deviceInfo.webBrowserInfo;
+      deviceName = browser.browserName.name;
+      deviceOS = "Web (${browser.browserName.name})";
+    } else if (Platform.isWindows) {
       final device = await _deviceInfo.windowsInfo;
       deviceName = device.computerName;
       deviceOS = "${device.productName} Build ${device.displayVersion}";
