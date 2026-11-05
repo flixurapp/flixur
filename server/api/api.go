@@ -146,8 +146,9 @@ func RegisterAPI(router chi.Router, client *ent.Client) APIRegistry {
 		r.Use(cors.Handler(cors.Options{
 			AllowedOrigins: []string{"https://*", "http://*"},
 			AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-			AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-			MaxAge:         300,
+			AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token",
+				"X-Platform-Client", "X-Platform-Device", "X-Platform-OS"},
+			MaxAge: 300,
 		}))
 
 		registry.API = hureg.NewAPIGen(humachi.New(r, config)).
