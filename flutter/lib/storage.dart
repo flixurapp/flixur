@@ -13,8 +13,13 @@ class Storage {
   static Future<void> init() async {
     // cache values
     serverUrl.value = await _sharedPrefs.getString(_serverUrlKey);
-    sessionToken.value = await _secureStorage.read(key: _sessionTokenKey);
     playerID.value = await _sharedPrefs.getString(_playerIDKey);
+    try {
+      sessionToken.value = await _secureStorage.read(key: _sessionTokenKey);
+      // ignore: avoid_catching_errors secure storage will fail on insecure contexts
+    } on UnsupportedError {
+      sessionToken.value = null;
+    }
   }
 
   // Base URL for the server API client.
