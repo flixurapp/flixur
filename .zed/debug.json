@@ -7,6 +7,6 @@
     "program": "lib/main.dart",
     "cwd": "$ZED_WORKTREE_ROOT/flutter",
     "flutterMode": "debug",
-    "toolArgs": ["-d", "linux", "--pid-file", "/tmp/flixur-flutter.pid"],
-  },
+    "toolArgs": ["-d", "linux", "--pid-file", "/tmp/flixur-flutter.pid"]
+  }
 ]

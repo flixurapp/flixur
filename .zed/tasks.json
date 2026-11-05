@@ -6,20 +6,20 @@
     "cwd": "$ZED_WORKTREE_ROOT",
     "use_new_terminal": false,
     "allow_concurrent_runs": false,
-    "reveal": "always",
+    "reveal": "always"
   },
   {
     "label": "Flutter: hot reload",
     "command": "bash",
     "args": ["-c", "kill -s USR1 $(cat /tmp/flixur-flutter.pid)"],
     "use_new_terminal": false,
-    "allow_concurrent_runs": false,
+    "allow_concurrent_runs": false
   },
   {
     "label": "Flutter: hot restart",
     "command": "bash",
     "args": ["-c", "kill -s USR2 $(cat /tmp/flixur-flutter.pid)"],
     "use_new_terminal": false,
-    "allow_concurrent_runs": false,
-  },
+    "allow_concurrent_runs": false
+  }
 ]
