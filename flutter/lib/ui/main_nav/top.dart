@@ -11,12 +11,10 @@ class MainNavTop extends StatelessWidget {
 
     return Material(
       color: colors.mantle,
-      child: SafeArea(
+      child: const SafeArea(
         child: SizedBox(
           height: MainNavRail.itemHeight,
-          child: Column(
-            children: [Expanded(child: const Text("Window Title"))],
-          ),
+          child: Column(children: [Expanded(child: Text("Window Title"))]),
         ),
       ),
     );

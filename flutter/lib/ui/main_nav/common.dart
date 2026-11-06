@@ -146,7 +146,7 @@ class MainNavWrapper extends StatelessWidget {
     final shell = Column(
       crossAxisAlignment: .stretch,
       children: [
-        MainNavTop(),
+        const MainNavTop(),
         Expanded(child: navShell),
       ],
     );
