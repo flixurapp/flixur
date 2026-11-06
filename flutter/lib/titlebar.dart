@@ -1,5 +1,6 @@
 import "package:window_manager/window_manager.dart";
 
+//TODO: start maximized setting
 class TitlebarManager {
   static Future<void> init() async {
     final window = WindowManager.instance.getCurrent();
