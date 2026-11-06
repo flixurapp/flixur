@@ -15,10 +15,10 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_query: ^0.11.1
-  flutter_secure_storage: ^10.3.1
+  flutter_secure_storage: ^11.2.0
   flutter_web_plugins:
     sdk: flutter
-  go_router: ^17.3.0
+  go_router: ^18.1.3
   iconify_design:
     git:
       url: https://github.com/itzTheMeow/iconify_design_flutter.git
