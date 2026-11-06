@@ -180,6 +180,16 @@
       "source": "hosted",
       "version": "3.0.8"
     },
+    "cupertino_ui": {
+      "dependency": "transitive",
+      "description": {
+        "name": "cupertino_ui",
+        "sha256": "369e39a1c5c030a6212589c3da1809920b1c2cfade7b02aade7695bfa4b88c3a",
+        "url": "https://pub.dev"
+      },
+      "source": "hosted",
+      "version": "1.1.6"
+    },
     "dart_style": {
       "dependency": "transitive",
       "description": {
@@ -624,6 +634,16 @@
       },
       "source": "hosted",
       "version": "0.13.0"
+    },
+    "material_ui": {
+      "dependency": "direct main",
+      "description": {
+        "name": "material_ui",
+        "sha256": "a30f5d0625b6b83770f53ca3f7aafd6fd9d147cb3853f54a70668541046fe5d6",
+        "url": "https://pub.dev"
+      },
+      "source": "hosted",
+      "version": "1.10.0"
     },
     "meta": {
       "dependency": "transitive",
@@ -1134,11 +1154,11 @@
       "dependency": "direct dev",
       "description": {
         "name": "very_good_analysis",
-        "sha256": "481af67ab5877af20325251dc215a4ebac7666a1c8cf09198ffd457bc612b33d",
+        "sha256": "0bd5eb8d6be76aa0d71e70cbdae6cac8f784f761170568e3c2214a6948c7f6d3",
         "url": "https://pub.dev"
       },
       "source": "hosted",
-      "version": "10.3.0"
+      "version": "11.0.0"
     },
     "vm_service": {
       "dependency": "transitive",
