@@ -1,28 +1,24 @@
-import "dart:async";
-
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/main_nav/common.dart";
 import "package:flixur/ui/theme.dart";
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
 
 //TODO: wire into an actual setting
 /// Show text labels under each nav icon.
-const bottomLabelsSetting = true;
+const bottomLabelsSetting = false;
 
 /// Main bottom navigation bar.
-class MainNavBottom extends StatelessWidget {
+class MainNavBottom extends StatelessWidget with MainNavWidget {
   const MainNavBottom({
     required this.parent,
     required this.onSelected,
     super.key,
-    this.showLabels = bottomLabelsSetting,
   });
 
+  @override
   final MainNavWrapper parent;
-
+  @override
   final ValueChanged<MainNavSection> onSelected;
-  final bool showLabels;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +30,7 @@ class MainNavBottom extends StatelessWidget {
           children: [
             for (final section in parent.shownSections)
               Expanded(
-                child: MainNavBottomItem(parent: this, section: section),
+                child: _MainNavBottomItem(parent: this, section: section),
               ),
           ],
         ),
@@ -43,65 +39,39 @@ class MainNavBottom extends StatelessWidget {
   }
 }
 
-class MainNavBottomItem extends StatelessWidget {
-  const MainNavBottomItem({
-    required this.parent,
-    required this.section,
-    super.key,
+class _MainNavBottomItem extends MainNavItem {
+  const _MainNavBottomItem({
+    required super.parent,
+    required super.section,
+    super.axis = .horizontal,
   });
 
-  final MainNavBottom parent;
-  final MainNavSection section;
+  bool get showLabels => bottomLabelsSetting;
 
-  bool get selected => parent.parent.selected == section.id;
+  @override
+  double get height => showLabels ? 74 : 64;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final iconColor = selected ? colors.text : colors.textMuted;
 
-    return Semantics(
-      label: section.label,
-      selected: selected,
-      inMutuallyExclusiveGroup: true,
-      child: InkWell(
-        onTap: () {
-          unawaited(HapticFeedback.selectionClick());
-          parent.onSelected(section);
-        },
-        child: SizedBox(
-          height: parent.showLabels ? 74 : 64,
-          child: Column(
-            mainAxisAlignment: .center,
-            children: [
-              LayoutBuilder(
-                builder: (context, constraints) => AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: selected ? constraints.maxWidth : 0,
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: selected ? colors.primary : Colors.transparent,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Iconify(section.icon, size: 32, color: iconColor),
-              ),
-              if (parent.showLabels) ...[
-                Text(
-                  section.label,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: iconColor,
-                    fontWeight: selected ? .w600 : .w400,
-                  ),
-                ),
-                const SizedBox(height: 4),
-              ],
-            ],
+    return builder([
+      MainNavItemHighlighter(axis: .horizontal, enabled: selected),
+      Expanded(
+        child: Iconify(section.icon, size: mainNavIconSize, color: iconColor),
+      ),
+      if (showLabels) ...[
+        Text(
+          section.label,
+          style: TextStyle(
+            fontSize: 11,
+            color: iconColor,
+            fontWeight: selected ? .w600 : .w400,
           ),
         ),
-      ),
-    );
+        const SizedBox(height: 4),
+      ],
+    ]);
   }
 }

@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flixur/routes/activity/index.dart";
 import "package:flixur/routes/admin/index.dart";
 import "package:flixur/routes/downloads/index.dart";
@@ -7,8 +9,13 @@ import "package:flixur/routes/library/index.dart";
 import "package:flixur/routes/search/index.dart";
 import "package:flixur/routes/settings/index.dart";
 import "package:flixur/ui/main_nav/bottom.dart";
+import "package:flixur/ui/main_nav/rail.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+
+const mainNavIconSize = 32.0;
+const mainNavAnimationDuration = Duration(milliseconds: 200);
 
 enum MainNavIDs {
   // default on navbar
@@ -102,13 +109,10 @@ final mainNavSections = [
 /// Which sections to render in the main nav.
 const mainNavShownSections = [
   "home",
-  "activity",
   "library",
   "search",
+  "activity",
   "explore",
-  "downloads",
-  "admin",
-  "settings",
 ];
 
 /// Resolves a list of string section IDs to a list of sections.
@@ -138,18 +142,33 @@ class MainNavWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: navShell,
-      bottomNavigationBar: MainNavBottom(
-        parent: this,
-        onSelected: (destination) => navShell.goBranch(
-          // there should always be a branch index for any given ID
-          branchIndexFromID(destination.id)!,
-          // re-selecting the active tab goes back its root
-          initialLocation:
-              destination.id == sectionIDFromBranch(navShell.currentIndex),
+    //TODO: wire in other shell stuff
+    final shell = navShell;
+
+    // landscape gets a side navbar instead of the bottom one
+    if (context.isLandscape) {
+      return Scaffold(
+        body: Row(
+          children: [
+            MainNavRail(parent: this, onSelected: _onSelect),
+            Expanded(child: shell),
+          ],
         ),
-      ),
+      );
+    }
+
+    return Scaffold(
+      body: shell,
+      bottomNavigationBar: MainNavBottom(parent: this, onSelected: _onSelect),
+    );
+  }
+
+  void _onSelect(MainNavSection section) {
+    navShell.goBranch(
+      // there should always be a branch index for any given ID
+      branchIndexFromID(section.id)!,
+      // re-selecting the active tab goes back its root
+      initialLocation: section.id == selected,
     );
   }
 
@@ -163,5 +182,91 @@ class MainNavWrapper extends StatelessWidget {
   static int? branchIndexFromID(MainNavIDs id) {
     final index = mainNavSections.indexWhere((item) => item.id == id);
     return index == -1 ? null : index;
+  }
+}
+
+/// Mixin for the main nav parent.
+mixin MainNavWidget {
+  MainNavWrapper get parent;
+  ValueChanged<MainNavSection> get onSelected;
+}
+
+/// Class for individual nav buttons.
+abstract class MainNavItem extends StatelessWidget {
+  const MainNavItem({
+    required this.parent,
+    required this.section,
+    required this.axis,
+    super.key,
+    this.width,
+    this.height,
+  });
+
+  final MainNavWidget parent;
+  final MainNavSection section;
+  final Axis axis;
+
+  final double? width;
+  final double? height;
+
+  bool get selected => parent.parent.selected == section.id;
+
+  Widget builder(List<Widget> children) {
+    return Semantics(
+      label: section.label,
+      selected: selected,
+      inMutuallyExclusiveGroup: true,
+      child: InkWell(
+        mouseCursor: SystemMouseCursors.click,
+        onTap: () {
+          unawaited(HapticFeedback.selectionClick());
+          parent.onSelected(section);
+        },
+        child: SizedBox(
+          width: width,
+          height: height,
+          child: axis == .horizontal
+              ? Column(mainAxisAlignment: .center, children: children)
+              : Row(children: children),
+        ),
+      ),
+    );
+  }
+}
+
+/// Highlight element for selected navbar buttons.
+class MainNavItemHighlighter extends StatelessWidget {
+  const MainNavItemHighlighter({
+    required this.axis,
+    required this.enabled,
+    super.key,
+  });
+
+  /// Axis for the highlight to render on.
+  final Axis axis;
+
+  /// Whether or not the highlight should be applied.
+  final bool enabled;
+
+  static const double size = 3;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) => AnimatedContainer(
+        duration: mainNavAnimationDuration,
+        width: axis == .vertical
+            ? size
+            : // horizontal
+              (enabled ? constraints.maxWidth : 0),
+        height: axis == .horizontal
+            ? size
+            : // vertical
+              (enabled ? constraints.maxHeight : 0),
+        decoration: BoxDecoration(
+          color: enabled ? context.colors.primary : Colors.transparent,
+        ),
+      ),
+    );
   }
 }

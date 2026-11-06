@@ -4,6 +4,9 @@ app_name: "Flixur"
 btn_cancel: "Cancel"
 btn_ok: "OK"
 navigation:
+  rail:
+    collapse: "Collapse Navigation"
+    expand: "Expand Navigation"
   section_titles:
     activity: "Activity"
     admin: "Admin"
