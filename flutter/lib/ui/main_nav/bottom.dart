@@ -25,7 +25,6 @@ class MainNavBottom extends StatelessWidget with MainNavWidget {
     return Material(
       color: context.colors.mantle,
       child: SafeArea(
-        top: false,
         child: Row(
           children: [
             for (final section in parent.shownSections)
