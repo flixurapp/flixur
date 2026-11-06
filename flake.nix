@@ -253,6 +253,20 @@
               yq . pubspec.lock > pubspec.lock.json
             '';
           };
+          # apply dart fixes
+          dart-fix = pkgs.writeShellApplication {
+            name = "dart-fix";
+            runtimeInputs = [
+              commands.flutter-wrapped
+              pkgs-unstable.flutter.dart
+            ];
+            text = ''
+              ${setup}
+              cd flutter
+              flutter pub get
+              dart fix --apply
+            '';
+          };
           # wrapped flutter command for debug builds with libsecret included
           flutter-wrapped = pkgs.writeShellApplication {
             name = "flutter";
