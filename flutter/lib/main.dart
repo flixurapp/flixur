@@ -1,6 +1,7 @@
 import "package:flixur/api.dart";
 import "package:flixur/router.dart";
 import "package:flixur/storage.dart";
+import "package:flixur/titlebar.dart";
 import "package:flixur/utils.dart";
 import "package:flutter_web_plugins/url_strategy.dart";
 import "package:material_ui/material_ui.dart";
@@ -22,6 +23,9 @@ void main() async {
 
   // init persistent storage
   await Storage.init();
+
+  // init title bar
+  await TitlebarManager.init();
 
   runApp(TranslationProvider(child: const MainApp()));
 }
