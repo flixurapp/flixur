@@ -33,7 +33,7 @@ enum MainNavIDs {
 
 /// A single main navigation section.
 class MainNavSection {
-  const MainNavSection({
+  const new({
     required this.id,
     required this.icon,
     required this.builder,
@@ -129,7 +129,7 @@ List<MainNavSection> resolveMainNavSections(List<String> ids) {
 
 /// Wrapper holding the main nav sections and the navbars.
 class MainNavWrapper extends StatelessWidget {
-  const MainNavWrapper({required this.navShell, super.key});
+  const new({required this.navShell, super.key});
 
   final StatefulNavigationShell navShell;
 
@@ -199,7 +199,7 @@ mixin MainNavWidget {
 
 /// Class for individual nav buttons.
 abstract class MainNavItem extends StatelessWidget {
-  const MainNavItem({
+  const new({
     required this.parent,
     required this.section,
     required this.axis,
@@ -242,7 +242,7 @@ abstract class MainNavItem extends StatelessWidget {
 
 /// Highlight element for selected navbar buttons.
 class MainNavItemHighlighter extends StatelessWidget {
-  const MainNavItemHighlighter({
+  const new({
     required this.axis,
     required this.enabled,
     super.key,

@@ -2,7 +2,7 @@ import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
 
 class LoadingSpinner extends StatelessWidget {
-  const LoadingSpinner({super.key, this.color});
+  const new({super.key, this.color});
 
   final Color? color;
 
@@ -21,7 +21,7 @@ class LoadingSpinner extends StatelessWidget {
 
 // A line with "OR" in the middle. ---- OR ----
 class OrLine extends StatelessWidget {
-  const OrLine({super.key, this.padding = 6});
+  const new({super.key, this.padding = 6});
 
   // Vertical padding for the line.
   final double padding;
@@ -53,7 +53,7 @@ class OrLine extends StatelessWidget {
 }
 
 class FlixurInput extends StatelessWidget {
-  const FlixurInput({
+  const new({
     required this.label,
     required this.textField,
     this.errorText,

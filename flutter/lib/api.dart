@@ -46,17 +46,17 @@ class Api {
 }
 
 sealed class ApiResult<T> {
-  const ApiResult();
+  const new();
 }
 
 class ApiSuccess<T> extends ApiResult<T> {
-  const ApiSuccess(this.data, this.response);
+  const new(this.data, this.response);
   final T data;
   final Response<T> response;
 }
 
 class ApiFailure<T> extends ApiResult<T> {
-  const ApiFailure(this.rawException, this.err);
+  const new(this.rawException, this.err);
   final APIError? err;
   final DioException rawException;
 

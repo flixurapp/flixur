@@ -36,7 +36,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   slang_build_runner: ^4.18.0
-  very_good_analysis: ^10.2.0
+  very_good_analysis: ^11.0.0
 
 flutter:
   uses-material-design: true

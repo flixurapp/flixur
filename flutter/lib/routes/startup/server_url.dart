@@ -7,7 +7,7 @@ import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
 class ServerUrlView extends StatefulWidget {
-  const ServerUrlView({super.key});
+  const new({super.key});
 
   @override
   State<ServerUrlView> createState() => _ServerUrlViewState();
@@ -142,7 +142,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
 }
 
 class ServerLoginPayload {
-  ServerLoginPayload({required this.url, required this.body});
+  new({required this.url, required this.body});
 
   // Full basePath of the api client.
   final String url;

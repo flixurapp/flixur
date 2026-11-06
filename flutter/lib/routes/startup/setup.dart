@@ -11,7 +11,7 @@ import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
 class SetupView extends StatefulWidget {
-  const SetupView({required this.serverInfo, super.key});
+  const new({required this.serverInfo, super.key});
 
   final ServerLoginPayload serverInfo;
 

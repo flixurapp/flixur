@@ -10,7 +10,7 @@ import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
 class LoginView extends StatefulWidget {
-  const LoginView({required this.serverInfo, super.key});
+  const new({required this.serverInfo, super.key});
 
   final ServerLoginPayload serverInfo;
 

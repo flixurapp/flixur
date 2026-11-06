@@ -11,7 +11,7 @@ const _defaultSet = "ph";
 const _errIcon = "$_defaultSet:x-bold";
 
 class Iconify extends StatelessWidget {
-  Iconify(String iconName, {super.key, this.size = 24, this.color})
+  new(String iconName, {super.key, this.size = 24, this.color})
     : icon = !iconName.contains(":") ? "$_defaultSet:$iconName" : iconName;
 
   /// Icon name to use, if prefix is not provided, the default will be appended.

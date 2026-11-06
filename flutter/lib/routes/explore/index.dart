@@ -1,7 +1,7 @@
 import "package:material_ui/material_ui.dart";
 
 class ExploreView extends StatelessWidget {
-  const ExploreView({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

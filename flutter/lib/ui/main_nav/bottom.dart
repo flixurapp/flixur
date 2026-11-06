@@ -9,7 +9,7 @@ const bottomLabelsSetting = false;
 
 /// Main bottom navigation bar.
 class MainNavBottom extends StatelessWidget with MainNavWidget {
-  const MainNavBottom({
+  const new({
     required this.parent,
     required this.onSelected,
     super.key,
@@ -39,7 +39,7 @@ class MainNavBottom extends StatelessWidget with MainNavWidget {
 }
 
 class _MainNavBottomItem extends MainNavItem {
-  const _MainNavBottomItem({
+  const new({
     required super.parent,
     required super.section,
     super.axis = .horizontal,

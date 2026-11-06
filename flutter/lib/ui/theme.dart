@@ -3,7 +3,7 @@ import "package:material_ui/material_ui.dart";
 //TODO: use theme_tailor once it works??
 @immutable
 class AppColors extends ThemeExtension<AppColors> {
-  const AppColors({
+  const new({
     required this.brightness,
     required this.primary,
     required this.secondary,
