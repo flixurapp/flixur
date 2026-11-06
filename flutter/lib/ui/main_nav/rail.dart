@@ -9,11 +9,7 @@ const railExpandedDefaultSetting = false;
 
 /// Main side navigation rail for wide layouts.
 class MainNavRail extends StatefulWidget with MainNavWidget {
-  const new({
-    required this.parent,
-    required this.onSelected,
-    super.key,
-  });
+  const new({required this.parent, required this.onSelected, super.key});
 
   static const collapsedWidth = 64.0;
   static const double expandedWidth = collapsedWidth * 3.5;

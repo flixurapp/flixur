@@ -33,11 +33,7 @@ enum MainNavIDs {
 
 /// A single main navigation section.
 class MainNavSection {
-  const new({
-    required this.id,
-    required this.icon,
-    required this.builder,
-  });
+  const new({required this.id, required this.icon, required this.builder});
 
   // Unique ID for this section.
   final MainNavIDs id;
@@ -242,11 +238,7 @@ abstract class MainNavItem extends StatelessWidget {
 
 /// Highlight element for selected navbar buttons.
 class MainNavItemHighlighter extends StatelessWidget {
-  const new({
-    required this.axis,
-    required this.enabled,
-    super.key,
-  });
+  const new({required this.axis, required this.enabled, super.key});
 
   /// Axis for the highlight to render on.
   final Axis axis;
