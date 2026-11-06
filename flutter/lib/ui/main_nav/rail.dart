@@ -3,10 +3,6 @@ import "package:flixur/ui/main_nav/common.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
 
-const _railCollapsedWidth = 64.0;
-const double _railExpandedWidth = _railCollapsedWidth * 3.5;
-const _railItemHeight = 48.0;
-
 //TODO: wire into an actual setting
 /// Whether the rail starts expanded.
 const railExpandedDefaultSetting = false;
@@ -18,6 +14,10 @@ class MainNavRail extends StatefulWidget with MainNavWidget {
     required this.onSelected,
     super.key,
   });
+
+  static const collapsedWidth = 64.0;
+  static const double expandedWidth = collapsedWidth * 3.5;
+  static const itemHeight = 48.0;
 
   @override
   final MainNavWrapper parent;
@@ -43,7 +43,9 @@ class _MainNavRailState extends State<MainNavRail> {
         child: AnimatedContainer(
           duration: mainNavAnimationDuration,
           curve: Curves.easeOutCubic,
-          width: expanded ? _railExpandedWidth : _railCollapsedWidth,
+          width: expanded
+              ? MainNavRail.expandedWidth
+              : MainNavRail.collapsedWidth,
           // keeps some space between the button and page
           decoration: BoxDecoration(
             border: Border(right: BorderSide(color: colors.crust)),
@@ -61,7 +63,7 @@ class _MainNavRailState extends State<MainNavRail> {
                   mouseCursor: SystemMouseCursors.click,
                   onTap: toggleExpanded,
                   child: SizedBox(
-                    height: _railItemHeight,
+                    height: MainNavRail.itemHeight,
                     child: AnimatedRotation(
                       duration: mainNavAnimationDuration,
                       turns: expanded ? 0 : -1 / 2,
@@ -108,11 +110,11 @@ class _MainNavRailItem extends MainNavItem {
   final bool expanded;
 
   @override
-  double get height => _railItemHeight;
+  double get height => MainNavRail.itemHeight;
 
   static const _paddingBox = SizedBox(
     width:
-        ((_railCollapsedWidth - mainNavIconSize) / 2) -
+        ((MainNavRail.collapsedWidth - mainNavIconSize) / 2) -
         MainNavItemHighlighter.size,
   );
 
@@ -137,7 +139,7 @@ class _MainNavRailItem extends MainNavItem {
               softWrap: false,
               overflow: .clip,
               style: TextStyle(
-                fontSize: _railItemHeight / 3,
+                fontSize: MainNavRail.itemHeight / 3,
                 color: iconColor,
                 fontWeight: selected ? .w600 : .w400,
               ),
