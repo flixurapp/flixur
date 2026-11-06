@@ -9,11 +9,7 @@ const bottomLabelsSetting = false;
 
 /// Main bottom navigation bar.
 class MainNavBottom extends StatelessWidget with MainNavWidget {
-  const new({
-    required this.parent,
-    required this.onSelected,
-    super.key,
-  });
+  const new({required this.parent, required this.onSelected, super.key});
 
   @override
   final MainNavWrapper parent;
