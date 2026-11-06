@@ -1,6 +1,7 @@
 import "package:flixur/routes/startup/login.dart";
 import "package:flixur/routes/startup/server_url.dart";
 import "package:flixur/routes/startup/setup.dart";
+import "package:flixur/storage.dart";
 import "package:flixur/ui/main_nav/common.dart";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
@@ -13,6 +14,18 @@ T? extractExtra<T>(GoRouterState state) {
 
 final router = GoRouter(
   initialLocation: "/",
+  redirect: (context, state) {
+    final loggedIn = Storage.sessionToken.value != null;
+    final path = state.matchedLocation;
+
+    final isStartupRoute =
+        path == "/" || path == "/startup" || path.startsWith("/startup/");
+
+    // if logged in then bypass startup routes
+    if (loggedIn) return isStartupRoute ? "/home" : null;
+    // otherwise, logged out, redirect everything back to startup
+    return !isStartupRoute ? "/" : null;
+  },
   routes: [
     GoRoute(
       path: "/",
