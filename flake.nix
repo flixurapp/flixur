@@ -247,8 +247,8 @@
 
               # flutter stuff
               cd flutter
-              # we know its deprecated, but this is the only one that works on nixos
-              flutter pub run build_runner build
+              # dart need to know where the flutter SDK is to work properly
+              FLUTTER_ROOT=${pkgs-unstable.flutter} dart run build_runner build
               # we also need to generate the JSON file for the pubspec
               yq . pubspec.lock > pubspec.lock.json
             '';
