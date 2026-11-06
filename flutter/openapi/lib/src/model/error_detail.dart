@@ -14,7 +14,7 @@ part 'error_detail.g.dart';
 /// Properties:
 /// * [location] - Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
 /// * [message] - Error message text
-/// * [value]
+/// * [value] - The value at the given location
 @BuiltValue()
 abstract class ErrorDetail implements Built<ErrorDetail, ErrorDetailBuilder> {
   /// Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
@@ -25,6 +25,7 @@ abstract class ErrorDetail implements Built<ErrorDetail, ErrorDetailBuilder> {
   @BuiltValueField(wireName: r'message')
   String? get message;
 
+  /// The value at the given location
   @BuiltValueField(wireName: r'value')
   JsonObject? get value;
 
@@ -100,15 +101,17 @@ class _$ErrorDetailSerializer implements PrimitiveSerializer<ErrorDetail> {
         case r'location':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
           result.location = valueDes;
           break;
         case r'message':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
           result.message = valueDes;
           break;
         case r'value':

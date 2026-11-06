@@ -90,7 +90,7 @@
                 curl
                 diffutils
                 killport
-                openapi-generator-cli
+                pkgs-unstable.openapi-generator-cli
                 pkgs-unstable.flutter
               ];
               text = ''

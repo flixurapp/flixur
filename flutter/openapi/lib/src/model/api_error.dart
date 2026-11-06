@@ -98,8 +98,9 @@ class _$APIErrorSerializer implements PrimitiveSerializer<APIError> {
         case r'$schema':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
           result.dollarSchema = valueDes;
           break;
         case r'code':
@@ -112,8 +113,9 @@ class _$APIErrorSerializer implements PrimitiveSerializer<APIError> {
         case r'detail':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
           result.detail = valueDes;
           break;
         default:

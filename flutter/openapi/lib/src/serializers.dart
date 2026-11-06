@@ -42,6 +42,14 @@ part 'serializers.g.dart';
   SessionTokenBody,
 ])
 Serializers serializers = (_$serializers.toBuilder()
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(Artist)]),
+        () => ListBuilder<Artist>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(ErrorDetail)]),
+        () => ListBuilder<ErrorDetail>(),
+      )
       ..add(const OneOfSerializer())
       ..add(const AnyOfSerializer())
       ..add(const DateSerializer())
