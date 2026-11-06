@@ -9,3 +9,13 @@ linter:
     public_member_api_docs: false
     # all TODOs are my own buddy
     flutter_style_todos: false
+
+analyzer:
+  exclude:
+    - android/**
+    - build/**
+    - ios/**
+    - linux/**
+    - macos/**
+    - web/**
+    - windows/**

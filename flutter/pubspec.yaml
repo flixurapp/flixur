@@ -4,7 +4,7 @@ publish_to: "none"
 version: 0.1.0+1
 
 environment:
-  sdk: 3.11.5
+  sdk: 3.13.3
 
 dependencies:
   device_info_plus: ^13.2.0

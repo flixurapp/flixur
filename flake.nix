@@ -22,6 +22,7 @@
       flake-utils,
       go-overlay,
       nixpkgs,
+      nixpkgs-unstable,
       treefmt-nix,
       ...
     }:
@@ -32,12 +33,22 @@
           inherit system;
           overlays = [ go-overlay.overlays.default ];
         };
+        pkgs-unstable = import nixpkgs-unstable {
+          inherit system;
+          overlays = [ go-overlay.overlays.default ];
+        };
         lib = nixpkgs.lib;
 
-        treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+        treefmtEval = treefmt-nix.lib.evalModule pkgs {
+          imports = [ ./treefmt.nix ];
+          # use the new dart version that the rest of the repo uses
+          settings.formatter.dart-format.command = "${pkgs-unstable.flutter.dart}/bin/dart";
+        };
 
-        flixur-flutter-linux = pkgs.callPackage ./nix/flutter.pkg.nix { };
-        flixur-flutter-web = pkgs.callPackage ./nix/flutter.pkg.nix { targetFlutterPlatform = "web"; };
+        flixur-flutter-linux = pkgs-unstable.callPackage ./nix/flutter.pkg.nix { };
+        flixur-flutter-web = pkgs-unstable.callPackage ./nix/flutter.pkg.nix {
+          targetFlutterPlatform = "web";
+        };
         flixur-server = pkgs.callPackage ./nix/server.pkg.nix { frontendDir = flixur-flutter-web; };
 
         # util to cd to root
@@ -78,9 +89,9 @@
                 coreutils
                 curl
                 diffutils
-                flutter
                 killport
                 openapi-generator-cli
+                pkgs-unstable.flutter
               ];
               text = ''
                 ${setup}
@@ -115,7 +126,7 @@
                   exit 0
                 fi
 
-                export DART_POST_PROCESS_FILE="${pkgs.dart}/bin/dart format"
+                export DART_POST_PROCESS_FILE="${pkgs-unstable.flutter.dart}/bin/dart format"
 
                 # keep dart-tool dir
                 dart_tool_tmp="$(mktemp -d)"
@@ -215,7 +226,7 @@
           generate = pkgs.writeShellApplication {
             name = "generate";
             runtimeInputs = [
-              pkgs.flutter
+              pkgs-unstable.flutter
               pkgs.ent-go
               pkgs.go
               pkgs.yq
@@ -246,7 +257,7 @@
           flutter-wrapped = pkgs.writeShellApplication {
             name = "flutter";
             runtimeInputs = with pkgs; [
-              flutter
+              pkgs-unstable.flutter
               pkg-config # so flutter can find packages
               libsysprof-capture # flutter requires this for some reason
               libsecret.dev # for flutter_secure_storage
@@ -300,7 +311,10 @@
         };
 
         devShells.default = pkgs.mkShell {
-          buildInputs = [ commands.flutter-wrapped ];
+          buildInputs = [
+            commands.flutter-wrapped
+            pkgs-unstable.flutter.dart
+          ];
         };
 
         formatter = treefmtEval.config.build.wrapper;

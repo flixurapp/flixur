@@ -1,10 +1,10 @@
 {
-  flutter341,
+  flutter,
   lib,
 
   targetFlutterPlatform ? "linux",
 }:
-flutter341.buildFlutterApplication {
+flutter.buildFlutterApplication {
   pname = "flixur-flutter";
   version = "0.0.0+1";
   inherit targetFlutterPlatform;
