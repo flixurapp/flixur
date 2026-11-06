@@ -8,26 +8,20 @@ import "package:material_ui/material_ui.dart";
 const railExpandedDefaultSetting = false;
 
 /// Main side navigation rail for wide layouts.
-class MainNavRail extends StatefulWidget with MainNavWidget {
+class MainNavRail extends StatelessWidget with MainNavWidget {
   const new({required this.parent, required this.onSelected, super.key});
 
   static const collapsedWidth = 64.0;
   static const double expandedWidth = collapsedWidth * 3.5;
   static const itemHeight = 48.0;
 
+  /// Whether the nav rail is expanded.
+  static final isExpanded = ValueNotifier<bool>(railExpandedDefaultSetting);
+
   @override
   final MainNavWrapper parent;
   @override
   final ValueChanged<MainNavSection> onSelected;
-
-  @override
-  State<MainNavRail> createState() => _MainNavRailState();
-}
-
-class _MainNavRailState extends State<MainNavRail> {
-  bool expanded = railExpandedDefaultSetting;
-
-  void toggleExpanded() => setState(() => expanded = !expanded);
 
   @override
   Widget build(BuildContext context) {
@@ -36,58 +30,37 @@ class _MainNavRailState extends State<MainNavRail> {
     return Material(
       color: colors.mantle,
       child: SafeArea(
-        child: AnimatedContainer(
-          duration: mainNavAnimationDuration,
-          curve: Curves.easeOutCubic,
-          width: expanded
-              ? MainNavRail.expandedWidth
-              : MainNavRail.collapsedWidth,
-          // keeps some space between the button and page
-          decoration: BoxDecoration(
-            border: Border(right: BorderSide(color: colors.mantle)),
-          ),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              // expand/collapse button
-              Semantics(
-                button: true,
-                label: expanded
-                    ? t.navigation.rail.collapse
-                    : t.navigation.rail.expand,
-                child: InkWell(
-                  mouseCursor: SystemMouseCursors.click,
-                  onTap: toggleExpanded,
-                  child: SizedBox(
-                    height: MainNavRail.itemHeight,
-                    child: AnimatedRotation(
-                      duration: mainNavAnimationDuration,
-                      turns: expanded ? 0 : -1 / 2,
-                      child: Iconify(
-                        "caret-double-left",
-                        size: mainNavIconSize * 0.8,
-                        color: colors.textMuted,
-                      ),
-                    ),
+        child: ValueListenableBuilder(
+          valueListenable: isExpanded,
+          builder: (context, expanded, _) => AnimatedContainer(
+            duration: mainNavAnimationDuration,
+            curve: Curves.easeOutCubic,
+            width: expanded
+                ? MainNavRail.expandedWidth
+                : MainNavRail.collapsedWidth,
+            // keeps some space between the button and page
+            decoration: BoxDecoration(
+              border: Border(right: BorderSide(color: colors.mantle)),
+            ),
+            child: Column(
+              crossAxisAlignment: .stretch,
+              children: [
+                for (final section in parent.shownSections)
+                  _MainNavRailItem(
+                    parent: this,
+                    section: section,
+                    expanded: expanded,
                   ),
-                ),
-              ),
-
-              for (final section in widget.parent.shownSections)
-                _MainNavRailItem(
-                  parent: widget,
-                  section: section,
-                  expanded: expanded,
-                ),
-              // "hidden" sections go at the bottom
-              const Spacer(),
-              for (final section in widget.parent.hiddenSections)
-                _MainNavRailItem(
-                  parent: widget,
-                  section: section,
-                  expanded: expanded,
-                ),
-            ],
+                // "hidden" sections go at the bottom
+                const Spacer(),
+                for (final section in parent.hiddenSections)
+                  _MainNavRailItem(
+                    parent: this,
+                    section: section,
+                    expanded: expanded,
+                  ),
+              ],
+            ),
           ),
         ),
       ),

@@ -139,28 +139,35 @@ class MainNavWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shell = Column(
-      crossAxisAlignment: .stretch,
-      children: [
-        const MainNavTop(),
-        Expanded(child: navShell),
-      ],
-    );
-
     // landscape gets a side navbar instead of the bottom one
     if (context.isLandscape) {
       return Scaffold(
-        body: Row(
+        body: Column(
+          crossAxisAlignment: .stretch,
           children: [
-            MainNavRail(parent: this, onSelected: _onSelect),
-            Expanded(child: shell),
+            const MainNavTop(),
+            Expanded(
+              child: Row(
+                children: [
+                  MainNavRail(parent: this, onSelected: _onSelect),
+                  Expanded(child: navShell),
+                ],
+              ),
+            ),
           ],
         ),
       );
     }
 
+    // mobile layout
     return Scaffold(
-      body: shell,
+      body: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          const MainNavTop(),
+          Expanded(child: navShell),
+        ],
+      ),
       bottomNavigationBar: MainNavBottom(parent: this, onSelected: _onSelect),
     );
   }
