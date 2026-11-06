@@ -7,13 +7,39 @@ import "package:window_manager/window_manager.dart";
 const startMaximizedSetting = true;
 
 class TitlebarManager {
-  static Future<void> init() async {
-    // these platforms dont have title bars
-    if (kIsWeb || Platform.isAndroid || Platform.isIOS) return;
+  /// Whether the platform supports a custom titlebar.
+  static bool get isSupported =>
+      !(kIsWeb || Platform.isAndroid || Platform.isIOS);
 
-    final window = WindowManager.instance.getCurrent();
+  /// Get the current window instance.
+  static Window? getWindow() {
+    return WindowManager.instance.getCurrent();
+  }
+
+  static Future<void> init() async {
+    if (!isSupported) return;
+
+    final window = getWindow();
     if (window == null) return;
     window.titleBarStyle = TitleBarStyle.hidden;
     if (startMaximizedSetting) window.maximize();
+  }
+
+  static void minimize() {
+    if (!isSupported) return;
+    final window = getWindow();
+    window?.minimize();
+  }
+
+  static void maximize() {
+    if (!isSupported) return;
+    final window = getWindow();
+    window?.maximize();
+  }
+
+  static void close() {
+    if (!isSupported) return;
+    final window = getWindow();
+    window?.close();
   }
 }
