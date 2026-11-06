@@ -39,14 +39,73 @@
         };
         lib = nixpkgs.lib;
 
+        # shim that includes all pkg-config assets required for the linux build to work properly
+        # this is due to the native libs required by window_manager and secure storage
+        pkgConfigStart = with pkgs-unstable; [
+          atk
+          cairo
+          gdk-pixbuf
+          glib
+          gtk3
+          harfbuzz
+          libepoxy
+          libxext # Xge.h needed by libxi's XInput2.h
+          libxi
+          pango
+          libx11
+          libsysprof-capture
+          libsecret # required by flutter_secure_storage
+        ];
+        devOf = pkg: if pkg ? dev then pkg.dev else pkg;
+        depsOf =
+          pkg: lib.filter lib.isDerivation ((pkg.buildInputs or [ ]) ++ (pkg.propagatedBuildInputs or [ ]));
+        pkgConfigClosure = map devOf (
+          map (e: e.val) (
+            lib.genericClosure {
+              startSet = map (pkg: {
+                key = pkg.outPath;
+                val = pkg;
+              }) pkgConfigStart;
+              operator =
+                { val, ... }:
+                map (pkg: {
+                  key = pkg.outPath;
+                  val = pkg;
+                }) (depsOf val);
+            }
+          )
+        );
+        pkgConfigSearchDirs = lib.concatMap (dev: [
+          "${dev}/lib/pkgconfig"
+          "${dev}/share/pkgconfig"
+        ]) pkgConfigClosure;
+        pkgConfigCflags = lib.concatMapStringsSep " " (dev: "-isystem ${dev}/include") pkgConfigClosure;
+        pkgConfigLdflags = lib.concatMapStringsSep " " (
+          dev: "-L${lib.getLib dev}/lib -rpath ${lib.getLib dev}/lib"
+        ) pkgConfigClosure;
+
+        pkgConfigShim =
+          pkgs-unstable.runCommand "pkg-config-with-search-path"
+            {
+              nativeBuildInputs = [ pkgs-unstable.makeWrapper ];
+            }
+            ''
+              mkdir --parents "$out/bin"
+              makeWrapper ${lib.getExe pkgs-unstable.pkg-config} "$out/bin/pkg-config" \
+                --prefix PKG_CONFIG_PATH : ${lib.concatStringsSep ":" pkgConfigSearchDirs}
+            '';
+
         treefmtEval = treefmt-nix.lib.evalModule pkgs {
           imports = [ ./treefmt.nix ];
           # use the new dart version that the rest of the repo uses
           settings.formatter.dart-format.command = "${pkgs-unstable.flutter.dart}/bin/dart";
         };
 
-        flixur-flutter-linux = pkgs-unstable.callPackage ./nix/flutter.pkg.nix { };
+        flixur-flutter-linux = pkgs-unstable.callPackage ./nix/flutter.pkg.nix {
+          inherit pkgConfigShim;
+        };
         flixur-flutter-web = pkgs-unstable.callPackage ./nix/flutter.pkg.nix {
+          inherit pkgConfigShim;
           targetFlutterPlatform = "web";
         };
         flixur-server = pkgs.callPackage ./nix/server.pkg.nix { frontendDir = flixur-flutter-web; };
@@ -267,18 +326,20 @@
               dart fix --apply
             '';
           };
-          # wrapped flutter command for debug builds with libsecret included
+          # wrapped flutter command for debug builds
           flutter-wrapped = pkgs.writeShellApplication {
             name = "flutter";
-            runtimeInputs = with pkgs; [
+            # shim must stay first
+            runtimeInputs = [
+              pkgConfigShim
               pkgs-unstable.flutter
-              pkg-config # so flutter can find packages
-              libsysprof-capture # flutter requires this for some reason
-              libsecret.dev # for flutter_secure_storage
             ];
             text = ''
-              # we arent appending to the variable because there is no variable to append to
-              export PKG_CONFIG_PATH="${pkgs.lib.makeSearchPath "lib/pkgconfig" [ pkgs.libsecret.dev ]}"
+              # export flags required by pkg-config
+              export NIX_CFLAGS_COMPILE="${pkgConfigCflags} ''${NIX_CFLAGS_COMPILE:-}"
+              export NIX_CFLAGS_COMPILE_x86_64_unknown_linux_gnu="$NIX_CFLAGS_COMPILE"
+              export NIX_LDFLAGS="${pkgConfigLdflags} ''${NIX_LDFLAGS:-}"
+              export NIX_LDFLAGS_x86_64_unknown_linux_gnu="$NIX_LDFLAGS"
               exec flutter "$@"
             '';
           };

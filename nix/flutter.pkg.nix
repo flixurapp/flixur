@@ -1,6 +1,7 @@
 {
   flutter,
   lib,
+  pkgConfigShim,
 
   targetFlutterPlatform ? "linux",
 }:
@@ -12,4 +13,5 @@ flutter.buildFlutterApplication {
   pubspecLock = lib.importJSON ../flutter/pubspec.lock.json;
   # hashes for git-sourced pub dependencies (see pubspec.lock.json)
   gitHashes.iconify_design = "sha256-2i8MA5B6NXCr93oZqcnQJ0Ajz9Un0emMC1ayn1A//MA=";
+  nativeBuildInputs = [ pkgConfigShim ];
 }
