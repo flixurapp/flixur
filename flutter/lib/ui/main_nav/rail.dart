@@ -121,35 +121,30 @@ class _MainNavRailItem extends MainNavItem {
     final colors = context.colors;
     final iconColor = selected ? colors.text : colors.textMuted;
 
-    return builder(
-      [
-        MainNavItemHighlighter(
-          axis: .vertical,
-          enabled: selected,
-        ),
-        _paddingBox,
-        Iconify(section.icon, size: mainNavIconSize, color: iconColor),
-        _paddingBox,
-        Flexible(
-          child: ClipRect(
-            child: AnimatedOpacity(
-              duration: mainNavAnimationDuration,
-              opacity: expanded ? 1 : 0,
-              child: Text(
-                section.label,
-                maxLines: 1,
-                softWrap: false,
-                overflow: .clip,
-                style: TextStyle(
-                  fontSize: _railItemHeight / 3,
-                  color: iconColor,
-                  fontWeight: selected ? .w600 : .w400,
-                ),
+    return builder([
+      MainNavItemHighlighter(axis: .vertical, enabled: selected),
+      _paddingBox,
+      Iconify(section.icon, size: mainNavIconSize, color: iconColor),
+      _paddingBox,
+      Flexible(
+        child: ClipRect(
+          child: AnimatedOpacity(
+            duration: mainNavAnimationDuration,
+            opacity: expanded ? 1 : 0,
+            child: Text(
+              section.label,
+              maxLines: 1,
+              softWrap: false,
+              overflow: .clip,
+              style: TextStyle(
+                fontSize: _railItemHeight / 3,
+                color: iconColor,
+                fontWeight: selected ? .w600 : .w400,
               ),
             ),
           ),
         ),
-      ],
-    );
+      ),
+    ]);
   }
 }
