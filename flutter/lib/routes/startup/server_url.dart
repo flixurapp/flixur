@@ -3,7 +3,7 @@ import "package:flixur/routes/startup/components.dart";
 import "package:flixur/storage.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
-import "package:flutter/material.dart";
+import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
 class ServerUrlView extends StatefulWidget {

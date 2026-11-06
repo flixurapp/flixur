@@ -12,8 +12,8 @@ import "package:flixur/ui/main_nav/bottom.dart";
 import "package:flixur/ui/main_nav/rail.dart";
 import "package:flixur/ui/main_nav/top.dart";
 import "package:flixur/utils.dart";
-import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:material_ui/material_ui.dart";
 
 const mainNavIconSize = 32.0;
 const mainNavAnimationDuration = Duration(milliseconds: 200);

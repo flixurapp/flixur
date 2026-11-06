@@ -1,8 +1,8 @@
 import "dart:math";
 
 import "package:flixur/utils.dart";
-import "package:flutter/material.dart";
 import "package:iconify_design/iconify_design.dart";
+import "package:material_ui/material_ui.dart";
 
 // Default icon set to use for icons.
 const _defaultSet = "ph";

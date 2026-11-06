@@ -1,5 +1,5 @@
 import "package:flixur/ui/inputs.dart";
-import "package:flutter/material.dart";
+import "package:material_ui/material_ui.dart";
 
 class StartupButton extends StatelessWidget {
   const StartupButton({

@@ -1,6 +1,6 @@
 import "package:flixur/ui/main_nav/rail.dart";
 import "package:flixur/utils.dart";
-import "package:flutter/material.dart";
+import "package:material_ui/material_ui.dart";
 
 class MainNavTop extends StatelessWidget {
   const MainNavTop({super.key});

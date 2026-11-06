@@ -1,7 +1,7 @@
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/main_nav/common.dart";
 import "package:flixur/ui/theme.dart";
-import "package:flutter/material.dart";
+import "package:material_ui/material_ui.dart";
 
 //TODO: wire into an actual setting
 /// Show text labels under each nav icon.

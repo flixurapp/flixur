@@ -1,7 +1,7 @@
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/main_nav/common.dart";
 import "package:flixur/utils.dart";
-import "package:flutter/material.dart";
+import "package:material_ui/material_ui.dart";
 
 //TODO: wire into an actual setting
 /// Whether the rail starts expanded.

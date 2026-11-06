@@ -5,8 +5,8 @@ import "package:flixur/storage.dart";
 import "package:flixur/ui/dialogs.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
-import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
 class LoginView extends StatefulWidget {

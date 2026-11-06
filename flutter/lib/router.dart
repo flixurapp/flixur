@@ -3,8 +3,8 @@ import "package:flixur/routes/startup/server_url.dart";
 import "package:flixur/routes/startup/setup.dart";
 import "package:flixur/storage.dart";
 import "package:flixur/ui/main_nav/common.dart";
-import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
+import "package:material_ui/material_ui.dart";
 
 // extracts `extra` from state and casts it to the proper type
 T? extractExtra<T>(GoRouterState state) {

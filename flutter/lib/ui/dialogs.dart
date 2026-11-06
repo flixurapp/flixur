@@ -1,6 +1,6 @@
 import "package:flixur/ui/icons.dart";
 import "package:flixur/utils.dart";
-import "package:flutter/material.dart";
+import "package:material_ui/material_ui.dart";
 
 Future<void> showErrorDialog(
   BuildContext context, {
