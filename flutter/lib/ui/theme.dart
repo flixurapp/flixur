@@ -16,30 +16,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.text,
     required this.textMuted,
   });
-  final Brightness brightness;
-
-  final Color primary;
-  final Color secondary;
-  final Color tertiary;
-  final Color success;
-  final Color error;
-  final Color crust;
-  final Color mantle;
-  final Color base;
-  final Color text;
-  final Color textMuted;
-
-  Color get onPrimary => text;
-  Color get onSecondary => text;
-
-  // idc about these
-  @override
-  AppColors copyWith() => this;
-  @override
-  AppColors lerp(ThemeExtension<AppColors>? other, double t) =>
-      t < 0.5 ? this : (other as AppColors? ?? this);
-
-  static AppColors of(AppThemeNames name) => switch (name) {
+  factory of(AppThemeNames name) => switch (name) {
     .dark => const AppColors(
       brightness: .dark,
       primary: Color(0xFF3366DE),
@@ -68,6 +45,29 @@ class AppColors extends ThemeExtension<AppColors> {
       textMuted: Color(0xFFA6ADC8),
     ),
   };
+
+  final Brightness brightness;
+
+  final Color primary;
+  final Color secondary;
+  final Color tertiary;
+  final Color success;
+  final Color error;
+  final Color crust;
+  final Color mantle;
+  final Color base;
+  final Color text;
+  final Color textMuted;
+
+  Color get onPrimary => text;
+  Color get onSecondary => text;
+
+  // idc about these
+  @override
+  AppColors copyWith() => this;
+  @override
+  AppColors lerp(ThemeExtension<AppColors>? other, double t) =>
+      t < 0.5 ? this : (other as AppColors? ?? this);
 }
 
 enum AppThemeNames { dark, catppuccinMocha }
