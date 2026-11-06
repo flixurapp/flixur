@@ -1,5 +1,6 @@
 build/
 /result
+.direnv/
 test/
 */coverage.out
 .openapi-spec.cache
