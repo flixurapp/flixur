@@ -48,7 +48,7 @@ class _MainNavRailState extends State<MainNavRail> {
               : MainNavRail.collapsedWidth,
           // keeps some space between the button and page
           decoration: BoxDecoration(
-            border: Border(right: BorderSide(color: colors.crust)),
+            border: Border(right: BorderSide(color: colors.mantle)),
           ),
           child: Column(
             crossAxisAlignment: .stretch,

@@ -10,6 +10,7 @@ import "package:flixur/routes/search/index.dart";
 import "package:flixur/routes/settings/index.dart";
 import "package:flixur/ui/main_nav/bottom.dart";
 import "package:flixur/ui/main_nav/rail.dart";
+import "package:flixur/ui/main_nav/top.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
@@ -142,8 +143,13 @@ class MainNavWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: wire in other shell stuff
-    final shell = navShell;
+    final shell = Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        MainNavTop(),
+        Expanded(child: navShell),
+      ],
+    );
 
     // landscape gets a side navbar instead of the bottom one
     if (context.isLandscape) {
