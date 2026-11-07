@@ -1,11 +1,7 @@
 import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
 
-class LoadingSpinner extends StatelessWidget {
-  const new({super.key, this.color});
-
-  final Color? color;
-
+class LoadingSpinner({final Color? color, super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -19,13 +15,12 @@ class LoadingSpinner extends StatelessWidget {
   }
 }
 
-// A line with "OR" in the middle. ---- OR ----
-class OrLine extends StatelessWidget {
-  const new({super.key, this.padding = 6});
-
+/// A line with "OR" in the middle. ---- OR ----
+class OrLine({
   // Vertical padding for the line.
-  final double padding;
-
+  final double padding = 6,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final line = Expanded(
@@ -52,20 +47,17 @@ class OrLine extends StatelessWidget {
   }
 }
 
-class FlixurInput extends StatelessWidget {
-  const new({
-    required this.label,
-    required this.textField,
-    this.errorText,
-    super.key,
-  });
-  final String label;
-  // TextField builder. Supplied an InputDecoration to use.
-  final Widget Function(InputDecoration decoration) textField;
+class FlixurInput({
+  /// Text to show above the field.
+  required final String label,
 
-  // Forwarded errorText to the input decoration. Used for error colors.
-  final String? errorText;
+  /// TextField builder. Supplied an InputDecoration to use.
+  required final Widget Function(InputDecoration decoration) textField,
 
+  /// Forwarded errorText to the input decoration. Used for error colors.
+  final String? errorText,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(

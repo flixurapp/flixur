@@ -45,21 +45,13 @@ class Api {
   }
 }
 
-sealed class ApiResult<T> {
-  const new();
-}
+sealed class ApiResult<T>();
 
-class ApiSuccess<T> extends ApiResult<T> {
-  const new(this.data, this.response);
-  final T data;
-  final Response<T> response;
-}
+class ApiSuccess<T>(final T data, final Response<T> response)
+    extends ApiResult<T>;
 
-class ApiFailure<T> extends ApiResult<T> {
-  const new(this.rawException, this.err);
-  final APIError? err;
-  final DioException rawException;
-
+class ApiFailure<T>(final DioException rawException, final APIError? err)
+    extends ApiResult<T> {
   String get message => err == null
       ? rawException.message ?? rawException.type.name
       : "${err?.code} ${err?.detail ?? ""}".trim();

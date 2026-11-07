@@ -30,9 +30,7 @@ void main() async {
   runApp(TranslationProvider(child: const MainApp()));
 }
 
-class MainApp extends StatelessWidget {
-  const new({super.key});
-
+class const MainApp({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
