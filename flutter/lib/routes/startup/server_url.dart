@@ -6,9 +6,7 @@ import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
-class ServerUrlView extends StatefulWidget {
-  const new({super.key});
-
+class const ServerUrlView({super.key}) extends StatefulWidget {
   @override
   State<ServerUrlView> createState() => _ServerUrlViewState();
 }
@@ -141,11 +139,10 @@ class _ServerUrlViewState extends State<ServerUrlView> {
   }
 }
 
-class ServerLoginPayload {
-  new({required this.url, required this.body});
+class ServerLoginPayload({
+  /// Full basePath of the api client.
+  required final String url,
 
-  // Full basePath of the api client.
-  final String url;
-  // Server ping response body.
-  final PingBody body;
-}
+  /// Server ping response body.
+  required final PingBody body,
+}) {}

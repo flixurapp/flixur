@@ -9,11 +9,8 @@ import "package:flutter/services.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
-class LoginView extends StatefulWidget {
-  const new({required this.serverInfo, super.key});
-
-  final ServerLoginPayload serverInfo;
-
+class LoginView({required final ServerLoginPayload serverInfo, super.key})
+    extends StatefulWidget {
   @override
   State<LoginView> createState() => _LoginViewState();
 }

@@ -10,14 +10,16 @@ const _defaultSet = "ph";
 /// Icon to use if another icon fails to load.
 const _errIcon = "$_defaultSet:x-bold";
 
-class Iconify extends StatelessWidget {
-  new(String iconName, {super.key, this.size = 24, this.color})
-    : icon = !iconName.contains(":") ? "$_defaultSet:$iconName" : iconName;
-
+class Iconify(
   /// Icon name to use, if prefix is not provided, the default will be appended.
-  final String icon;
-  final double size;
-  final Color? color;
+  String iconName, {
+  super.key,
+  final double size = 24,
+  final Color? color,
+}) extends StatelessWidget {
+  final String icon = !iconName.contains(":")
+      ? "$_defaultSet:$iconName"
+      : iconName;
 
   @override
   Widget build(BuildContext context) {

@@ -1,18 +1,12 @@
 import "package:flixur/ui/inputs.dart";
 import "package:material_ui/material_ui.dart";
 
-class StartupButton extends StatelessWidget {
-  const new({
-    required this.text,
-    super.key,
-    this.onPressed,
-    this.isLoading = false,
-  });
-
-  final String text;
-  final bool isLoading;
-  final void Function()? onPressed;
-
+class StartupButton({
+  required final String text,
+  super.key,
+  final void Function()? onPressed,
+  final bool isLoading = false,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton(

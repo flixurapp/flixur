@@ -31,7 +31,7 @@ class const MainNavBottom({
   }
 }
 
-class const _MainNavBottomItem({
+class _MainNavBottomItem({
   required super.parent,
   required super.section,
   super.axis = .horizontal,

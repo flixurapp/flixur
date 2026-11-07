@@ -4,9 +4,7 @@ import "package:flixur/ui/main_nav/rail.dart";
 import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
 
-class MainNavTop extends StatelessWidget {
-  const new({super.key});
-
+class const MainNavTop({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;

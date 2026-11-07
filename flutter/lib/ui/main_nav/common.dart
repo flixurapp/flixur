@@ -199,23 +199,14 @@ abstract class const MainNavWidget({
 }) extends StatelessWidget;
 
 /// Class for individual nav buttons.
-abstract class MainNavItem extends StatelessWidget {
-  const new({
-    required this.parent,
-    required this.section,
-    required this.axis,
-    super.key,
-    this.width,
-    this.height,
-  });
-
-  final MainNavWidget parent;
-  final MainNavSection section;
-  final Axis axis;
-
-  final double? width;
-  final double? height;
-
+abstract class MainNavItem({
+  required final MainNavWidget parent,
+  required final MainNavSection section,
+  required final Axis axis,
+  super.key,
+  final double? width,
+  final double? height,
+}) extends StatelessWidget {
   bool get selected => parent.parent.selected == section.id;
 
   Widget builder(List<Widget> children) {
@@ -242,15 +233,14 @@ abstract class MainNavItem extends StatelessWidget {
 }
 
 /// Highlight element for selected navbar buttons.
-class MainNavItemHighlighter extends StatelessWidget {
-  const new({required this.axis, required this.enabled, super.key});
-
+class MainNavItemHighlighter({
   /// Axis for the highlight to render on.
-  final Axis axis;
+  required final Axis axis,
 
   /// Whether or not the highlight should be applied.
-  final bool enabled;
-
+  required final bool enabled,
+  super.key,
+}) extends StatelessWidget {
   static const double size = 3;
 
   @override
