@@ -8,14 +8,11 @@ import "package:material_ui/material_ui.dart";
 const bottomLabelsSetting = false;
 
 /// Main bottom navigation bar.
-class MainNavBottom extends StatelessWidget with MainNavWidget {
-  const new({required this.parent, required this.onSelected, super.key});
-
-  @override
-  final MainNavWrapper parent;
-  @override
-  final ValueChanged<MainNavSection> onSelected;
-
+class const MainNavBottom({
+  required super.parent,
+  required super.onSelected,
+  super.key,
+}) extends MainNavWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -34,13 +31,11 @@ class MainNavBottom extends StatelessWidget with MainNavWidget {
   }
 }
 
-class _MainNavBottomItem extends MainNavItem {
-  const new({
-    required super.parent,
-    required super.section,
-    super.axis = .horizontal,
-  });
-
+class const _MainNavBottomItem({
+  required super.parent,
+  required super.section,
+  super.axis = .horizontal,
+}) extends MainNavItem {
   bool get showLabels => bottomLabelsSetting;
 
   @override

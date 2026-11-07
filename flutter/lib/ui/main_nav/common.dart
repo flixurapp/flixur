@@ -32,18 +32,16 @@ enum MainNavIDs {
 }
 
 /// A single main navigation section.
-class MainNavSection {
-  const new({required this.id, required this.icon, required this.builder});
-
+class const MainNavSection({
   // Unique ID for this section.
-  final MainNavIDs id;
+  required final MainNavIDs id,
 
   /// Icon string to use for the route.
-  final String icon;
+  required final String icon,
 
   /// Page shown at the root route.
-  final GoRouterWidgetBuilder builder;
-
+  required final GoRouterWidgetBuilder builder,
+}) {
   /// The enum name of this section's ID.
   String get name => id.name;
 
@@ -124,11 +122,10 @@ List<MainNavSection> resolveMainNavSections(List<String> ids) {
 }
 
 /// Wrapper holding the main nav sections and the navbars.
-class MainNavWrapper extends StatelessWidget {
-  const new({required this.navShell, super.key});
-
-  final StatefulNavigationShell navShell;
-
+class MainNavWrapper({
+  required final StatefulNavigationShell navShell,
+  super.key,
+}) extends StatelessWidget {
   MainNavIDs? get selected => sectionIDFromBranch(navShell.currentIndex);
   List<MainNavSection> get shownSections =>
       resolveMainNavSections(mainNavShownSections);
@@ -195,10 +192,11 @@ class MainNavWrapper extends StatelessWidget {
 }
 
 /// Mixin for the main nav parent.
-mixin MainNavWidget {
-  MainNavWrapper get parent;
-  ValueChanged<MainNavSection> get onSelected;
-}
+abstract class const MainNavWidget({
+  required final MainNavWrapper parent,
+  required final ValueChanged<MainNavSection> onSelected,
+  super.key,
+}) extends StatelessWidget;
 
 /// Class for individual nav buttons.
 abstract class MainNavItem extends StatelessWidget {
