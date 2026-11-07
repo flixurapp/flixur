@@ -36,10 +36,10 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                     ),
                   ),
                 ),
-              // ignore: prefer_const_constructors DragToMoveArea cant
               Expanded(
-                // ignore: prefer_const_constructors DragToMoveArea cant
-                child: DragToMoveArea(
+                child: GatedWidget(
+                  gate: TitlebarManager.isSupported,
+                  wrapper: (child) => DragToMoveArea(child: child),
                   child: const Row(
                     children: [Spacer(), Text("Window Title"), Spacer()],
                   ),
