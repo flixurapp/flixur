@@ -33,9 +33,6 @@ void main() async {
 class const MainApp({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: buildAppTheme(AppColors.of(.dark)),
-      routerConfig: router,
-    );
+    return MaterialApp.router(theme: AppTheme.dark.theme, routerConfig: router);
   }
 }

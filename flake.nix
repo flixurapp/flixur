@@ -285,7 +285,9 @@
           generate = pkgs.writeShellApplication {
             name = "generate";
             runtimeInputs = [
-              pkgs-unstable.flutter
+              pkgConfigShim
+              pkgs-unstable.clang
+              pkgs.lndir
               pkgs.ent-go
               pkgs.go
               pkgs.yq
@@ -306,8 +308,27 @@
 
               # flutter stuff
               cd flutter
-              # dart need to know where the flutter SDK is to work properly
-              FLUTTER_ROOT=${pkgs-unstable.flutter} dart run build_runner build
+
+              # idk bro flutter hates nix
+
+              # dart has to be laid out like flutter's SDK for dart:ui resolution
+              # during codegen: build_runner looks for pkg/sky_engine next to the
+              # running dart sdk, and the dart binary must be a real file, not a
+              # symlink, or that sdk path resolves away (nix'd dart is a symlink)
+              mirror=".dart_tool/codegen-dart"
+              flutter_sdk="${pkgs-unstable.flutter}"
+              rm -rf "$mirror"
+              mkdir -p "$mirror/bin/cache/pkg" "$mirror/bin/cache/dart-sdk"
+              ln -sfn "$flutter_sdk/bin/cache/pkg/sky_engine" "$mirror/bin/cache/pkg/sky_engine"
+              lndir -silent "$flutter_sdk/bin/cache/dart-sdk" "$mirror/bin/cache/dart-sdk"
+              rm "$mirror/bin/cache/dart-sdk/bin/dart"
+              cp -L "$flutter_sdk/bin/cache/dart-sdk/bin/dart" "$mirror/bin/cache/dart-sdk/bin/dart"
+              # the env flutter's build wrapper provides (pkg-config paths, wayland
+              # headers for the native build hooks)
+              export NIX_CFLAGS_COMPILE="${pkgConfigCflags}"
+              export NIX_LDFLAGS="${pkgConfigLdflags}"
+              FLUTTER_ROOT="$flutter_sdk" "$mirror/bin/cache/dart-sdk/bin/dart" run build_runner build
+
               # we also need to generate the JSON file for the pubspec
               yq . pubspec.lock > pubspec.lock.json
             '';
