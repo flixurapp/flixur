@@ -4,9 +4,6 @@ app_name: "Flixur"
 btn_cancel: "Cancel"
 btn_ok: "OK"
 navigation:
-  rail:
-    collapse: "Collapse Navigation"
-    expand: "Expand Navigation"
   section_titles:
     activity: "Activity"
     admin: "Admin"
@@ -48,4 +45,10 @@ routes:
 storage:
   store_fail: "Failed to store secure value."
   store_fail_title: "Storage Failure"
+titlebar:
+  close: "Close"
+  maximize: "Maximize"
+  minimize: "Minimize"
+  rail_collapse: "Collapse Navigation"
+  rail_expand: "Expand Navigation"
 username: "Username"

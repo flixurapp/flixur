@@ -64,6 +64,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 
 	late final Translations$routes$en routes = Translations$routes$en._(_root);
 	late final Translations$storage$en storage = Translations$storage$en._(_root);
+	late final Translations$titlebar$en titlebar = Translations$titlebar$en._(_root);
 
 	/// en: 'Username'
 	String get username => 'Username';
@@ -76,7 +77,6 @@ class Translations$navigation$en {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-	late final Translations$navigation$rail$en rail = Translations$navigation$rail$en._(_root);
 	Map<String, String> get section_titles => {
 		'activity': 'Activity',
 		'admin': 'Admin',
@@ -114,19 +114,28 @@ class Translations$storage$en {
 	String get store_fail_title => 'Storage Failure';
 }
 
-// Path: navigation.rail
-class Translations$navigation$rail$en {
-	Translations$navigation$rail$en._(this._root);
+// Path: titlebar
+class Translations$titlebar$en {
+	Translations$titlebar$en._(this._root);
 
 	final Translations _root; // ignore: unused_field
 
 	// Translations
 
+	/// en: 'Close'
+	String get close => 'Close';
+
+	/// en: 'Maximize'
+	String get maximize => 'Maximize';
+
+	/// en: 'Minimize'
+	String get minimize => 'Minimize';
+
 	/// en: 'Collapse Navigation'
-	String get collapse => 'Collapse Navigation';
+	String get rail_collapse => 'Collapse Navigation';
 
 	/// en: 'Expand Navigation'
-	String get expand => 'Expand Navigation';
+	String get rail_expand => 'Expand Navigation';
 }
 
 // Path: routes.startup
@@ -234,8 +243,6 @@ extension on Translations {
 			'app_name' => 'Flixur',
 			'btn_cancel' => 'Cancel',
 			'btn_ok' => 'OK',
-			'navigation.rail.collapse' => 'Collapse Navigation',
-			'navigation.rail.expand' => 'Expand Navigation',
 			'navigation.section_titles.activity' => 'Activity',
 			'navigation.section_titles.admin' => 'Admin',
 			'navigation.section_titles.downloads' => 'Downloads',
@@ -268,6 +275,11 @@ extension on Translations {
 			'routes.startup.setup.title' => 'Welcome to ${_root.app_name}!',
 			'storage.store_fail' => 'Failed to store secure value.',
 			'storage.store_fail_title' => 'Storage Failure',
+			'titlebar.close' => 'Close',
+			'titlebar.maximize' => 'Maximize',
+			'titlebar.minimize' => 'Minimize',
+			'titlebar.rail_collapse' => 'Collapse Navigation',
+			'titlebar.rail_expand' => 'Expand Navigation',
 			'username' => 'Username',
 			_ => null,
 		};

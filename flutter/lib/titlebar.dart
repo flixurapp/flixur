@@ -11,14 +11,17 @@ class TitlebarManager {
   static bool get isSupported =>
       !(kIsWeb || Platform.isAndroid || Platform.isIOS);
 
+  //TODO: wire setting into this and other stuff idk
+  /// Whether the title bar should be showing buttons.
+  static bool get shouldShowButtons => isSupported;
+
   /// Get the current window instance.
   static Window? getWindow() {
+    if (!isSupported) return null;
     return WindowManager.instance.getCurrent();
   }
 
   static Future<void> init() async {
-    if (!isSupported) return;
-
     final window = getWindow();
     if (window == null) return;
     window.titleBarStyle = TitleBarStyle.hidden;
@@ -26,19 +29,21 @@ class TitlebarManager {
   }
 
   static void minimize() {
-    if (!isSupported) return;
     final window = getWindow();
     window?.minimize();
   }
 
-  static void maximize() {
-    if (!isSupported) return;
+  static bool get isMaximized => getWindow()?.isMaximized ?? false;
+  static void toggleMaximized() {
     final window = getWindow();
-    window?.maximize();
+    if (isMaximized) {
+      window?.unmaximize();
+    } else {
+      window?.maximize();
+    }
   }
 
   static void close() {
-    if (!isSupported) return;
     final window = getWindow();
     window?.close();
   }
