@@ -24,22 +24,34 @@ class Storage {
 
   // Base URL for the server API client.
   static ValueNotifier<String?> serverUrl = .new(null);
-  static Future<void> setServerUrl(String url) async {
-    await _sharedPrefs.setString(_serverUrlKey, url);
+  static Future<void> setServerUrl(String? url) async {
+    if (url == null) {
+      await _sharedPrefs.remove(_serverUrlKey);
+    } else {
+      await _sharedPrefs.setString(_serverUrlKey, url);
+    }
     serverUrl.value = url;
   }
 
   // Session token for logged in users.
   static ValueNotifier<String?> sessionToken = .new(null);
-  static Future<void> setSessionToken(String token) async {
-    await _secureStorage.write(key: _sessionTokenKey, value: token);
+  static Future<void> setSessionToken(String? token) async {
+    if (token == null) {
+      await _secureStorage.delete(key: _sessionTokenKey);
+    } else {
+      await _secureStorage.write(key: _sessionTokenKey, value: token);
+    }
     sessionToken.value = token;
   }
 
   // Identifier for this player. This is returned from the server.
   static ValueNotifier<String?> playerID = .new("");
-  static Future<void> setPlayerID(String id) async {
-    await _sharedPrefs.setString(_playerIDKey, id);
+  static Future<void> setPlayerID(String? id) async {
+    if (id == null) {
+      await _sharedPrefs.remove(_playerIDKey);
+    } else {
+      await _sharedPrefs.setString(_playerIDKey, id);
+    }
     playerID.value = id;
   }
 }
