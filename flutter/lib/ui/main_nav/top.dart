@@ -17,58 +17,76 @@ class const MainNavTop({super.key}) extends StatelessWidget {
       child: SafeArea(
         child: SizedBox(
           height: height,
-          child: Row(
+          child: Stack(
+            fit: StackFit.expand,
             children: [
-              // nav rail expand/collapse toggle
-              if (context.isLandscape)
-                ValueListenableBuilder(
-                  valueListenable: MainNavRail.isExpanded,
-                  builder: (context, expanded, _) => _MainNavTopButton(
-                    label: expanded
-                        ? t.titlebar.rail_collapse
-                        : t.titlebar.rail_expand,
-                    onTap: () => MainNavRail.isExpanded.value =
-                        !MainNavRail.isExpanded.value,
-                    child: AnimatedRotation(
-                      duration: mainNavAnimationDuration,
-                      turns: expanded ? 0 : -1 / 2,
-                      child: const _MainNavTopIcon("caret-double-left"),
-                    ),
-                  ),
-                ),
-              Expanded(
+              // window title / dragger
+              Align(
+                alignment: context.isLandscape ? .center : .centerStart,
                 child: GatedWidget(
                   gate: TitlebarManager.isSupported,
                   wrapper: (child) => DragToMoveArea(child: child),
-                  child: const Row(
-                    children: [Spacer(), Text("Window Title"), Spacer()],
+                  child: Padding(
+                    padding: const .symmetric(horizontal: 12),
+                    child: Text(
+                      "Window Title",
+                      style: .new(fontSize: context.isLandscape ? 14 : 16),
+                    ),
                   ),
                 ),
               ),
-              Row(
-                children: [
-                  _MainNavTopButton(
-                    label: t.titlebar.minimize,
-                    onTap: TitlebarManager.minimize,
-                    child: const _MainNavTopIcon("minus"),
-                  ),
-                  _MainNavTopButton(
-                    label: t.titlebar.maximize,
-                    onTap: TitlebarManager.toggleMaximized,
-                    child: ValueListenableBuilder(
-                      valueListenable: TitlebarManager.isMaximizedNotifier,
-                      builder: (context, maximized, _) => _MainNavTopIcon(
-                        maximized ? "corners-in" : "corners-out",
+              // (left) nav rail expand/collapse toggle
+              if (context.isLandscape)
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: ValueListenableBuilder(
+                    valueListenable: MainNavRail.isExpanded,
+                    builder: (context, expanded, _) => _MainNavTopButton(
+                      label: expanded
+                          ? t.titlebar.rail_collapse
+                          : t.titlebar.rail_expand,
+                      onTap: () => MainNavRail.isExpanded.value =
+                          !MainNavRail.isExpanded.value,
+                      child: AnimatedRotation(
+                        duration: mainNavAnimationDuration,
+                        turns: expanded ? 0 : -1 / 2,
+                        child: const _MainNavTopIcon("caret-double-left"),
                       ),
                     ),
                   ),
-                  _MainNavTopButton(
-                    label: t.titlebar.close,
-                    onTap: TitlebarManager.close,
-                    color: colors.error,
-                    child: const _MainNavTopIcon("x"),
-                  ),
-                ],
+                ),
+              // (right) window manager buttons
+              Positioned(
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: Row(
+                  children: [
+                    _MainNavTopButton(
+                      label: t.titlebar.minimize,
+                      onTap: TitlebarManager.minimize,
+                      child: const _MainNavTopIcon("minus"),
+                    ),
+                    _MainNavTopButton(
+                      label: t.titlebar.maximize,
+                      onTap: TitlebarManager.toggleMaximized,
+                      child: ValueListenableBuilder(
+                        valueListenable: TitlebarManager.isMaximizedNotifier,
+                        builder: (context, maximized, _) => _MainNavTopIcon(
+                          maximized ? "corners-in" : "corners-out",
+                        ),
+                      ),
+                    ),
+                    _MainNavTopButton(
+                      label: t.titlebar.close,
+                      onTap: TitlebarManager.close,
+                      color: colors.error,
+                      child: const _MainNavTopIcon("x"),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
