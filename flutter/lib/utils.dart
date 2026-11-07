@@ -67,3 +67,14 @@ class Images {
   // App logo.
   static Image get logo => Image.asset("assets/logo.png", fit: .contain);
 }
+
+/// Conditionally wraps [child] using [wrapper] when [gate] is true.
+class const GatedWidget({
+  required final bool gate,
+  required final Widget Function(Widget child) wrapper,
+  required final Widget child,
+  super.key,
+}) extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => gate ? wrapper(child) : child;
+}
