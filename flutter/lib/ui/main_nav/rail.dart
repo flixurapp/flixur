@@ -8,8 +8,11 @@ import "package:material_ui/material_ui.dart";
 const railExpandedDefaultSetting = false;
 
 /// Main side navigation rail for wide layouts.
-class MainNavRail({required super.parent, required super.onSelected, super.key})
-    extends MainNavWidget {
+class const MainNavRail({
+  required super.parent,
+  required super.onSelected,
+  super.key,
+}) extends MainNavWidget {
   static const collapsedWidth = 64.0;
   static const double expandedWidth = collapsedWidth * 3.5;
   static const itemHeight = 48.0;
@@ -62,7 +65,7 @@ class MainNavRail({required super.parent, required super.onSelected, super.key})
   }
 }
 
-class _MainNavRailItem({
+class const _MainNavRailItem({
   required super.parent,
   required super.section,
   required final bool expanded,

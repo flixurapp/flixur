@@ -122,7 +122,7 @@ List<MainNavSection> resolveMainNavSections(List<String> ids) {
 }
 
 /// Wrapper holding the main nav sections and the navbars.
-class MainNavWrapper({
+class const MainNavWrapper({
   required final StatefulNavigationShell navShell,
   super.key,
 }) extends StatelessWidget {
@@ -199,7 +199,7 @@ abstract class const MainNavWidget({
 }) extends StatelessWidget;
 
 /// Class for individual nav buttons.
-abstract class MainNavItem({
+abstract class const MainNavItem({
   required final MainNavWidget parent,
   required final MainNavSection section,
   required final Axis axis,
@@ -233,7 +233,7 @@ abstract class MainNavItem({
 }
 
 /// Highlight element for selected navbar buttons.
-class MainNavItemHighlighter({
+class const MainNavItemHighlighter({
   /// Axis for the highlight to render on.
   required final Axis axis,
 

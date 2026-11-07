@@ -1,7 +1,7 @@
 import "package:flixur/ui/inputs.dart";
 import "package:material_ui/material_ui.dart";
 
-class StartupButton({
+class const StartupButton({
   required final String text,
   super.key,
   final void Function()? onPressed,

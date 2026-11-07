@@ -145,4 +145,4 @@ class ServerLoginPayload({
 
   /// Server ping response body.
   required final PingBody body,
-}) {}
+});

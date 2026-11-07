@@ -10,7 +10,7 @@ import "package:flutter/services.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
-class SetupView({required final ServerLoginPayload serverInfo, super.key})
+class const SetupView({required final ServerLoginPayload serverInfo, super.key})
     extends StatefulWidget {
   @override
   State<SetupView> createState() => _SetupViewState();

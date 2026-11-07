@@ -10,7 +10,7 @@ const _defaultSet = "ph";
 /// Icon to use if another icon fails to load.
 const _errIcon = "$_defaultSet:x-bold";
 
-class Iconify(
+class const Iconify(
   /// Icon name to use, if prefix is not provided, the default will be appended.
   String iconName, {
   super.key,
