@@ -8,12 +8,14 @@ import "package:flixur/routes/home/index.dart";
 import "package:flixur/routes/library/index.dart";
 import "package:flixur/routes/search/index.dart";
 import "package:flixur/routes/settings/index.dart";
+import "package:flixur/titlebar.dart";
 import "package:flixur/ui/main_nav/bottom.dart";
 import "package:flixur/ui/main_nav/rail.dart";
 import "package:flixur/ui/main_nav/top.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/services.dart";
 import "package:material_ui/material_ui.dart";
+import "package:window_manager/window_manager.dart";
 
 const mainNavIconSize = 32.0;
 const mainNavAnimationDuration = Duration(milliseconds: 200);
@@ -134,8 +136,7 @@ class const MainNavWrapper({
       if (!mainNavShownSections.contains(section.name)) section.name,
   ]);
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildShell(BuildContext context) {
     // landscape gets a side navbar instead of the bottom one
     if (context.isLandscape) {
       return Scaffold(
@@ -166,6 +167,23 @@ class const MainNavWrapper({
         ],
       ),
       bottomNavigationBar: MainNavBottom(parent: this, onSelected: _onSelect),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GatedWidget(
+      gate: TitlebarManager.isSupported,
+      wrapper: (child) => ValueListenableBuilder(
+        valueListenable: TitlebarManager.isMaximizedNotifier,
+        builder: (context, maximized, child) => DragToResizeArea(
+          // only enable resize edges when the window isnt maximized
+          enableResizeEdges: maximized ? [] : null,
+          child: child!,
+        ),
+        child: child,
+      ),
+      child: _buildShell(context),
     );
   }
 
