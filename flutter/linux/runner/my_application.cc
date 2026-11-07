@@ -25,6 +25,25 @@ static void my_application_activate(GApplication* application) {
   // ! DEFAULT FLUTTER TITLEBAR REMOVED HERE
   gtk_window_set_title(window, "flixur");
 
+  // non-native titlebar doesnt work with window_manager
+  // TODO:pr https://github.com/leanflutter/window_manager/issues/594
+  GdkScreen* screen = gtk_window_get_screen(window);
+  GdkVisual* visual = gdk_screen_get_rgba_visual(screen);
+  if (visual != nullptr && gdk_screen_is_composited(screen)) {
+    gtk_widget_set_visual(GTK_WIDGET(window), visual);
+    g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(provider,
+                                    "window.app-translucent, "
+                                    "window.app-translucent:backdrop {"
+                                    "  background-color: transparent; "
+                                    "  background-image: none; }",
+                                    -1, nullptr);
+    gtk_style_context_add_provider_for_screen(
+        screen, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+    gtk_style_context_add_class(
+        gtk_widget_get_style_context(GTK_WIDGET(window)), "app-translucent");
+  }
+
   gtk_window_set_default_size(window, 1280, 720);
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
