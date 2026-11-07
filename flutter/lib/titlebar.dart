@@ -1,4 +1,5 @@
 import "dart:io";
+import "dart:ui" show Size;
 
 import "package:flutter/foundation.dart";
 import "package:window_manager/window_manager.dart";
@@ -56,5 +57,15 @@ class TitlebarManager {
   static void close() {
     final window = getWindow();
     window?.close();
+  }
+
+  /// Resize the window to a landscape "phone" layout for debugging.
+  static void debugResizeToPhone() {
+    final window = getWindow();
+    if (window == null) return;
+    final phoneHeight = window.size.height * 0.9;
+    final phoneWidth = (phoneHeight * 9 / 16).clamp(0.0, window.size.width);
+    if (window.isMaximized) window.unmaximize();
+    window.setSize(Size(phoneWidth, phoneHeight).toNative(), false);
   }
 }

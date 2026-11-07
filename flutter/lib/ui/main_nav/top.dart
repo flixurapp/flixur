@@ -3,6 +3,7 @@ import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/main_nav/common.dart";
 import "package:flixur/ui/main_nav/rail.dart";
 import "package:flixur/utils.dart";
+import "package:flutter/foundation.dart";
 import "package:material_ui/material_ui.dart";
 import "package:window_manager/window_manager.dart";
 
@@ -64,6 +65,13 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                 bottom: 0,
                 child: Row(
                   children: [
+                    if (kDebugMode)
+                      _MainNavTopButton(
+                        label: t.titlebar.minimize,
+                        onTap: TitlebarManager.debugResizeToPhone,
+                        color: context.colors.tertiary,
+                        child: const _MainNavTopIcon("device-mobile"),
+                      ),
                     _MainNavTopButton(
                       label: t.titlebar.minimize,
                       onTap: TitlebarManager.minimize,
