@@ -1,6 +1,7 @@
 import "dart:io";
 import "dart:ui" show Size;
 
+import "package:flixur/ui/main_nav/common.dart";
 import "package:flutter/foundation.dart";
 import "package:window_manager/window_manager.dart";
 
@@ -27,6 +28,12 @@ class TitlebarManager {
     if (window == null) return;
     window.titleBarStyle = TitleBarStyle.hidden;
     if (startMaximizedSetting) window.maximize();
+
+    // keep the OS window title in sync with the main nav
+    window.title = MainNavWrapper.pageTitle.value;
+    MainNavWrapper.pageTitle.addListener(
+      () => window.title = MainNavWrapper.pageTitle.value,
+    );
 
     // keep the notifier up to date
     isMaximizedNotifier.value = window.isMaximized;

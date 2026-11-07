@@ -128,6 +128,13 @@ class const MainNavWrapper({
   required final StatefulNavigationShell navShell,
   super.key,
 }) extends StatelessWidget {
+  /// The currently selected section.
+  static final ValueNotifier<MainNavSection?> activeSection =
+      ValueNotifier<MainNavSection?>(null);
+
+  /// The current page/window title.
+  static final ValueNotifier<String> pageTitle = _createMainNavTitle();
+
   MainNavIDs? get selected => sectionIDFromBranch(navShell.currentIndex);
   List<MainNavSection> get shownSections =>
       resolveMainNavSections(mainNavShownSections);
@@ -172,6 +179,7 @@ class const MainNavWrapper({
 
   @override
   Widget build(BuildContext context) {
+    _syncActiveSection();
     return GatedWidget(
       gate: TitlebarManager.isSupported,
       wrapper: (child) => ValueListenableBuilder(
@@ -196,6 +204,20 @@ class const MainNavWrapper({
     );
   }
 
+  /// Syncs the active section to the notifier.
+  void _syncActiveSection() {
+    final section = sectionFromID(sectionIDFromBranch(navShell.currentIndex));
+    if (!identical(activeSection.value, section)) activeSection.value = section;
+  }
+
+  /// The section for [id], or null if it doesn't exist.
+  static MainNavSection? sectionFromID(MainNavIDs? id) {
+    for (final section in mainNavSections) {
+      if (section.id == id) return section;
+    }
+    return null;
+  }
+
   /// The section ID for a specific branch index.
   static MainNavIDs? sectionIDFromBranch(int index) =>
       index >= 0 && index < mainNavSections.length
@@ -207,6 +229,36 @@ class const MainNavWrapper({
     final index = mainNavSections.indexWhere((item) => item.id == id);
     return index == -1 ? null : index;
   }
+}
+
+/// Keeps [MainNavWrapper.pageTitle] updated.
+ValueNotifier<String> _createMainNavTitle() {
+  final notifier = ValueNotifier<String>(t.app_name);
+  ValueNotifier<String?>? listened;
+
+  /// Updates the current window title.
+  void update() {
+    final title =
+        // listened title
+        listened?.value ??
+        // or section name
+        MainNavWrapper.activeSection.value?.label ??
+        // fallback to app name
+        t.app_name;
+    if (notifier.value != title) notifier.value = title;
+  }
+
+  /// Re-listsns to the new active section title.
+  void sync() {
+    listened?.removeListener(update);
+    listened = MainNavWrapper.activeSection.value?.title;
+    listened?.addListener(update);
+    update();
+  }
+
+  MainNavWrapper.activeSection.addListener(sync);
+  sync();
+  return notifier;
 }
 
 /// Mixin for the main nav parent.

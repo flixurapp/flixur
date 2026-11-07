@@ -29,9 +29,12 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                   wrapper: (child) => DragToMoveArea(child: child),
                   child: Padding(
                     padding: const .symmetric(horizontal: 12),
-                    child: Text(
-                      "Window Title",
-                      style: .new(fontSize: context.isLandscape ? 14 : 16),
+                    child: ValueListenableBuilder(
+                      valueListenable: MainNavWrapper.pageTitle,
+                      builder: (context, title, _) => Text(
+                        title,
+                        style: .new(fontSize: context.isLandscape ? 14 : 16),
+                      ),
                     ),
                   ),
                 ),
