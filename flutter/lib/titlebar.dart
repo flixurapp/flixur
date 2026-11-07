@@ -26,6 +26,12 @@ class TitlebarManager {
     if (window == null) return;
     window.titleBarStyle = TitleBarStyle.hidden;
     if (startMaximizedSetting) window.maximize();
+
+    // keep the notifier up to date
+    isMaximizedNotifier.value = window.isMaximized;
+    WindowManager.instance.addListener(
+      (event) => isMaximizedNotifier.value = window.isMaximized,
+    );
   }
 
   static void minimize() {
@@ -34,6 +40,10 @@ class TitlebarManager {
   }
 
   static bool get isMaximized => getWindow()?.isMaximized ?? false;
+  static final ValueNotifier<bool> isMaximizedNotifier = ValueNotifier<bool>(
+    false,
+  );
+
   static void toggleMaximized() {
     final window = getWindow();
     if (isMaximized) {

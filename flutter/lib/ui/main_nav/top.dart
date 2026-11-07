@@ -55,10 +55,11 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                   _MainNavTopButton(
                     label: t.titlebar.maximize,
                     onTap: TitlebarManager.toggleMaximized,
-                    child: _MainNavTopIcon(
-                      TitlebarManager.isMaximized
-                          ? "corners-in"
-                          : "corners-out",
+                    child: ValueListenableBuilder(
+                      valueListenable: TitlebarManager.isMaximizedNotifier,
+                      builder: (context, maximized, _) => _MainNavTopIcon(
+                        maximized ? "corners-in" : "corners-out",
+                      ),
                     ),
                   ),
                   _MainNavTopButton(
