@@ -1,7 +1,8 @@
 import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
 
-class LoadingSpinner({final Color? color, super.key}) extends StatelessWidget {
+class const LoadingSpinner({final Color? color, super.key})
+    extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -16,7 +17,7 @@ class LoadingSpinner({final Color? color, super.key}) extends StatelessWidget {
 }
 
 /// A line with "OR" in the middle. ---- OR ----
-class OrLine({
+class const OrLine({
   // Vertical padding for the line.
   final double padding = 6,
   super.key,
@@ -47,7 +48,7 @@ class OrLine({
   }
 }
 
-class FlixurInput({
+class const FlixurInput({
   /// Text to show above the field.
   required final String label,
 
