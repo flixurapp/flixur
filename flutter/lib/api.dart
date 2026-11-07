@@ -1,4 +1,5 @@
 import "package:dio/dio.dart";
+import "package:flixur/router.dart";
 import "package:flixur/storage.dart";
 import "package:openapi/openapi.dart";
 
@@ -42,6 +43,16 @@ class Api {
       // otherwise return a generic error
       return ApiFailure(err, null);
     }
+  }
+
+  static Future<void> logout() async {
+    // clear data from storage
+    await Storage.setSessionToken(null);
+    await Storage.setServerUrl(null);
+    await Storage.setPlayerID(null);
+
+    // navigate back to root
+    router.go("/");
   }
 }
 
