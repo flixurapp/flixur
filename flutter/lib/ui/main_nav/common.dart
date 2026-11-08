@@ -192,7 +192,7 @@ class const MainNavWrapper({
     final section = sectionFromID(sectionIDFromBranch(navShell.currentIndex));
     if (identical(activeSection.value, section)) return;
 
-    runAfterFrame(() {
+    scheduleMicrotask(() {
       if (!identical(activeSection.value, section)) {
         activeSection.value = section;
       }
@@ -236,7 +236,7 @@ ValueNotifier<String> _createMainNavTitle() {
         // fallback to app name
         t.app_name;
 
-    runAfterFrame(() {
+    scheduleMicrotask(() {
       if (notifier.value != title) notifier.value = title;
     });
   }

@@ -1,3 +1,4 @@
+import "dart:async";
 import "dart:io";
 
 import "package:flixur/ui/main_nav/common.dart";
@@ -100,7 +101,7 @@ class PageTitleSlot extends ValueNotifier<String?> {
   void _scheduleUpdate() {
     // updates have to be scheduled so a title change doesn't update the widget
     // tree before a build is finished
-    runAfterFrame(() {
+    scheduleMicrotask(() {
       final title = _titleStack.isEmpty ? null : _titleStack.values.last;
       if (value != title) value = title;
     });
