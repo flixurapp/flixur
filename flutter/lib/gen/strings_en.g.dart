@@ -158,9 +158,6 @@ class Translations$routes$startup$login$en {
 
 	// Translations
 
-	/// en: 'Log In'
-	String get app_bar => 'Log In';
-
 	/// en: 'Login Failed'
 	String get failed => 'Login Failed';
 
@@ -171,6 +168,9 @@ class Translations$routes$startup$login$en {
 
 	/// en: 'Log In'
 	String get login => 'Log In';
+
+	/// en: 'Log In'
+	String get title => 'Log In';
 }
 
 // Path: routes.startup.server_url
@@ -201,9 +201,6 @@ class Translations$routes$startup$setup$en {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-
-	/// en: 'Server Setup'
-	String get app_bar => 'Server Setup';
 
 	/// en: 'To get started, enter the credentials for the initial admin user. You will be automatically logged in.'
 	String get body => 'To get started, enter the credentials for the initial admin user. You will be automatically logged in.';
@@ -253,16 +250,15 @@ extension on Translations {
 			'navigation.section_titles.settings' => 'Settings',
 			'or_line' => 'OR',
 			'password' => 'Password',
-			'routes.startup.login.app_bar' => 'Log In',
 			'routes.startup.login.failed' => 'Login Failed',
 			'routes.startup.login.failed_codes.INCORRECT_PASSWORD' => 'Incorrect password.',
 			'routes.startup.login.failed_codes.INCORRECT_USERNAME' => 'Username not found.',
 			'routes.startup.login.login' => 'Log In',
+			'routes.startup.login.title' => 'Log In',
 			'routes.startup.server_url.connect' => 'Connect',
 			'routes.startup.server_url.url' => 'Server URL',
 			'routes.startup.server_url.url_error' => 'Server URL is not valid!',
 			'routes.startup.server_url.welcome' => 'Welcome!',
-			'routes.startup.setup.app_bar' => 'Server Setup',
 			'routes.startup.setup.body' => 'To get started, enter the credentials for the initial admin user. You will be automatically logged in.',
 			'routes.startup.setup.code' => 'Setup Code',
 			'routes.startup.setup.code_info' => 'You can get the setup code from the server console. You only need to do this once to set up the server.',

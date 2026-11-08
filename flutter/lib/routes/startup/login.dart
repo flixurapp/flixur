@@ -31,7 +31,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return PageTitle(
-      t.routes.startup.login.app_bar,
+      t.routes.startup.login.title,
       child: Scaffold(
         backgroundColor: context.colors.base,
         body: Center(

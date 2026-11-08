@@ -29,7 +29,7 @@ class _SetupViewState extends State<SetupView> {
   @override
   Widget build(BuildContext context) {
     return PageTitle(
-      t.routes.startup.setup.app_bar,
+      t.routes.startup.setup.title,
       child: Scaffold(
         backgroundColor: context.colors.base,
         body: Center(
