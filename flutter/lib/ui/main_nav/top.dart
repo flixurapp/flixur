@@ -40,27 +40,12 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                 ),
               ),
               // (left) nav rail expand/collapse toggle
-              if (context.isLandscape)
-                Positioned(
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: ValueListenableBuilder(
-                    valueListenable: MainNavRail.isExpanded,
-                    builder: (context, expanded, _) => _MainNavTopButton(
-                      label: expanded
-                          ? t.titlebar.rail_collapse
-                          : t.titlebar.rail_expand,
-                      onTap: () => MainNavRail.isExpanded.value =
-                          !MainNavRail.isExpanded.value,
-                      child: AnimatedRotation(
-                        duration: mainNavAnimationDuration,
-                        turns: expanded ? 0 : -1 / 2,
-                        child: const _MainNavTopIcon("caret-double-left"),
-                      ),
-                    ),
-                  ),
-                ),
+              const Positioned(
+                left: 0,
+                top: 0,
+                bottom: 0,
+                child: _RailToggle(),
+              ),
               // (right) window manager buttons
               Positioned(
                 right: 0,
@@ -128,6 +113,41 @@ class const _MainNavTopButton({
           height: MainNavRail.itemHeight,
           child: child,
         ),
+      ),
+    );
+  }
+}
+
+/// Nav rail toggle button.
+class const _RailToggle() extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: MainNavWrapper.activeSection,
+      builder: (context, section, _) => ValueListenableBuilder(
+        valueListenable: MainNavWrapper.outerTitleSlot,
+        builder: (context, outerTitle, _) {
+          // only show while the shell rail is actually visible
+          if (!context.isLandscape || section == null || outerTitle != null) {
+            return const SizedBox.shrink();
+          }
+
+          return ValueListenableBuilder(
+            valueListenable: MainNavRail.isExpanded,
+            builder: (context, expanded, _) => _MainNavTopButton(
+              label: expanded
+                  ? t.titlebar.rail_collapse
+                  : t.titlebar.rail_expand,
+              onTap: () =>
+                  MainNavRail.isExpanded.value = !MainNavRail.isExpanded.value,
+              child: AnimatedRotation(
+                duration: mainNavAnimationDuration,
+                turns: expanded ? 0 : -1 / 2,
+                child: const _MainNavTopIcon("caret-double-left"),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

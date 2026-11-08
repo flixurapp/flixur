@@ -2,6 +2,7 @@ import "dart:io";
 
 import "package:device_info_plus/device_info_plus.dart";
 import "package:flutter/foundation.dart";
+import "package:flutter/scheduler.dart";
 import "package:material_ui/material_ui.dart";
 import "package:package_info_plus/package_info_plus.dart";
 
@@ -77,4 +78,14 @@ class const GatedWidget({
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => gate ? wrapper(child) : child;
+}
+
+/// Runs [action] after the current frame if we are in the build phase,
+/// otherwise immediately.
+void runAfterFrame(VoidCallback action) {
+  if (SchedulerBinding.instance.schedulerPhase == .persistentCallbacks) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => action());
+    return;
+  }
+  action();
 }

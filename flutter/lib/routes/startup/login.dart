@@ -2,6 +2,7 @@ import "package:flixur/api.dart";
 import "package:flixur/routes/startup/components.dart";
 import "package:flixur/routes/startup/server_url.dart";
 import "package:flixur/storage.dart";
+import "package:flixur/titlebar.dart";
 import "package:flixur/ui/dialogs.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
@@ -29,64 +30,58 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.colors.base,
-      appBar: AppBar(
-        backgroundColor: context.colors.mantle,
-        leading: Padding(
-          padding: const .symmetric(vertical: 6),
-          child: Images.logo,
-        ),
-        title: Text(t.routes.startup.login.app_bar),
-        toolbarHeight: 60,
-      ),
-      body: Center(
-        child: FractionallySizedBox(
-          widthFactor: 0.8,
-          child: Column(
-            mainAxisAlignment: .center,
-            crossAxisAlignment: .stretch,
-            spacing: 14,
-            children: [
-              if (_serverResponseBody.supportsPasswordLogin) ...[
-                FlixurInput(
-                  label: t.username.toUpperCase(),
-                  errorText: _usernameError,
-                  textField: (deco) => TextField(
-                    decoration: deco.copyWith(hintText: "peppa.pig"),
-                    controller: _usernameController,
-                    onSubmitted: (_) => _passwordFocus.requestFocus(),
+    return PageTitle(
+      t.routes.startup.login.app_bar,
+      child: Scaffold(
+        backgroundColor: context.colors.base,
+        body: Center(
+          child: FractionallySizedBox(
+            widthFactor: 0.8,
+            child: Column(
+              mainAxisAlignment: .center,
+              crossAxisAlignment: .stretch,
+              spacing: 14,
+              children: [
+                if (_serverResponseBody.supportsPasswordLogin) ...[
+                  FlixurInput(
+                    label: t.username.toUpperCase(),
+                    errorText: _usernameError,
+                    textField: (deco) => TextField(
+                      decoration: deco.copyWith(hintText: "peppa.pig"),
+                      controller: _usernameController,
+                      onSubmitted: (_) => _passwordFocus.requestFocus(),
+                    ),
                   ),
-                ),
-                FlixurInput(
-                  label: t.password.toUpperCase(),
-                  errorText: _passwordError,
-                  textField: (deco) => TextField(
-                    decoration: deco.copyWith(hintText: "*" * 12),
-                    controller: _passwordController,
-                    onSubmitted: (_) => _passwordSubmit(),
-                    focusNode: _passwordFocus,
-                    obscureText: true,
+                  FlixurInput(
+                    label: t.password.toUpperCase(),
+                    errorText: _passwordError,
+                    textField: (deco) => TextField(
+                      decoration: deco.copyWith(hintText: "*" * 12),
+                      controller: _passwordController,
+                      onSubmitted: (_) => _passwordSubmit(),
+                      focusNode: _passwordFocus,
+                      obscureText: true,
+                    ),
                   ),
-                ),
-                StartupButton(
-                  text: t.routes.startup.login.login,
-                  isLoading: _isPasswordLoading,
-                  // disable button if OIDC is loading
-                  onPressed: _isOidcLoading ? null : _passwordSubmit,
-                ),
+                  StartupButton(
+                    text: t.routes.startup.login.login,
+                    isLoading: _isPasswordLoading,
+                    // disable button if OIDC is loading
+                    onPressed: _isOidcLoading ? null : _passwordSubmit,
+                  ),
+                ],
+                // only show the "OR" line if both methods are allowed
+                if (_serverResponseBody.supportsPasswordLogin &&
+                    _serverResponseBody.supportsOIDCLogin != "")
+                  const OrLine(),
+                if (_serverResponseBody.supportsOIDCLogin != "")
+                  StartupButton(
+                    text: _serverResponseBody.supportsOIDCLogin,
+                    isLoading: _isOidcLoading,
+                    onPressed: _isPasswordLoading ? null : _oidcSubmit,
+                  ),
               ],
-              // only show the "OR" line if both methods are allowed
-              if (_serverResponseBody.supportsPasswordLogin &&
-                  _serverResponseBody.supportsOIDCLogin != "")
-                const OrLine(),
-              if (_serverResponseBody.supportsOIDCLogin != "")
-                StartupButton(
-                  text: _serverResponseBody.supportsOIDCLogin,
-                  isLoading: _isOidcLoading,
-                  onPressed: _isPasswordLoading ? null : _oidcSubmit,
-                ),
-            ],
+            ),
           ),
         ),
       ),

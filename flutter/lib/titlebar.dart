@@ -1,8 +1,9 @@
 import "dart:io";
-import "dart:ui" show Size;
 
 import "package:flixur/ui/main_nav/common.dart";
+import "package:flixur/utils.dart";
 import "package:flutter/foundation.dart";
+import "package:material_ui/material_ui.dart";
 import "package:window_manager/window_manager.dart";
 
 //TODO: wire into setting
@@ -75,4 +76,98 @@ class TitlebarManager {
     if (window.isMaximized) window.unmaximize();
     window.setSize(Size(phoneWidth, phoneHeight).toNative(), false);
   }
+}
+
+/// Holds titles pushed by [PageTitle] widgets.
+class PageTitleSlot extends ValueNotifier<String?> {
+  new() : super(null);
+
+  /// Stack of titles pushed by widgets.
+  final _titleStack = <Object, String>{};
+
+  /// Whether an update is currently scheduled.
+  bool _scheduled = false;
+
+  /// Have [widget] push a [title], replacing any existing title it has.
+  void push(Object widget, String title) {
+    if (_titleStack[widget] == title) return;
+    _titleStack[widget] = title;
+    _scheduleUpdate();
+  }
+
+  /// Remove any title associated with [widget].
+  void pop(Object widget) {
+    if (_titleStack.remove(widget) != null) _scheduleUpdate();
+  }
+
+  void _scheduleUpdate() {
+    // updates have to be scheduled so a title change doesn't update the widget
+    // tree before a build is finished
+    if (_scheduled) return;
+    _scheduled = true;
+    runAfterFrame(() {
+      _scheduled = false;
+      // actually update the title
+      final title = _titleStack.isEmpty ? null : _titleStack.values.last;
+      if (value != title) value = title;
+    });
+  }
+}
+
+/// Provides a [PageTitleSlot] to [PageTitle]s beneath it.
+class const PageTitleScope({
+  required final PageTitleSlot slot,
+  required super.child,
+  super.key,
+}) extends InheritedWidget {
+  /// The nearest title slot for a [context] if it exists.
+  static PageTitleSlot? slotOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<PageTitleScope>()?.slot;
+  @override
+  bool updateShouldNotify(PageTitleScope old) => old.slot != slot;
+}
+
+/// Pushes its [title] to the nearest [PageTitleScope].
+class const PageTitle(
+  final String title, {
+  required final Widget child,
+  super.key,
+}) extends StatefulWidget {
+  @override
+  State<PageTitle> createState() => _PageTitleState();
+}
+
+class _PageTitleState extends State<PageTitle> {
+  PageTitleSlot? _slot;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _sync();
+  }
+
+  @override
+  void didUpdateWidget(PageTitle old) {
+    super.didUpdateWidget(old);
+    if (widget.title != old.title) _sync();
+  }
+
+  void _sync() {
+    final slot = PageTitleScope.slotOf(context);
+    if (!identical(slot, _slot)) {
+      _slot?.pop(this);
+      _slot = slot;
+    }
+    _slot?.push(this, widget.title);
+  }
+
+  @override
+  void deactivate() {
+    _slot?.pop(this);
+    _slot = null;
+    super.deactivate();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }

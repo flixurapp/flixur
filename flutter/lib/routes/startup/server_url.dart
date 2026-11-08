@@ -1,6 +1,7 @@
 import "package:flixur/api.dart";
 import "package:flixur/routes/startup/components.dart";
 import "package:flixur/storage.dart";
+import "package:flixur/titlebar.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
@@ -21,66 +22,69 @@ class _ServerUrlViewState extends State<ServerUrlView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.colors.mantle,
-      body: Center(
-        child: Flex(
-          direction: context.isLandscape ? .horizontal : .vertical,
-          mainAxisAlignment: .center,
-          children: [
-            Expanded(
-              child: Column(
-                mainAxisAlignment: .center,
-                spacing: 16,
-                children: [
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      // sane sizing for logo depending on screen size
-                      maxWidth:
-                          context.screenSize.width *
-                          (context.isLandscape ? 0.4 : 0.8),
-                      maxHeight:
-                          context.screenSize.height *
-                          (context.isLandscape ? 0.4 : 0.3),
-                    ),
-                    child: Images.logo,
-                  ),
-                  Text(
-                    t.routes.startup.server_url.welcome,
-                    style: const TextStyle(fontSize: 56),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: FractionallySizedBox(
-                widthFactor: 0.8,
+    return PageTitle(
+      t.routes.startup.server_url.welcome,
+      child: Scaffold(
+        backgroundColor: context.colors.mantle,
+        body: Center(
+          child: Flex(
+            direction: context.isLandscape ? .horizontal : .vertical,
+            mainAxisAlignment: .center,
+            children: [
+              Expanded(
                 child: Column(
                   mainAxisAlignment: .center,
-                  crossAxisAlignment: .stretch,
-                  spacing: 14,
+                  spacing: 16,
                   children: [
-                    FlixurInput(
-                      label: t.routes.startup.server_url.url.toUpperCase(),
-                      errorText: _errorText,
-                      textField: (deco) => TextField(
-                        decoration: deco.copyWith(
-                          hintText: "https://demo.flixur.app",
-                        ),
-                        controller: _serverUrlController,
-                        onSubmitted: (_) => _serverUrlSubmit(),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        // sane sizing for logo depending on screen size
+                        maxWidth:
+                            context.screenSize.width *
+                            (context.isLandscape ? 0.4 : 0.8),
+                        maxHeight:
+                            context.screenSize.height *
+                            (context.isLandscape ? 0.4 : 0.3),
                       ),
+                      child: Images.logo,
                     ),
-                    StartupButton(
-                      text: t.routes.startup.server_url.connect,
-                      isLoading: _isLoading,
-                      onPressed: _serverUrlSubmit,
+                    Text(
+                      t.routes.startup.server_url.welcome,
+                      style: const TextStyle(fontSize: 56),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                child: FractionallySizedBox(
+                  widthFactor: 0.8,
+                  child: Column(
+                    mainAxisAlignment: .center,
+                    crossAxisAlignment: .stretch,
+                    spacing: 14,
+                    children: [
+                      FlixurInput(
+                        label: t.routes.startup.server_url.url.toUpperCase(),
+                        errorText: _errorText,
+                        textField: (deco) => TextField(
+                          decoration: deco.copyWith(
+                            hintText: "https://demo.flixur.app",
+                          ),
+                          controller: _serverUrlController,
+                          onSubmitted: (_) => _serverUrlSubmit(),
+                        ),
+                      ),
+                      StartupButton(
+                        text: t.routes.startup.server_url.connect,
+                        isLoading: _isLoading,
+                        onPressed: _serverUrlSubmit,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
