@@ -26,7 +26,7 @@ class const AppColors({
 // derived `on` colors
 extension AppColorsDerived on AppColors {
   Color get onPrimary => onPrimaryOverride ?? text;
-  Color get onSecondary => onSecondaryOverride ?? base;
+  Color get onSecondary => onSecondaryOverride ?? text;
 }
 
 extension AppThemeContext on BuildContext {
