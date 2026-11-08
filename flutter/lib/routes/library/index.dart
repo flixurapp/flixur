@@ -1,5 +1,3 @@
-import "dart:math";
-
 import "package:flixur/ui/cards.dart";
 import "package:material_ui/material_ui.dart";
 
@@ -14,7 +12,11 @@ class LibraryView extends StatelessWidget {
     return CardsGrid(
       rowCount: _cardsPerRow,
       children: List.generate(100, (index) {
-        return Random().nextBool() ? ArtistCard() : AlbumCard();
+        return switch (index % 3) {
+          0 => ArtistCard(),
+          1 => AlbumCard(),
+          _ => PlaylistCard(),
+        };
       }),
     );
   }
