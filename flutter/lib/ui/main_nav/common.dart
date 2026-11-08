@@ -235,7 +235,10 @@ ValueNotifier<String> _createMainNavTitle() {
         (section?.titleSlot.value ?? section?.label) ??
         // fallback to app name
         t.app_name;
-    if (notifier.value != title) notifier.value = title;
+
+    runAfterFrame(() {
+      if (notifier.value != title) notifier.value = title;
+    });
   }
 
   /// Re-listsns to the new active section title.

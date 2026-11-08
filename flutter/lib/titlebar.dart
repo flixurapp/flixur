@@ -85,9 +85,6 @@ class PageTitleSlot extends ValueNotifier<String?> {
   /// Stack of titles pushed by widgets.
   final _titleStack = <Object, String>{};
 
-  /// Whether an update is currently scheduled.
-  bool _scheduled = false;
-
   /// Have [widget] push a [title], replacing any existing title it has.
   void push(Object widget, String title) {
     if (_titleStack[widget] == title) return;
@@ -103,11 +100,7 @@ class PageTitleSlot extends ValueNotifier<String?> {
   void _scheduleUpdate() {
     // updates have to be scheduled so a title change doesn't update the widget
     // tree before a build is finished
-    if (_scheduled) return;
-    _scheduled = true;
     runAfterFrame(() {
-      _scheduled = false;
-      // actually update the title
       final title = _titleStack.isEmpty ? null : _titleStack.values.last;
       if (value != title) value = title;
     });
