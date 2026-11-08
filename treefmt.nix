@@ -1,3 +1,7 @@
+{ pkgs, ... }:
+let
+  yamlKeySort = [ "flutter/assets/translations/*.yaml" ];
+in
 {
   projectRootFile = "flake.nix";
 
@@ -25,5 +29,17 @@
     prettier.enable = true;
     buf.enable = true;
     just.enable = true;
+  };
+
+  # ignore the yaml key files in prettier so yaml-sort can work
+  settings.formatter.prettier.excludes = yamlKeySort;
+  settings.formatter.yaml-sort = {
+    command = "${pkgs.yq-go}/bin/yq";
+    options = [
+      "eval"
+      "sort_keys(..)"
+      "--inplace"
+    ];
+    includes = yamlKeySort;
   };
 }
