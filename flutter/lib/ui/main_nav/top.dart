@@ -22,11 +22,11 @@ class const MainNavTop({super.key}) extends StatelessWidget {
             fit: StackFit.expand,
             children: [
               // window title / dragger
-              Align(
-                alignment: context.isLandscape ? .center : .centerStart,
-                child: GatedWidget(
-                  gate: TitlebarManager.isSupported,
-                  wrapper: (child) => DragToMoveArea(child: child),
+              GatedWidget(
+                gate: TitlebarManager.isSupported,
+                wrapper: (child) => DragToMoveArea(child: child),
+                child: Align(
+                  alignment: context.isLandscape ? .center : .centerStart,
                   child: Padding(
                     padding: const .symmetric(horizontal: 12),
                     child: ValueListenableBuilder(
@@ -57,17 +57,20 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                       _MainNavTopButton(
                         label: t.titlebar.minimize,
                         onTap: TitlebarManager.debugResizeToPhone,
+                        square: !context.isLandscape,
                         color: context.colors.tertiary,
                         child: const _MainNavTopIcon("device-mobile"),
                       ),
                     _MainNavTopButton(
                       label: t.titlebar.minimize,
                       onTap: TitlebarManager.minimize,
+                      square: !context.isLandscape,
                       child: const _MainNavTopIcon("minus"),
                     ),
                     _MainNavTopButton(
                       label: t.titlebar.maximize,
                       onTap: TitlebarManager.toggleMaximized,
+                      square: !context.isLandscape,
                       child: ValueListenableBuilder(
                         valueListenable: TitlebarManager.isMaximizedNotifier,
                         builder: (context, maximized, _) => _MainNavTopIcon(
@@ -78,6 +81,7 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                     _MainNavTopButton(
                       label: t.titlebar.close,
                       onTap: TitlebarManager.close,
+                      square: !context.isLandscape,
                       color: colors.error,
                       child: const _MainNavTopIcon("x"),
                     ),
@@ -96,6 +100,7 @@ class const _MainNavTopButton({
   required final String label,
   required final VoidCallback onTap,
   required final Widget child,
+  final bool square = false,
   final Color? color,
 }) extends StatelessWidget {
   @override
@@ -109,7 +114,7 @@ class const _MainNavTopButton({
         splashColor: color,
         hoverColor: color?.withValues(alpha: 0.3),
         child: SizedBox(
-          width: MainNavRail.collapsedWidth,
+          width: square ? MainNavRail.itemHeight : MainNavRail.collapsedWidth,
           height: MainNavRail.itemHeight,
           child: child,
         ),
