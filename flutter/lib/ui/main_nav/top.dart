@@ -125,7 +125,7 @@ class const _RailToggle() extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: MainNavWrapper.activeSection,
       builder: (context, section, _) => ValueListenableBuilder(
-        valueListenable: MainNavWrapper.outerTitleSlot,
+        valueListenable: MainNavWrapper.titleSlot,
         builder: (context, outerTitle, _) {
           // only show while the shell rail is actually visible
           if (!context.isLandscape || section == null || outerTitle != null) {

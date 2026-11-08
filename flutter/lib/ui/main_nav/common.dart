@@ -11,11 +11,9 @@ import "package:flixur/routes/settings/index.dart";
 import "package:flixur/titlebar.dart";
 import "package:flixur/ui/main_nav/bottom.dart";
 import "package:flixur/ui/main_nav/rail.dart";
-import "package:flixur/ui/main_nav/top.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/services.dart";
 import "package:material_ui/material_ui.dart";
-import "package:window_manager/window_manager.dart";
 
 const mainNavIconSize = 32.0;
 const mainNavAnimationDuration = Duration(milliseconds: 200);
@@ -34,7 +32,7 @@ enum MainNavIDs {
 }
 
 /// A single main navigation section.
-class const MainNavSection({
+class MainNavSection({
   // Unique ID for this section.
   required final MainNavIDs id,
 
@@ -50,10 +48,21 @@ class const MainNavSection({
   /// Translated label for the section.
   String get label => t.navigation.section_titles[id.name] ?? "Unknown";
 
+  /// Title slot for this section.
+  final titleSlot = PageTitleSlot();
+
   /// Builds the shell branch hosting this section.
   StatefulShellBranch toBranch() {
     return StatefulShellBranch(
-      routes: [GoRoute(name: name, path: "/$name", builder: builder)],
+      routes: [
+        GoRoute(
+          name: name,
+          path: "/$name",
+          builder: (context, state) =>
+              // wrap the brandh in the title scope
+              PageTitleScope(slot: titleSlot, child: builder(context, state)),
+        ),
+      ],
     );
   }
 }
@@ -132,6 +141,9 @@ class const MainNavWrapper({
   static final ValueNotifier<MainNavSection?> activeSection =
       ValueNotifier<MainNavSection?>(null);
 
+  /// Title slot for pages that dont have a section-specific title.
+  static final titleSlot = PageTitleSlot();
+
   /// The current page/window title.
   static final ValueNotifier<String> pageTitle = _createMainNavTitle();
 
@@ -143,22 +155,17 @@ class const MainNavWrapper({
       if (!mainNavShownSections.contains(section.name)) section.name,
   ]);
 
-  Widget _buildShell(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
+    _syncActiveSection();
+
     // landscape gets a side navbar instead of the bottom one
     if (context.isLandscape) {
       return Scaffold(
-        body: Column(
-          crossAxisAlignment: .stretch,
+        body: Row(
           children: [
-            const MainNavTop(),
-            Expanded(
-              child: Row(
-                children: [
-                  MainNavRail(parent: this, onSelected: _onSelect),
-                  Expanded(child: navShell),
-                ],
-              ),
-            ),
+            MainNavRail(parent: this, onSelected: _onSelect),
+            Expanded(child: navShell),
           ],
         ),
       );
@@ -166,32 +173,8 @@ class const MainNavWrapper({
 
     // mobile layout
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          const MainNavTop(),
-          Expanded(child: navShell),
-        ],
-      ),
+      body: navShell,
       bottomNavigationBar: MainNavBottom(parent: this, onSelected: _onSelect),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _syncActiveSection();
-    return GatedWidget(
-      gate: TitlebarManager.isSupported,
-      wrapper: (child) => ValueListenableBuilder(
-        valueListenable: TitlebarManager.isMaximizedNotifier,
-        builder: (context, maximized, child) => DragToResizeArea(
-          // only enable resize edges when the window isnt maximized
-          enableResizeEdges: maximized ? [] : null,
-          child: child!,
-        ),
-        child: child,
-      ),
-      child: _buildShell(context),
     );
   }
 
@@ -207,7 +190,13 @@ class const MainNavWrapper({
   /// Syncs the active section to the notifier.
   void _syncActiveSection() {
     final section = sectionFromID(sectionIDFromBranch(navShell.currentIndex));
-    if (!identical(activeSection.value, section)) activeSection.value = section;
+    if (identical(activeSection.value, section)) return;
+
+    runAfterFrame(() {
+      if (!identical(activeSection.value, section)) {
+        activeSection.value = section;
+      }
+    });
   }
 
   /// The section for [id], or null if it doesn't exist.
@@ -238,11 +227,12 @@ ValueNotifier<String> _createMainNavTitle() {
 
   /// Updates the current window title.
   void update() {
+    final section = MainNavWrapper.activeSection.value;
     final title =
-        // listened title
-        listened?.value ??
-        // or section name
-        MainNavWrapper.activeSection.value?.label ??
+        // main page title
+        MainNavWrapper.titleSlot.value ??
+        // active section page title or label
+        (section?.titleSlot.value ?? section?.label) ??
         // fallback to app name
         t.app_name;
     if (notifier.value != title) notifier.value = title;
@@ -251,11 +241,12 @@ ValueNotifier<String> _createMainNavTitle() {
   /// Re-listsns to the new active section title.
   void sync() {
     listened?.removeListener(update);
-    listened = MainNavWrapper.activeSection.value?.title;
+    listened = MainNavWrapper.activeSection.value?.titleSlot;
     listened?.addListener(update);
     update();
   }
 
+  MainNavWrapper.titleSlot.addListener(update);
   MainNavWrapper.activeSection.addListener(sync);
   sync();
   return notifier;
