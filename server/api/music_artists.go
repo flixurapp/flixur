@@ -17,7 +17,7 @@ type ArtistSearchBody struct {
 func RegisterMusicArtistsRoutes(reg APIRegistry) {
 	api := reg.API.AddOpHandler(op_handler.AddTags("Artists"))
 
-	hureg.Post(WithOptions(api, APIRoute{
+	hureg.Post(WithOptions(api, reg, APIRoute{
 		OperationID: "search_artists",
 		Name:        "Search Artists",
 		Description: "Search for an artist by name.",

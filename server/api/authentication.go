@@ -5,11 +5,14 @@ import (
 	"context"
 	"crypto/rand"
 	"fmt"
+	"strings"
 	"sync/atomic"
+	"time"
 
 	"forge.xela.codes/xela/flixur/common"
 	"forge.xela.codes/xela/flixur/ent"
 	"forge.xela.codes/xela/flixur/ent/user"
+	"forge.xela.codes/xela/flixur/ent/usersession"
 	"github.com/cardinalby/hureg"
 	"github.com/cardinalby/hureg/pkg/huma/op_handler"
 	"github.com/danielgtaylor/huma/v2"
@@ -51,7 +54,7 @@ type SessionTokenBody struct {
 func RegisterAuthenticationRoutes(reg APIRegistry) {
 	api := reg.API.AddOpHandler(op_handler.AddTags("Authentication"))
 
-	hureg.Get(WithOptions(api, APIRoute{
+	hureg.Get(WithOptions(api, reg, APIRoute{
 		Name:        "Ping Server",
 		Description: "Can be used to test the server connectivity and return version/feature info.",
 		NoSetup:     true,
@@ -70,7 +73,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 	// all following routes are at /auth
 	api = api.AddBasePath("/auth")
 
-	hureg.Post(WithOptions(api, APIRoute{
+	hureg.Post(WithOptions(api, reg, APIRoute{
 		Name:        "Setup Server",
 		Description: "Creates the initial admin account and sets up the server.",
 		NoSetup:     true,
@@ -176,7 +179,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		}), nil
 	})
 
-	hureg.Post(WithOptions(api, APIRoute{
+	hureg.Post(WithOptions(api, reg, APIRoute{
 		Name:        "Login",
 		Description: "Login with username/password.",
 		NoAuth:      true,
@@ -218,7 +221,7 @@ func RegisterAuthenticationRoutes(reg APIRegistry) {
 		}), nil
 	})
 
-	hureg.Get(WithOptions(api, APIRoute{
+	hureg.Get(WithOptions(api, reg, APIRoute{
 		Name:        "OIDC Login",
 		Description: "Initializes an OIDC login request returning the URL for authorization.",
 		NoAuth:      true,
@@ -244,6 +247,29 @@ func CreateUserSessionToken(ctx context.Context, client *ent.Client, user *ent.U
 	return token, nil
 }
 
+// Validates a raw bearer token header against stored sessions and returns its user.
+func AuthorizeSessionToken(ctx context.Context, db *ent.Client, header string) (*ent.User, *ent.UserSession, error) {
+	token, ok := strings.CutPrefix(strings.TrimSpace(header), "Bearer ")
+	if !ok || token == "" {
+		return nil, nil, CreateAPIError(CodeInvalidToken)
+	}
+
+	session, err := db.UserSession.Query().
+		Where(usersession.TokenEQ(common.SHA256Hex(token))).
+		WithUser().
+		First(ctx)
+	if err != nil || session.Edges.User == nil {
+		return nil, nil, CreateAPIError(CodeInvalidToken)
+	}
+
+	// update last seen without failing the request
+	if _, err = session.Update().SetLastSeenAt(time.Now()).Save(ctx); err != nil {
+		log.Err(err).Msg("Failed to update session last seen.")
+	}
+
+	return session.Edges.User, session, nil
+}
+
 // server setup state management
 var serverSetupCode atomic.Pointer[string]
 
@@ -254,6 +280,8 @@ func GetServerSetupCode() *string {
 func SetServerSetupCode(state *string) {
 	serverSetupCode.Store(state)
 }
+
+// Loads the setup state of the server.
 func LoadServerSetupState(ctx context.Context, client *ent.Client) error {
 	// just check that there is at least 1 user account
 	exists, err := client.User.Query().Exist(ctx)

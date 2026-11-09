@@ -23,6 +23,8 @@ var errorCodeList = []errCode{
 	{"INCORRECT_PASSWORD", http.StatusUnauthorized},
 	{"INCORRECT_USERNAME", http.StatusUnauthorized},
 	{"INVALID_INPUT", http.StatusBadRequest},
+	{"INVALID_TOKEN", http.StatusUnauthorized},
+	{"NOT_FOUND", http.StatusNotFound},
 	{"TOO_LONG", http.StatusBadRequest},
 	{"TOO_SHORT", http.StatusBadRequest},
 }

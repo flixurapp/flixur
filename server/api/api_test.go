@@ -190,7 +190,7 @@ func TestNoSetupMiddleware(t *testing.T) {
 	_, reg, api := newTestAPI(t)
 
 	// add a route without NoSetup (requires setup)
-	hureg.Get(WithOptions(reg.API, APIRoute{
+	hureg.Get(WithOptions(reg.API, reg, APIRoute{
 		NoSetup: false,
 	}), "/requires-setup", func(ctx context.Context, _ *struct{}) (*Output[string], error) {
 		return CreateOutput("ok"), nil

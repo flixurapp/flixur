@@ -14,6 +14,7 @@ import (
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
+	"github.com/rs/zerolog/log"
 
 	_ "github.com/danielgtaylor/huma/v2/formats/cbor"
 )
@@ -67,7 +68,7 @@ type APIRoute struct {
 }
 
 // Sets various properties on a given API generator and returns it.
-func WithOptions(api hureg.APIGen, opts APIRoute) hureg.APIGen {
+func WithOptions(api hureg.APIGen, reg APIRegistry, opts APIRoute) hureg.APIGen {
 	handlers := []op_handler.OperationHandler{}
 	middlewares := []func(huma.Context, func(huma.Context)){}
 
@@ -106,10 +107,18 @@ func WithOptions(api hureg.APIGen, opts APIRoute) hureg.APIGen {
 		handlers = append(handlers, op_handler.AddSecurity(map[string][]string{AUTH_SCHEME_NAME: {}}))
 		middlewares = append(middlewares, func(ctx huma.Context, next func(huma.Context)) {
 			header := ctx.Header("authorization")
-			if header == "" {
-				huma.WriteErr(api.GetHumaAPI(), ctx, http.StatusUnauthorized, "no token provided")
+			user, session, err := AuthorizeSessionToken(ctx.Context(), reg.DB, header)
+			if err != nil {
+				log.Err(err).Msg("Session authorization failed.")
+				if apiErr, ok := err.(*APIError); ok {
+					huma.WriteErr(api.GetHumaAPI(), ctx, apiErr.GetStatus(), apiErr.Error())
+					return
+				}
+				huma.WriteErr(api.GetHumaAPI(), ctx, http.StatusUnauthorized, "session rejected")
 				return
 			}
+			ctx = huma.WithValue(ctx, ctxKeyAuthorizedUser{}, user)
+			ctx = huma.WithValue(ctx, ctxKeyAuthorizedUserSession{}, session)
 			next(ctx)
 		})
 	}
@@ -156,6 +165,7 @@ func RegisterAPI(router chi.Router, client *ent.Client) APIRegistry {
 
 		RegisterAuthenticationRoutes(registry)
 		RegisterMusicArtistsRoutes(registry)
+		RegisterSettingsRoutes(registry)
 
 		//TODO:testing
 		/*
@@ -173,7 +183,30 @@ func RegisterAPI(router chi.Router, client *ent.Client) APIRegistry {
 
 // key identifying the client IP
 type ctxKeyClientIP struct{}
+
+// Returns the resolved client IP taking into account proxies.
+func GetClientIP(ctx context.Context) string {
+	ip, _ := ctx.Value(ctxKeyClientIP{}).(string)
+	return ip
+}
+
+// key identifying the authorized user for this request
 type ctxKeyAuthorizedUser struct{}
+
+// Returns the user authenticated by the middleware, nil if none.
+func GetAuthorizedUser(ctx context.Context) *ent.User {
+	user, _ := ctx.Value(ctxKeyAuthorizedUser{}).(*ent.User)
+	return user
+}
+
+// key identifying the authorized user's current session for this request
+type ctxKeyAuthorizedUserSession struct{}
+
+// Returns the user authenticated by the middleware, nil if none.
+func GetAuthorizedUserSession(ctx context.Context) *ent.UserSession {
+	session, _ := ctx.Value(ctxKeyAuthorizedUser{}).(*ent.UserSession)
+	return session
+}
 
 // Determines if a proxy IP should be trusted.
 func isTrustedProxy(ip string) bool {
@@ -214,10 +247,4 @@ func ipMiddleware(ctx huma.Context, next func(huma.Context)) {
 	}
 
 	next(huma.WithValue(ctx, ctxKeyClientIP{}, clientIP))
-}
-
-// Returns the resolved client IP taking into account proxies.
-func GetClientIP(ctx context.Context) string {
-	ip, _ := ctx.Value(ctxKeyClientIP{}).(string)
-	return ip
 }
