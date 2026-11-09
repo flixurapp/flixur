@@ -4,11 +4,11 @@ import "package:flixur/ui/cards/common.dart";
 import "package:material_ui/material_ui.dart";
 
 /// Each circle's punch-out width, percent relative to the overall image width.
-const ringPunchRatio = 2;
+const _ringPunchRatio = 2;
 
 /// (left, top, diameter) definitions for each circle count in the card.
 /// The units are whole percentages relative to the image size. (100 is max)
-const List<List<(double, double, double)>> perImageCount = [
+const List<List<(double, double, double)>> _circleDefinitions = [
   [(8, 8, 84)], // 1
   [(6, 6, 68), (38, 38, 60)], // 2
   [(4, 4, 66), (38, 24, 58), (14, 48, 52)], // 3
@@ -31,11 +31,15 @@ class CollectionCard({super.key}) extends BaseCard {
             if (images.length <= 0) return const SizedBox.shrink();
 
             final width = constraints.maxWidth;
-            final ringPunchSize = width * ringPunchRatio / 100;
+            final ringPunchSize = width * _ringPunchRatio / 100;
 
             // grab 1-4 circles based on the amount of images
             final layout =
-                perImageCount[min(images.length, perImageCount.length) - 1];
+                _circleDefinitions[min(
+                      images.length,
+                      _circleDefinitions.length,
+                    ) -
+                    1];
 
             // create rectangles for each selected circle
             final circles = [
