@@ -2,6 +2,7 @@ import "dart:math";
 
 import "package:flixur/ui/cards/album.dart";
 import "package:flixur/ui/cards/artist.dart";
+import "package:flixur/ui/cards/collection.dart";
 import "package:flixur/ui/cards/common.dart";
 import "package:flixur/ui/cards/playlist.dart";
 import "package:material_ui/material_ui.dart";
@@ -17,10 +18,11 @@ class LibraryView extends StatelessWidget {
     return CardsGrid(
       rowCount: _cardsPerRow,
       children: List.generate(100, (index) {
-        return switch (index % 3) {
+        return switch (index % 4) {
           0 => ArtistCard(),
           1 => AlbumCard(),
-          _ => PlaylistCard(),
+          2 => PlaylistCard(),
+          _ => CollectionCard(),
         };
       }),
     );

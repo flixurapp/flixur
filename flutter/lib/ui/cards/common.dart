@@ -25,6 +25,7 @@ class CardSizing {
       subtextFontSize * lineHeight;
 }
 
+// ignore: prefer_const_constructors_in_immutables child card classes cant be const
 class BaseCard({
   required final Widget image,
   final String? _text,
