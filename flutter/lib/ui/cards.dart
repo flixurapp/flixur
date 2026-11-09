@@ -133,11 +133,13 @@ class ArtistCard({super.key}) extends _BaseCard {
 class AlbumCard({super.key}) extends _BaseCard {
   this
     : super(
-        image: ClipRRect(
-          borderRadius: .circular(8),
-          child: Image.network(
-            "https://i.scdn.co/image/ab67616d0000b273791e5ad29bbd6253aa453293",
-            fit: .cover,
+        image: LayoutBuilder(
+          builder: (context, constraints) => ClipRRect(
+            borderRadius: .circular(constraints.maxWidth / 12),
+            child: Image.network(
+              "https://i.scdn.co/image/ab67616d0000b273791e5ad29bbd6253aa453293",
+              fit: .cover,
+            ),
           ),
         ),
         text: "MYCELiUM",
