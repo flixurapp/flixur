@@ -8,6 +8,63 @@ import (
 )
 
 var (
+	// SettingProfilesColumns holds the columns for the "setting_profiles" table.
+	SettingProfilesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true},
+		{Name: "name", Type: field.TypeString, Size: 100},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "user_setting_profiles", Type: field.TypeString},
+	}
+	// SettingProfilesTable holds the schema information for the "setting_profiles" table.
+	SettingProfilesTable = &schema.Table{
+		Name:       "setting_profiles",
+		Columns:    SettingProfilesColumns,
+		PrimaryKey: []*schema.Column{SettingProfilesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "setting_profiles_users_setting_profiles",
+				Columns:    []*schema.Column{SettingProfilesColumns[3]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "settingprofile_name_user_setting_profiles",
+				Unique:  true,
+				Columns: []*schema.Column{SettingProfilesColumns[1], SettingProfilesColumns[3]},
+			},
+		},
+	}
+	// SettingValuesColumns holds the columns for the "setting_values" table.
+	SettingValuesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true},
+		{Name: "setting_id", Type: field.TypeString},
+		{Name: "value", Type: field.TypeString},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "setting_profile_values", Type: field.TypeString},
+	}
+	// SettingValuesTable holds the schema information for the "setting_values" table.
+	SettingValuesTable = &schema.Table{
+		Name:       "setting_values",
+		Columns:    SettingValuesColumns,
+		PrimaryKey: []*schema.Column{SettingValuesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "setting_values_setting_profiles_values",
+				Columns:    []*schema.Column{SettingValuesColumns[4]},
+				RefColumns: []*schema.Column{SettingProfilesColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "settingvalue_setting_id_setting_profile_values",
+				Unique:  true,
+				Columns: []*schema.Column{SettingValuesColumns[1], SettingValuesColumns[4]},
+			},
+		},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true},
@@ -76,6 +133,8 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		SettingProfilesTable,
+		SettingValuesTable,
 		UsersTable,
 		UserLinkedOidCsTable,
 		UserSessionsTable,
@@ -83,6 +142,8 @@ var (
 )
 
 func init() {
+	SettingProfilesTable.ForeignKeys[0].RefTable = UsersTable
+	SettingValuesTable.ForeignKeys[0].RefTable = SettingProfilesTable
 	UserLinkedOidCsTable.ForeignKeys[0].RefTable = UsersTable
 	UserSessionsTable.ForeignKeys[0].RefTable = UsersTable
 }

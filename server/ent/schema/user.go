@@ -39,6 +39,8 @@ func (User) Edges() []ent.Edge {
 			Comment("Linked OIDC providers for this account."),
 		edge.To("sessions", UserSession.Type).
 			Comment("Sessions for this user."),
+		edge.To("setting_profiles", SettingProfile.Type).
+			Comment("Client settings profiles owned by this user."),
 	}
 }
 

@@ -15,6 +15,8 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"forge.xela.codes/xela/flixur/ent/settingprofile"
+	"forge.xela.codes/xela/flixur/ent/settingvalue"
 	"forge.xela.codes/xela/flixur/ent/user"
 	"forge.xela.codes/xela/flixur/ent/userlinkedoidc"
 	"forge.xela.codes/xela/flixur/ent/usersession"
@@ -25,6 +27,10 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// SettingProfile is the client for interacting with the SettingProfile builders.
+	SettingProfile *SettingProfileClient
+	// SettingValue is the client for interacting with the SettingValue builders.
+	SettingValue *SettingValueClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 	// UserLinkedOIDC is the client for interacting with the UserLinkedOIDC builders.
@@ -42,6 +48,8 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.SettingProfile = NewSettingProfileClient(c.config)
+	c.SettingValue = NewSettingValueClient(c.config)
 	c.User = NewUserClient(c.config)
 	c.UserLinkedOIDC = NewUserLinkedOIDCClient(c.config)
 	c.UserSession = NewUserSessionClient(c.config)
@@ -137,6 +145,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	return &Tx{
 		ctx:            ctx,
 		config:         cfg,
+		SettingProfile: NewSettingProfileClient(cfg),
+		SettingValue:   NewSettingValueClient(cfg),
 		User:           NewUserClient(cfg),
 		UserLinkedOIDC: NewUserLinkedOIDCClient(cfg),
 		UserSession:    NewUserSessionClient(cfg),
@@ -159,6 +169,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		ctx:            ctx,
 		config:         cfg,
+		SettingProfile: NewSettingProfileClient(cfg),
+		SettingValue:   NewSettingValueClient(cfg),
 		User:           NewUserClient(cfg),
 		UserLinkedOIDC: NewUserLinkedOIDCClient(cfg),
 		UserSession:    NewUserSessionClient(cfg),
@@ -168,7 +180,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		User.
+//		SettingProfile.
 //		Query().
 //		Count(ctx)
 func (c *Client) Debug() *Client {
@@ -190,6 +202,8 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.SettingProfile.Use(hooks...)
+	c.SettingValue.Use(hooks...)
 	c.User.Use(hooks...)
 	c.UserLinkedOIDC.Use(hooks...)
 	c.UserSession.Use(hooks...)
@@ -198,6 +212,8 @@ func (c *Client) Use(hooks ...Hook) {
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
+	c.SettingProfile.Intercept(interceptors...)
+	c.SettingValue.Intercept(interceptors...)
 	c.User.Intercept(interceptors...)
 	c.UserLinkedOIDC.Intercept(interceptors...)
 	c.UserSession.Intercept(interceptors...)
@@ -206,6 +222,10 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 // Mutate implements the ent.Mutator interface.
 func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
+	case *SettingProfileMutation:
+		return c.SettingProfile.mutate(ctx, m)
+	case *SettingValueMutation:
+		return c.SettingValue.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
 	case *UserLinkedOIDCMutation:
@@ -214,6 +234,320 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.UserSession.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
+	}
+}
+
+// SettingProfileClient is a client for the SettingProfile schema.
+type SettingProfileClient struct {
+	config
+}
+
+// NewSettingProfileClient returns a client for the SettingProfile from the given config.
+func NewSettingProfileClient(c config) *SettingProfileClient {
+	return &SettingProfileClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `settingprofile.Hooks(f(g(h())))`.
+func (c *SettingProfileClient) Use(hooks ...Hook) {
+	c.hooks.SettingProfile = append(c.hooks.SettingProfile, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `settingprofile.Intercept(f(g(h())))`.
+func (c *SettingProfileClient) Intercept(interceptors ...Interceptor) {
+	c.inters.SettingProfile = append(c.inters.SettingProfile, interceptors...)
+}
+
+// Create returns a builder for creating a SettingProfile entity.
+func (c *SettingProfileClient) Create() *SettingProfileCreate {
+	mutation := newSettingProfileMutation(c.config, OpCreate)
+	return &SettingProfileCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of SettingProfile entities.
+func (c *SettingProfileClient) CreateBulk(builders ...*SettingProfileCreate) *SettingProfileCreateBulk {
+	return &SettingProfileCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *SettingProfileClient) MapCreateBulk(slice any, setFunc func(*SettingProfileCreate, int)) *SettingProfileCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &SettingProfileCreateBulk{err: fmt.Errorf("calling to SettingProfileClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*SettingProfileCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &SettingProfileCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for SettingProfile.
+func (c *SettingProfileClient) Update() *SettingProfileUpdate {
+	mutation := newSettingProfileMutation(c.config, OpUpdate)
+	return &SettingProfileUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *SettingProfileClient) UpdateOne(_m *SettingProfile) *SettingProfileUpdateOne {
+	mutation := newSettingProfileMutation(c.config, OpUpdateOne, withSettingProfile(_m))
+	return &SettingProfileUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *SettingProfileClient) UpdateOneID(id string) *SettingProfileUpdateOne {
+	mutation := newSettingProfileMutation(c.config, OpUpdateOne, withSettingProfileID(id))
+	return &SettingProfileUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for SettingProfile.
+func (c *SettingProfileClient) Delete() *SettingProfileDelete {
+	mutation := newSettingProfileMutation(c.config, OpDelete)
+	return &SettingProfileDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *SettingProfileClient) DeleteOne(_m *SettingProfile) *SettingProfileDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *SettingProfileClient) DeleteOneID(id string) *SettingProfileDeleteOne {
+	builder := c.Delete().Where(settingprofile.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &SettingProfileDeleteOne{builder}
+}
+
+// Query returns a query builder for SettingProfile.
+func (c *SettingProfileClient) Query() *SettingProfileQuery {
+	return &SettingProfileQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeSettingProfile},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a SettingProfile entity by its id.
+func (c *SettingProfileClient) Get(ctx context.Context, id string) (*SettingProfile, error) {
+	return c.Query().Where(settingprofile.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *SettingProfileClient) GetX(ctx context.Context, id string) *SettingProfile {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryValues queries the values edge of a SettingProfile.
+func (c *SettingProfileClient) QueryValues(_m *SettingProfile) *SettingValueQuery {
+	query := (&SettingValueClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(settingprofile.Table, settingprofile.FieldID, id),
+			sqlgraph.To(settingvalue.Table, settingvalue.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, settingprofile.ValuesTable, settingprofile.ValuesColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryUser queries the user edge of a SettingProfile.
+func (c *SettingProfileClient) QueryUser(_m *SettingProfile) *UserQuery {
+	query := (&UserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(settingprofile.Table, settingprofile.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, settingprofile.UserTable, settingprofile.UserColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *SettingProfileClient) Hooks() []Hook {
+	return c.hooks.SettingProfile
+}
+
+// Interceptors returns the client interceptors.
+func (c *SettingProfileClient) Interceptors() []Interceptor {
+	return c.inters.SettingProfile
+}
+
+func (c *SettingProfileClient) mutate(ctx context.Context, m *SettingProfileMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&SettingProfileCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&SettingProfileUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&SettingProfileUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&SettingProfileDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown SettingProfile mutation op: %q", m.Op())
+	}
+}
+
+// SettingValueClient is a client for the SettingValue schema.
+type SettingValueClient struct {
+	config
+}
+
+// NewSettingValueClient returns a client for the SettingValue from the given config.
+func NewSettingValueClient(c config) *SettingValueClient {
+	return &SettingValueClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `settingvalue.Hooks(f(g(h())))`.
+func (c *SettingValueClient) Use(hooks ...Hook) {
+	c.hooks.SettingValue = append(c.hooks.SettingValue, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `settingvalue.Intercept(f(g(h())))`.
+func (c *SettingValueClient) Intercept(interceptors ...Interceptor) {
+	c.inters.SettingValue = append(c.inters.SettingValue, interceptors...)
+}
+
+// Create returns a builder for creating a SettingValue entity.
+func (c *SettingValueClient) Create() *SettingValueCreate {
+	mutation := newSettingValueMutation(c.config, OpCreate)
+	return &SettingValueCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of SettingValue entities.
+func (c *SettingValueClient) CreateBulk(builders ...*SettingValueCreate) *SettingValueCreateBulk {
+	return &SettingValueCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *SettingValueClient) MapCreateBulk(slice any, setFunc func(*SettingValueCreate, int)) *SettingValueCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &SettingValueCreateBulk{err: fmt.Errorf("calling to SettingValueClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*SettingValueCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &SettingValueCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for SettingValue.
+func (c *SettingValueClient) Update() *SettingValueUpdate {
+	mutation := newSettingValueMutation(c.config, OpUpdate)
+	return &SettingValueUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *SettingValueClient) UpdateOne(_m *SettingValue) *SettingValueUpdateOne {
+	mutation := newSettingValueMutation(c.config, OpUpdateOne, withSettingValue(_m))
+	return &SettingValueUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *SettingValueClient) UpdateOneID(id string) *SettingValueUpdateOne {
+	mutation := newSettingValueMutation(c.config, OpUpdateOne, withSettingValueID(id))
+	return &SettingValueUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for SettingValue.
+func (c *SettingValueClient) Delete() *SettingValueDelete {
+	mutation := newSettingValueMutation(c.config, OpDelete)
+	return &SettingValueDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *SettingValueClient) DeleteOne(_m *SettingValue) *SettingValueDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *SettingValueClient) DeleteOneID(id string) *SettingValueDeleteOne {
+	builder := c.Delete().Where(settingvalue.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &SettingValueDeleteOne{builder}
+}
+
+// Query returns a query builder for SettingValue.
+func (c *SettingValueClient) Query() *SettingValueQuery {
+	return &SettingValueQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeSettingValue},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a SettingValue entity by its id.
+func (c *SettingValueClient) Get(ctx context.Context, id string) (*SettingValue, error) {
+	return c.Query().Where(settingvalue.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *SettingValueClient) GetX(ctx context.Context, id string) *SettingValue {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryProfile queries the profile edge of a SettingValue.
+func (c *SettingValueClient) QueryProfile(_m *SettingValue) *SettingProfileQuery {
+	query := (&SettingProfileClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(settingvalue.Table, settingvalue.FieldID, id),
+			sqlgraph.To(settingprofile.Table, settingprofile.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, settingvalue.ProfileTable, settingvalue.ProfileColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *SettingValueClient) Hooks() []Hook {
+	return c.hooks.SettingValue
+}
+
+// Interceptors returns the client interceptors.
+func (c *SettingValueClient) Interceptors() []Interceptor {
+	return c.inters.SettingValue
+}
+
+func (c *SettingValueClient) mutate(ctx context.Context, m *SettingValueMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&SettingValueCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&SettingValueUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&SettingValueUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&SettingValueDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown SettingValue mutation op: %q", m.Op())
 	}
 }
 
@@ -350,6 +684,22 @@ func (c *UserClient) QuerySessions(_m *User) *UserSessionQuery {
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(usersession.Table, usersession.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.SessionsTable, user.SessionsColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QuerySettingProfiles queries the setting_profiles edge of a User.
+func (c *UserClient) QuerySettingProfiles(_m *User) *SettingProfileQuery {
+	query := (&SettingProfileClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(settingprofile.Table, settingprofile.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.SettingProfilesTable, user.SettingProfilesColumn),
 		)
 		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
@@ -685,9 +1035,10 @@ func (c *UserSessionClient) mutate(ctx context.Context, m *UserSessionMutation) 
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		User, UserLinkedOIDC, UserSession []ent.Hook
+		SettingProfile, SettingValue, User, UserLinkedOIDC, UserSession []ent.Hook
 	}
 	inters struct {
-		User, UserLinkedOIDC, UserSession []ent.Interceptor
+		SettingProfile, SettingValue, User, UserLinkedOIDC,
+		UserSession []ent.Interceptor
 	}
 )

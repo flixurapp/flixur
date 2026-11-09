@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"forge.xela.codes/xela/flixur/ent/schema"
+	"forge.xela.codes/xela/flixur/ent/settingprofile"
+	"forge.xela.codes/xela/flixur/ent/settingvalue"
 	"forge.xela.codes/xela/flixur/ent/user"
 	"forge.xela.codes/xela/flixur/ent/userlinkedoidc"
 	"forge.xela.codes/xela/flixur/ent/usersession"
@@ -15,6 +17,60 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	settingprofileMixin := schema.SettingProfile{}.Mixin()
+	settingprofileMixinFields0 := settingprofileMixin[0].Fields()
+	_ = settingprofileMixinFields0
+	settingprofileFields := schema.SettingProfile{}.Fields()
+	_ = settingprofileFields
+	// settingprofileDescName is the schema descriptor for name field.
+	settingprofileDescName := settingprofileFields[0].Descriptor()
+	// settingprofile.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	settingprofile.NameValidator = func() func(string) error {
+		validators := settingprofileDescName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(name string) error {
+			for _, fn := range fns {
+				if err := fn(name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// settingprofileDescCreatedAt is the schema descriptor for created_at field.
+	settingprofileDescCreatedAt := settingprofileFields[1].Descriptor()
+	// settingprofile.DefaultCreatedAt holds the default value on creation for the created_at field.
+	settingprofile.DefaultCreatedAt = settingprofileDescCreatedAt.Default.(func() time.Time)
+	// settingprofileDescID is the schema descriptor for id field.
+	settingprofileDescID := settingprofileMixinFields0[0].Descriptor()
+	// settingprofile.DefaultID holds the default value on creation for the id field.
+	settingprofile.DefaultID = settingprofileDescID.Default.(func() string)
+	settingvalueMixin := schema.SettingValue{}.Mixin()
+	settingvalueMixinFields0 := settingvalueMixin[0].Fields()
+	_ = settingvalueMixinFields0
+	settingvalueFields := schema.SettingValue{}.Fields()
+	_ = settingvalueFields
+	// settingvalueDescSettingID is the schema descriptor for setting_id field.
+	settingvalueDescSettingID := settingvalueFields[0].Descriptor()
+	// settingvalue.SettingIDValidator is a validator for the "setting_id" field. It is called by the builders before save.
+	settingvalue.SettingIDValidator = settingvalueDescSettingID.Validators[0].(func(string) error)
+	// settingvalueDescValue is the schema descriptor for value field.
+	settingvalueDescValue := settingvalueFields[1].Descriptor()
+	// settingvalue.ValueValidator is a validator for the "value" field. It is called by the builders before save.
+	settingvalue.ValueValidator = settingvalueDescValue.Validators[0].(func(string) error)
+	// settingvalueDescUpdatedAt is the schema descriptor for updated_at field.
+	settingvalueDescUpdatedAt := settingvalueFields[2].Descriptor()
+	// settingvalue.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	settingvalue.DefaultUpdatedAt = settingvalueDescUpdatedAt.Default.(func() time.Time)
+	// settingvalue.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	settingvalue.UpdateDefaultUpdatedAt = settingvalueDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// settingvalueDescID is the schema descriptor for id field.
+	settingvalueDescID := settingvalueMixinFields0[0].Descriptor()
+	// settingvalue.DefaultID holds the default value on creation for the id field.
+	settingvalue.DefaultID = settingvalueDescID.Default.(func() string)
 	userMixin := schema.User{}.Mixin()
 	userHooks := schema.User{}.Hooks()
 	user.Hooks[0] = userHooks[0]

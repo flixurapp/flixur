@@ -9,6 +9,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"forge.xela.codes/xela/flixur/ent/settingprofile"
 	"forge.xela.codes/xela/flixur/ent/user"
 	"forge.xela.codes/xela/flixur/ent/userlinkedoidc"
 	"forge.xela.codes/xela/flixur/ent/usersession"
@@ -95,6 +96,21 @@ func (_c *UserCreate) AddSessions(v ...*UserSession) *UserCreate {
 		ids[i] = v[i].ID
 	}
 	return _c.AddSessionIDs(ids...)
+}
+
+// AddSettingProfileIDs adds the "setting_profiles" edge to the SettingProfile entity by IDs.
+func (_c *UserCreate) AddSettingProfileIDs(ids ...string) *UserCreate {
+	_c.mutation.AddSettingProfileIDs(ids...)
+	return _c
+}
+
+// AddSettingProfiles adds the "setting_profiles" edges to the SettingProfile entity.
+func (_c *UserCreate) AddSettingProfiles(v ...*SettingProfile) *UserCreate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddSettingProfileIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -252,6 +268,22 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(usersession.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.SettingProfilesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SettingProfilesTable,
+			Columns: []string{user.SettingProfilesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(settingprofile.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

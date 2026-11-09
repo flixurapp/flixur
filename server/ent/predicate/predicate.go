@@ -6,6 +6,12 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// SettingProfile is the predicate function for settingprofile builders.
+type SettingProfile func(*sql.Selector)
+
+// SettingValue is the predicate function for settingvalue builders.
+type SettingValue func(*sql.Selector)
+
 // User is the predicate function for user builders.
 type User func(*sql.Selector)
 

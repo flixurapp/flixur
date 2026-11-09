@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 	"forge.xela.codes/xela/flixur/ent/predicate"
+	"forge.xela.codes/xela/flixur/ent/settingprofile"
 	"forge.xela.codes/xela/flixur/ent/user"
 	"forge.xela.codes/xela/flixur/ent/userlinkedoidc"
 	"forge.xela.codes/xela/flixur/ent/usersession"
@@ -114,6 +115,21 @@ func (_u *UserUpdate) AddSessions(v ...*UserSession) *UserUpdate {
 	return _u.AddSessionIDs(ids...)
 }
 
+// AddSettingProfileIDs adds the "setting_profiles" edge to the SettingProfile entity by IDs.
+func (_u *UserUpdate) AddSettingProfileIDs(ids ...string) *UserUpdate {
+	_u.mutation.AddSettingProfileIDs(ids...)
+	return _u
+}
+
+// AddSettingProfiles adds the "setting_profiles" edges to the SettingProfile entity.
+func (_u *UserUpdate) AddSettingProfiles(v ...*SettingProfile) *UserUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddSettingProfileIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdate) Mutation() *UserMutation {
 	return _u.mutation
@@ -159,6 +175,27 @@ func (_u *UserUpdate) RemoveSessions(v ...*UserSession) *UserUpdate {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveSessionIDs(ids...)
+}
+
+// ClearSettingProfiles clears all "setting_profiles" edges to the SettingProfile entity.
+func (_u *UserUpdate) ClearSettingProfiles() *UserUpdate {
+	_u.mutation.ClearSettingProfiles()
+	return _u
+}
+
+// RemoveSettingProfileIDs removes the "setting_profiles" edge to SettingProfile entities by IDs.
+func (_u *UserUpdate) RemoveSettingProfileIDs(ids ...string) *UserUpdate {
+	_u.mutation.RemoveSettingProfileIDs(ids...)
+	return _u
+}
+
+// RemoveSettingProfiles removes "setting_profiles" edges to SettingProfile entities.
+func (_u *UserUpdate) RemoveSettingProfiles(v ...*SettingProfile) *UserUpdate {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveSettingProfileIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -322,6 +359,51 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if _u.mutation.SettingProfilesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SettingProfilesTable,
+			Columns: []string{user.SettingProfilesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(settingprofile.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedSettingProfilesIDs(); len(nodes) > 0 && !_u.mutation.SettingProfilesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SettingProfilesTable,
+			Columns: []string{user.SettingProfilesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(settingprofile.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.SettingProfilesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SettingProfilesTable,
+			Columns: []string{user.SettingProfilesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(settingprofile.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{user.Label}
@@ -426,6 +508,21 @@ func (_u *UserUpdateOne) AddSessions(v ...*UserSession) *UserUpdateOne {
 	return _u.AddSessionIDs(ids...)
 }
 
+// AddSettingProfileIDs adds the "setting_profiles" edge to the SettingProfile entity by IDs.
+func (_u *UserUpdateOne) AddSettingProfileIDs(ids ...string) *UserUpdateOne {
+	_u.mutation.AddSettingProfileIDs(ids...)
+	return _u
+}
+
+// AddSettingProfiles adds the "setting_profiles" edges to the SettingProfile entity.
+func (_u *UserUpdateOne) AddSettingProfiles(v ...*SettingProfile) *UserUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddSettingProfileIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdateOne) Mutation() *UserMutation {
 	return _u.mutation
@@ -471,6 +568,27 @@ func (_u *UserUpdateOne) RemoveSessions(v ...*UserSession) *UserUpdateOne {
 		ids[i] = v[i].ID
 	}
 	return _u.RemoveSessionIDs(ids...)
+}
+
+// ClearSettingProfiles clears all "setting_profiles" edges to the SettingProfile entity.
+func (_u *UserUpdateOne) ClearSettingProfiles() *UserUpdateOne {
+	_u.mutation.ClearSettingProfiles()
+	return _u
+}
+
+// RemoveSettingProfileIDs removes the "setting_profiles" edge to SettingProfile entities by IDs.
+func (_u *UserUpdateOne) RemoveSettingProfileIDs(ids ...string) *UserUpdateOne {
+	_u.mutation.RemoveSettingProfileIDs(ids...)
+	return _u
+}
+
+// RemoveSettingProfiles removes "setting_profiles" edges to SettingProfile entities.
+func (_u *UserUpdateOne) RemoveSettingProfiles(v ...*SettingProfile) *UserUpdateOne {
+	ids := make([]string, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveSettingProfileIDs(ids...)
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -657,6 +775,51 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(usersession.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.SettingProfilesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SettingProfilesTable,
+			Columns: []string{user.SettingProfilesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(settingprofile.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedSettingProfilesIDs(); len(nodes) > 0 && !_u.mutation.SettingProfilesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SettingProfilesTable,
+			Columns: []string{user.SettingProfilesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(settingprofile.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.SettingProfilesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SettingProfilesTable,
+			Columns: []string{user.SettingProfilesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(settingprofile.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

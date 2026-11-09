@@ -37,9 +37,11 @@ type UserEdges struct {
 	OidcLinks []*UserLinkedOIDC `json:"oidc_links,omitempty"`
 	// Sessions for this user.
 	Sessions []*UserSession `json:"sessions,omitempty"`
+	// Client settings profiles owned by this user.
+	SettingProfiles []*SettingProfile `json:"setting_profiles,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // OidcLinksOrErr returns the OidcLinks value or an error if the edge
@@ -58,6 +60,15 @@ func (e UserEdges) SessionsOrErr() ([]*UserSession, error) {
 		return e.Sessions, nil
 	}
 	return nil, &NotLoadedError{edge: "sessions"}
+}
+
+// SettingProfilesOrErr returns the SettingProfiles value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) SettingProfilesOrErr() ([]*SettingProfile, error) {
+	if e.loadedTypes[2] {
+		return e.SettingProfiles, nil
+	}
+	return nil, &NotLoadedError{edge: "setting_profiles"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -139,6 +150,11 @@ func (_m *User) QueryOidcLinks() *UserLinkedOIDCQuery {
 // QuerySessions queries the "sessions" edge of the User entity.
 func (_m *User) QuerySessions() *UserSessionQuery {
 	return NewUserClient(_m.config).QuerySessions(_m)
+}
+
+// QuerySettingProfiles queries the "setting_profiles" edge of the User entity.
+func (_m *User) QuerySettingProfiles() *SettingProfileQuery {
+	return NewUserClient(_m.config).QuerySettingProfiles(_m)
 }
 
 // Update returns a builder for updating this User.

@@ -264,6 +264,29 @@ func HasSessionsWith(preds ...predicate.UserSession) predicate.User {
 	})
 }
 
+// HasSettingProfiles applies the HasEdge predicate on the "setting_profiles" edge.
+func HasSettingProfiles() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, SettingProfilesTable, SettingProfilesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasSettingProfilesWith applies the HasEdge predicate on the "setting_profiles" edge with a given conditions (other predicates).
+func HasSettingProfilesWith(preds ...predicate.SettingProfile) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := newSettingProfilesStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.User) predicate.User {
 	return predicate.User(sql.AndPredicates(predicates...))

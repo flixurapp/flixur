@@ -25,6 +25,8 @@ const (
 	EdgeOidcLinks = "oidc_links"
 	// EdgeSessions holds the string denoting the sessions edge name in mutations.
 	EdgeSessions = "sessions"
+	// EdgeSettingProfiles holds the string denoting the setting_profiles edge name in mutations.
+	EdgeSettingProfiles = "setting_profiles"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 	// OidcLinksTable is the table that holds the oidc_links relation/edge.
@@ -41,6 +43,13 @@ const (
 	SessionsInverseTable = "user_sessions"
 	// SessionsColumn is the table column denoting the sessions relation/edge.
 	SessionsColumn = "user_sessions"
+	// SettingProfilesTable is the table that holds the setting_profiles relation/edge.
+	SettingProfilesTable = "setting_profiles"
+	// SettingProfilesInverseTable is the table name for the SettingProfile entity.
+	// It exists in this package in order to avoid circular dependency with the "settingprofile" package.
+	SettingProfilesInverseTable = "setting_profiles"
+	// SettingProfilesColumn is the table column denoting the setting_profiles relation/edge.
+	SettingProfilesColumn = "user_setting_profiles"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -131,6 +140,20 @@ func BySessions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newSessionsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// BySettingProfilesCount orders the results by setting_profiles count.
+func BySettingProfilesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newSettingProfilesStep(), opts...)
+	}
+}
+
+// BySettingProfiles orders the results by setting_profiles terms.
+func BySettingProfiles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newSettingProfilesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newOidcLinksStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -143,5 +166,12 @@ func newSessionsStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(SessionsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, SessionsTable, SessionsColumn),
+	)
+}
+func newSettingProfilesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(SettingProfilesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, SettingProfilesTable, SettingProfilesColumn),
 	)
 }
