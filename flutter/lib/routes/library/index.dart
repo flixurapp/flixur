@@ -5,6 +5,7 @@ import "package:flixur/ui/cards/artist.dart";
 import "package:flixur/ui/cards/collection.dart";
 import "package:flixur/ui/cards/common.dart";
 import "package:flixur/ui/cards/playlist.dart";
+import "package:flixur/ui/cards/queue.dart";
 import "package:material_ui/material_ui.dart";
 
 // TODO: wire to setting
@@ -18,11 +19,12 @@ class LibraryView extends StatelessWidget {
     return CardsGrid(
       rowCount: _cardsPerRow,
       children: List.generate(100, (index) {
-        return switch (index % 4) {
+        return switch (index % 5) {
           0 => ArtistCard(),
           1 => AlbumCard(),
           2 => PlaylistCard(),
-          _ => CollectionCard(),
+          3 => CollectionCard(),
+          _ => QueueCard(),
         };
       }),
     );
