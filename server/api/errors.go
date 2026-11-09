@@ -41,7 +41,7 @@ func CreateAPIErrorDetail(code APIErrorCode, detail string) *APIError {
 type APIErrorCodes = map[APIErrorCode]string
 
 func APIErrorResponses(api hureg.APIGen, descriptions APIErrorCodes) map[string]*huma.Response {
-	schema := api.GetHumaAPI().OpenAPI().Components.Schemas.Schema(reflect.TypeOf(APIError{}), true, "APIError")
+	schema := api.GetHumaAPI().OpenAPI().Components.Schemas.Schema(reflect.TypeFor[APIError](), true, "APIError")
 
 	// collect api error codes by their HTTP status
 	byStatus := map[int][]APIErrorCode{}

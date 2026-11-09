@@ -14,11 +14,11 @@ import (
 
 // mockClientProtocol implements plugin.ClientProtocol for tests.
 type mockClientProtocol struct {
-	dispense func(string) (interface{}, error)
+	dispense func(string) (any, error)
 }
 
 func (m *mockClientProtocol) Close() error { return nil }
-func (m *mockClientProtocol) Dispense(name string) (interface{}, error) {
+func (m *mockClientProtocol) Dispense(name string) (any, error) {
 	return m.dispense(name)
 }
 func (m *mockClientProtocol) Ping() error { return nil }
@@ -123,7 +123,7 @@ func TestRegisterPluginsDuplicateID(t *testing.T) {
 	oldFactory := pluginClientFactory
 	pluginClientFactory = func(bin string) pluginClient {
 		return &mockPluginClient{proto: &mockClientProtocol{
-			dispense: func(string) (interface{}, error) {
+			dispense: func(string) (any, error) {
 				return &mockFlixurPlugin{}, nil
 			},
 		}}
@@ -161,7 +161,7 @@ func TestInitPluginDispenseError(t *testing.T) {
 	pluginClientFactory = func(bin string) pluginClient {
 		return &mockPluginClient{
 			proto: &mockClientProtocol{
-				dispense: func(string) (interface{}, error) {
+				dispense: func(string) (any, error) {
 					return nil, errors.New("dispense failed")
 				},
 			},
@@ -200,7 +200,7 @@ func TestInitPluginDuplicateID(t *testing.T) {
 	pluginClientFactory = func(bin string) pluginClient {
 		return &mockPluginClient{
 			proto: &mockClientProtocol{
-				dispense: func(string) (interface{}, error) {
+				dispense: func(string) (any, error) {
 					return &mockFlixurPlugin{}, nil
 				},
 			},
@@ -223,7 +223,7 @@ func TestInitPluginSuccess(t *testing.T) {
 		return &mockPluginClient{
 			killFunc: func() { killed = true },
 			proto: &mockClientProtocol{
-				dispense: func(string) (interface{}, error) {
+				dispense: func(string) (any, error) {
 					return &mockFlixurPlugin{}, nil
 				},
 			},
