@@ -2,6 +2,7 @@ package pluginkit
 
 import (
 	"encoding/json"
+	"maps"
 	"os"
 	"sort"
 	"strings"
@@ -125,9 +126,7 @@ func TestManifestSchemaRejects(t *testing.T) {
 	}
 	set := func(m map[string]any, k string, v any) map[string]any {
 		c := make(map[string]any, len(m)+1)
-		for key, val := range m {
-			c[key] = val
-		}
+		maps.Copy(c, m)
 		if v == nil {
 			delete(c, k)
 		} else {
