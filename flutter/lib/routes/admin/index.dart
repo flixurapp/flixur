@@ -1,3 +1,4 @@
+import "package:flixur/api.dart";
 import "package:material_ui/material_ui.dart";
 
 class AdminView extends StatelessWidget {
@@ -5,6 +6,6 @@ class AdminView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text("admin page");
+    return const MaterialButton(onPressed: Api.logout, child: Text("logout"));
   }
 }
