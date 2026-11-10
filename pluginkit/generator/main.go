@@ -168,7 +168,7 @@ var clientHeader = `type grpcClient struct {
 	client pb.FlixurPluginServiceClient
 }
 
-func (p *FlixurGRPCPlugin) GRPCClient(ctx context.Context, broker *plugin.GRPCBroker, c *grpc.ClientConn) (interface{}, error) {
+func (p *FlixurGRPCPlugin) GRPCClient(ctx context.Context, broker *plugin.GRPCBroker, c *grpc.ClientConn) (any, error) {
 	return &grpcClient{client: pb.NewFlixurPluginServiceClient(c)}, nil
 }`
 
