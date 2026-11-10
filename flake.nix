@@ -347,6 +347,20 @@
               dart fix --apply
             '';
           };
+          # apply go fixes
+          go-fix = pkgs.writeShellApplication {
+            name = "go-fix";
+            runtimeInputs = [ pkgs.go ];
+            text = ''
+              ${setup}
+              for mod in server pluginkit plugin-example; do
+                cd "$mod"
+                # shellcheck disable=SC2046 # arguments are packages, splitting is intended
+                go fix $(go list ./... | grep -v '/ent')
+                cd ..
+              done
+            '';
+          };
           # wrapped flutter command for debug builds
           flutter-wrapped = pkgs.writeShellApplication {
             name = "flutter";

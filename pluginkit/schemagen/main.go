@@ -107,7 +107,7 @@ func run() error {
 }
 
 // u64 returns a pointer to the given value for schema fields like MinLength.
-func u64(v uint64) *uint64 { return &v }
+func u64(v uint64) *uint64 { return new(v) }
 
 // returns the manifest feature IDs in enum order.
 func featureEnum() []any {
