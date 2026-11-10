@@ -72,7 +72,7 @@ func TestSettingsDefinitions(t *testing.T) {
 	for _, group := range body.Groups {
 		registryGroups[group.ID] = true
 	}
-	for _, expected := range []string{"ui", "ui.navigation", "ui.titlebar", "ui.library"} {
+	for _, expected := range []string{"ui", "ui.navigation", "ui.window", "ui.library"} {
 		if !registryGroups[expected] {
 			t.Errorf("missing group %s in the definitions response", expected)
 		}
@@ -83,7 +83,7 @@ func TestSettingsDefinitions(t *testing.T) {
 	for _, def := range body.List {
 		byID[def.ID] = def
 	}
-	boolDef := byID["ui.titlebar.startMaximized"]
+	boolDef := byID["ui.window.startMaximized"]
 	if boolDef == nil || boolDef.Kind != settings.KindBool ||
 		boolDef.Bool == nil || !boolDef.Bool.Default {
 		t.Errorf("startMaximized definition = %+v", boolDef)
@@ -191,7 +191,7 @@ func TestSettingsProfileValues(t *testing.T) {
 	profileID := profiles.List[0].ID
 
 	// set a bool override
-	resp = api.Put("/settings/profiles/"+profileID+"/values/ui.titlebar.startMaximized",
+	resp = api.Put("/settings/profiles/"+profileID+"/values/ui.window.startMaximized",
 		append(authHeaders(token), map[string]any{"value": "false"})...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("put bool status = %d, body = %s", resp.Code, resp.Body.String())
@@ -204,12 +204,12 @@ func TestSettingsProfileValues(t *testing.T) {
 	// get values contains it
 	resp = api.Get("/settings/profiles/"+profileID+"/values", authHeaders(token)...)
 	values := decode[SettingValuesBody](t, resp)
-	if len(values.Values) != 1 || values.Values["ui.titlebar.startMaximized"].Value != "false" {
+	if len(values.Values) != 1 || values.Values["ui.window.startMaximized"].Value != "false" {
 		t.Fatalf("values = %+v", values.Values)
 	}
 
 	// update overwrites
-	resp = api.Put("/settings/profiles/"+profileID+"/values/ui.titlebar.startMaximized",
+	resp = api.Put("/settings/profiles/"+profileID+"/values/ui.window.startMaximized",
 		append(authHeaders(token), map[string]any{"value": "true"})...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("re-put bool status = %d", resp.Code)
@@ -220,7 +220,7 @@ func TestSettingsProfileValues(t *testing.T) {
 	}
 
 	// invalid value for the kind is rejected
-	resp = api.Put("/settings/profiles/"+profileID+"/values/ui.titlebar.startMaximized",
+	resp = api.Put("/settings/profiles/"+profileID+"/values/ui.window.startMaximized",
 		append(authHeaders(token), map[string]any{"value": "\"nope\""})...)
 	if resp.Code != http.StatusBadRequest {
 		t.Errorf("invalid bool status = %d", resp.Code)

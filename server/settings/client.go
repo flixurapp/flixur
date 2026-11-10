@@ -36,12 +36,12 @@ func newClientRegistry() *Registry {
 	reg.Register(Bool("ui.navigation.railDefaultExpanded", false).Order(2))
 
 	//==
-	//== Title Bar
+	//== Window
 	//==
-	reg.RegisterGroup(Group("ui.titlebar").Order(1))
+	reg.RegisterGroup(Group("ui.window").Order(1))
 
-	reg.Register(Bool("ui.titlebar.startMaximized", true).Order(1))
-	reg.Register(Bool("ui.titlebar.windowControls", true).Order(1))
+	reg.Register(Bool("ui.window.startMaximized", true).Order(1))
+	reg.Register(Bool("ui.window.useCustom", true).Order(1))
 
 	//==
 	//== Library
