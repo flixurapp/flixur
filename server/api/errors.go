@@ -31,6 +31,8 @@ func CreateAPIError(code APIErrorCode) *APIError {
 }
 
 // Create a new APIError with error code and details.
+// Detail should be a single word describing what specific item failed.
+// Commonly this is one of the input key names. This is used for translations.
 func CreateAPIErrorDetail(code APIErrorCode, detail string) *APIError {
 	return &APIError{
 		APIErrorCodesMixin: APIErrorCodesMixin{Code: code},
