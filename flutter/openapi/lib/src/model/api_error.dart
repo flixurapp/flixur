@@ -23,7 +23,7 @@ abstract class APIError implements Built<APIError, APIErrorBuilder> {
 
   @BuiltValueField(wireName: r'code')
   APIErrorCodeEnum get code;
-  // enum codeEnum {  DATABASE_ERROR,  INCORRECT_PASSWORD,  INCORRECT_USERNAME,  INVALID_INPUT,  TOO_LONG,  TOO_SHORT,  };
+  // enum codeEnum {  CONFLICT,  DATABASE_ERROR,  INCORRECT_PASSWORD,  INCORRECT_USERNAME,  INVALID_INPUT,  INVALID_TOKEN,  NOT_FOUND,  TOO_LONG,  TOO_SHORT,  };
 
   @BuiltValueField(wireName: r'detail')
   String? get detail;
@@ -148,6 +148,8 @@ class _$APIErrorSerializer implements PrimitiveSerializer<APIError> {
 }
 
 class APIErrorCodeEnum extends EnumClass {
+  @BuiltValueEnumConst(wireName: r'CONFLICT')
+  static const APIErrorCodeEnum CONFLICT = _$aPIErrorCodeEnum_CONFLICT;
   @BuiltValueEnumConst(wireName: r'DATABASE_ERROR')
   static const APIErrorCodeEnum DATABASE_ERROR =
       _$aPIErrorCodeEnum_DATABASE_ERROR;
@@ -160,6 +162,11 @@ class APIErrorCodeEnum extends EnumClass {
   @BuiltValueEnumConst(wireName: r'INVALID_INPUT')
   static const APIErrorCodeEnum INVALID_INPUT =
       _$aPIErrorCodeEnum_INVALID_INPUT;
+  @BuiltValueEnumConst(wireName: r'INVALID_TOKEN')
+  static const APIErrorCodeEnum INVALID_TOKEN =
+      _$aPIErrorCodeEnum_INVALID_TOKEN;
+  @BuiltValueEnumConst(wireName: r'NOT_FOUND')
+  static const APIErrorCodeEnum NOT_FOUND = _$aPIErrorCodeEnum_NOT_FOUND;
   @BuiltValueEnumConst(wireName: r'TOO_LONG')
   static const APIErrorCodeEnum TOO_LONG = _$aPIErrorCodeEnum_TOO_LONG;
   @BuiltValueEnumConst(wireName: r'TOO_SHORT')

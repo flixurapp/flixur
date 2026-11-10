@@ -6,6 +6,8 @@ part of 'api_error.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+const APIErrorCodeEnum _$aPIErrorCodeEnum_CONFLICT =
+    const APIErrorCodeEnum._('CONFLICT');
 const APIErrorCodeEnum _$aPIErrorCodeEnum_DATABASE_ERROR =
     const APIErrorCodeEnum._('DATABASE_ERROR');
 const APIErrorCodeEnum _$aPIErrorCodeEnum_INCORRECT_PASSWORD =
@@ -14,6 +16,10 @@ const APIErrorCodeEnum _$aPIErrorCodeEnum_INCORRECT_USERNAME =
     const APIErrorCodeEnum._('INCORRECT_USERNAME');
 const APIErrorCodeEnum _$aPIErrorCodeEnum_INVALID_INPUT =
     const APIErrorCodeEnum._('INVALID_INPUT');
+const APIErrorCodeEnum _$aPIErrorCodeEnum_INVALID_TOKEN =
+    const APIErrorCodeEnum._('INVALID_TOKEN');
+const APIErrorCodeEnum _$aPIErrorCodeEnum_NOT_FOUND =
+    const APIErrorCodeEnum._('NOT_FOUND');
 const APIErrorCodeEnum _$aPIErrorCodeEnum_TOO_LONG =
     const APIErrorCodeEnum._('TOO_LONG');
 const APIErrorCodeEnum _$aPIErrorCodeEnum_TOO_SHORT =
@@ -21,6 +27,8 @@ const APIErrorCodeEnum _$aPIErrorCodeEnum_TOO_SHORT =
 
 APIErrorCodeEnum _$aPIErrorCodeEnumValueOf(String name) {
   switch (name) {
+    case 'CONFLICT':
+      return _$aPIErrorCodeEnum_CONFLICT;
     case 'DATABASE_ERROR':
       return _$aPIErrorCodeEnum_DATABASE_ERROR;
     case 'INCORRECT_PASSWORD':
@@ -29,6 +37,10 @@ APIErrorCodeEnum _$aPIErrorCodeEnumValueOf(String name) {
       return _$aPIErrorCodeEnum_INCORRECT_USERNAME;
     case 'INVALID_INPUT':
       return _$aPIErrorCodeEnum_INVALID_INPUT;
+    case 'INVALID_TOKEN':
+      return _$aPIErrorCodeEnum_INVALID_TOKEN;
+    case 'NOT_FOUND':
+      return _$aPIErrorCodeEnum_NOT_FOUND;
     case 'TOO_LONG':
       return _$aPIErrorCodeEnum_TOO_LONG;
     case 'TOO_SHORT':
@@ -40,10 +52,13 @@ APIErrorCodeEnum _$aPIErrorCodeEnumValueOf(String name) {
 
 final BuiltSet<APIErrorCodeEnum> _$aPIErrorCodeEnumValues =
     BuiltSet<APIErrorCodeEnum>(const <APIErrorCodeEnum>[
+  _$aPIErrorCodeEnum_CONFLICT,
   _$aPIErrorCodeEnum_DATABASE_ERROR,
   _$aPIErrorCodeEnum_INCORRECT_PASSWORD,
   _$aPIErrorCodeEnum_INCORRECT_USERNAME,
   _$aPIErrorCodeEnum_INVALID_INPUT,
+  _$aPIErrorCodeEnum_INVALID_TOKEN,
+  _$aPIErrorCodeEnum_NOT_FOUND,
   _$aPIErrorCodeEnum_TOO_LONG,
   _$aPIErrorCodeEnum_TOO_SHORT,
 ]);
@@ -54,18 +69,24 @@ Serializer<APIErrorCodeEnum> _$aPIErrorCodeEnumSerializer =
 class _$APIErrorCodeEnumSerializer
     implements PrimitiveSerializer<APIErrorCodeEnum> {
   static const Map<String, Object> _toWire = const <String, Object>{
+    'CONFLICT': 'CONFLICT',
     'DATABASE_ERROR': 'DATABASE_ERROR',
     'INCORRECT_PASSWORD': 'INCORRECT_PASSWORD',
     'INCORRECT_USERNAME': 'INCORRECT_USERNAME',
     'INVALID_INPUT': 'INVALID_INPUT',
+    'INVALID_TOKEN': 'INVALID_TOKEN',
+    'NOT_FOUND': 'NOT_FOUND',
     'TOO_LONG': 'TOO_LONG',
     'TOO_SHORT': 'TOO_SHORT',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
+    'CONFLICT': 'CONFLICT',
     'DATABASE_ERROR': 'DATABASE_ERROR',
     'INCORRECT_PASSWORD': 'INCORRECT_PASSWORD',
     'INCORRECT_USERNAME': 'INCORRECT_USERNAME',
     'INVALID_INPUT': 'INVALID_INPUT',
+    'INVALID_TOKEN': 'INVALID_TOKEN',
+    'NOT_FOUND': 'NOT_FOUND',
     'TOO_LONG': 'TOO_LONG',
     'TOO_SHORT': 'TOO_SHORT',
   };

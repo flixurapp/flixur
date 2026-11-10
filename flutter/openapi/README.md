@@ -70,6 +70,13 @@ Class | Method | HTTP request | Description
 [*AuthenticationApi*](doc/AuthenticationApi.md) | [**getPing**](doc/AuthenticationApi.md#getping) | **GET** /ping | Ping Server
 [*AuthenticationApi*](doc/AuthenticationApi.md) | [**postAuthLogin**](doc/AuthenticationApi.md#postauthlogin) | **POST** /auth/login | Login
 [*AuthenticationApi*](doc/AuthenticationApi.md) | [**postAuthSetup**](doc/AuthenticationApi.md#postauthsetup) | **POST** /auth/setup | Setup Server
+[*SettingsApi*](doc/SettingsApi.md) | [**createSettingsProfile**](doc/SettingsApi.md#createsettingsprofile) | **POST** /settings/profiles | Create Settings Profile
+[*SettingsApi*](doc/SettingsApi.md) | [**deleteSettingsProfile**](doc/SettingsApi.md#deletesettingsprofile) | **DELETE** /settings/profiles/{profile} | Delete Settings Profile
+[*SettingsApi*](doc/SettingsApi.md) | [**getClientSettingsDefinitions**](doc/SettingsApi.md#getclientsettingsdefinitions) | **GET** /settings/definitions | Get Client Settings Definitions
+[*SettingsApi*](doc/SettingsApi.md) | [**getSettingsProfileValues**](doc/SettingsApi.md#getsettingsprofilevalues) | **GET** /settings/profiles/{profile}/values | Get Settings Profile Values
+[*SettingsApi*](doc/SettingsApi.md) | [**getSettingsProfiles**](doc/SettingsApi.md#getsettingsprofiles) | **GET** /settings/profiles | Get Settings Profiles
+[*SettingsApi*](doc/SettingsApi.md) | [**renameSettingsProfile**](doc/SettingsApi.md#renamesettingsprofile) | **PUT** /settings/profiles/{profile} | Rename Settings Profile
+[*SettingsApi*](doc/SettingsApi.md) | [**updateSettingsProfileValue**](doc/SettingsApi.md#updatesettingsprofilevalue) | **PUT** /settings/profiles/{profile}/values/{settingID} | Update Settings Profile Value
 
 
 ## Documentation For Models
@@ -77,14 +84,32 @@ Class | Method | HTTP request | Description
  - [APIError](doc/APIError.md)
  - [Artist](doc/Artist.md)
  - [ArtistSearchBody](doc/ArtistSearchBody.md)
+ - [BoolProps](doc/BoolProps.md)
+ - [ChoiceSpec](doc/ChoiceSpec.md)
+ - [CreateSettingsProfileRequest](doc/CreateSettingsProfileRequest.md)
+ - [EnumProps](doc/EnumProps.md)
  - [ErrorDetail](doc/ErrorDetail.md)
  - [ErrorModel](doc/ErrorModel.md)
+ - [FloatProps](doc/FloatProps.md)
+ - [IntProps](doc/IntProps.md)
  - [OIDCInitBody](doc/OIDCInitBody.md)
+ - [OutputSuccessBody](doc/OutputSuccessBody.md)
  - [PingBody](doc/PingBody.md)
  - [PostAuthLoginRequest](doc/PostAuthLoginRequest.md)
  - [PostAuthSetupRequest](doc/PostAuthSetupRequest.md)
+ - [RenameSettingsProfileRequest](doc/RenameSettingsProfileRequest.md)
  - [SearchArtistsRequest](doc/SearchArtistsRequest.md)
  - [SessionTokenBody](doc/SessionTokenBody.md)
+ - [SettingProfileBody](doc/SettingProfileBody.md)
+ - [SettingValueEntry](doc/SettingValueEntry.md)
+ - [SettingValuesBody](doc/SettingValuesBody.md)
+ - [SettingsDefinition](doc/SettingsDefinition.md)
+ - [SettingsDefinitionsBody](doc/SettingsDefinitionsBody.md)
+ - [SettingsGroup](doc/SettingsGroup.md)
+ - [SettingsProfilesBody](doc/SettingsProfilesBody.md)
+ - [StringListProps](doc/StringListProps.md)
+ - [StringProps](doc/StringProps.md)
+ - [UpdateSettingsProfileValueRequest](doc/UpdateSettingsProfileValueRequest.md)
 
 
 ## Documentation For Authorization
