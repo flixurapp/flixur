@@ -32,8 +32,8 @@ func newClientRegistry() *Registry {
 			AddChoice("admin", "gavel"),
 	)
 
-	reg.Register(Bool("ui.nav.bottomLabels", false).Order(2))
-	reg.Register(Bool("ui.nav.railDefaultExpanded", false).Order(2))
+	reg.Register(Bool("ui.navigation.bottomLabels", false).Order(2))
+	reg.Register(Bool("ui.navigation.railDefaultExpanded", false).Order(2))
 
 	//==
 	//== Title Bar
