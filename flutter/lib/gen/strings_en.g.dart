@@ -54,10 +54,51 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	/// en: 'OK'
 	String get btn_ok => 'OK';
 
+	/// en: 'Create'
+	String get btn_create => 'Create';
+
+	/// en: 'Delete'
+	String get btn_delete => 'Delete';
+
+	/// en: 'Add'
+	String get btn_add => 'Add';
+
+	/// en: 'Remove'
+	String get btn_remove => 'Remove';
+
+	/// en: 'Rename'
+	String get btn_rename => 'Rename';
+
+	/// en: 'Save'
+	String get btn_save => 'Save';
+
 	late final Translations$navigation$en navigation = Translations$navigation$en._(_root);
 
 	/// en: 'OR'
 	String get or_line => 'OR';
+
+	Map<String, String> get setting_descriptions => {
+		'ui.library.cardsPerRow': 'Maximum number of cards to show per row in library grids.',
+		'ui.navigation.bottomLabels': 'Show text labels under the icons in the bottom navbar.',
+		'ui.navigation.railDefaultExpanded': 'Whether the left navigation rail starts off expanded.',
+		'ui.navigation.shownSections': 'Choose which sections are shown in the main navigation.',
+		'ui.window.startMaximized': 'Open ${_root.app_name} maximized on launch.',
+		'ui.window.useCustom': 'Whether to use a custom titlebar.',
+	};
+	Map<String, String> get setting_names => {
+		'ui.library.cardsPerRow': 'Cards Per Row',
+		'ui.navigation.bottomLabels': 'Bottom Nav Labels',
+		'ui.navigation.railDefaultExpanded': 'Expand Nav Rail',
+		'ui.navigation.shownSections': 'Navigation Sections',
+		'ui.window.startMaximized': 'Start Maximized',
+		'ui.window.useCustom': 'Custom Titlebar',
+	};
+	Map<String, String> get setting_group_names => {
+		'ui': 'User Interface',
+		'ui.library': 'Library',
+		'ui.navigation': 'Navigation',
+		'ui.window': 'Window',
+	};
 
 	/// en: 'Password'
 	String get password => 'Password';
@@ -96,6 +137,7 @@ class Translations$routes$en {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+	late final Translations$routes$settings$en settings = Translations$routes$settings$en._(_root);
 	late final Translations$routes$startup$en startup = Translations$routes$startup$en._(_root);
 }
 
@@ -136,6 +178,28 @@ class Translations$titlebar$en {
 
 	/// en: 'Expand Navigation'
 	String get rail_expand => 'Expand Navigation';
+}
+
+// Path: routes.settings
+class Translations$routes$settings$en {
+	Translations$routes$settings$en._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Add Profile'
+	String get add_profile => 'Add Profile';
+
+	/// en: 'Profiles'
+	String get profiles => 'Profiles';
+
+	Map<String, String> get profiles_failed_codes => {
+		'TOO_SHORT.profile': 'Profile name is too short!',
+	};
+
+	/// en: 'Search settings...'
+	String get search_hint => 'Search settings...';
 }
 
 // Path: routes.startup
@@ -240,6 +304,12 @@ extension on Translations {
 			'app_name' => 'Flixur',
 			'btn_cancel' => 'Cancel',
 			'btn_ok' => 'OK',
+			'btn_create' => 'Create',
+			'btn_delete' => 'Delete',
+			'btn_add' => 'Add',
+			'btn_remove' => 'Remove',
+			'btn_rename' => 'Rename',
+			'btn_save' => 'Save',
 			'navigation.section_titles.activity' => 'Activity',
 			'navigation.section_titles.admin' => 'Admin',
 			'navigation.section_titles.downloads' => 'Downloads',
@@ -249,7 +319,27 @@ extension on Translations {
 			'navigation.section_titles.search' => 'Search',
 			'navigation.section_titles.settings' => 'Settings',
 			'or_line' => 'OR',
+			'setting_descriptions."ui.library.cardsPerRow"' => 'Maximum number of cards to show per row in library grids.',
+			'setting_descriptions."ui.navigation.bottomLabels"' => 'Show text labels under the icons in the bottom navbar.',
+			'setting_descriptions."ui.navigation.railDefaultExpanded"' => 'Whether the left navigation rail starts off expanded.',
+			'setting_descriptions."ui.navigation.shownSections"' => 'Choose which sections are shown in the main navigation.',
+			'setting_descriptions."ui.window.startMaximized"' => 'Open ${_root.app_name} maximized on launch.',
+			'setting_descriptions."ui.window.useCustom"' => 'Whether to use a custom titlebar.',
+			'setting_names."ui.library.cardsPerRow"' => 'Cards Per Row',
+			'setting_names."ui.navigation.bottomLabels"' => 'Bottom Nav Labels',
+			'setting_names."ui.navigation.railDefaultExpanded"' => 'Expand Nav Rail',
+			'setting_names."ui.navigation.shownSections"' => 'Navigation Sections',
+			'setting_names."ui.window.startMaximized"' => 'Start Maximized',
+			'setting_names."ui.window.useCustom"' => 'Custom Titlebar',
+			'setting_group_names.ui' => 'User Interface',
+			'setting_group_names."ui.library"' => 'Library',
+			'setting_group_names."ui.navigation"' => 'Navigation',
+			'setting_group_names."ui.window"' => 'Window',
 			'password' => 'Password',
+			'routes.settings.add_profile' => 'Add Profile',
+			'routes.settings.profiles' => 'Profiles',
+			'routes.settings.profiles_failed_codes."TOO_SHORT.profile"' => 'Profile name is too short!',
+			'routes.settings.search_hint' => 'Search settings...',
 			'routes.startup.login.failed' => 'Login Failed',
 			'routes.startup.login.failed_codes.INCORRECT_PASSWORD' => 'Incorrect password.',
 			'routes.startup.login.failed_codes.INCORRECT_USERNAME' => 'Username not found.',
