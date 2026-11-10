@@ -11,7 +11,7 @@ part 'float_props.g.dart';
 /// FloatProps
 ///
 /// Properties:
-/// * [default_]
+/// * [defaultValue]
 /// * [max]
 /// * [min]
 /// * [recommendedMax]
@@ -19,8 +19,8 @@ part 'float_props.g.dart';
 /// * [step]
 @BuiltValue()
 abstract class FloatProps implements Built<FloatProps, FloatPropsBuilder> {
-  @BuiltValueField(wireName: r'default')
-  double get default_;
+  @BuiltValueField(wireName: r'defaultValue')
+  double get defaultValue;
 
   @BuiltValueField(wireName: r'max')
   double? get max;
@@ -60,9 +60,9 @@ class _$FloatPropsSerializer implements PrimitiveSerializer<FloatProps> {
     FloatProps object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'default';
+    yield r'defaultValue';
     yield serializers.serialize(
-      object.default_,
+      object.defaultValue,
       specifiedType: const FullType(double),
     );
     if (object.max != null) {
@@ -125,12 +125,12 @@ class _$FloatPropsSerializer implements PrimitiveSerializer<FloatProps> {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
-        case r'default':
+        case r'defaultValue':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(double),
           ) as double;
-          result.default_ = valueDes;
+          result.defaultValue = valueDes;
           break;
         case r'max':
           final valueDes = serializers.deserialize(

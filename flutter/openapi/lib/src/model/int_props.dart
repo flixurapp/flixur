@@ -11,7 +11,7 @@ part 'int_props.g.dart';
 /// IntProps
 ///
 /// Properties:
-/// * [default_]
+/// * [defaultValue]
 /// * [max]
 /// * [min]
 /// * [recommendedMax]
@@ -19,8 +19,8 @@ part 'int_props.g.dart';
 /// * [step]
 @BuiltValue()
 abstract class IntProps implements Built<IntProps, IntPropsBuilder> {
-  @BuiltValueField(wireName: r'default')
-  int get default_;
+  @BuiltValueField(wireName: r'defaultValue')
+  int get defaultValue;
 
   @BuiltValueField(wireName: r'max')
   int? get max;
@@ -60,9 +60,9 @@ class _$IntPropsSerializer implements PrimitiveSerializer<IntProps> {
     IntProps object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'default';
+    yield r'defaultValue';
     yield serializers.serialize(
-      object.default_,
+      object.defaultValue,
       specifiedType: const FullType(int),
     );
     if (object.max != null) {
@@ -125,12 +125,12 @@ class _$IntPropsSerializer implements PrimitiveSerializer<IntProps> {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
-        case r'default':
+        case r'defaultValue':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(int),
           ) as int;
-          result.default_ = valueDes;
+          result.defaultValue = valueDes;
           break;
         case r'max':
           final valueDes = serializers.deserialize(

@@ -3,7 +3,7 @@ package settings
 // A boolean setting's properties.
 type BoolProps struct {
 	// Default setting value.
-	Default bool `json:"default"`
+	Default bool `json:"defaultValue"`
 }
 
 // Creates a bool setting definition with [def] as the default.

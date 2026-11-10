@@ -3,7 +3,7 @@ package settings
 // An enum setting's properties.
 type EnumProps struct {
 	// Default setting value.
-	Default string `json:"default"`
+	Default string `json:"defaultValue"`
 	// Available choices as [ChoiceSpec]s.
 	Choices []ChoiceSpec `json:"choices"`
 }

@@ -8,7 +8,7 @@ part of 'int_props.dart';
 
 class _$IntProps extends IntProps {
   @override
-  final int default_;
+  final int defaultValue;
   @override
   final int? max;
   @override
@@ -24,7 +24,7 @@ class _$IntProps extends IntProps {
       (IntPropsBuilder()..update(updates))._build();
 
   _$IntProps._(
-      {required this.default_,
+      {required this.defaultValue,
       this.max,
       this.min,
       this.recommendedMax,
@@ -42,7 +42,7 @@ class _$IntProps extends IntProps {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is IntProps &&
-        default_ == other.default_ &&
+        defaultValue == other.defaultValue &&
         max == other.max &&
         min == other.min &&
         recommendedMax == other.recommendedMax &&
@@ -53,7 +53,7 @@ class _$IntProps extends IntProps {
   @override
   int get hashCode {
     var _$hash = 0;
-    _$hash = $jc(_$hash, default_.hashCode);
+    _$hash = $jc(_$hash, defaultValue.hashCode);
     _$hash = $jc(_$hash, max.hashCode);
     _$hash = $jc(_$hash, min.hashCode);
     _$hash = $jc(_$hash, recommendedMax.hashCode);
@@ -66,7 +66,7 @@ class _$IntProps extends IntProps {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'IntProps')
-          ..add('default_', default_)
+          ..add('defaultValue', defaultValue)
           ..add('max', max)
           ..add('min', min)
           ..add('recommendedMax', recommendedMax)
@@ -79,9 +79,9 @@ class _$IntProps extends IntProps {
 class IntPropsBuilder implements Builder<IntProps, IntPropsBuilder> {
   _$IntProps? _$v;
 
-  int? _default_;
-  int? get default_ => _$this._default_;
-  set default_(int? default_) => _$this._default_ = default_;
+  int? _defaultValue;
+  int? get defaultValue => _$this._defaultValue;
+  set defaultValue(int? defaultValue) => _$this._defaultValue = defaultValue;
 
   int? _max;
   int? get max => _$this._max;
@@ -112,7 +112,7 @@ class IntPropsBuilder implements Builder<IntProps, IntPropsBuilder> {
   IntPropsBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
-      _default_ = $v.default_;
+      _defaultValue = $v.defaultValue;
       _max = $v.max;
       _min = $v.min;
       _recommendedMax = $v.recommendedMax;
@@ -139,8 +139,8 @@ class IntPropsBuilder implements Builder<IntProps, IntPropsBuilder> {
   _$IntProps _build() {
     final _$result = _$v ??
         _$IntProps._(
-          default_: BuiltValueNullFieldError.checkNotNull(
-              default_, r'IntProps', 'default_'),
+          defaultValue: BuiltValueNullFieldError.checkNotNull(
+              defaultValue, r'IntProps', 'defaultValue'),
           max: max,
           min: min,
           recommendedMax: recommendedMax,

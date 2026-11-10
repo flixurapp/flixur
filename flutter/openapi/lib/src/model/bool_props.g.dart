@@ -8,12 +8,12 @@ part of 'bool_props.dart';
 
 class _$BoolProps extends BoolProps {
   @override
-  final bool default_;
+  final bool defaultValue;
 
   factory _$BoolProps([void Function(BoolPropsBuilder)? updates]) =>
       (BoolPropsBuilder()..update(updates))._build();
 
-  _$BoolProps._({required this.default_}) : super._();
+  _$BoolProps._({required this.defaultValue}) : super._();
   @override
   BoolProps rebuild(void Function(BoolPropsBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -24,13 +24,13 @@ class _$BoolProps extends BoolProps {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is BoolProps && default_ == other.default_;
+    return other is BoolProps && defaultValue == other.defaultValue;
   }
 
   @override
   int get hashCode {
     var _$hash = 0;
-    _$hash = $jc(_$hash, default_.hashCode);
+    _$hash = $jc(_$hash, defaultValue.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -38,7 +38,7 @@ class _$BoolProps extends BoolProps {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'BoolProps')
-          ..add('default_', default_))
+          ..add('defaultValue', defaultValue))
         .toString();
   }
 }
@@ -46,9 +46,9 @@ class _$BoolProps extends BoolProps {
 class BoolPropsBuilder implements Builder<BoolProps, BoolPropsBuilder> {
   _$BoolProps? _$v;
 
-  bool? _default_;
-  bool? get default_ => _$this._default_;
-  set default_(bool? default_) => _$this._default_ = default_;
+  bool? _defaultValue;
+  bool? get defaultValue => _$this._defaultValue;
+  set defaultValue(bool? defaultValue) => _$this._defaultValue = defaultValue;
 
   BoolPropsBuilder() {
     BoolProps._defaults(this);
@@ -57,7 +57,7 @@ class BoolPropsBuilder implements Builder<BoolProps, BoolPropsBuilder> {
   BoolPropsBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
-      _default_ = $v.default_;
+      _defaultValue = $v.defaultValue;
       _$v = null;
     }
     return this;
@@ -79,8 +79,8 @@ class BoolPropsBuilder implements Builder<BoolProps, BoolPropsBuilder> {
   _$BoolProps _build() {
     final _$result = _$v ??
         _$BoolProps._(
-          default_: BuiltValueNullFieldError.checkNotNull(
-              default_, r'BoolProps', 'default_'),
+          defaultValue: BuiltValueNullFieldError.checkNotNull(
+              defaultValue, r'BoolProps', 'defaultValue'),
         );
     replace(_$result);
     return _$result;

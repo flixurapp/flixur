@@ -8,7 +8,7 @@ part of 'string_props.dart';
 
 class _$StringProps extends StringProps {
   @override
-  final String? default_;
+  final String defaultValue;
   @override
   final int? maxLength;
   @override
@@ -17,7 +17,8 @@ class _$StringProps extends StringProps {
   factory _$StringProps([void Function(StringPropsBuilder)? updates]) =>
       (StringPropsBuilder()..update(updates))._build();
 
-  _$StringProps._({this.default_, this.maxLength, this.secret}) : super._();
+  _$StringProps._({required this.defaultValue, this.maxLength, this.secret})
+      : super._();
   @override
   StringProps rebuild(void Function(StringPropsBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -29,7 +30,7 @@ class _$StringProps extends StringProps {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is StringProps &&
-        default_ == other.default_ &&
+        defaultValue == other.defaultValue &&
         maxLength == other.maxLength &&
         secret == other.secret;
   }
@@ -37,7 +38,7 @@ class _$StringProps extends StringProps {
   @override
   int get hashCode {
     var _$hash = 0;
-    _$hash = $jc(_$hash, default_.hashCode);
+    _$hash = $jc(_$hash, defaultValue.hashCode);
     _$hash = $jc(_$hash, maxLength.hashCode);
     _$hash = $jc(_$hash, secret.hashCode);
     _$hash = $jf(_$hash);
@@ -47,7 +48,7 @@ class _$StringProps extends StringProps {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'StringProps')
-          ..add('default_', default_)
+          ..add('defaultValue', defaultValue)
           ..add('maxLength', maxLength)
           ..add('secret', secret))
         .toString();
@@ -57,9 +58,9 @@ class _$StringProps extends StringProps {
 class StringPropsBuilder implements Builder<StringProps, StringPropsBuilder> {
   _$StringProps? _$v;
 
-  String? _default_;
-  String? get default_ => _$this._default_;
-  set default_(String? default_) => _$this._default_ = default_;
+  String? _defaultValue;
+  String? get defaultValue => _$this._defaultValue;
+  set defaultValue(String? defaultValue) => _$this._defaultValue = defaultValue;
 
   int? _maxLength;
   int? get maxLength => _$this._maxLength;
@@ -76,7 +77,7 @@ class StringPropsBuilder implements Builder<StringProps, StringPropsBuilder> {
   StringPropsBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
-      _default_ = $v.default_;
+      _defaultValue = $v.defaultValue;
       _maxLength = $v.maxLength;
       _secret = $v.secret;
       _$v = null;
@@ -100,7 +101,8 @@ class StringPropsBuilder implements Builder<StringProps, StringPropsBuilder> {
   _$StringProps _build() {
     final _$result = _$v ??
         _$StringProps._(
-          default_: default_,
+          defaultValue: BuiltValueNullFieldError.checkNotNull(
+              defaultValue, r'StringProps', 'defaultValue'),
           maxLength: maxLength,
           secret: secret,
         );

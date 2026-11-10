@@ -10,12 +10,12 @@ class _$EnumProps extends EnumProps {
   @override
   final BuiltList<ChoiceSpec>? choices;
   @override
-  final String default_;
+  final String defaultValue;
 
   factory _$EnumProps([void Function(EnumPropsBuilder)? updates]) =>
       (EnumPropsBuilder()..update(updates))._build();
 
-  _$EnumProps._({this.choices, required this.default_}) : super._();
+  _$EnumProps._({this.choices, required this.defaultValue}) : super._();
   @override
   EnumProps rebuild(void Function(EnumPropsBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -28,14 +28,14 @@ class _$EnumProps extends EnumProps {
     if (identical(other, this)) return true;
     return other is EnumProps &&
         choices == other.choices &&
-        default_ == other.default_;
+        defaultValue == other.defaultValue;
   }
 
   @override
   int get hashCode {
     var _$hash = 0;
     _$hash = $jc(_$hash, choices.hashCode);
-    _$hash = $jc(_$hash, default_.hashCode);
+    _$hash = $jc(_$hash, defaultValue.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -44,7 +44,7 @@ class _$EnumProps extends EnumProps {
   String toString() {
     return (newBuiltValueToStringHelper(r'EnumProps')
           ..add('choices', choices)
-          ..add('default_', default_))
+          ..add('defaultValue', defaultValue))
         .toString();
   }
 }
@@ -57,9 +57,9 @@ class EnumPropsBuilder implements Builder<EnumProps, EnumPropsBuilder> {
       _$this._choices ??= ListBuilder<ChoiceSpec>();
   set choices(ListBuilder<ChoiceSpec>? choices) => _$this._choices = choices;
 
-  String? _default_;
-  String? get default_ => _$this._default_;
-  set default_(String? default_) => _$this._default_ = default_;
+  String? _defaultValue;
+  String? get defaultValue => _$this._defaultValue;
+  set defaultValue(String? defaultValue) => _$this._defaultValue = defaultValue;
 
   EnumPropsBuilder() {
     EnumProps._defaults(this);
@@ -69,7 +69,7 @@ class EnumPropsBuilder implements Builder<EnumProps, EnumPropsBuilder> {
     final $v = _$v;
     if ($v != null) {
       _choices = $v.choices?.toBuilder();
-      _default_ = $v.default_;
+      _defaultValue = $v.defaultValue;
       _$v = null;
     }
     return this;
@@ -94,8 +94,8 @@ class EnumPropsBuilder implements Builder<EnumProps, EnumPropsBuilder> {
       _$result = _$v ??
           _$EnumProps._(
             choices: _choices?.build(),
-            default_: BuiltValueNullFieldError.checkNotNull(
-                default_, r'EnumProps', 'default_'),
+            defaultValue: BuiltValueNullFieldError.checkNotNull(
+                defaultValue, r'EnumProps', 'defaultValue'),
           );
     } catch (_) {
       late String _$failedField;

@@ -3,7 +3,7 @@ package settings
 // A float setting's properties.
 type FloatProps struct {
 	// Default setting value.
-	Default float64 `json:"default"`
+	Default float64 `json:"defaultValue"`
 	// Optional lowest value the setting can be.
 	Min *float64 `json:"min,omitempty"`
 	// Optional highest value the setting can be.

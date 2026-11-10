@@ -10,14 +10,15 @@ class _$StringListProps extends StringListProps {
   @override
   final BuiltList<ChoiceSpec>? choices;
   @override
-  final BuiltList<String>? default_;
+  final BuiltList<String>? defaultValue;
   @override
   final int? maxItems;
 
   factory _$StringListProps([void Function(StringListPropsBuilder)? updates]) =>
       (StringListPropsBuilder()..update(updates))._build();
 
-  _$StringListProps._({this.choices, this.default_, this.maxItems}) : super._();
+  _$StringListProps._({this.choices, this.defaultValue, this.maxItems})
+      : super._();
   @override
   StringListProps rebuild(void Function(StringListPropsBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -30,7 +31,7 @@ class _$StringListProps extends StringListProps {
     if (identical(other, this)) return true;
     return other is StringListProps &&
         choices == other.choices &&
-        default_ == other.default_ &&
+        defaultValue == other.defaultValue &&
         maxItems == other.maxItems;
   }
 
@@ -38,7 +39,7 @@ class _$StringListProps extends StringListProps {
   int get hashCode {
     var _$hash = 0;
     _$hash = $jc(_$hash, choices.hashCode);
-    _$hash = $jc(_$hash, default_.hashCode);
+    _$hash = $jc(_$hash, defaultValue.hashCode);
     _$hash = $jc(_$hash, maxItems.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
@@ -48,7 +49,7 @@ class _$StringListProps extends StringListProps {
   String toString() {
     return (newBuiltValueToStringHelper(r'StringListProps')
           ..add('choices', choices)
-          ..add('default_', default_)
+          ..add('defaultValue', defaultValue)
           ..add('maxItems', maxItems))
         .toString();
   }
@@ -63,10 +64,11 @@ class StringListPropsBuilder
       _$this._choices ??= ListBuilder<ChoiceSpec>();
   set choices(ListBuilder<ChoiceSpec>? choices) => _$this._choices = choices;
 
-  ListBuilder<String>? _default_;
-  ListBuilder<String> get default_ =>
-      _$this._default_ ??= ListBuilder<String>();
-  set default_(ListBuilder<String>? default_) => _$this._default_ = default_;
+  ListBuilder<String>? _defaultValue;
+  ListBuilder<String> get defaultValue =>
+      _$this._defaultValue ??= ListBuilder<String>();
+  set defaultValue(ListBuilder<String>? defaultValue) =>
+      _$this._defaultValue = defaultValue;
 
   int? _maxItems;
   int? get maxItems => _$this._maxItems;
@@ -80,7 +82,7 @@ class StringListPropsBuilder
     final $v = _$v;
     if ($v != null) {
       _choices = $v.choices?.toBuilder();
-      _default_ = $v.default_?.toBuilder();
+      _defaultValue = $v.defaultValue?.toBuilder();
       _maxItems = $v.maxItems;
       _$v = null;
     }
@@ -106,7 +108,7 @@ class StringListPropsBuilder
       _$result = _$v ??
           _$StringListProps._(
             choices: _choices?.build(),
-            default_: _default_?.build(),
+            defaultValue: _defaultValue?.build(),
             maxItems: maxItems,
           );
     } catch (_) {
@@ -114,8 +116,8 @@ class StringListPropsBuilder
       try {
         _$failedField = 'choices';
         _choices?.build();
-        _$failedField = 'default_';
-        _default_?.build();
+        _$failedField = 'defaultValue';
+        _defaultValue?.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
             r'StringListProps', _$failedField, e.toString());

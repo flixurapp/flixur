@@ -3,7 +3,7 @@ package settings
 // An int setting's properties.
 type IntProps struct {
 	// Default setting value.
-	Default int64 `json:"default"`
+	Default int64 `json:"defaultValue"`
 	// Optional lowest value the setting can be.
 	Min *int64 `json:"min,omitempty"`
 	// Optional highest value the setting can be.

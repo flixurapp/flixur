@@ -3,7 +3,7 @@ package settings
 // A stringlist setting's properties.
 type StringListProps struct {
 	// Default setting value.
-	Default []string `json:"default"`
+	Default []string `json:"defaultValue"`
 	// Choices offered to clients for adding items.
 	Choices []ChoiceSpec `json:"choices"`
 	// Maximum total selected items.

@@ -14,14 +14,14 @@ part 'enum_props.g.dart';
 ///
 /// Properties:
 /// * [choices]
-/// * [default_]
+/// * [defaultValue]
 @BuiltValue()
 abstract class EnumProps implements Built<EnumProps, EnumPropsBuilder> {
   @BuiltValueField(wireName: r'choices')
   BuiltList<ChoiceSpec>? get choices;
 
-  @BuiltValueField(wireName: r'default')
-  String get default_;
+  @BuiltValueField(wireName: r'defaultValue')
+  String get defaultValue;
 
   EnumProps._();
 
@@ -54,9 +54,9 @@ class _$EnumPropsSerializer implements PrimitiveSerializer<EnumProps> {
             specifiedType:
                 const FullType.nullable(BuiltList, [FullType(ChoiceSpec)]),
           );
-    yield r'default';
+    yield r'defaultValue';
     yield serializers.serialize(
-      object.default_,
+      object.defaultValue,
       specifiedType: const FullType(String),
     );
   }
@@ -93,12 +93,12 @@ class _$EnumPropsSerializer implements PrimitiveSerializer<EnumProps> {
           if (valueDes == null) continue;
           result.choices.replace(valueDes);
           break;
-        case r'default':
+        case r'defaultValue':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(String),
           ) as String;
-          result.default_ = valueDes;
+          result.defaultValue = valueDes;
           break;
         default:
           unhandled.add(key);

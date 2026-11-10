@@ -14,7 +14,7 @@ part 'string_list_props.g.dart';
 ///
 /// Properties:
 /// * [choices]
-/// * [default_]
+/// * [defaultValue]
 /// * [maxItems]
 @BuiltValue()
 abstract class StringListProps
@@ -22,8 +22,8 @@ abstract class StringListProps
   @BuiltValueField(wireName: r'choices')
   BuiltList<ChoiceSpec>? get choices;
 
-  @BuiltValueField(wireName: r'default')
-  BuiltList<String>? get default_;
+  @BuiltValueField(wireName: r'defaultValue')
+  BuiltList<String>? get defaultValue;
 
   @BuiltValueField(wireName: r'maxItems')
   int? get maxItems;
@@ -62,11 +62,11 @@ class _$StringListPropsSerializer
             specifiedType:
                 const FullType.nullable(BuiltList, [FullType(ChoiceSpec)]),
           );
-    yield r'default';
-    yield object.default_ == null
+    yield r'defaultValue';
+    yield object.defaultValue == null
         ? null
         : serializers.serialize(
-            object.default_,
+            object.defaultValue,
             specifiedType:
                 const FullType.nullable(BuiltList, [FullType(String)]),
           );
@@ -111,14 +111,14 @@ class _$StringListPropsSerializer
           if (valueDes == null) continue;
           result.choices.replace(valueDes);
           break;
-        case r'default':
+        case r'defaultValue':
           final valueDes = serializers.deserialize(
             value,
             specifiedType:
                 const FullType.nullable(BuiltList, [FullType(String)]),
           ) as BuiltList<String>?;
           if (valueDes == null) continue;
-          result.default_.replace(valueDes);
+          result.defaultValue.replace(valueDes);
           break;
         case r'maxItems':
           final valueDes = serializers.deserialize(

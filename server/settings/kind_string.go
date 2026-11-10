@@ -3,7 +3,7 @@ package settings
 // A string setting's properties.
 type StringProps struct {
 	// Default setting value.
-	Default string `json:"default,omitempty"`
+	Default string `json:"defaultValue"`
 	// Maximum character length.
 	MaxLength *int `json:"maxLength,omitempty"`
 	// Whether this setting value is considered secret. Used for API keys.
