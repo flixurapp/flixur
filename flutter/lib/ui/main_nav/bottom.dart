@@ -1,11 +1,8 @@
+import "package:flixur/settings.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/main_nav/common.dart";
 import "package:flixur/ui/theme.dart";
 import "package:material_ui/material_ui.dart";
-
-//TODO: wire into an actual setting
-/// Show text labels under each nav icon.
-const bottomLabelsSetting = false;
 
 /// Main bottom navigation bar.
 class const MainNavBottom({
@@ -18,13 +15,23 @@ class const MainNavBottom({
     return Material(
       color: context.colors.mantle,
       child: SafeArea(
-        child: Row(
-          children: [
-            for (final section in parent.shownSections)
-              Expanded(
-                child: _MainNavBottomItem(parent: this, section: section),
-              ),
-          ],
+        child: SettingsValue<List<String>>(
+          "ui.nav.shownSections",
+          builder: (context, _) => SettingsValue<bool>(
+            "ui.nav.bottomLabels",
+            builder: (context, showLabels) => Row(
+              children: [
+                for (final section in parent.shownSections)
+                  Expanded(
+                    child: _MainNavBottomItem(
+                      parent: this,
+                      section: section,
+                      showLabels: showLabels,
+                    ),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -34,10 +41,9 @@ class const MainNavBottom({
 class const _MainNavBottomItem({
   required super.parent,
   required super.section,
+  required final bool showLabels,
   super.axis = .horizontal,
 }) extends MainNavItem {
-  bool get showLabels => bottomLabelsSetting;
-
   @override
   double get height => showLabels ? 74 : 64;
 

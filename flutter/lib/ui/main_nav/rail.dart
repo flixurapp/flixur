@@ -1,11 +1,8 @@
+import "package:flixur/settings.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/main_nav/common.dart";
 import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
-
-//TODO: wire into an actual setting
-/// Whether the rail starts expanded.
-const railExpandedDefaultSetting = false;
 
 /// Main side navigation rail for wide layouts.
 class const MainNavRail({
@@ -18,7 +15,9 @@ class const MainNavRail({
   static const itemHeight = 48.0;
 
   /// Whether the nav rail is expanded.
-  static final isExpanded = ValueNotifier<bool>(railExpandedDefaultSetting);
+  static final isExpanded = ValueNotifier<bool>(
+    Settings.getValue<bool>("ui.nav.railDefaultExpanded"),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -27,36 +26,39 @@ class const MainNavRail({
     return Material(
       color: colors.mantle,
       child: SafeArea(
-        child: ValueListenableBuilder(
-          valueListenable: isExpanded,
-          builder: (context, expanded, _) => AnimatedContainer(
-            duration: mainNavAnimationDuration,
-            curve: Curves.easeOutCubic,
-            width: expanded
-                ? MainNavRail.expandedWidth
-                : MainNavRail.collapsedWidth,
-            // keeps some space between the button and page
-            decoration: BoxDecoration(
-              border: Border(right: BorderSide(color: colors.mantle)),
-            ),
-            child: Column(
-              crossAxisAlignment: .stretch,
-              children: [
-                for (final section in parent.shownSections)
-                  _MainNavRailItem(
-                    parent: this,
-                    section: section,
-                    expanded: expanded,
-                  ),
-                // "hidden" sections go at the bottom
-                const Spacer(),
-                for (final section in parent.hiddenSections)
-                  _MainNavRailItem(
-                    parent: this,
-                    section: section,
-                    expanded: expanded,
-                  ),
-              ],
+        child: SettingsValue<List<String>>(
+          "ui.nav.shownSections",
+          builder: (context, _) => ValueListenableBuilder(
+            valueListenable: isExpanded,
+            builder: (context, expanded, _) => AnimatedContainer(
+              duration: mainNavAnimationDuration,
+              curve: Curves.easeOutCubic,
+              width: expanded
+                  ? MainNavRail.expandedWidth
+                  : MainNavRail.collapsedWidth,
+              // keeps some space between the button and page
+              decoration: BoxDecoration(
+                border: Border(right: BorderSide(color: colors.mantle)),
+              ),
+              child: Column(
+                crossAxisAlignment: .stretch,
+                children: [
+                  for (final section in parent.shownSections)
+                    _MainNavRailItem(
+                      parent: this,
+                      section: section,
+                      expanded: expanded,
+                    ),
+                  // "hidden" sections go at the bottom
+                  const Spacer(),
+                  for (final section in parent.hiddenSections)
+                    _MainNavRailItem(
+                      parent: this,
+                      section: section,
+                      expanded: expanded,
+                    ),
+                ],
+              ),
             ),
           ),
         ),

@@ -8,6 +8,7 @@ import "package:flixur/routes/home/index.dart";
 import "package:flixur/routes/library/index.dart";
 import "package:flixur/routes/search/index.dart";
 import "package:flixur/routes/settings/index.dart";
+import "package:flixur/settings.dart";
 import "package:flixur/titlebar.dart";
 import "package:flixur/ui/main_nav/bottom.dart";
 import "package:flixur/ui/main_nav/rail.dart";
@@ -111,16 +112,6 @@ final mainNavSections = [
   ),
 ];
 
-//TODO: wire into an actual setting
-/// Which sections to render in the main nav.
-const mainNavShownSections = [
-  "home",
-  "library",
-  "search",
-  "activity",
-  "explore",
-];
-
 /// Resolves a list of string section IDs to a list of sections.
 List<MainNavSection> resolveMainNavSections(List<String> ids) {
   // map the sections
@@ -148,11 +139,16 @@ class const MainNavWrapper({
   static final ValueNotifier<String> pageTitle = _createMainNavTitle();
 
   MainNavIDs? get selected => sectionIDFromBranch(navShell.currentIndex);
-  List<MainNavSection> get shownSections =>
-      resolveMainNavSections(mainNavShownSections);
+  List<MainNavSection> get shownSections => resolveMainNavSections(
+    Settings.getValue<List<String>>("ui.nav.shownSections"),
+  );
+
+  /// Sections not shown in the main nav with the current setting.
   List<MainNavSection> get hiddenSections => resolveMainNavSections([
     for (final section in mainNavSections)
-      if (!mainNavShownSections.contains(section.name)) section.name,
+      if (!Settings.getValue<List<String>>("ui.nav.shownSections")
+          .contains(section.name))
+        section.name,
   ]);
 
   @override

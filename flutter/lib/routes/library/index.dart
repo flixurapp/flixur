@@ -1,5 +1,6 @@
 import "dart:math";
 
+import "package:flixur/settings.dart";
 import "package:flixur/ui/cards/album.dart";
 import "package:flixur/ui/cards/artist.dart";
 import "package:flixur/ui/cards/collection.dart";
@@ -8,25 +9,23 @@ import "package:flixur/ui/cards/playlist.dart";
 import "package:flixur/ui/cards/queue.dart";
 import "package:material_ui/material_ui.dart";
 
-// TODO: wire to setting
-const _cardsPerRow = 6;
-
-class LibraryView extends StatelessWidget {
-  const new({super.key});
-
+class const LibraryView({super.key}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return CardsGrid(
-      rowCount: _cardsPerRow,
-      children: List.generate(100, (index) {
-        return switch (index % 5) {
-          0 => ArtistCard(),
-          1 => AlbumCard(),
-          2 => PlaylistCard(),
-          3 => CollectionCard(),
-          _ => QueueCard(),
-        };
-      }),
+    return SettingsValue<int>(
+      "ui.library.cardsPerRow",
+      builder: (context, perRow) => CardsGrid(
+        rowCount: perRow,
+        children: List.generate(100, (index) {
+          return switch (index % 5) {
+            0 => ArtistCard(),
+            1 => AlbumCard(),
+            2 => PlaylistCard(),
+            3 => CollectionCard(),
+            _ => QueueCard(),
+          };
+        }),
+      ),
     );
   }
 }
