@@ -16,7 +16,7 @@ Future<void> showErrorDialog(
         content: Text(message),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(ctx).pop(),
             child: Text(t.btn_ok),
           ),
         ],
