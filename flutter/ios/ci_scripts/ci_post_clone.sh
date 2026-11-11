@@ -41,6 +41,8 @@ if [ ! -x "$SDK_DIR/bin/flutter" ]; then
 	TMP_DIR="$(mktemp -d)"
 	curl -sSfL "$URL" -o "$TMP_DIR/$ARCHIVE"
 	unzip -q "$TMP_DIR/$ARCHIVE" -d "$TMP_DIR"
+	rm -rf "$SDK_DIR"
+	mkdir -p "$CACHE_BASE"
 	mv "$TMP_DIR/flutter" "$SDK_DIR"
 	rm -rf "$TMP_DIR"
 fi
