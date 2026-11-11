@@ -1,8 +1,21 @@
+import "dart:async";
 import "dart:math";
 
 import "package:flixur/utils.dart";
+import "package:hive_ce_flutter/hive_ce_flutter.dart";
 import "package:iconify_design/iconify_design.dart";
 import "package:material_ui/material_ui.dart";
+
+const _boxName = "iconify_icons";
+
+Future<void> initIconify() async {
+  IconifyClientService.maxMemoryCacheIcons = 512;
+
+  // open box and use it for the cache
+  final box = await Hive.openBox<String>(_boxName);
+  IconifyClientService.cacheGet = box.get;
+  IconifyClientService.cacheSet = box.put;
+}
 
 // Default icon set to use for icons.
 const _defaultSet = "ph";

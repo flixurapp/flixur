@@ -2,6 +2,7 @@ import "package:flixur/api.dart";
 import "package:flixur/router.dart";
 import "package:flixur/storage.dart";
 import "package:flixur/titlebar.dart";
+import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/main_nav/common.dart";
 import "package:flixur/ui/main_nav/top.dart";
 import "package:flixur/utils.dart";
@@ -23,6 +24,7 @@ void main() async {
 
   // init hive and open boxes
   await Storage.init();
+  await initIconify();
 
   // init API client
   Api.init();
