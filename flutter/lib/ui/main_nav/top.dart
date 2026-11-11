@@ -1,3 +1,4 @@
+import "package:flixur/settings.dart";
 import "package:flixur/titlebar.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/main_nav/common.dart";
@@ -51,41 +52,48 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                 right: 0,
                 top: 0,
                 bottom: 0,
-                child: Row(
-                  children: [
-                    if (kDebugMode)
-                      _MainNavTopButton(
-                        label: t.titlebar.minimize,
-                        onTap: TitlebarManager.debugResizeToPhone,
-                        square: !context.isLandscape,
-                        color: context.colors.tertiary,
-                        child: const _MainNavTopIcon("device-mobile"),
-                      ),
-                    _MainNavTopButton(
-                      label: t.titlebar.minimize,
-                      onTap: TitlebarManager.minimize,
-                      square: !context.isLandscape,
-                      child: const _MainNavTopIcon("minus"),
-                    ),
-                    _MainNavTopButton(
-                      label: t.titlebar.maximize,
-                      onTap: TitlebarManager.toggleMaximized,
-                      square: !context.isLandscape,
-                      child: ValueListenableBuilder(
-                        valueListenable: TitlebarManager.isMaximizedNotifier,
-                        builder: (context, maximized, _) => _MainNavTopIcon(
-                          maximized ? "corners-in" : "corners-out",
-                        ),
-                      ),
-                    ),
-                    _MainNavTopButton(
-                      label: t.titlebar.close,
-                      onTap: TitlebarManager.close,
-                      square: !context.isLandscape,
-                      color: colors.error,
-                      child: const _MainNavTopIcon("x"),
-                    ),
-                  ],
+                child: SettingsValue<bool>(
+                  "ui.window.showButtons",
+                  builder: (context, _) => TitlebarManager.shouldShowButtons
+                      ? Row(
+                          children: [
+                            if (kDebugMode)
+                              _MainNavTopButton(
+                                label: t.titlebar.minimize,
+                                onTap: TitlebarManager.debugResizeToPhone,
+                                square: !context.isLandscape,
+                                color: context.colors.tertiary,
+                                child: const _MainNavTopIcon("device-mobile"),
+                              ),
+                            _MainNavTopButton(
+                              label: t.titlebar.minimize,
+                              onTap: TitlebarManager.minimize,
+                              square: !context.isLandscape,
+                              child: const _MainNavTopIcon("minus"),
+                            ),
+                            _MainNavTopButton(
+                              label: t.titlebar.maximize,
+                              onTap: TitlebarManager.toggleMaximized,
+                              square: !context.isLandscape,
+                              child: ValueListenableBuilder(
+                                valueListenable:
+                                    TitlebarManager.isMaximizedNotifier,
+                                builder: (context, maximized, _) =>
+                                    _MainNavTopIcon(
+                                      maximized ? "corners-in" : "corners-out",
+                                    ),
+                              ),
+                            ),
+                            _MainNavTopButton(
+                              label: t.titlebar.close,
+                              onTap: TitlebarManager.close,
+                              square: !context.isLandscape,
+                              color: colors.error,
+                              child: const _MainNavTopIcon("x"),
+                            ),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
                 ),
               ),
             ],

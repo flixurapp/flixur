@@ -1,22 +1,20 @@
 import "dart:async";
 import "dart:io";
 
+import "package:flixur/settings.dart";
 import "package:flixur/ui/main_nav/common.dart";
 import "package:flutter/foundation.dart";
 import "package:material_ui/material_ui.dart";
 import "package:window_manager/window_manager.dart";
-
-//TODO: wire into setting
-const startMaximizedSetting = true;
 
 class TitlebarManager {
   /// Whether the platform supports a custom titlebar.
   static bool get isSupported =>
       !(kIsWeb || Platform.isAndroid || Platform.isIOS);
 
-  //TODO: wire setting into this and other stuff idk
   /// Whether the title bar should be showing buttons.
-  static bool get shouldShowButtons => isSupported;
+  static bool get shouldShowButtons =>
+      isSupported && Settings.getValue<bool>("ui.window.showButtons");
 
   /// Get the current window instance.
   static Window? getWindow() {
@@ -28,7 +26,7 @@ class TitlebarManager {
     final window = getWindow();
     if (window == null) return;
     window.titleBarStyle = TitleBarStyle.hidden;
-    if (startMaximizedSetting) window.maximize();
+    if (Settings.getValue<bool>("ui.window.startMaximized")) window.maximize();
 
     // keep the OS window title in sync with the main nav
     window.title = MainNavWrapper.pageTitle.value;
