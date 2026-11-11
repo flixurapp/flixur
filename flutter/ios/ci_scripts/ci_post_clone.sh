@@ -16,7 +16,12 @@ FLUTTER_VERSION="3.47.4"
 
 REPO_DIR="${CI_PRIMARY_REPOSITORY_PATH:-${CI_WORKSPACE:?CI_WORKSPACE is not set}}"
 APP_DIR="$REPO_DIR/flutter"
-SDK_DIR="$HOME/flutter-$FLUTTER_VERSION"
+# Xcode Cloud restores derived data between builds of the same workflow
+# (unless the workflow uses Clean builds). Install the SDK there so repeat
+# builds skip the ~2.3 GB download; falls back to $HOME when the path is
+# unset or the cache was wiped, in which case we just re-download.
+CACHE_BASE="${CI_DERIVED_DATA_PATH:-$HOME}"
+SDK_DIR="$CACHE_BASE/flutter-$FLUTTER_VERSION"
 
 if [ ! -x "$SDK_DIR/bin/flutter" ]; then
 	# Release archives: macos = Intel, macos_arm64 = Apple Silicon.
