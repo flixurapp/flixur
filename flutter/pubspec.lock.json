@@ -464,6 +464,36 @@
       "source": "hosted",
       "version": "2.3.2"
     },
+    "hive_ce": {
+      "dependency": "direct main",
+      "description": {
+        "name": "hive_ce",
+        "sha256": "c2692c07b780d5eaec78c4f9317e9bfbb952700ef60bfdbca9e52c496300b967",
+        "url": "https://pub.dev"
+      },
+      "source": "hosted",
+      "version": "2.23.3"
+    },
+    "hive_ce_flutter": {
+      "dependency": "direct main",
+      "description": {
+        "name": "hive_ce_flutter",
+        "sha256": "7853fb2924c5dd6715c81f7a5cc4574afe4aac3c2d7ecd657fdeba409505f1d1",
+        "url": "https://pub.dev"
+      },
+      "source": "hosted",
+      "version": "2.5.0"
+    },
+    "hive_ce_generator": {
+      "dependency": "direct dev",
+      "description": {
+        "name": "hive_ce_generator",
+        "sha256": "2925081718b37e37a3183530b1781c4bd60959e35c46a1d7605689bf7a320de4",
+        "url": "https://pub.dev"
+      },
+      "source": "hosted",
+      "version": "1.11.3"
+    },
     "hooks": {
       "dependency": "transitive",
       "description": {
@@ -534,6 +564,16 @@
       },
       "source": "hosted",
       "version": "1.1.0"
+    },
+    "isolate_channel": {
+      "dependency": "transitive",
+      "description": {
+        "name": "isolate_channel",
+        "sha256": "bd56e1bb2787bed914158c2696943dc7254732bfea2c207aafca6bc930580fd4",
+        "url": "https://pub.dev"
+      },
+      "source": "hosted",
+      "version": "0.6.2"
     },
     "jni": {
       "dependency": "transitive",
@@ -795,7 +835,7 @@
       "version": "1.1.0"
     },
     "path_provider": {
-      "dependency": "transitive",
+      "dependency": "direct main",
       "description": {
         "name": "path_provider",
         "sha256": "a7f4874f987173da295a61c181b8ee71dab59b332a486b391babf26a1b884825",
@@ -955,7 +995,7 @@
       "version": "0.5.2"
     },
     "shared_preferences": {
-      "dependency": "direct main",
+      "dependency": "transitive",
       "description": {
         "name": "shared_preferences",
         "sha256": "1e85e0dccf5b4a016077fea7dfbb4a7cb39c759ac1596fcf60c06deadb7da91f",
@@ -1359,6 +1399,16 @@
       },
       "source": "hosted",
       "version": "3.1.4"
+    },
+    "yaml_writer": {
+      "dependency": "transitive",
+      "description": {
+        "name": "yaml_writer",
+        "sha256": "69651cd7238411179ac32079937d4aa9a2970150d6b2ae2c6fe6de09402a5dc5",
+        "url": "https://pub.dev"
+      },
+      "source": "hosted",
+      "version": "2.1.0"
     }
   },
   "sdks": {

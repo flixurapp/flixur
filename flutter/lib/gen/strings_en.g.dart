@@ -48,11 +48,11 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	/// en: 'Flixur'
 	String get app_name => 'Flixur';
 
+	/// en: 'Add'
+	String get btn_add => 'Add';
+
 	/// en: 'Cancel'
 	String get btn_cancel => 'Cancel';
-
-	/// en: 'OK'
-	String get btn_ok => 'OK';
 
 	/// en: 'Create'
 	String get btn_create => 'Create';
@@ -60,8 +60,8 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	/// en: 'Delete'
 	String get btn_delete => 'Delete';
 
-	/// en: 'Add'
-	String get btn_add => 'Add';
+	/// en: 'OK'
+	String get btn_ok => 'OK';
 
 	/// en: 'Remove'
 	String get btn_remove => 'Remove';
@@ -77,6 +77,10 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	/// en: 'OR'
 	String get or_line => 'OR';
 
+	/// en: 'Password'
+	String get password => 'Password';
+
+	late final Translations$routes$en routes = Translations$routes$en._(_root);
 	Map<String, String> get setting_descriptions => {
 		'ui.library.cardsPerRow': 'Maximum number of cards to show per row in library grids.',
 		'ui.navigation.bottomLabels': 'Show text labels under the icons in the bottom navbar.',
@@ -84,6 +88,12 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'ui.navigation.shownSections': 'Choose which sections are shown in the main navigation.',
 		'ui.window.startMaximized': 'Open ${_root.app_name} maximized on launch.',
 		'ui.window.useCustom': 'Whether to use a custom titlebar.',
+	};
+	Map<String, String> get setting_group_names => {
+		'ui': 'User Interface',
+		'ui.library': 'Library',
+		'ui.navigation': 'Navigation',
+		'ui.window': 'Window',
 	};
 	Map<String, String> get setting_names => {
 		'ui.library.cardsPerRow': 'Cards Per Row',
@@ -93,18 +103,6 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'ui.window.startMaximized': 'Start Maximized',
 		'ui.window.useCustom': 'Custom Titlebar',
 	};
-	Map<String, String> get setting_group_names => {
-		'ui': 'User Interface',
-		'ui.library': 'Library',
-		'ui.navigation': 'Navigation',
-		'ui.window': 'Window',
-	};
-
-	/// en: 'Password'
-	String get password => 'Password';
-
-	late final Translations$routes$en routes = Translations$routes$en._(_root);
-	late final Translations$storage$en storage = Translations$storage$en._(_root);
 	late final Translations$titlebar$en titlebar = Translations$titlebar$en._(_root);
 
 	/// en: 'Username'
@@ -139,21 +137,6 @@ class Translations$routes$en {
 	// Translations
 	late final Translations$routes$settings$en settings = Translations$routes$settings$en._(_root);
 	late final Translations$routes$startup$en startup = Translations$routes$startup$en._(_root);
-}
-
-// Path: storage
-class Translations$storage$en {
-	Translations$storage$en._(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// en: 'Failed to store secure value.'
-	String get store_fail => 'Failed to store secure value.';
-
-	/// en: 'Storage Failure'
-	String get store_fail_title => 'Storage Failure';
 }
 
 // Path: titlebar
@@ -302,11 +285,11 @@ extension on Translations {
 		return switch (path) {
 			'api_request_fail' => 'API Request Failed',
 			'app_name' => 'Flixur',
+			'btn_add' => 'Add',
 			'btn_cancel' => 'Cancel',
-			'btn_ok' => 'OK',
 			'btn_create' => 'Create',
 			'btn_delete' => 'Delete',
-			'btn_add' => 'Add',
+			'btn_ok' => 'OK',
 			'btn_remove' => 'Remove',
 			'btn_rename' => 'Rename',
 			'btn_save' => 'Save',
@@ -319,22 +302,6 @@ extension on Translations {
 			'navigation.section_titles.search' => 'Search',
 			'navigation.section_titles.settings' => 'Settings',
 			'or_line' => 'OR',
-			'setting_descriptions."ui.library.cardsPerRow"' => 'Maximum number of cards to show per row in library grids.',
-			'setting_descriptions."ui.navigation.bottomLabels"' => 'Show text labels under the icons in the bottom navbar.',
-			'setting_descriptions."ui.navigation.railDefaultExpanded"' => 'Whether the left navigation rail starts off expanded.',
-			'setting_descriptions."ui.navigation.shownSections"' => 'Choose which sections are shown in the main navigation.',
-			'setting_descriptions."ui.window.startMaximized"' => 'Open ${_root.app_name} maximized on launch.',
-			'setting_descriptions."ui.window.useCustom"' => 'Whether to use a custom titlebar.',
-			'setting_names."ui.library.cardsPerRow"' => 'Cards Per Row',
-			'setting_names."ui.navigation.bottomLabels"' => 'Bottom Nav Labels',
-			'setting_names."ui.navigation.railDefaultExpanded"' => 'Expand Nav Rail',
-			'setting_names."ui.navigation.shownSections"' => 'Navigation Sections',
-			'setting_names."ui.window.startMaximized"' => 'Start Maximized',
-			'setting_names."ui.window.useCustom"' => 'Custom Titlebar',
-			'setting_group_names.ui' => 'User Interface',
-			'setting_group_names."ui.library"' => 'Library',
-			'setting_group_names."ui.navigation"' => 'Navigation',
-			'setting_group_names."ui.window"' => 'Window',
 			'password' => 'Password',
 			'routes.settings.add_profile' => 'Add Profile',
 			'routes.settings.profiles' => 'Profiles',
@@ -359,8 +326,22 @@ extension on Translations {
 			'routes.startup.setup.failed_codes."TOO_SHORT.password"' => 'Password must be at least 12 characters.',
 			'routes.startup.setup.failed_codes."TOO_SHORT.username"' => 'Username must be at least 2 characters.',
 			'routes.startup.setup.title' => 'Welcome to ${_root.app_name}!',
-			'storage.store_fail' => 'Failed to store secure value.',
-			'storage.store_fail_title' => 'Storage Failure',
+			'setting_descriptions."ui.library.cardsPerRow"' => 'Maximum number of cards to show per row in library grids.',
+			'setting_descriptions."ui.navigation.bottomLabels"' => 'Show text labels under the icons in the bottom navbar.',
+			'setting_descriptions."ui.navigation.railDefaultExpanded"' => 'Whether the left navigation rail starts off expanded.',
+			'setting_descriptions."ui.navigation.shownSections"' => 'Choose which sections are shown in the main navigation.',
+			'setting_descriptions."ui.window.startMaximized"' => 'Open ${_root.app_name} maximized on launch.',
+			'setting_descriptions."ui.window.useCustom"' => 'Whether to use a custom titlebar.',
+			'setting_group_names.ui' => 'User Interface',
+			'setting_group_names."ui.library"' => 'Library',
+			'setting_group_names."ui.navigation"' => 'Navigation',
+			'setting_group_names."ui.window"' => 'Window',
+			'setting_names."ui.library.cardsPerRow"' => 'Cards Per Row',
+			'setting_names."ui.navigation.bottomLabels"' => 'Bottom Nav Labels',
+			'setting_names."ui.navigation.railDefaultExpanded"' => 'Expand Nav Rail',
+			'setting_names."ui.navigation.shownSections"' => 'Navigation Sections',
+			'setting_names."ui.window.startMaximized"' => 'Start Maximized',
+			'setting_names."ui.window.useCustom"' => 'Custom Titlebar',
 			'titlebar.close' => 'Close',
 			'titlebar.maximize' => 'Maximize',
 			'titlebar.minimize' => 'Minimize',
