@@ -1,5 +1,7 @@
 import "package:flixur/api.dart";
+import "package:flixur/hive/hive_adapters.dart";
 import "package:flixur/router.dart";
+import "package:flixur/settings.dart";
 import "package:flixur/storage.dart";
 import "package:flixur/titlebar.dart";
 import "package:flixur/ui/icons.dart";
@@ -25,9 +27,13 @@ void main() async {
   // init hive and open boxes
   await Storage.init();
   await initIconify();
+  registerHiveAdapters();
 
   // init API client
   Api.init();
+
+  // init settings manager
+  await Settings.init();
 
   // init title bar
   await TitlebarManager.init();

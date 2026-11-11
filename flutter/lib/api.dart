@@ -8,6 +8,9 @@ import "package:openapi/openapi.dart";
 class Api {
   static Openapi client = .new();
 
+  static bool get canMakeAuthenticatedRequests =>
+      Storage.has(.serverUrl) && Storage.has(.sessionToken);
+
   /// Updates the base URL of the stored client.
   static void setBaseUrl(String? url) {
     client = Openapi(basePathOverride: url);
