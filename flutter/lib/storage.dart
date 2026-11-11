@@ -21,6 +21,11 @@ class Storage {
   static Box<String> get core => Hive.box(_coreBox);
   static Box<String> get secure => Hive.box(_secureBox);
 
+  /// Checks to see if a [Stored] item is not null.
+  static bool has(Stored key) {
+    return boxFor(key).get(key.name) != null;
+  }
+
   /// Get a [Stored] item from one of the boxes.
   static String? get(Stored key) {
     return boxFor(key).get(key.name);

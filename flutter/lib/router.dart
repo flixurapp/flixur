@@ -15,14 +15,13 @@ T? extractExtra<T>(GoRouterState state) {
 final router = GoRouter(
   initialLocation: "/",
   redirect: (context, state) {
-    final loggedIn = Storage.get(.sessionToken) != null;
     final path = state.matchedLocation;
 
     final isStartupRoute =
         path == "/" || path == "/startup" || path.startsWith("/startup/");
 
     // if logged in then bypass startup routes
-    if (loggedIn) return isStartupRoute ? "/home" : null;
+    if (Storage.has(.sessionToken)) return isStartupRoute ? "/home" : null;
     // otherwise, logged out, redirect everything back to startup
     return !isStartupRoute ? "/" : null;
   },
