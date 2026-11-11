@@ -11,8 +11,8 @@
 
 set -eu
 
-# Keep in sync with flutter/pubspec.yaml (requires Dart >= 3.13.3).
-FLUTTER_VERSION="3.47.9"
+# Keep in sync with the flutter version from the flake devshell.
+FLUTTER_VERSION="3.47.4"
 
 REPO_DIR="${CI_PRIMARY_REPOSITORY_PATH:-${CI_WORKSPACE:?CI_WORKSPACE is not set}}"
 APP_DIR="$REPO_DIR/flutter"
@@ -21,12 +21,15 @@ SDK_DIR="$HOME/flutter-$FLUTTER_VERSION"
 if [ ! -x "$SDK_DIR/bin/flutter" ]; then
 	# Release archives: macos = Intel, macos_arm64 = Apple Silicon.
 	case "$(uname -m)" in
-	arm64) ARCHIVE_PREFIX="flutter_macos_arm64" ;;
-	x86_64) ARCHIVE_PREFIX="flutter_macos" ;;
-	*) echo "unsupported arch: $(uname -m)" >&2; exit 1 ;;
+	arm64) ARCHIVE_PREFIX="flutter_macos_arm64_" ;;
+	x86_64) ARCHIVE_PREFIX="flutter_macos_" ;;
+	*)
+		echo "unsupported arch: $(uname -m)" >&2
+		exit 1
+		;;
 	esac
 
-	ARCHIVE="$ARCHIVE_PREFIX-$FLUTTER_VERSION-stable.zip"
+	ARCHIVE="$ARCHIVE_PREFIX$FLUTTER_VERSION-stable.zip"
 	URL="https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/$ARCHIVE"
 	echo "Downloading $URL"
 
@@ -50,5 +53,5 @@ flutter precache --ios
 # Reuse pubspec's version name, but take the build number from Xcode Cloud so
 # every TestFlight upload is unique (pubspec's +1 would collide).
 GEN_XCCONFIG="$APP_DIR/ios/Flutter/Generated.xcconfig"
-echo "FLUTTER_BUILD_NUMBER=${CI_BUILD_NUMBER:-1}" >> "$GEN_XCCONFIG"
+echo "FLUTTER_BUILD_NUMBER=${CI_BUILD_NUMBER:-1}" >>"$GEN_XCCONFIG"
 echo "Set FLUTTER_BUILD_NUMBER=${CI_BUILD_NUMBER:-1} in $GEN_XCCONFIG"
