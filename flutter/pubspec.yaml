@@ -20,6 +20,8 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   go_router: ^18.1.3
+  hive_ce: ^2.23.3
+  hive_ce_flutter: ^2.5.0
   iconify_design:
     git:
       url: https://github.com/itzTheMeow/iconify_design_flutter.git
@@ -38,6 +40,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
+  hive_ce_generator: ^1.11.3
   slang_build_runner: ^4.18.0
   theme_tailor: ^4.0.2
   very_good_analysis: ^11.0.0
