@@ -5,12 +5,28 @@ import "package:openapi/openapi.dart";
 
 class Api {
   static Openapi client = .new();
+
   static void setBaseUrl(String? url) {
     client = Openapi(basePathOverride: url);
+    // re-set the session token when refreshing the client
+    setSessionToken(Storage.sessionToken.value);
+  }
+
+  static void setSessionToken(String? token) {
+    if (token == null) {
+      client.removeBearerAuth("bearerAuth");
+    } else {
+      client.setBearerAuth("bearerAuth", token);
+    }
   }
 
   static void init() {
+    //! API client is initialized BEFORE storage so that storage listeners
+    //! will fire on init
     Storage.serverUrl.addListener(() => setBaseUrl(Storage.serverUrl.value));
+    Storage.sessionToken.addListener(
+      () => setSessionToken(Storage.sessionToken.value),
+    );
   }
 
   /// Safely make a request and return the error if it occurs.

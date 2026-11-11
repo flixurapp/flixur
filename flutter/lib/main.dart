@@ -21,7 +21,8 @@ void main() async {
   // get package info
   await AppInfo.init();
 
-  // init API client before storage so that it can listen for `Storage` URL
+  // init API client
+  //! before storage so that it can listen for `Storage` changes
   Api.init();
 
   // init persistent storage
