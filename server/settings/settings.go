@@ -125,6 +125,12 @@ func (r *Registry) Register(builder SettingBuilder) *SettingsDefinition {
 	if !validIDRegex.MatchString(def.ID) {
 		panic("invalid setting ID: " + def.ID)
 	}
+	// IDs greater than 128 characters will cause issues on clients
+	// for example hive_ce can only have keys up to 255 characters
+	// 128 is a safe default as I can't imagine a settings key needing to be longer
+	if len(def.ID) > 128 {
+		panic("setting ID must not be >128 characters: " + def.ID)
+	}
 
 	// last dot in the ID
 	dot := strings.LastIndex(def.ID, ".")
