@@ -14,7 +14,7 @@ class const ServerUrlView({super.key}) extends StatefulWidget {
 
 class _ServerUrlViewState extends State<ServerUrlView> {
   final _serverUrlController = TextEditingController(
-    text: Storage.serverUrl.value,
+    text: Storage.get(.serverUrl),
   );
 
   String? _errorText;
@@ -131,7 +131,7 @@ class _ServerUrlViewState extends State<ServerUrlView> {
 
     switch (pingResponse) {
       case ApiSuccess(:final data):
-        await Storage.setServerUrl(finalServerUrl);
+        await Storage.put(.serverUrl, finalServerUrl);
         if (!mounted) return;
         context.goNamed(
           data.isSetup ? "startup_login" : "startup_setup",

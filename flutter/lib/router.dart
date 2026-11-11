@@ -15,7 +15,7 @@ T? extractExtra<T>(GoRouterState state) {
 final router = GoRouter(
   initialLocation: "/",
   redirect: (context, state) {
-    final loggedIn = Storage.sessionToken.value != null;
+    final loggedIn = Storage.get(.sessionToken) != null;
     final path = state.matchedLocation;
 
     final isStartupRoute =

@@ -6,7 +6,6 @@ import "package:flixur/titlebar.dart";
 import "package:flixur/ui/dialogs.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
-import "package:flutter/services.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
@@ -113,17 +112,7 @@ class _LoginViewState extends State<LoginView> {
 
     switch (response) {
       case ApiSuccess(:final data):
-        try {
-          await Storage.setSessionToken(data.sessionToken);
-        } on PlatformException catch (e) {
-          if (!mounted) return;
-          await showErrorDialog(
-            context,
-            title: t.storage.store_fail_title,
-            message: e.message ?? t.storage.store_fail,
-          );
-          return;
-        }
+        await Storage.put(.sessionToken, data.sessionToken);
         if (!mounted) return;
         context.goNamed("home");
       case ApiFailure(:final err, :final message):

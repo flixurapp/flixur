@@ -7,7 +7,6 @@ import "package:flixur/ui/dialogs.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
-import "package:flutter/services.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
@@ -132,18 +131,8 @@ class _SetupViewState extends State<SetupView> {
 
     switch (response) {
       case ApiSuccess(:final data):
-        try {
-          await Storage.setServerUrl(widget.serverInfo.url);
-          await Storage.setSessionToken(data.sessionToken);
-        } on PlatformException catch (e) {
-          if (!mounted) return;
-          await showErrorDialog(
-            context,
-            title: t.storage.store_fail_title,
-            message: e.message ?? t.storage.store_fail,
-          );
-          return;
-        }
+        await Storage.put(.serverUrl, widget.serverInfo.url);
+        await Storage.put(.sessionToken, data.sessionToken);
         if (!mounted) return;
         // save was successful, so continue
         context.goNamed("home");

@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:dio/dio.dart";
 import "package:flixur/router.dart";
 import "package:flixur/storage.dart";
@@ -6,12 +8,14 @@ import "package:openapi/openapi.dart";
 class Api {
   static Openapi client = .new();
 
+  /// Updates the base URL of the stored client.
   static void setBaseUrl(String? url) {
     client = Openapi(basePathOverride: url);
     // re-set the session token when refreshing the client
-    setSessionToken(Storage.sessionToken.value);
+    setSessionToken(Storage.get(.sessionToken));
   }
 
+  /// Updates the session token associated with the stored client.
   static void setSessionToken(String? token) {
     if (token == null) {
       client.removeBearerAuth("bearerAuth");
@@ -21,12 +25,16 @@ class Api {
   }
 
   static void init() {
-    //! API client is initialized BEFORE storage so that storage listeners
-    //! will fire on init
-    Storage.serverUrl.addListener(() => setBaseUrl(Storage.serverUrl.value));
-    Storage.sessionToken.addListener(
-      () => setSessionToken(Storage.sessionToken.value),
-    );
+    setBaseUrl(Storage.get(.serverUrl));
+    setSessionToken(Storage.get(.sessionToken));
+
+    // keep the client in sync with storage changes
+    Storage.watch(.serverUrl).listen((event) {
+      setBaseUrl(event.deleted ? null : event.value as String?);
+    });
+    Storage.watch(.sessionToken).listen((event) {
+      setSessionToken(event.deleted ? null : event.value as String?);
+    });
   }
 
   /// Safely make a request and return the error if it occurs.
@@ -63,9 +71,9 @@ class Api {
 
   static Future<void> logout() async {
     // clear data from storage
-    await Storage.setSessionToken(null);
-    await Storage.setServerUrl(null);
-    await Storage.setPlayerID(null);
+    await Storage.delete(.sessionToken);
+    await Storage.delete(.serverUrl);
+    await Storage.delete(.playerID);
 
     // navigate back to root
     router.go("/");

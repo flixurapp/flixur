@@ -71,9 +71,6 @@ setting_names:
   ui.navigation.shownSections: "Navigation Sections"
   ui.window.startMaximized: "Start Maximized"
   ui.window.useCustom: "Custom Titlebar"
-storage:
-  store_fail: "Failed to store secure value."
-  store_fail_title: "Storage Failure"
 titlebar:
   close: "Close"
   maximize: "Maximize"

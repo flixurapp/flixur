@@ -30,7 +30,7 @@ dependencies:
   openapi:
     path: ./openapi
   package_info_plus: ^10.2.1
-  shared_preferences: ^2.5.5
+  path_provider: ^2.1.6
   slang: ^4.18.0
   slang_flutter: ^4.18.0
   theme_tailor_annotation: ^4.0.2

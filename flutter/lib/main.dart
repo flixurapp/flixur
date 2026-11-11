@@ -21,12 +21,11 @@ void main() async {
   // get package info
   await AppInfo.init();
 
-  // init API client
-  //! before storage so that it can listen for `Storage` changes
-  Api.init();
-
-  // init persistent storage
+  // init hive and open boxes
   await Storage.init();
+
+  // init API client
+  Api.init();
 
   // init title bar
   await TitlebarManager.init();

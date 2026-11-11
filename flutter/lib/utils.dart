@@ -5,6 +5,7 @@ import "package:device_info_plus/device_info_plus.dart";
 import "package:flutter/foundation.dart";
 import "package:material_ui/material_ui.dart";
 import "package:package_info_plus/package_info_plus.dart";
+import "package:path_provider/path_provider.dart";
 
 // re-export several extensions on the context so we arent duplicating
 export "package:flixur/gen/strings.g.dart";
@@ -12,9 +13,13 @@ export "package:flixur/ui/responsiveness.dart";
 export "package:flixur/ui/theme.dart";
 export "package:go_router/go_router.dart";
 
+/// Contains app/system information.
 class AppInfo {
   static final _deviceInfo = DeviceInfoPlugin();
   static late PackageInfo _info;
+
+  /// The application support directory for the current system. Null if on web.
+  static String? dataDirectory;
 
   static Future<void> init() async {
     _info = await PackageInfo.fromPlatform();
@@ -52,6 +57,11 @@ class AppInfo {
       // unknown platform
       deviceName = "Unknown Device";
       deviceOS = "Unknown";
+    }
+
+    // load data dir
+    if (!kIsWeb) {
+      dataDirectory = (await getApplicationSupportDirectory()).path;
     }
   }
 
