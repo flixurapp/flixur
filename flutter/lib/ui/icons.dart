@@ -23,34 +23,32 @@ const _defaultSet = "ph";
 /// Icon to use if another icon fails to load.
 const _errIcon = "$_defaultSet:x-bold";
 
-class Iconify extends StatelessWidget {
-  new(
-    /// Icon name to use.
-    /// If a prefix is not provided, the default will be prepended.
-    String iconName, {
-    super.key,
-    this.size = 24,
-    this.color,
-  }) : icon = !iconName.contains(":") ? "$_defaultSet:$iconName" : iconName;
-
-  final String icon;
-  final double size;
-  final Color? color;
-
+class const Iconify(
+  /// Icon name to use.
+  /// If a prefix is not provided, the default will be prepended.
+  final String iconName, {
+  final double size = 24,
+  final Color? color,
+  super.key,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final icon = !iconName.contains(":") ? "$_defaultSet:$iconName" : iconName;
+    // inherit from the icon color theme if possible
+    final effectiveColor =
+        color ?? IconTheme.of(context).color ?? context.colors.text;
     // this keeps the icon in the center so it doesnt stretch
     return Center(
       child: IconifyIcon(
         icon: icon,
         size: size,
-        color: color,
+        color: effectiveColor,
         placeholder: SizedBox(
           width: size,
           height: size,
           child: CircularProgressIndicator(
             strokeWidth: max(1, size / 12),
-            color: color,
+            color: effectiveColor,
           ),
         ),
         errorWidget: icon != _errIcon
