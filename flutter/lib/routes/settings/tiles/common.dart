@@ -1,6 +1,5 @@
 import "package:flixur/routes/settings/index.dart";
 import "package:flixur/settings.dart";
-import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
