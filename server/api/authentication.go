@@ -248,7 +248,7 @@ func CreateUserSessionToken(ctx context.Context, client *ent.Client, user *ent.U
 }
 
 // Validates a raw bearer token header against stored sessions and returns its user.
-func AuthorizeSessionToken(ctx context.Context, db *ent.Client, header string) (*ent.User, *ent.UserSession, error) {
+func AuthorizeSessionToken(ctx context.Context, db *ent.Client, header string) (*ent.User, *ent.UserSession, *APIError) {
 	token, ok := strings.CutPrefix(strings.TrimSpace(header), "Bearer ")
 	if !ok || token == "" {
 		return nil, nil, CreateAPIError(CodeInvalidToken)

@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"net"
-	"net/http"
 	"strings"
 
 	"forge.xela.codes/xela/flixur/common"
@@ -111,11 +110,7 @@ func WithOptions(api hureg.APIGen, reg APIRegistry, opts APIRoute) hureg.APIGen 
 			user, session, err := AuthorizeSessionToken(ctx.Context(), reg.DB, header)
 			if err != nil {
 				log.Err(err).Msg("Session authorization failed.")
-				if apiErr, ok := err.(*APIError); ok {
-					huma.WriteErr(api.GetHumaAPI(), ctx, apiErr.GetStatus(), apiErr.Error())
-					return
-				}
-				huma.WriteErr(api.GetHumaAPI(), ctx, http.StatusUnauthorized, "session rejected")
+				huma.WriteErr(api.GetHumaAPI(), ctx, err.GetStatus(), err.Error())
 				return
 			}
 			ctx = huma.WithValue(ctx, ctxKeyAuthorizedUser{}, user)
@@ -214,7 +209,7 @@ type ctxKeyAuthorizedUserSession struct{}
 
 // Returns the user authenticated by the middleware, nil if none.
 func GetAuthorizedUserSession(ctx context.Context) *ent.UserSession {
-	session, _ := ctx.Value(ctxKeyAuthorizedUser{}).(*ent.UserSession)
+	session, _ := ctx.Value(ctxKeyAuthorizedUserSession{}).(*ent.UserSession)
 	return session
 }
 
