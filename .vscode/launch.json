@@ -10,7 +10,8 @@
       "request": "launch",
       "type": "dart",
       // use the wrapped flutter with libsecret for debugger
-      "customTool": "${workspaceFolder}/tools/flutter-wrapped"
+      "customTool": "${workspaceFolder}/tools/flutter-wrapped",
+      "args": ["--no-enable-impeller"]
     }
   ]
 }
