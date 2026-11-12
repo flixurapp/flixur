@@ -16,7 +16,7 @@ class const MainNavRail({
 
   /// Whether the nav rail is expanded.
   static final isExpanded = ValueNotifier<bool>(
-    Settings.getValue<bool>("ui.nav.railDefaultExpanded"),
+    Settings.getValue<bool>("ui.navigation.railDefaultExpanded"),
   );
 
   @override
@@ -27,7 +27,7 @@ class const MainNavRail({
       color: colors.mantle,
       child: SafeArea(
         child: SettingsValue<List<String>>(
-          "ui.nav.shownSections",
+          "ui.navigation.shownSections",
           builder: (context, _) => ValueListenableBuilder(
             valueListenable: isExpanded,
             builder: (context, expanded, _) => AnimatedContainer(

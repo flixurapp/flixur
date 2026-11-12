@@ -63,14 +63,19 @@ class const WindowFrame({required final Widget page, super.key})
     return GatedWidget(
       gate: TitlebarManager.isSupported,
       // wrap the entire app with resize edges if supported
-      wrapper: (child) => ValueListenableBuilder(
-        valueListenable: TitlebarManager.isMaximizedNotifier,
-        builder: (context, maximized, child) => DragToResizeArea(
-          // only enable resize edges when the window isnt maximized
-          enableResizeEdges: maximized ? [] : null,
-          child: child!,
+      wrapper: (child) => SettingsValue(
+        "ui.window.useCustom",
+        builder: (context, _) => ValueListenableBuilder(
+          valueListenable: TitlebarManager.isMaximizedNotifier,
+          builder: (context, maximized, child) => TitlebarManager.shouldEnable
+              ? DragToResizeArea(
+                  // only enable resize edges when the window isnt maximized
+                  enableResizeEdges: maximized ? [] : null,
+                  child: child!,
+                )
+              : child!,
+          child: child,
         ),
-        child: child,
       ),
 
       child: PageTitleScope(

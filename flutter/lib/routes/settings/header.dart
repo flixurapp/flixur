@@ -85,14 +85,14 @@ class const SettingsViewHeader(
                   borderWidth: 2,
                   tint: colors.success,
                   icon: const Iconify("plus"),
-                  label: context.isLandscape ? null : Text(t.btn_new),
+                  label: context.isLandscape ? Text(t.btn_new) : null,
                 ),
                 FlixurButton(
                   onPressed: () => _renameProfile(context),
                   borderWidth: 2,
                   tint: colors.primary,
                   icon: const Iconify("pencil-simple"),
-                  label: context.isLandscape ? null : Text(t.btn_rename),
+                  label: context.isLandscape ? Text(t.btn_rename) : null,
                 ),
                 FlixurButton(
                   onPressed: (Settings.profiles?.length ?? 0) > 1
@@ -101,7 +101,7 @@ class const SettingsViewHeader(
                   borderWidth: 2,
                   tint: colors.error,
                   icon: const Iconify("trash-simple"),
-                  label: context.isLandscape ? null : Text(t.btn_delete),
+                  label: context.isLandscape ? Text(t.btn_delete) : null,
                 ),
               ],
             ),

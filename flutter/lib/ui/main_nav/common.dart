@@ -140,13 +140,13 @@ class const MainNavWrapper({
 
   MainNavIDs? get selected => sectionIDFromBranch(navShell.currentIndex);
   List<MainNavSection> get shownSections => resolveMainNavSections(
-    Settings.getValue<List<String>>("ui.nav.shownSections"),
+    Settings.getValue<List<String>>("ui.navigation.shownSections"),
   );
 
   /// Sections not shown in the main nav with the current setting.
   List<MainNavSection> get hiddenSections => resolveMainNavSections([
     for (final section in mainNavSections)
-      if (!Settings.getValue<List<String>>("ui.nav.shownSections")
+      if (!Settings.getValue<List<String>>("ui.navigation.shownSections")
           .contains(section.name))
         section.name,
   ]);
