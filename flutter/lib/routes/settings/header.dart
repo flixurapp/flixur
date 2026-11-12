@@ -89,7 +89,7 @@ class const SettingsViewHeader(
                   onPressed: () => _renameProfile(context),
                   borderWidth: 2,
                   tint: colors.primary,
-                  icon: const Iconify("pencil"),
+                  icon: const Iconify("pencil-simple"),
                   label: context.isLandscape ? null : Text(t.btn_rename),
                 ),
                 FlixurButton(
@@ -98,7 +98,7 @@ class const SettingsViewHeader(
                       : null,
                   borderWidth: 2,
                   tint: colors.error,
-                  icon: const Iconify("trash"),
+                  icon: const Iconify("trash-simple"),
                   label: context.isLandscape ? null : Text(t.btn_delete),
                 ),
               ],
