@@ -27,52 +27,48 @@ class const Iconify(
   /// Icon name to use.
   /// If a prefix is not provided, the default will be prepended.
   final String iconName, {
-  final double size = 24,
-  final bool noWrap = false,
+  final double? size,
   final Color? color,
   super.key,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final icon = !iconName.contains(":") ? "$_defaultSet:$iconName" : iconName;
-    // inherit from the icon color theme if possible
-    final effectiveColor =
-        color ?? IconTheme.of(context).color ?? context.colors.text;
-    return GatedWidget(
-      gate: !noWrap,
-      // this keeps the icon in the center so it doesnt stretch
-      wrapper: (child) => Center(child: child),
-      child: IconifyIcon(
-        icon: icon,
-        size: size,
-        color: effectiveColor,
-        placeholder: SizedBox(
-          width: size,
-          height: size,
-          child: CircularProgressIndicator(
-            strokeWidth: max(1, size / 12),
-            color: effectiveColor,
-          ),
+    final iconTheme = IconTheme.of(context);
+
+    // inherit from icon theme if possible
+    final effectiveSize = size ?? iconTheme.size ?? 24;
+    final effectiveColor = color ?? iconTheme.color ?? context.colors.text;
+    return IconifyIcon(
+      icon: icon,
+      size: effectiveSize,
+      color: effectiveColor,
+      placeholder: SizedBox(
+        width: effectiveSize,
+        height: effectiveSize,
+        child: CircularProgressIndicator(
+          strokeWidth: max(1, effectiveSize / 12),
+          color: effectiveColor,
         ),
-        errorWidget: icon != _errIcon
-            ? Iconify(_errIcon, size: size, color: context.colors.error)
-            // if we cant load icons AT ALL then fall back to a textual X
-            : Container(
-                alignment: .center,
-                width: size,
-                height: size,
-                child: Text(
-                  "X",
-                  textAlign: .center,
-                  style: .new(
-                    fontWeight: .w900,
-                    color: context.colors.error,
-                    fontSize: size - 2,
-                    height: 1,
-                  ),
+      ),
+      errorWidget: icon != _errIcon
+          ? Iconify(_errIcon, size: effectiveSize, color: context.colors.error)
+          // if we cant load icons AT ALL then fall back to a textual X
+          : Container(
+              alignment: .center,
+              width: effectiveSize,
+              height: effectiveSize,
+              child: Text(
+                "X",
+                textAlign: .center,
+                style: .new(
+                  fontWeight: .w900,
+                  color: context.colors.error,
+                  fontSize: effectiveSize - 2,
+                  height: 1,
                 ),
               ),
-      ),
+            ),
     );
   }
 }

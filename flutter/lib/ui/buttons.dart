@@ -17,6 +17,7 @@ class const FlixurButton({
     return FilledButton(
       onPressed: onPressed,
       style: .new(
+        iconSize: .all(24),
         backgroundColor: .all(bg),
         shape: .all(
           borderWidth > 0

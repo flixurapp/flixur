@@ -368,7 +368,7 @@ String settingName(String id) => t.setting_names[id] ?? id;
 String settingDescription(String id) => t.setting_descriptions[id] ?? "";
 
 /// Translated name for a settings group.
-String settingGroupName(String id) => t.setting_group_names[id] ?? "";
+String settingGroupName(String id) => t.setting_group_names[id] ?? id;
 
 /// The JSON-encoded default value of a definition.
 String _defaultEncoded(SettingsDefinition def) => switch (def.kind) {

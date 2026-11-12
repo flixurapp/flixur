@@ -48,6 +48,7 @@ Future<bool> showConfirmDialog(
                 child: Text(t.btn_cancel),
               ),
               TextButton(
+                autofocus: true,
                 onPressed: () => Navigator.of(ctx).pop(true),
                 child: Text(okText ?? t.btn_confirm),
               ),
@@ -68,7 +69,7 @@ Future<String?> showPromptDialog(
   int? maxLength,
 }) async {
   final controller = TextEditingController();
-  return await showDialog<String>(
+  final res = await showDialog<String>(
     context: context,
     builder: (ctx) {
       void submit() {
@@ -103,4 +104,6 @@ Future<String?> showPromptDialog(
       );
     },
   );
+  //controller.dispose();
+  return res;
 }
