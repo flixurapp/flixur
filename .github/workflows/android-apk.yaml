@@ -1,0 +1,27 @@
+name: Build Android APK
+on:
+  workflow_dispatch: {}
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 90
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=channel:nixos-26.05
+
+      - name: Build APK
+        run: nix build --accept-flake-config .#flixur-flutter-android
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: flixur-android-apk
+          path: result/app-release.apk
