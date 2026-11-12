@@ -107,5 +107,6 @@ ThemeData buildAppTheme(AppColors colors) {
       bodyMedium: TextStyle(color: colors.text),
       bodySmall: TextStyle(color: colors.textMuted),
     ),
+    iconTheme: IconThemeData(color: colors.text),
   );
 }
