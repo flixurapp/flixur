@@ -239,10 +239,16 @@ flutter.buildFlutterApplication {
         mkdir --parents "$M2"
         cp --recursive "$GRADLE_USER_HOME/caches/modules-2/files-2.1/." "$M2/"
         find "$M2" -mindepth 5 -maxdepth 5 -type f -execdir mv {} ../ \;
+        # merge the dotted group directories into maven's dot-as-path layout.
+        # merge file contents (not the dirs themselves): a plain `mv dir target`
+        # nests the dir inside target when a sibling with a longer dotted name
+        # already created the parent path - order-dependent (find iterates in
+        # filesystem order), which broke CI while working locally
         find "$M2" -mindepth 1 -maxdepth 1 -type d -name '*.*' | while read -r d; do
           target="$M2/$(basename "$d" | tr '.' '/')"
-          mkdir --parents "$(dirname "$target")"
-          mv "$d" "$target"
+          mkdir --parents "$target"
+          find "$d" -mindepth 1 -maxdepth 1 -exec mv {} "$target"/ \;
+          rmdir "$d"
         done
 
         printf 'org.gradle.daemon=false\norg.gradle.jvmargs=-Xmx4G -XX:MaxMetaspaceSize=1G\n' \
