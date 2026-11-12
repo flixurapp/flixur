@@ -1,4 +1,5 @@
 import "package:flixur/routes/settings/header.dart";
+import "package:flixur/routes/settings/tiles/bool.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/utils.dart";
@@ -6,6 +7,9 @@ import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
 class const SettingsView({super.key}) extends StatefulWidget {
+  /// Amount of padding to the left of setting items.
+  static const tilePadding = 16.0;
+
   @override
   State<SettingsView> createState() => _SettingsViewState();
 }
@@ -15,7 +19,6 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
     return ValueListenableBuilder(
       valueListenable: Settings.changeNotifier,
       builder: (context, _, _) => Column(
@@ -53,7 +56,16 @@ class _SettingsViewState extends State<SettingsView> {
     ], (g) => (g.id, settingGroupName(g.id), g.order));
 
     return [
-      //  for (final def in children) _settingTile(context, def),
+      for (final def in children)
+        switch (def.kind) {
+          .bool_ => SettingsTileBool(def),
+          //.int_ => SettingsTileInt(def),
+          //.float => SettingsTileFloat(def),
+          //.string => SettingsTileString(def),
+          //.enum_ => SettingsTileEnum(def),
+          //.stringlist => SettingsTileStringList(def),
+          _ => const SizedBox.shrink(),
+        },
       for (final group in childGroups) _GroupTile(this, group),
     ];
   }
@@ -103,7 +115,10 @@ class _GroupTileState extends State<_GroupTile> {
       shape: shape,
       collapsedShape: shape,
       // each child gets inset more
-      tilePadding: .only(left: group.id.split(".").length * 16, right: 16),
+      tilePadding: .only(
+        left: group.id.split(".").length * SettingsView.tilePadding,
+        right: SettingsView.tilePadding,
+      ),
       childrenPadding: const .only(bottom: 4),
       children: [...widget.parent.renderGroup(context, group.id)],
     );

@@ -108,5 +108,52 @@ ThemeData buildAppTheme(AppColors colors) {
       bodySmall: TextStyle(color: colors.textMuted),
     ),
     iconTheme: IconThemeData(color: colors.text),
+    switchTheme: .new(
+      trackColor: .resolveWith(
+        (s) => switch (s.mainState) {
+          .selected => colors.primary,
+          _ => Colors.transparent,
+        },
+      ),
+      thumbColor: .resolveWith(
+        (s) => switch (s.mainState) {
+          .selected || .hovered => colors.text,
+          _ => colors.textMuted,
+        },
+      ),
+      trackOutlineWidth: .all(2),
+      trackOutlineColor: .resolveWith(
+        (s) => switch (s.mainState) {
+          _ when s.has(.hovered) && s.has(.selected) => colors.text,
+          .selected => Colors.transparent,
+          _ => colors.textMuted,
+        },
+      ),
+      overlayColor: .all(Colors.transparent),
+    ),
   );
+}
+
+extension WidgetStateSetX on Set<WidgetState> {
+  /// Returns the "most important" state from the set for use with switch().
+  WidgetState? get mainState {
+    // ordered in order of importance
+    const priority = <WidgetState>[
+      .disabled,
+      .error,
+      .dragged,
+      .pressed,
+      .selected,
+      .hovered,
+      .focused,
+      .scrolledUnder,
+    ];
+    for (final state in priority) {
+      if (contains(state)) return state;
+    }
+    return null;
+  }
+
+  /// Typed check function to see if a state exists.
+  bool has(WidgetState state) => contains(state);
 }

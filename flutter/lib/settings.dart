@@ -290,7 +290,7 @@ class Settings {
     if (def == null || profileID == null) return false;
 
     final encoded = _encode<T>(def, value);
-    final updatedAt = DateTime.now();
+    final updatedAt = DateTime.now().toUtc();
 
     // store/update value locally
     _storeValue(
@@ -359,6 +359,12 @@ class const SettingsValue<T extends Object>(
           builder(context, Settings.getValue<T>(id)),
     );
   }
+}
+
+extension SettingsDefinitionHelpers on SettingsDefinition {
+  String get name => settingName(id);
+  String get description => settingDescription(id);
+  T value<T extends Object>() => Settings.getValue<T>(id);
 }
 
 /// Translated name for a setting.
