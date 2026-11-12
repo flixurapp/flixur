@@ -197,9 +197,10 @@ flutter.buildFlutterApplication {
   targetFlutterPlatform = "linux";
   dontDartBuild = true;
   # the debug output holds the --split-debug-info symbols below; normally
-  # targetFlutterPlatform = "linux" would add it for us, but we declare it
+  # targetFlutterPlatform = "linux" would add it for us, but we can declare it
   # explicitly so the build doesn't depend on that
-  outputs = [ "debug" ];
+  # disabled since its upstream but if it ever changes its here
+  # outputs = [ "debug" ];
 
   nativeBuildInputs = [
     flutter
