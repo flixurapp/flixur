@@ -174,15 +174,8 @@ class Translations$routes$settings$en {
 
 	// Translations
 
-	/// en: 'Add Profile'
-	String get add_profile => 'Add Profile';
-
-	/// en: 'Profiles'
-	String get profiles => 'Profiles';
-
-	Map<String, String> get profiles_failed_codes => {
-		'TOO_SHORT.profile': 'Profile name is too short!',
-	};
+	/// en: 'New Profile'
+	String get new_profile => 'New Profile';
 
 	/// en: 'Search settings...'
 	String get search_hint => 'Search settings...';
@@ -307,9 +300,7 @@ extension on Translations {
 			'navigation.section_titles.settings' => 'Settings',
 			'or_line' => 'OR',
 			'password' => 'Password',
-			'routes.settings.add_profile' => 'Add Profile',
-			'routes.settings.profiles' => 'Profiles',
-			'routes.settings.profiles_failed_codes."TOO_SHORT.profile"' => 'Profile name is too short!',
+			'routes.settings.new_profile' => 'New Profile',
 			'routes.settings.search_hint' => 'Search settings...',
 			'routes.startup.login.failed' => 'Login Failed',
 			'routes.startup.login.failed_codes.INCORRECT_PASSWORD' => 'Incorrect password.',

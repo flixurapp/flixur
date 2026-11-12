@@ -49,11 +49,11 @@ class const OrLine({
 }
 
 class const FlixurInput({
-  /// Text to show above the field.
-  required final String label,
-
   /// TextField builder. Supplied an InputDecoration to use.
   required final Widget Function(InputDecoration decoration) textField,
+
+  /// Text to show above the field.
+  final String? label,
 
   /// Forwarded errorText to the input decoration. Used for error colors.
   final String? errorText,
@@ -63,12 +63,13 @@ class const FlixurInput({
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8,
       children: [
-        Text(
-          label.toUpperCase(),
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 8),
+        if (label != null)
+          Text(
+            label!.toUpperCase(),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          ),
         textField(
           InputDecoration(
             errorText: errorText,

@@ -56,7 +56,7 @@ class Api {
       return ApiSuccess(data, response);
     } on DioException catch (err) {
       final dynamic data = err.response?.data;
-      // attempt to deserialize API error
+      // attempt to deserialize API error / error model
       // this can fail if server doesnt return a proper response
       if (data != null) {
         try {
@@ -64,11 +64,20 @@ class Api {
             APIError.serializer,
             data,
           );
-          if (apiError != null) return ApiFailure(err, apiError);
+          if (apiError != null) return ApiFailure(err, err: apiError);
+        } on Object catch (_) {}
+        try {
+          final errorModel = standardSerializers.deserializeWith(
+            ErrorModel.serializer,
+            data,
+          );
+          if (errorModel != null) {
+            return ApiFailure(err, errorModel: errorModel);
+          }
         } on Object catch (_) {}
       }
       // otherwise return a generic error
-      return ApiFailure(err, null);
+      return ApiFailure(err);
     }
   }
 
@@ -88,11 +97,23 @@ sealed class ApiResult<T>();
 class ApiSuccess<T>(final T data, final Response<T> response)
     extends ApiResult<T>;
 
-class ApiFailure<T>(final DioException rawException, final APIError? err)
-    extends ApiResult<T> {
-  String get message => err == null
-      ? rawException.message ?? rawException.type.name
-      : "${err?.code} ${err?.detail ?? ""}".trim();
+class ApiFailure<T>(
+  final DioException rawException, {
+  final APIError? err,
+  final ErrorModel? errorModel,
+}) extends ApiResult<T> {
+  String get message {
+    if (err != null) {
+      return "${err?.code} ${err?.detail ?? ""}".trim();
+    }
+    if (errorModel != null) {
+      return '''
+${errorModel?.status ?? ""} ${errorModel?.title ?? ""}
+${errorModel?.detail ?? ""}'''
+          .trim();
+    }
+    return rawException.message ?? rawException.type.name;
+  }
 }
 
 extension APIErrorKey on APIError {
