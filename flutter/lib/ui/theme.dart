@@ -117,14 +117,15 @@ ThemeData buildAppTheme(AppColors colors) {
       ),
       thumbColor: .resolveWith(
         (s) => switch (s.mainState) {
-          .selected || .hovered => colors.text,
+          .selected => colors.onPrimary,
+          .hovered => colors.primary,
           _ => colors.textMuted,
         },
       ),
       trackOutlineWidth: .all(2),
       trackOutlineColor: .resolveWith(
         (s) => switch (s.mainState) {
-          _ when s.has(.hovered) && s.has(.selected) => colors.text,
+          _ when s.has(.hovered) && s.has(.selected) => colors.onPrimary,
           .selected => Colors.transparent,
           _ => colors.textMuted,
         },
