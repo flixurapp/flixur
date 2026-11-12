@@ -165,6 +165,9 @@ class Translations$titlebar$en {
 	/// en: 'Minimize'
 	String get minimize => 'Minimize';
 
+	/// en: 'More Options'
+	String get more => 'More Options';
+
 	/// en: 'Collapse Navigation'
 	String get rail_collapse => 'Collapse Navigation';
 
@@ -352,6 +355,7 @@ extension on Translations {
 			'titlebar.close' => 'Close',
 			'titlebar.maximize' => 'Maximize',
 			'titlebar.minimize' => 'Minimize',
+			'titlebar.more' => 'More Options',
 			'titlebar.rail_collapse' => 'Collapse Navigation',
 			'titlebar.rail_expand' => 'Expand Navigation',
 			'username' => 'Username',

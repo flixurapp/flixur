@@ -23,7 +23,7 @@ class const MainNavBottom({
             "ui.navigation.bottomLabels",
             builder: (context, showLabels) => Row(
               children: [
-                for (final section in parent.shownSections)
+                for (final section in MainNavWrapper.shownSections)
                   Expanded(
                     child: _MainNavBottomItem(
                       parent: this,

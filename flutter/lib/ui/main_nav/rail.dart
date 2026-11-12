@@ -44,7 +44,7 @@ class const MainNavRail({
               child: Column(
                 crossAxisAlignment: .stretch,
                 children: [
-                  for (final section in parent.shownSections)
+                  for (final section in MainNavWrapper.shownSections)
                     _MainNavRailItem(
                       parent: this,
                       section: section,
@@ -52,7 +52,7 @@ class const MainNavRail({
                     ),
                   // "hidden" sections go at the bottom
                   const Spacer(),
-                  for (final section in parent.hiddenSections)
+                  for (final section in MainNavWrapper.hiddenSections)
                     _MainNavRailItem(
                       parent: this,
                       section: section,

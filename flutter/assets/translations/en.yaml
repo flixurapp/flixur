@@ -76,6 +76,7 @@ titlebar:
   close: "Close"
   maximize: "Maximize"
   minimize: "Minimize"
+  more: "More Options"
   rail_collapse: "Collapse Navigation"
   rail_expand: "Expand Navigation"
 username: "Username"

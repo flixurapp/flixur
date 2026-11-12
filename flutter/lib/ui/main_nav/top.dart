@@ -59,6 +59,21 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                   builder: (context, _) => Row(
                     crossAxisAlignment: .stretch,
                     children: [
+                      if (!context.isLandscape)
+                        ValueListenableBuilder(
+                          valueListenable: MainNavWrapper.activeSection,
+                          builder: (context, value, _) => _MainNavTopButton(
+                            label: t.titlebar.more,
+                            onTap: () {},
+                            square: true,
+                            color: context.colors.primary,
+                            noForeground: true,
+                            selected: MainNavWrapper.hiddenSections.contains(
+                              value,
+                            ),
+                            child: const _MainNavTopIcon("dots-three"),
+                          ),
+                        ),
                       if (kDebugMode)
                         _MainNavTopButton(
                           label: t.titlebar.minimize,
@@ -111,6 +126,8 @@ class const _MainNavTopButton({
   required final VoidCallback onTap,
   required final Widget child,
   final bool square = false,
+  final bool noForeground = false,
+  final bool selected = false,
   final Color? color,
 }) extends StatelessWidget {
   @override
@@ -120,8 +137,9 @@ class const _MainNavTopButton({
       label: label,
       child: FlixurButton(
         tint: color,
-        foregroundColor: color,
+        foregroundColor: noForeground ? null : color,
         icon: child,
+        borderWidth: selected ? MainNavItemHighlighter.size : 0,
         onPressed: onTap,
         size: .new(
           square ? MainNavRail.itemHeight : MainNavRail.collapsedWidth,

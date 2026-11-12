@@ -138,18 +138,19 @@ class const MainNavWrapper({
   /// The current page/window title.
   static final ValueNotifier<String> pageTitle = _createMainNavTitle();
 
-  MainNavIDs? get selected => sectionIDFromBranch(navShell.currentIndex);
-  List<MainNavSection> get shownSections => resolveMainNavSections(
+  static List<MainNavSection> get shownSections => resolveMainNavSections(
     Settings.getValue<List<String>>("ui.navigation.shownSections"),
   );
 
   /// Sections not shown in the main nav with the current setting.
-  List<MainNavSection> get hiddenSections => resolveMainNavSections([
+  static List<MainNavSection> get hiddenSections => resolveMainNavSections([
     for (final section in mainNavSections)
       if (!Settings.getValue<List<String>>("ui.navigation.shownSections")
           .contains(section.name))
         section.name,
   ]);
+
+  MainNavIDs? get selected => sectionIDFromBranch(navShell.currentIndex);
 
   @override
   Widget build(BuildContext context) {
