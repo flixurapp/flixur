@@ -96,7 +96,7 @@ func WithOptions(api hureg.APIGen, reg APIRegistry, opts APIRoute) hureg.APIGen 
 	if !opts.NoSetup {
 		middlewares = append(middlewares, func(ctx huma.Context, next func(huma.Context)) {
 			if GetServerSetupCode() != nil {
-				huma.WriteErr(api.GetHumaAPI(), ctx, http.StatusServiceUnavailable, "server not set up")
+				huma.WriteErr(api.GetHumaAPI(), ctx, http.StatusUnauthorized, "server not set up")
 				return
 			}
 			next(ctx)

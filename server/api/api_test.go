@@ -196,10 +196,10 @@ func TestNoSetupMiddleware(t *testing.T) {
 		return CreateOutput("ok"), nil
 	})
 
-	// route without NoSetup should return 503 when setup code exists
+	// route without NoSetup should return unauthorized when setup code exists
 	resp := api.Get("/requires-setup")
-	if resp.Code != http.StatusServiceUnavailable {
-		t.Errorf("no-NoSetup route: status = %d, want %d", resp.Code, http.StatusServiceUnavailable)
+	if resp.Code != http.StatusUnauthorized {
+		t.Errorf("no-NoSetup route: status = %d, want %d", resp.Code, http.StatusUnauthorized)
 	}
 
 	// /ping has NoSetup: true so it should still work
