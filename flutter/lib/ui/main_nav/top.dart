@@ -120,6 +120,7 @@ class const _MainNavTopButton({
       label: label,
       child: FlixurButton(
         tint: color,
+        foregroundColor: color,
         icon: child,
         onPressed: onTap,
         size: .new(
@@ -169,10 +170,6 @@ class const _RailToggle() extends StatelessWidget {
 class const _MainNavTopIcon(final String name) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Iconify(
-      name,
-      size: mainNavIconSize * 0.8,
-      color: context.colors.textMuted,
-    );
+    return Iconify(name, size: mainNavIconSize * 0.8);
   }
 }

@@ -6,6 +6,7 @@ class const FlixurButton({
   final Widget? icon,
   final Widget? label,
   final Color? backgroundColor,
+  final Color? foregroundColor,
   final Color? tint,
   final Size? size,
   final double borderWidth = 0,
@@ -14,12 +15,15 @@ class const FlixurButton({
   @override
   Widget build(BuildContext context) {
     final bg = backgroundColor ?? context.colors.mantle;
+    final fg = foregroundColor ?? context.colors.text;
 
     return FilledButton(
       onPressed: onPressed,
       style: .new(
-        iconSize: .all(24),
         backgroundColor: .all(bg),
+        foregroundColor: .all(fg),
+        iconSize: .all(24),
+        iconColor: .all(fg),
         shape: .all(
           borderWidth > 0
               ? LinearBorder.bottom(
