@@ -21,7 +21,7 @@ func newClientRegistry() *Registry {
 	reg.Register(
 		StringList(
 			"ui.navigation.shownSections",
-			[]string{"home", "library", "search", "activity", "explore"},
+			[]string{"home", "library", "search", "activity", "explore", "admin", "settings"},
 		).Order(1).
 			AddChoice("home", "house").
 			AddChoice("library", "folders").
@@ -29,7 +29,8 @@ func newClientRegistry() *Registry {
 			AddChoice("activity", "heartbeat").
 			AddChoice("explore", "binoculars").
 			AddChoice("downloads", "download-simple").
-			AddChoice("admin", "gavel"),
+			AddChoice("admin", "gavel").
+			AddChoice("settings", "gear"),
 	)
 
 	reg.Register(Bool("ui.navigation.bottomLabels", false).Order(2))
