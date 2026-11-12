@@ -18,6 +18,8 @@ void main() async {
   // ensure flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
 
+  //! A LOT OF THIS HAS TO BE INITIALIZED IN ORDER SO LOOK BEFORE REORDERING
+
   // setup translations
   await LocaleSettings.useDeviceLocale();
 
