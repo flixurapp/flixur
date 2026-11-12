@@ -7,6 +7,7 @@ class const FlixurButton({
   final Widget? label,
   final Color? backgroundColor,
   final Color? tint,
+  final Size? size,
   final double borderWidth = 0,
   super.key,
 }) extends StatelessWidget {
@@ -27,8 +28,15 @@ class const FlixurButton({
               : const RoundedRectangleBorder(),
         ),
         surfaceTintColor: .all(tint),
+        // custom size requires no padding, let the Row() center elements
+        padding: size != null ? .all(.zero) : null,
+        fixedSize: size != null ? .all(size) : null,
       ),
-      child: Row(spacing: 6, children: [?icon, ?label]),
+      child: Row(
+        spacing: 6,
+        mainAxisAlignment: .center,
+        children: [?icon, ?label],
+      ),
     );
   }
 }

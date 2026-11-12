@@ -1,5 +1,6 @@
 import "package:flixur/settings.dart";
 import "package:flixur/titlebar.dart";
+import "package:flixur/ui/buttons.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/main_nav/common.dart";
 import "package:flixur/ui/main_nav/rail.dart";
@@ -56,6 +57,7 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                 child: SettingsValue<bool>(
                   "ui.window.useCustom",
                   builder: (context, _) => Row(
+                    crossAxisAlignment: .stretch,
                     children: [
                       if (kDebugMode)
                         _MainNavTopButton(
@@ -116,15 +118,13 @@ class const _MainNavTopButton({
     return Semantics(
       button: true,
       label: label,
-      child: InkWell(
-        mouseCursor: SystemMouseCursors.click,
-        onTap: onTap,
-        splashColor: color,
-        hoverColor: color?.withValues(alpha: 0.3),
-        child: SizedBox(
-          width: square ? MainNavRail.itemHeight : MainNavRail.collapsedWidth,
-          height: MainNavRail.itemHeight,
-          child: child,
+      child: FlixurButton(
+        tint: color,
+        icon: child,
+        onPressed: onTap,
+        size: .new(
+          square ? MainNavRail.itemHeight : MainNavRail.collapsedWidth,
+          MainNavRail.itemHeight,
         ),
       ),
     );
