@@ -60,6 +60,9 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	/// en: 'Delete'
 	String get btn_delete => 'Delete';
 
+	/// en: 'New'
+	String get btn_new => 'New';
+
 	/// en: 'OK'
 	String get btn_ok => 'OK';
 
@@ -289,6 +292,7 @@ extension on Translations {
 			'btn_cancel' => 'Cancel',
 			'btn_create' => 'Create',
 			'btn_delete' => 'Delete',
+			'btn_new' => 'New',
 			'btn_ok' => 'OK',
 			'btn_remove' => 'Remove',
 			'btn_rename' => 'Rename',
