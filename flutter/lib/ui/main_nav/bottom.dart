@@ -15,6 +15,8 @@ class const MainNavBottom({
     return Material(
       color: context.colors.mantle,
       child: SafeArea(
+        top: false,
+        maintainBottomViewPadding: true,
         child: SettingsValue<List<String>>(
           "ui.navigation.shownSections",
           builder: (context, _) => SettingsValue<bool>(

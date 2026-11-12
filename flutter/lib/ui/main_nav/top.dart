@@ -17,6 +17,7 @@ class const MainNavTop({super.key}) extends StatelessWidget {
     return Material(
       color: colors.mantle,
       child: SafeArea(
+        bottom: false,
         child: SizedBox(
           height: height,
           child: Stack(

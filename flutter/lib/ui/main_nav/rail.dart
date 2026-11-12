@@ -26,6 +26,7 @@ class const MainNavRail({
     return Material(
       color: colors.mantle,
       child: SafeArea(
+        right: false,
         child: SettingsValue<List<String>>(
           "ui.navigation.shownSections",
           builder: (context, _) => ValueListenableBuilder(
