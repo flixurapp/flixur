@@ -47,6 +47,10 @@ class Settings {
   static SettingsDefinition? definition(String id) =>
       definitions?.where((item) => item.id == id).firstOrNull;
 
+  /// Get a profile by ID.
+  static SettingProfileBody? profile(String id) =>
+      profiles?.where((item) => item.id == id).firstOrNull;
+
   /// Hive box to store settings/data.
   static late Box<dynamic> _box;
 
@@ -245,6 +249,9 @@ class Settings {
 
   /// Switches to the specified profile.
   static Future<void> switchProfile(String? id) async {
+    // dont switch to nonexistent profile
+    if (id != null && profile(id) == null) return;
+
     activeProfileID = id;
     if (id != null) {
       await _box.put(_activeProfileKey, id);

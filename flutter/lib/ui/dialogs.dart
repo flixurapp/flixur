@@ -26,6 +26,38 @@ Future<void> showErrorDialog(
   );
 }
 
+/// Ask the user for confirmation.
+Future<bool> showConfirmDialog(
+  BuildContext context, {
+  String? title,
+  String? message,
+  String? okText,
+}) async {
+  return await showDialog<bool>(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            icon: const Iconify("question", size: 40),
+            title: Text(title ?? t.confirmation_dialog_title),
+            content: message != null
+                ? SingleChildScrollView(child: Text(message))
+                : null,
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(false),
+                child: Text(t.btn_cancel),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(true),
+                child: Text(okText ?? t.btn_confirm),
+              ),
+            ],
+          );
+        },
+      ) ??
+      false;
+}
+
 /// Prompt for a single string.
 Future<String?> showPromptDialog(
   BuildContext context, {

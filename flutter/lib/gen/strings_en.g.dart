@@ -54,6 +54,9 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	/// en: 'Cancel'
 	String get btn_cancel => 'Cancel';
 
+	/// en: 'Confirm'
+	String get btn_confirm => 'Confirm';
+
 	/// en: 'Create'
 	String get btn_create => 'Create';
 
@@ -74,6 +77,9 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 
 	/// en: 'Save'
 	String get btn_save => 'Save';
+
+	/// en: 'Are you sure?'
+	String get confirmation_dialog_title => 'Are you sure?';
 
 	late final Translations$navigation$en navigation = Translations$navigation$en._(_root);
 
@@ -176,6 +182,9 @@ class Translations$routes$settings$en {
 
 	/// en: 'New Profile'
 	String get new_profile => 'New Profile';
+
+	/// en: 'Rename Profile'
+	String get rename_profile => 'Rename Profile';
 
 	/// en: 'Search settings...'
 	String get search_hint => 'Search settings...';
@@ -283,6 +292,7 @@ extension on Translations {
 			'app_name' => 'Flixur',
 			'btn_add' => 'Add',
 			'btn_cancel' => 'Cancel',
+			'btn_confirm' => 'Confirm',
 			'btn_create' => 'Create',
 			'btn_delete' => 'Delete',
 			'btn_new' => 'New',
@@ -290,6 +300,7 @@ extension on Translations {
 			'btn_remove' => 'Remove',
 			'btn_rename' => 'Rename',
 			'btn_save' => 'Save',
+			'confirmation_dialog_title' => 'Are you sure?',
 			'navigation.section_titles.activity' => 'Activity',
 			'navigation.section_titles.admin' => 'Admin',
 			'navigation.section_titles.downloads' => 'Downloads',
@@ -301,6 +312,7 @@ extension on Translations {
 			'or_line' => 'OR',
 			'password' => 'Password',
 			'routes.settings.new_profile' => 'New Profile',
+			'routes.settings.rename_profile' => 'Rename Profile',
 			'routes.settings.search_hint' => 'Search settings...',
 			'routes.startup.login.failed' => 'Login Failed',
 			'routes.startup.login.failed_codes.INCORRECT_PASSWORD' => 'Incorrect password.',
