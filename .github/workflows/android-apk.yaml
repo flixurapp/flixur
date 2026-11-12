@@ -25,7 +25,7 @@ jobs:
           pushFilter: "-androidsdk-" # ignore unfree android sdk
 
       - name: Build APK
-        run: nix build --accept-flake-config .#flixur-flutter-android
+        run: nix build -L --accept-flake-config .#flixur-flutter-android
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
