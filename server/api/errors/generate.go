@@ -26,6 +26,7 @@ var errorCodeList = []errCode{
 	{"INVALID_INPUT", http.StatusBadRequest},
 	{"INVALID_TOKEN", http.StatusUnauthorized},
 	{"NOT_FOUND", http.StatusNotFound},
+	{"SERVER_NOT_SETUP", http.StatusUnauthorized},
 	{"TOO_LONG", http.StatusBadRequest},
 	{"TOO_SHORT", http.StatusBadRequest},
 }

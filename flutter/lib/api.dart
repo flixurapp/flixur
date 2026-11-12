@@ -1,4 +1,5 @@
 import "dart:async";
+import "dart:io";
 
 import "package:dio/dio.dart";
 import "package:flixur/router.dart";
@@ -64,7 +65,15 @@ class Api {
             APIError.serializer,
             data,
           );
-          if (apiError != null) return ApiFailure(err, err: apiError);
+          if (apiError != null) {
+            // log out if we get an invalid session error
+            if (err.response?.statusCode == HttpStatus.unauthorized) {
+              final code = apiError.code;
+              if (code == .SERVER_NOT_SETUP) await logout(full: true);
+              if (code == .INVALID_TOKEN) await logout();
+            }
+            return ApiFailure(err, err: apiError);
+          }
         } on Object catch (_) {}
         try {
           final errorModel = standardSerializers.deserializeWith(
@@ -81,11 +90,16 @@ class Api {
     }
   }
 
-  static Future<void> logout() async {
+  static Future<void> logout({
+    /// Whether to remove the server URL too.
+    bool full = false,
+  }) async {
     // clear data from storage
     await Storage.delete(.sessionToken);
-    await Storage.delete(.serverUrl);
     await Storage.delete(.playerID);
+    if (full) {
+      await Storage.delete(.serverUrl);
+    }
 
     // navigate back to root
     router.go("/");

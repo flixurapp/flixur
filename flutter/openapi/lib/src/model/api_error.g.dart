@@ -20,6 +20,8 @@ const APIErrorCodeEnum _$aPIErrorCodeEnum_INVALID_TOKEN =
     const APIErrorCodeEnum._('INVALID_TOKEN');
 const APIErrorCodeEnum _$aPIErrorCodeEnum_NOT_FOUND =
     const APIErrorCodeEnum._('NOT_FOUND');
+const APIErrorCodeEnum _$aPIErrorCodeEnum_SERVER_NOT_SETUP =
+    const APIErrorCodeEnum._('SERVER_NOT_SETUP');
 const APIErrorCodeEnum _$aPIErrorCodeEnum_TOO_LONG =
     const APIErrorCodeEnum._('TOO_LONG');
 const APIErrorCodeEnum _$aPIErrorCodeEnum_TOO_SHORT =
@@ -41,6 +43,8 @@ APIErrorCodeEnum _$aPIErrorCodeEnumValueOf(String name) {
       return _$aPIErrorCodeEnum_INVALID_TOKEN;
     case 'NOT_FOUND':
       return _$aPIErrorCodeEnum_NOT_FOUND;
+    case 'SERVER_NOT_SETUP':
+      return _$aPIErrorCodeEnum_SERVER_NOT_SETUP;
     case 'TOO_LONG':
       return _$aPIErrorCodeEnum_TOO_LONG;
     case 'TOO_SHORT':
@@ -59,6 +63,7 @@ final BuiltSet<APIErrorCodeEnum> _$aPIErrorCodeEnumValues =
   _$aPIErrorCodeEnum_INVALID_INPUT,
   _$aPIErrorCodeEnum_INVALID_TOKEN,
   _$aPIErrorCodeEnum_NOT_FOUND,
+  _$aPIErrorCodeEnum_SERVER_NOT_SETUP,
   _$aPIErrorCodeEnum_TOO_LONG,
   _$aPIErrorCodeEnum_TOO_SHORT,
 ]);
@@ -76,6 +81,7 @@ class _$APIErrorCodeEnumSerializer
     'INVALID_INPUT': 'INVALID_INPUT',
     'INVALID_TOKEN': 'INVALID_TOKEN',
     'NOT_FOUND': 'NOT_FOUND',
+    'SERVER_NOT_SETUP': 'SERVER_NOT_SETUP',
     'TOO_LONG': 'TOO_LONG',
     'TOO_SHORT': 'TOO_SHORT',
   };
@@ -87,6 +93,7 @@ class _$APIErrorCodeEnumSerializer
     'INVALID_INPUT': 'INVALID_INPUT',
     'INVALID_TOKEN': 'INVALID_TOKEN',
     'NOT_FOUND': 'NOT_FOUND',
+    'SERVER_NOT_SETUP': 'SERVER_NOT_SETUP',
     'TOO_LONG': 'TOO_LONG',
     'TOO_SHORT': 'TOO_SHORT',
   };

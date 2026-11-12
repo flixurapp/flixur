@@ -96,7 +96,8 @@ func WithOptions(api hureg.APIGen, reg APIRegistry, opts APIRoute) hureg.APIGen 
 	if !opts.NoSetup {
 		middlewares = append(middlewares, func(ctx huma.Context, next func(huma.Context)) {
 			if GetServerSetupCode() != nil {
-				huma.WriteErr(api.GetHumaAPI(), ctx, http.StatusUnauthorized, "server not set up")
+				err := CreateAPIError(CodeServerNotSetup)
+				huma.WriteErr(api.GetHumaAPI(), ctx, err.GetStatus(), err.Error())
 				return
 			}
 			next(ctx)
@@ -143,6 +144,15 @@ func RegisterAPI(router chi.Router, client *ent.Client) APIRegistry {
 			Type:   "http",
 			Scheme: "bearer",
 		},
+	}
+
+	huma.NewErrorWithContext = func(ctx huma.Context, status int, msg string, errs ...error) huma.StatusError {
+		// properly pass through APIErrors from middleware
+		if code := APIErrorCode(msg); APIErrorCodeStatusMap[code] != 0 {
+			return CreateAPIError(code)
+		}
+		// huma-internal errors stay the same
+		return huma.NewError(status, msg, errs...)
 	}
 
 	// Saved registry to be returned for tests.
