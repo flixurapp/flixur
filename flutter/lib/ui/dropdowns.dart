@@ -4,8 +4,8 @@ import "package:material_ui/material_ui.dart";
 // passthru with icons set
 class const FlixurDropdownMenu<T>({
   required super.dropdownMenuEntries,
-  super.trailingIcon = const Iconify("caret-down"),
-  super.selectedTrailingIcon = const Iconify("caret-up"),
+  super.trailingIcon = const Iconify("caret-down", noWrap: true),
+  super.selectedTrailingIcon = const Iconify("caret-up", noWrap: true),
   super.initialSelection,
   super.expandedInsets,
   super.inputDecorationTheme,

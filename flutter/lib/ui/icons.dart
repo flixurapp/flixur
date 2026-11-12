@@ -28,6 +28,7 @@ class const Iconify(
   /// If a prefix is not provided, the default will be prepended.
   final String iconName, {
   final double size = 24,
+  final bool noWrap = false,
   final Color? color,
   super.key,
 }) extends StatelessWidget {
@@ -37,8 +38,10 @@ class const Iconify(
     // inherit from the icon color theme if possible
     final effectiveColor =
         color ?? IconTheme.of(context).color ?? context.colors.text;
-    // this keeps the icon in the center so it doesnt stretch
-    return Center(
+    return GatedWidget(
+      gate: !noWrap,
+      // this keeps the icon in the center so it doesnt stretch
+      wrapper: (child) => Center(child: child),
       child: IconifyIcon(
         icon: icon,
         size: size,
