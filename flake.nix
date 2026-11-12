@@ -36,6 +36,7 @@
         pkgs-unstable = import nixpkgs-unstable {
           inherit system;
           overlays = [ go-overlay.overlays.default ];
+          config.allowUnfree = true;
         };
         lib = nixpkgs.lib;
 
@@ -107,6 +108,9 @@
         flixur-flutter-web = pkgs-unstable.callPackage ./nix/flutter.pkg.nix {
           inherit pkgConfigShim;
           targetFlutterPlatform = "web";
+        };
+        flixur-flutter-android = pkgs-unstable.callPackage ./nix/flutter-android.pkg.nix {
+          jdk = pkgs-unstable.jdk17_headless;
         };
         flixur-server = pkgs.callPackage ./nix/server.pkg.nix { frontendDir = flixur-flutter-web; };
 
@@ -412,7 +416,12 @@
       in
       {
         packages = {
-          inherit flixur-server flixur-flutter-linux flixur-flutter-web;
+          inherit
+            flixur-server
+            flixur-flutter-linux
+            flixur-flutter-web
+            flixur-flutter-android
+            ;
           default = flixur-server;
         };
 
