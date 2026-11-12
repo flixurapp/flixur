@@ -36,6 +36,14 @@ func newClientRegistry() *Registry {
 	reg.Register(Bool("ui.navigation.bottomLabels", false).Order(2))
 	reg.Register(Bool("ui.navigation.railDefaultExpanded", false).Order(2))
 
+	//====
+	//==== Testing
+	//====
+	reg.RegisterGroup(Group("ui.navigation.testing").Order(1))
+
+	reg.Register(String("ui.navigation.testing.str", "").Order(1))
+	reg.Register(Enum("ui.navigation.testing.enum", "").AddChoice("x", "x").AddChoice("y").AddChoice("extra_super_long_choice", "phone-disconnect").Order(1))
+
 	//==
 	//== Window
 	//==
