@@ -27,10 +27,12 @@ class const SettingsViewHeader(
               textAlignVertical: .center,
               onChanged: onChanged,
               decoration: InputDecoration(
-                prefixIcon: SizedBox(
+                // hate hate hate hate
+                prefixIcon: Container(
                   width: 48,
                   height: 48,
-                  child: Iconify("magnifying-glass", color: colors.text),
+                  alignment: .center,
+                  child: const Iconify("magnifying-glass"),
                 ),
                 hintText: t.routes.settings.search_hint,
                 filled: true,
