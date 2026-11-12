@@ -16,7 +16,8 @@ class const SettingsTileShell(
       title: Text(def.name),
       isThreeLine: true,
       subtitle:
-          content ?? (def.description.isEmpty ? null : Text(def.description)),
+          content ??
+          Text(def.description.isNotEmpty ? def.description : def.id),
       trailing: trailing,
       onTap: onTap,
       contentPadding: .only(
