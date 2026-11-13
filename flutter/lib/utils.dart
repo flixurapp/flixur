@@ -3,6 +3,7 @@ import "dart:io";
 
 import "package:device_info_plus/device_info_plus.dart";
 import "package:flutter/foundation.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
 import "package:package_info_plus/package_info_plus.dart";
 import "package:path_provider/path_provider.dart";
@@ -79,9 +80,11 @@ class Images {
   static Image get logo => Image.asset("assets/logo.png", fit: .contain);
 }
 
+const _debouncedDefaultDuration = Duration(milliseconds: 350);
+
 /// Cancels and restarts a timer on each [run] call.
 class Debounced({
-  final Duration duration = const Duration(milliseconds: 350),
+  final Duration duration = _debouncedDefaultDuration,
 
   /// Whether [dispose] should run the pending action instead of dropping it.
   final bool flushOnDispose = false,
@@ -117,6 +120,33 @@ class Debounced({
     }
     _timer = null;
   }
+}
+
+/// Hook that creates a [Debounced] and disposes it when the widget unmounts.
+Debounced useFlixurDebounced({
+  Duration duration = _debouncedDefaultDuration,
+  bool flushOnDispose = false,
+  List<Object?>? keys,
+}) => use(_DebouncedHook(duration, flushOnDispose: flushOnDispose, keys: keys));
+
+class const _DebouncedHook(
+  final Duration duration, {
+  final bool flushOnDispose = false,
+  super.keys,
+}) extends Hook<Debounced> {
+  @override
+  _DebouncedHookState createState() => _DebouncedHookState();
+}
+
+class _DebouncedHookState extends HookState<Debounced, _DebouncedHook> {
+  late final debouncer = Debounced(
+    duration: hook.duration,
+    flushOnDispose: hook.flushOnDispose,
+  );
+  @override
+  Debounced build(BuildContext context) => debouncer;
+  @override
+  void dispose() => debouncer.dispose();
 }
 
 /// Conditionally wraps [child] using [wrapper] when [gate] is true.

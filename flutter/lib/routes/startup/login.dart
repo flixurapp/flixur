@@ -6,37 +6,66 @@ import "package:flixur/titlebar.dart";
 import "package:flixur/ui/dialogs.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
 class const LoginView({required final ServerLoginPayload serverInfo, super.key})
-    extends StatefulWidget {
-  @override
-  State<LoginView> createState() => _LoginViewState();
-}
-
-class _LoginViewState extends State<LoginView> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _passwordFocus = FocusNode();
-
-  PingBody get _serverResponseBody => widget.serverInfo.body;
-
-  String? _usernameError;
-  String? _passwordError;
-  bool _isPasswordLoading = false;
-  bool _isOidcLoading = false;
-
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
-    _passwordFocus.dispose();
-    super.dispose();
-  }
-
+    extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    final usernameController = useTextEditingController();
+    final passwordController = useTextEditingController();
+    final passwordFocus = useFocusNode();
+    final usernameError = useState<String?>(null);
+    final passwordError = useState<String?>(null);
+    final isPasswordLoading = useState(false);
+    final isOidcLoading = useState(false);
+
+    final serverResponseBody = serverInfo.body;
+
+    Future<void> passwordSubmit() async {
+      if (isPasswordLoading.value || isOidcLoading.value) return;
+
+      usernameError.value = passwordError.value = null;
+      isPasswordLoading.value = true;
+
+      final response = await Api.request(
+        (a) => a.getAuthenticationApi().postAuthLogin(
+          postAuthLoginRequest: PostAuthLoginRequest(
+            (b) => b
+              ..username = usernameController.text
+              ..password = passwordController.text,
+          ),
+          xPlatformClient: AppInfo.clientIdentifier,
+          xPlatformDevice: AppInfo.deviceName,
+          xPlatformOS: AppInfo.deviceOS,
+        ),
+      );
+      if (!context.mounted) return;
+      isPasswordLoading.value = false;
+
+      switch (response) {
+        case ApiSuccess(:final data):
+          await Storage.put(.sessionToken, data.sessionToken);
+          if (!context.mounted) return;
+          context.goNamed("home");
+        case ApiFailure(:final err, :final message):
+          await showErrorDialog(
+            context,
+            title: t.routes.startup.login.failed,
+            message:
+                err?.translate(t.routes.startup.login.failed_codes) ?? message,
+          );
+      }
+    }
+
+    Future<void> oidcSubmit() async {
+      if (isOidcLoading.value || isPasswordLoading.value) return;
+
+      isOidcLoading.value = true;
+    }
+
     return PageTitle(
       t.routes.startup.login.title,
       child: Scaffold(
@@ -49,43 +78,43 @@ class _LoginViewState extends State<LoginView> {
               crossAxisAlignment: .stretch,
               spacing: 14,
               children: [
-                if (_serverResponseBody.supportsPasswordLogin) ...[
+                if (serverResponseBody.supportsPasswordLogin) ...[
                   FlixurInput(
                     label: t.username.toUpperCase(),
-                    errorText: _usernameError,
+                    errorText: usernameError.value,
                     textField: (deco) => TextField(
                       decoration: deco.copyWith(hintText: "peppa.pig"),
-                      controller: _usernameController,
-                      onSubmitted: (_) => _passwordFocus.requestFocus(),
+                      controller: usernameController,
+                      onSubmitted: (_) => passwordFocus.requestFocus(),
                     ),
                   ),
                   FlixurInput(
                     label: t.password.toUpperCase(),
-                    errorText: _passwordError,
+                    errorText: passwordError.value,
                     textField: (deco) => TextField(
                       decoration: deco.copyWith(hintText: "*" * 12),
-                      controller: _passwordController,
-                      onSubmitted: (_) => _passwordSubmit(),
-                      focusNode: _passwordFocus,
+                      controller: passwordController,
+                      onSubmitted: (_) => passwordSubmit(),
+                      focusNode: passwordFocus,
                       obscureText: true,
                     ),
                   ),
                   StartupButton(
                     text: t.routes.startup.login.login,
-                    isLoading: _isPasswordLoading,
+                    isLoading: isPasswordLoading.value,
                     // disable button if OIDC is loading
-                    onPressed: _isOidcLoading ? null : _passwordSubmit,
+                    onPressed: isOidcLoading.value ? null : passwordSubmit,
                   ),
                 ],
                 // only show the "OR" line if both methods are allowed
-                if (_serverResponseBody.supportsPasswordLogin &&
-                    _serverResponseBody.supportsOIDCLogin != "")
+                if (serverResponseBody.supportsPasswordLogin &&
+                    serverResponseBody.supportsOIDCLogin != "")
                   const OrLine(),
-                if (_serverResponseBody.supportsOIDCLogin != "")
+                if (serverResponseBody.supportsOIDCLogin != "")
                   StartupButton(
-                    text: _serverResponseBody.supportsOIDCLogin,
-                    isLoading: _isOidcLoading,
-                    onPressed: _isPasswordLoading ? null : _oidcSubmit,
+                    text: serverResponseBody.supportsOIDCLogin,
+                    isLoading: isOidcLoading.value,
+                    onPressed: isPasswordLoading.value ? null : oidcSubmit,
                   ),
               ],
             ),
@@ -93,48 +122,5 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
     );
-  }
-
-  Future<void> _passwordSubmit() async {
-    if (_isPasswordLoading || _isOidcLoading) return;
-
-    setState(() {
-      _usernameError = _passwordError = null;
-      _isPasswordLoading = true;
-    });
-
-    final response = await Api.request(
-      (a) => a.getAuthenticationApi().postAuthLogin(
-        postAuthLoginRequest: PostAuthLoginRequest(
-          (b) => b
-            ..username = _usernameController.text
-            ..password = _passwordController.text,
-        ),
-        xPlatformClient: AppInfo.clientIdentifier,
-        xPlatformDevice: AppInfo.deviceName,
-        xPlatformOS: AppInfo.deviceOS,
-      ),
-    );
-    if (!mounted) return;
-    setState(() => _isPasswordLoading = false);
-
-    switch (response) {
-      case ApiSuccess(:final data):
-        await Storage.put(.sessionToken, data.sessionToken);
-        if (!mounted) return;
-        context.goNamed("home");
-      case ApiFailure(:final err, :final message):
-        await showErrorDialog(
-          context,
-          title: t.routes.startup.login.failed,
-          message: t.routes.startup.login.failed_codes[err?.key] ?? message,
-        );
-    }
-  }
-
-  Future<void> _oidcSubmit() async {
-    if (_isOidcLoading || _isPasswordLoading) return;
-
-    setState(() => _isOidcLoading = true);
   }
 }

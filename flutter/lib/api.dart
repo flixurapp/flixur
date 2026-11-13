@@ -133,4 +133,7 @@ ${errorModel?.detail ?? ""}'''
 extension APIErrorKey on APIError {
   /// Return a formatted translation key for the error.
   String get key => "$code${detail != null ? ".$detail" : ""}";
+
+  /// Return the translation for this error from the given translation [map].
+  String? translate(Map<String, String> map) => map[key];
 }

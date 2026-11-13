@@ -1,5 +1,6 @@
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
 
 /// The widget shown for a prompt dialog.
@@ -10,39 +11,28 @@ class const PromptDialog({
   final List<Widget>? content,
   final int? maxLength,
   super.key,
-}) extends StatefulWidget {
-  @override
-  State<PromptDialog> createState() => _PromptDialogState();
-}
-
-class _PromptDialogState extends State<PromptDialog> {
-  final _controller = TextEditingController();
-
-  void _submit() {
-    Navigator.of(context).pop(_controller.text.trim());
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    final controller = useTextEditingController();
+
+    void submit() {
+      Navigator.of(context).pop(controller.text.trim());
+    }
+
     return AlertDialog(
-      title: Text(widget.title),
+      title: Text(title),
       content: SingleChildScrollView(
         child: Column(
           children: [
-            ...?widget.content,
+            ...?content,
             FlixurInput(
               textField: (decoration) => TextField(
                 autofocus: true,
-                controller: _controller,
-                onSubmitted: (_) => _submit(),
-                decoration: decoration.copyWith(hintText: widget.hintText),
-                maxLength: widget.maxLength,
+                controller: controller,
+                onSubmitted: (_) => submit(),
+                decoration: decoration.copyWith(hintText: hintText),
+                maxLength: maxLength,
               ),
             ),
           ],
@@ -53,10 +43,7 @@ class _PromptDialogState extends State<PromptDialog> {
           onPressed: () => Navigator.of(context).pop(),
           child: Text(t.btn_cancel),
         ),
-        TextButton(
-          onPressed: _submit,
-          child: Text(widget.submitText ?? t.btn_save),
-        ),
+        TextButton(onPressed: submit, child: Text(submitText ?? t.btn_save)),
       ],
     );
   }

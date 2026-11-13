@@ -5,7 +5,7 @@
 - Flutter is **pinned via the nix flake** (`flake.lock` → nixpkgs-unstable). Never use a
   system/global `flutter`. Our Dart is newer than most training data - don't assume
   version numbers, check with `tools/flutter-wrapped --version`.
-  You might already be in the devshell. Check `flutter --version` first to make sure its >=3.13.3 and only use the wrapper if its not.
+  You might already be in the devshell. Check `flutter --version` first to make sure its >=3.47.4 and only use the wrapper if its not.
 - Run **all** flutter commands through the wrapper (it sets the pkg-config/NIX\_\* flags
   needed for the Linux desktop build):
   ```

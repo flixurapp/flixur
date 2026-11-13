@@ -7,132 +7,117 @@ import "package:flixur/settings.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
 /// A string setting.
 class const SettingsTileString(final SettingsDefinition def, {super.key})
-    extends StatefulWidget {
+    extends HookWidget {
   @override
-  State<SettingsTileString> createState() => _State();
-}
+  Widget build(BuildContext context) {
+    final debouncer = useFlixurDebounced(flushOnDispose: true);
+    final focus = useFocusNode();
+    final controller = useTextEditingController(text: def.value<String>());
+    // if the "show" button was clicked on the obscured text
+    final showObscured = useState(false);
 
-class _State extends State<SettingsTileString> {
-  final debouncer = Debounced(flushOnDispose: true);
-  final focus = FocusNode();
-  late final controller = TextEditingController(
-    text: widget.def.value<String>(),
-  );
+    // keep the controller in sync when the setting changes elsewhere
+    useEffect(() {
+      void syncValue() {
+        final value = def.value<String>();
+        if (!focus.hasFocus && controller.text != value) {
+          controller.text = value;
+        }
+      }
 
-  /// If the "show" button was clicked on the obscured text.
-  bool _showObscured = false;
+      Settings.changeNotifier.addListener(syncValue);
+      return () => Settings.changeNotifier.removeListener(syncValue);
+    });
 
-  @override
-  void initState() {
-    super.initState();
-    Settings.changeNotifier.addListener(_syncValue);
-  }
+    return LayoutBuilder(
+      builder: (context, constraints) => SettingsTileShell(
+        def,
+        vertical: SizedBox(
+          width: !context.isLandscape
+              ? constraints.maxWidth
+              : max(
+                  200,
+                  (constraints.maxWidth / 3) -
+                      SettingsView.paddingFor(context, def.id),
+                ),
+          child: FlixurInput(
+            textField: (decoration) {
+              final obscured = def.string?.secret ?? false;
+              final maxLength = def.string?.maxLength;
 
-  void _syncValue() {
-    final value = widget.def.value<String>();
-    if (!focus.hasFocus && controller.text != value) controller.text = value;
-  }
-
-  @override
-  void dispose() {
-    Settings.changeNotifier.removeListener(_syncValue);
-    debouncer.dispose();
-    controller.dispose();
-    focus.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) => SettingsTileShell(
-      widget.def,
-      vertical: SizedBox(
-        width: !context.isLandscape
-            ? constraints.maxWidth
-            : max(
-                200,
-                (constraints.maxWidth / 3) -
-                    SettingsView.paddingFor(context, widget.def.id),
-              ),
-        child: FlixurInput(
-          textField: (decoration) {
-            final obscured = widget.def.string?.secret ?? false;
-            final maxLength = widget.def.string?.maxLength;
-
-            final suffixIcon = obscured || maxLength != null
-                ? Padding(
-                    padding: const .symmetric(horizontal: 4),
-                    child: AnimatedBuilder(
-                      animation: Listenable.merge([controller, focus]),
-                      builder: (context, _) =>
-                          obscured && (maxLength == null || !focus.hasFocus)
-                          // show/hide button
-                          ? IconButton(
-                              mouseCursor: SystemMouseCursors.click,
-                              onPressed: () => setState(
-                                () => _showObscured = !_showObscured,
-                              ),
-                              icon: _showObscured
-                                  ? const Iconify("eye-slash")
-                                  : const Iconify("eye"),
-                              style: .new(
-                                iconColor: .all(context.colors.textMuted),
-                              ),
-                              tooltip: _showObscured ? t.btn_hide : t.btn_show,
-                            )
-                          // character counter
-                          : IntrinsicWidth(
-                              child: Container(
-                                padding: const .directional(end: 2),
-                                alignment: .bottomEnd,
-                                child: Text(
-                                  "${controller.text.characters.length}/$maxLength",
-                                  style: TextStyle(
-                                    color: context.colors.textMuted,
-                                    fontSize: 12,
+              final suffixIcon = obscured || maxLength != null
+                  ? Padding(
+                      padding: const .symmetric(horizontal: 4),
+                      child: AnimatedBuilder(
+                        animation: Listenable.merge([controller, focus]),
+                        builder: (context, _) =>
+                            obscured && (maxLength == null || !focus.hasFocus)
+                            // show/hide button
+                            ? IconButton(
+                                mouseCursor: SystemMouseCursors.click,
+                                onPressed: () =>
+                                    showObscured.value = !showObscured.value,
+                                icon: showObscured.value
+                                    ? const Iconify("eye-slash")
+                                    : const Iconify("eye"),
+                                style: .new(
+                                  iconColor: .all(context.colors.textMuted),
+                                ),
+                                tooltip: showObscured.value
+                                    ? t.btn_hide
+                                    : t.btn_show,
+                              )
+                            // character counter
+                            : IntrinsicWidth(
+                                child: Container(
+                                  padding: const .directional(end: 2),
+                                  alignment: .bottomEnd,
+                                  child: Text(
+                                    "${controller.text.characters.length}/$maxLength",
+                                    style: TextStyle(
+                                      color: context.colors.textMuted,
+                                      fontSize: 12,
+                                    ),
+                                    textAlign: .center,
                                   ),
-                                  textAlign: .center,
                                 ),
                               ),
-                            ),
-                    ),
-                  )
-                : null;
+                      ),
+                    )
+                  : null;
 
-            return TextField(
-              controller: controller,
-              focusNode: focus,
-              maxLength: maxLength,
-              decoration: decoration.copyWith(suffixIcon: suffixIcon),
-              obscureText: obscured && !_showObscured,
-              onChanged: (value) {
-                final profileID = Settings.activeProfileID;
-                debouncer.run(
-                  () => unawaited(
-                    Settings.set<String>(
-                      widget.def.id,
-                      value,
-                      profileID: profileID,
+              return TextField(
+                controller: controller,
+                focusNode: focus,
+                maxLength: maxLength,
+                decoration: decoration.copyWith(suffixIcon: suffixIcon),
+                obscureText: obscured && !showObscured.value,
+                onChanged: (value) {
+                  final profileID = Settings.activeProfileID;
+                  debouncer.run(
+                    () => unawaited(
+                      Settings.set<String>(def.id, value, profileID: profileID),
                     ),
-                  ),
-                );
-              },
-              // remove default character counter
-              buildCounter: (
-                _, {
-                required currentLength,
-                required isFocused,
-                maxLength,
-              }) => null,
-            );
-          },
+                  );
+                },
+                // remove default character counter
+                buildCounter: (
+                  _, {
+                  required currentLength,
+                  required isFocused,
+                  maxLength,
+                }) => null,
+              );
+            },
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

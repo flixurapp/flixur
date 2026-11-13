@@ -7,36 +7,59 @@ import "package:flixur/ui/dialogs.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
 class const SetupView({required final ServerLoginPayload serverInfo, super.key})
-    extends StatefulWidget {
-  @override
-  State<SetupView> createState() => _SetupViewState();
-}
-
-class _SetupViewState extends State<SetupView> {
-  final _codeController = TextEditingController();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _usernameFocus = FocusNode();
-  final _passwordFocus = FocusNode();
-
-  bool _isLoading = false;
-
-  @override
-  void dispose() {
-    _codeController.dispose();
-    _usernameController.dispose();
-    _passwordController.dispose();
-    _usernameFocus.dispose();
-    _passwordFocus.dispose();
-    super.dispose();
-  }
-
+    extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    final codeController = useTextEditingController();
+    final usernameController = useTextEditingController();
+    final passwordController = useTextEditingController();
+    final usernameFocus = useFocusNode();
+    final passwordFocus = useFocusNode();
+    final isLoading = useState(false);
+
+    Future<void> completeSetup() async {
+      if (isLoading.value) return;
+
+      isLoading.value = true;
+
+      final response = await Api.request(
+        (a) => a.getAuthenticationApi().postAuthSetup(
+          postAuthSetupRequest: PostAuthSetupRequest(
+            (b) => b
+              ..code = codeController.text
+              ..password = passwordController.text
+              ..username = usernameController.text,
+          ),
+          xPlatformClient: AppInfo.clientIdentifier,
+          xPlatformDevice: AppInfo.deviceName,
+          xPlatformOS: AppInfo.deviceOS,
+        ),
+      );
+      if (!context.mounted) return;
+      isLoading.value = false;
+
+      switch (response) {
+        case ApiSuccess(:final data):
+          await Storage.put(.serverUrl, serverInfo.url);
+          await Storage.put(.sessionToken, data.sessionToken);
+          if (!context.mounted) return;
+          // save was successful, so continue
+          context.goNamed("home");
+        case ApiFailure(:final err, :final message):
+          await showErrorDialog(
+            context,
+            title: t.routes.startup.setup.failed,
+            message:
+                err?.translate(t.routes.startup.setup.failed_codes) ?? message,
+          );
+      }
+    }
+
     return PageTitle(
       t.routes.startup.setup.title,
       child: Scaffold(
@@ -79,8 +102,8 @@ class _SetupViewState extends State<SetupView> {
                   label: t.routes.startup.setup.code.toUpperCase(),
                   textField: (deco) => TextField(
                     decoration: deco.copyWith(hintText: "X" * 6),
-                    controller: _codeController,
-                    onSubmitted: (_) => _usernameFocus.requestFocus(),
+                    controller: codeController,
+                    onSubmitted: (_) => usernameFocus.requestFocus(),
                     maxLength: 6,
                   ),
                 ),
@@ -88,9 +111,9 @@ class _SetupViewState extends State<SetupView> {
                   label: t.username.toUpperCase(),
                   textField: (deco) => TextField(
                     decoration: deco.copyWith(hintText: "peppa.pig"),
-                    controller: _usernameController,
-                    onSubmitted: (_) => _passwordFocus.requestFocus(),
-                    focusNode: _usernameFocus,
+                    controller: usernameController,
+                    onSubmitted: (_) => passwordFocus.requestFocus(),
+                    focusNode: usernameFocus,
                     maxLength: 64,
                   ),
                 ),
@@ -98,17 +121,17 @@ class _SetupViewState extends State<SetupView> {
                   label: t.password.toUpperCase(),
                   textField: (deco) => TextField(
                     decoration: deco.copyWith(hintText: "*" * 12),
-                    controller: _passwordController,
-                    onSubmitted: (_) => _completeSetup(),
-                    focusNode: _passwordFocus,
+                    controller: passwordController,
+                    onSubmitted: (_) => completeSetup(),
+                    focusNode: passwordFocus,
                     obscureText: true,
                     maxLength: 72,
                   ),
                 ),
                 StartupButton(
                   text: t.routes.startup.setup.complete,
-                  isLoading: _isLoading,
-                  onPressed: _completeSetup,
+                  isLoading: isLoading.value,
+                  onPressed: completeSetup,
                 ),
               ],
             ),
@@ -116,42 +139,5 @@ class _SetupViewState extends State<SetupView> {
         ),
       ),
     );
-  }
-
-  Future<void> _completeSetup() async {
-    if (_isLoading) return;
-
-    setState(() => _isLoading = true);
-
-    final response = await Api.request(
-      (a) => a.getAuthenticationApi().postAuthSetup(
-        postAuthSetupRequest: PostAuthSetupRequest(
-          (b) => b
-            ..code = _codeController.text
-            ..password = _passwordController.text
-            ..username = _usernameController.text,
-        ),
-        xPlatformClient: AppInfo.clientIdentifier,
-        xPlatformDevice: AppInfo.deviceName,
-        xPlatformOS: AppInfo.deviceOS,
-      ),
-    );
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-
-    switch (response) {
-      case ApiSuccess(:final data):
-        await Storage.put(.serverUrl, widget.serverInfo.url);
-        await Storage.put(.sessionToken, data.sessionToken);
-        if (!mounted) return;
-        // save was successful, so continue
-        context.goNamed("home");
-      case ApiFailure(:final err, :final message):
-        await showErrorDialog(
-          context,
-          title: t.routes.startup.setup.failed,
-          message: t.routes.startup.setup.failed_codes[err?.key] ?? message,
-        );
-    }
   }
 }

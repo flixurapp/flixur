@@ -4,10 +4,11 @@ import "package:flixur/routes/settings/tiles/string.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/utils.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
-class const SettingsView({super.key}) extends StatefulWidget {
+class const SettingsView({super.key}) extends HookWidget {
   /// Amount of padding to the left of setting items.
   static const tilePadding = 16.0;
 
@@ -20,105 +21,89 @@ class const SettingsView({super.key}) extends StatefulWidget {
       (context.isLandscape ? 1 : 0.5);
 
   @override
-  State<SettingsView> createState() => _SettingsViewState();
-}
-
-class _SettingsViewState extends State<SettingsView> {
-  String searchTerm = "";
-
-  @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: Settings.changeNotifier,
-      builder: (context, _, _) => Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          SettingsViewHeader((value) => setState(() => searchTerm = value)),
-          Expanded(
-            child: ListView(
-              padding: const .symmetric(horizontal: 16, vertical: 12),
-              children: [...renderGroup(context, null)],
-            ),
+    final searchTerm = useState("");
+    // rebuild when any setting changes
+    useListenable(Settings.changeNotifier);
+
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        SettingsViewHeader((value) => searchTerm.value = value),
+        Expanded(
+          child: ListView(
+            padding: const .symmetric(horizontal: 16, vertical: 12),
+            children: [..._renderGroup(context, null, searchTerm.value)],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
-
-  /// Render a group's settings, then its children.
-  List<Widget> renderGroup(BuildContext context, String? parent) {
-    final query = searchTerm.toLowerCase().trim();
-
-    // direct child settings
-    final definitions = Settings.definitions ?? [];
-    final children = _sortSettings([
-      for (final def in definitions)
-        if (parent != null &&
-            _groupParent(def.id) == parent &&
-            _settingMatches(def, query))
-          def,
-    ], (d) => (d.id, settingName(d.id), d.order));
-
-    // child groups
-    final groups = Settings.groups ?? [];
-    final childGroups = _sortSettings([
-      for (final group in groups)
-        if ((parent == null
-                ? !group.id.contains(".")
-                : _groupParent(group.id) == parent) &&
-            _groupHasVisibleChildren(group.id, query))
-          group,
-    ], (g) => (g.id, settingGroupName(g.id), g.order));
-
-    return [
-      for (final def in children)
-        switch (def.kind) {
-          .bool_ => SettingsTileBool(def),
-          //.int_ => SettingsTileInt(def),
-          //.float => SettingsTileFloat(def),
-          .string => SettingsTileString(def),
-          //.enum_ => SettingsTileEnum(def),
-          //.stringlist => SettingsTileStringList(def),
-          _ => const SizedBox.shrink(),
-        },
-      for (final group in childGroups) _GroupTile(this, group),
-    ];
-  }
 }
 
-class const _GroupTile(
-  final _SettingsViewState parent,
-  final SettingsGroup group,
-) extends StatefulWidget {
-  @override
-  State<_GroupTile> createState() => _GroupTileState();
+/// Render a group's settings, then its children.
+List<Widget> _renderGroup(
+  BuildContext context,
+  String? parent,
+  String searchTerm,
+) {
+  final query = searchTerm.toLowerCase().trim();
+
+  // direct child settings
+  final definitions = Settings.definitions ?? [];
+  final children = _sortSettings([
+    for (final def in definitions)
+      if (parent != null &&
+          _groupParent(def.id) == parent &&
+          _settingMatches(def, query))
+        def,
+  ], (d) => (d.id, settingName(d.id), d.order));
+
+  // child groups
+  final groups = Settings.groups ?? [];
+  final childGroups = _sortSettings([
+    for (final group in groups)
+      if ((parent == null
+              ? !group.id.contains(".")
+              : _groupParent(group.id) == parent) &&
+          _groupHasVisibleChildren(group.id, query))
+        group,
+  ], (g) => (g.id, settingGroupName(g.id), g.order));
+
+  return [
+    for (final def in children)
+      switch (def.kind) {
+        .bool_ => SettingsTileBool(def),
+        //.int_ => SettingsTileInt(def),
+        //.float => SettingsTileFloat(def),
+        .string => SettingsTileString(def),
+        //.enum_ => SettingsTileEnum(def),
+        //.stringlist => SettingsTileStringList(def),
+        _ => const SizedBox.shrink(),
+      },
+    for (final group in childGroups) _GroupTile(group, searchTerm),
+  ];
 }
 
-class _GroupTileState extends State<_GroupTile> {
-  final _controller = ExpansibleController();
-  // starts open, matching initiallyExpanded
-  bool expanded = true;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+class const _GroupTile(final SettingsGroup group, final String searchTerm)
+    extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-    final group = widget.group;
-    final icon = group.icon;
+    final controller = useExpansibleController();
+    final expanded = useState(true);
 
     // force categories to be expanded while searching
-    if (widget.parent.searchTerm.isNotEmpty && !_controller.isExpanded) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && widget.parent.searchTerm.isNotEmpty) {
-          _controller.expand();
-        }
-      });
-    }
+    useEffect(() {
+      if (searchTerm.isNotEmpty && !controller.isExpanded) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) controller.expand();
+        });
+      }
+      return null;
+    }, [searchTerm]);
+
+    final colors = context.colors;
+    final icon = group.icon;
 
     final bg = colors.crust;
     final shape = _groupParent(group.id) == null
@@ -127,13 +112,13 @@ class _GroupTileState extends State<_GroupTile> {
 
     return ExpansionTile(
       key: ValueKey(group.id),
-      controller: _controller,
+      controller: controller,
       collapsedBackgroundColor: bg,
       backgroundColor: bg,
       initiallyExpanded: true,
-      onExpansionChanged: (value) => setState(() => expanded = value),
+      onExpansionChanged: (value) => expanded.value = value,
       trailing: AnimatedRotation(
-        turns: expanded ? 0 : 0.5,
+        turns: expanded.value ? 0 : 0.5,
         duration: const Duration(milliseconds: 200),
         child: const Iconify("caret-down", size: 24),
       ),
@@ -152,7 +137,7 @@ class _GroupTileState extends State<_GroupTile> {
         right: SettingsView.paddingFor(context, ""),
       ),
       childrenPadding: const .only(bottom: 4),
-      children: [...widget.parent.renderGroup(context, group.id)],
+      children: [..._renderGroup(context, group.id, searchTerm)],
     );
   }
 }

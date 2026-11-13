@@ -4,30 +4,67 @@ import "package:flixur/storage.dart";
 import "package:flixur/titlebar.dart";
 import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
-class const ServerUrlView({super.key}) extends StatefulWidget {
-  @override
-  State<ServerUrlView> createState() => _ServerUrlViewState();
-}
-
-class _ServerUrlViewState extends State<ServerUrlView> {
-  final _serverUrlController = TextEditingController(
-    text: Storage.get(.serverUrl),
-  );
-
-  String? _errorText;
-  bool _isLoading = false;
-
-  @override
-  void dispose() {
-    _serverUrlController.dispose();
-    super.dispose();
-  }
-
+class const ServerUrlView({super.key}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    final serverUrlController = useTextEditingController(
+      text: Storage.get(.serverUrl),
+    );
+    final errorText = useState<String?>(null);
+    final isLoading = useState(false);
+
+    Future<void> submit() async {
+      if (isLoading.value) return;
+
+      errorText.value = null;
+      var serverUrl = Uri.tryParse(serverUrlController.text);
+      if (serverUrl == null ||
+          // must be an HTTP url
+          (serverUrl.scheme != "http" && serverUrl.scheme != "https") ||
+          // and have a host
+          serverUrl.authority == "") {
+        errorText.value = t.routes.startup.server_url.url_error;
+        return;
+      }
+
+      //TODO: maybe dont hardcode this eventually?
+      const apiPath = "api";
+
+      // append the `api` path to the URL
+      if (serverUrl.pathSegments.lastOrNull?.endsWith(apiPath) != true) {
+        serverUrl = serverUrl.replace(
+          pathSegments: [...serverUrl.pathSegments, apiPath],
+        );
+      }
+      final finalServerUrl = serverUrl.toString();
+      // we aren't going through `Storage` here since we don't want to persist
+      // an incorrect value
+      Api.setBaseUrl(finalServerUrl);
+
+      isLoading.value = true;
+      final pingResponse = await Api.request(
+        (a) => a.getAuthenticationApi().getPing(),
+      );
+      if (!context.mounted) return;
+      isLoading.value = false;
+
+      switch (pingResponse) {
+        case ApiSuccess(:final data):
+          await Storage.put(.serverUrl, finalServerUrl);
+          if (!context.mounted) return;
+          context.goNamed(
+            data.isSetup ? "startup_login" : "startup_setup",
+            extra: ServerLoginPayload(url: finalServerUrl, body: data),
+          );
+        case ApiFailure(:final message):
+          errorText.value = message;
+      }
+    }
+
     return PageTitle(
       t.routes.startup.server_url.welcome,
       child: Scaffold(
@@ -71,19 +108,19 @@ class _ServerUrlViewState extends State<ServerUrlView> {
                     children: [
                       FlixurInput(
                         label: t.routes.startup.server_url.url.toUpperCase(),
-                        errorText: _errorText,
+                        errorText: errorText.value,
                         textField: (deco) => TextField(
                           decoration: deco.copyWith(
                             hintText: "https://demo.flixur.app",
                           ),
-                          controller: _serverUrlController,
-                          onSubmitted: (_) => _serverUrlSubmit(),
+                          controller: serverUrlController,
+                          onSubmitted: (_) => submit(),
                         ),
                       ),
                       StartupButton(
                         text: t.routes.startup.server_url.connect,
-                        isLoading: _isLoading,
-                        onPressed: _serverUrlSubmit,
+                        isLoading: isLoading.value,
+                        onPressed: submit,
                       ),
                     ],
                   ),
@@ -94,58 +131,6 @@ class _ServerUrlViewState extends State<ServerUrlView> {
         ),
       ),
     );
-  }
-
-  void _setServerUrlError(String? text) {
-    setState(() => _errorText = text);
-  }
-
-  Future<void> _serverUrlSubmit() async {
-    if (_isLoading) return;
-
-    _setServerUrlError(null);
-    var serverUrl = Uri.tryParse(_serverUrlController.text);
-    if (serverUrl == null ||
-        // must be an HTTP url
-        (serverUrl.scheme != "http" && serverUrl.scheme != "https") ||
-        // and have a host
-        serverUrl.authority == "") {
-      _setServerUrlError(t.routes.startup.server_url.url_error);
-      return;
-    }
-
-    //TODO: maybe dont hardcode this eventually?
-    const apiPath = "api";
-
-    // append the `api` path to the URL
-    if (serverUrl.pathSegments.lastOrNull?.endsWith(apiPath) != true) {
-      serverUrl = serverUrl.replace(
-        pathSegments: [...serverUrl.pathSegments, apiPath],
-      );
-    }
-    final finalServerUrl = serverUrl.toString();
-    // we aren't going through `Storage` here since we don't want to persist
-    // an incorrect value
-    Api.setBaseUrl(finalServerUrl);
-
-    setState(() => _isLoading = true);
-    final pingResponse = await Api.request(
-      (a) => a.getAuthenticationApi().getPing(),
-    );
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-
-    switch (pingResponse) {
-      case ApiSuccess(:final data):
-        await Storage.put(.serverUrl, finalServerUrl);
-        if (!mounted) return;
-        context.goNamed(
-          data.isSetup ? "startup_login" : "startup_setup",
-          extra: ServerLoginPayload(url: finalServerUrl, body: data),
-        );
-      case ApiFailure(:final message):
-        _setServerUrlError(message);
-    }
   }
 }
 
