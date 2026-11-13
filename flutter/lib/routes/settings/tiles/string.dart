@@ -1,6 +1,7 @@
 import "dart:async";
 import "dart:math";
 
+import "package:flixur/hooks.dart";
 import "package:flixur/routes/settings/index.dart";
 import "package:flixur/routes/settings/tiles/common.dart";
 import "package:flixur/settings.dart";
