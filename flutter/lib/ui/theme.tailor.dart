@@ -24,6 +24,7 @@ mixin _$AppColorsTailorMixin on ThemeExtension<AppColors> {
   Color get textMuted;
   Color? get onPrimaryOverride;
   Color? get onSecondaryOverride;
+  Color? get onTertiaryOverride;
 
   @override
   AppColors copyWith({
@@ -41,6 +42,7 @@ mixin _$AppColorsTailorMixin on ThemeExtension<AppColors> {
     Color? textMuted,
     Color? onPrimaryOverride,
     Color? onSecondaryOverride,
+    Color? onTertiaryOverride,
   }) {
     return AppColors(
       brightness: brightness ?? this.brightness,
@@ -57,6 +59,7 @@ mixin _$AppColorsTailorMixin on ThemeExtension<AppColors> {
       textMuted: textMuted ?? this.textMuted,
       onPrimaryOverride: onPrimaryOverride ?? this.onPrimaryOverride,
       onSecondaryOverride: onSecondaryOverride ?? this.onSecondaryOverride,
+      onTertiaryOverride: onTertiaryOverride ?? this.onTertiaryOverride,
     );
   }
 
@@ -84,6 +87,11 @@ mixin _$AppColorsTailorMixin on ThemeExtension<AppColors> {
       onSecondaryOverride: Color.lerp(
         onSecondaryOverride,
         other.onSecondaryOverride,
+        t,
+      ),
+      onTertiaryOverride: Color.lerp(
+        onTertiaryOverride,
+        other.onTertiaryOverride,
         t,
       ),
     );
@@ -116,6 +124,10 @@ mixin _$AppColorsTailorMixin on ThemeExtension<AppColors> {
             const DeepCollectionEquality().equals(
               onSecondaryOverride,
               other.onSecondaryOverride,
+            ) &&
+            const DeepCollectionEquality().equals(
+              onTertiaryOverride,
+              other.onTertiaryOverride,
             ));
   }
 
@@ -137,6 +149,7 @@ mixin _$AppColorsTailorMixin on ThemeExtension<AppColors> {
       const DeepCollectionEquality().hash(textMuted),
       const DeepCollectionEquality().hash(onPrimaryOverride),
       const DeepCollectionEquality().hash(onSecondaryOverride),
+      const DeepCollectionEquality().hash(onTertiaryOverride),
     );
   }
 }

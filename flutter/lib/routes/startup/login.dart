@@ -67,56 +67,54 @@ class const LoginView({required final ServerLoginPayload serverInfo, super.key})
 
     return PageTitle(
       t.routes.startup.login.title,
-      child: Scaffold(
+      child: StartupBody(
         backgroundColor: context.colors.base,
-        body: Center(
-          child: FractionallySizedBox(
-            widthFactor: 0.8,
-            child: Column(
-              mainAxisAlignment: .center,
-              crossAxisAlignment: .stretch,
-              spacing: 14,
-              children: [
-                if (serverResponseBody.supportsPasswordLogin) ...[
-                  FlixurInput(
-                    label: t.username.toUpperCase(),
-                    errorText: usernameError.value,
-                    textField: (deco) => TextField(
-                      decoration: deco.copyWith(hintText: "peppa.pig"),
-                      controller: usernameController,
-                      onSubmitted: (_) => passwordFocus.requestFocus(),
-                    ),
+        child: FractionallySizedBox(
+          widthFactor: context.isLandscape ? 0.8 : 1,
+          child: Column(
+            mainAxisAlignment: .center,
+            crossAxisAlignment: .stretch,
+            spacing: 14,
+            children: [
+              if (serverResponseBody.supportsPasswordLogin) ...[
+                FlixurInput(
+                  label: t.username.toUpperCase(),
+                  errorText: usernameError.value,
+                  textField: (deco) => TextField(
+                    decoration: deco.copyWith(hintText: "peppa.pig"),
+                    controller: usernameController,
+                    onSubmitted: (_) => passwordFocus.requestFocus(),
                   ),
-                  FlixurInput(
-                    label: t.password.toUpperCase(),
-                    errorText: passwordError.value,
-                    textField: (deco) => TextField(
-                      decoration: deco.copyWith(hintText: "*" * 12),
-                      controller: passwordController,
-                      onSubmitted: (_) => passwordSubmit(),
-                      focusNode: passwordFocus,
-                      obscureText: true,
-                    ),
+                ),
+                FlixurInput(
+                  label: t.password.toUpperCase(),
+                  errorText: passwordError.value,
+                  textField: (deco) => TextField(
+                    decoration: deco.copyWith(hintText: "*" * 12),
+                    controller: passwordController,
+                    onSubmitted: (_) => passwordSubmit(),
+                    focusNode: passwordFocus,
+                    obscureText: true,
                   ),
-                  StartupButton(
-                    text: t.routes.startup.login.login,
-                    isLoading: isPasswordLoading.value,
-                    // disable button if OIDC is loading
-                    onPressed: isOidcLoading.value ? null : passwordSubmit,
-                  ),
-                ],
-                // only show the "OR" line if both methods are allowed
-                if (serverResponseBody.supportsPasswordLogin &&
-                    serverResponseBody.supportsOIDCLogin != "")
-                  const OrLine(),
-                if (serverResponseBody.supportsOIDCLogin != "")
-                  StartupButton(
-                    text: serverResponseBody.supportsOIDCLogin,
-                    isLoading: isOidcLoading.value,
-                    onPressed: isPasswordLoading.value ? null : oidcSubmit,
-                  ),
+                ),
+                StartupButton(
+                  text: t.routes.startup.login.login,
+                  isLoading: isPasswordLoading.value,
+                  // disable button if OIDC is loading
+                  onPressed: isOidcLoading.value ? null : passwordSubmit,
+                ),
               ],
-            ),
+              // only show the "OR" line if both methods are allowed
+              if (serverResponseBody.supportsPasswordLogin &&
+                  serverResponseBody.supportsOIDCLogin != "")
+                const OrLine(),
+              if (serverResponseBody.supportsOIDCLogin != "")
+                StartupButton(
+                  text: serverResponseBody.supportsOIDCLogin,
+                  isLoading: isOidcLoading.value,
+                  onPressed: isPasswordLoading.value ? null : oidcSubmit,
+                ),
+            ],
           ),
         ),
       ),

@@ -22,12 +22,14 @@ class const AppColors({
   required final Color textMuted,
   final Color? onPrimaryOverride,
   final Color? onSecondaryOverride,
+  final Color? onTertiaryOverride,
 }) extends ThemeExtension<AppColors> with _$AppColorsTailorMixin;
 
 // derived `on` colors
 extension AppColorsDerived on AppColors {
   Color get onPrimary => onPrimaryOverride ?? text;
-  Color get onSecondary => onSecondaryOverride ?? base;
+  Color get onSecondary => onSecondaryOverride ?? text;
+  Color get onTertiary => onTertiaryOverride ?? text;
 }
 
 extension AppThemeContext on BuildContext {

@@ -65,70 +65,68 @@ class const ServerUrlView({super.key}) extends HookWidget {
       }
     }
 
+    final welcomeText = Text(
+      t.routes.startup.server_url.welcome,
+      style: const TextStyle(fontSize: 56),
+    );
+
+    final logo = ConstrainedBox(
+      constraints: BoxConstraints(
+        // sane sizing for logo depending on screen size
+        maxWidth: context.screenSize.width * (context.isLandscape ? 0.4 : 0.8),
+        maxHeight:
+            context.screenSize.height * (context.isLandscape ? 0.4 : 0.3),
+      ),
+      child: Images.logo,
+    );
+
+    final input = FractionallySizedBox(
+      widthFactor: context.isLandscape ? 0.8 : 1,
+      child: Column(
+        mainAxisAlignment: .center,
+        crossAxisAlignment: .stretch,
+        spacing: 14,
+        children: [
+          FlixurInput(
+            label: t.routes.startup.server_url.url.toUpperCase(),
+            errorText: errorText.value,
+            textField: (deco) => TextField(
+              decoration: deco.copyWith(hintText: "https://demo.flixur.app"),
+              controller: serverUrlController,
+              onSubmitted: (_) => submit(),
+            ),
+          ),
+          StartupButton(
+            text: t.routes.startup.server_url.connect,
+            isLoading: isLoading.value,
+            onPressed: submit,
+          ),
+        ],
+      ),
+    );
+
     return PageTitle(
       t.routes.startup.server_url.welcome,
-      child: Scaffold(
+      child: StartupBody(
         backgroundColor: context.colors.mantle,
-        body: Center(
-          child: Flex(
-            direction: context.isLandscape ? .horizontal : .vertical,
-            mainAxisAlignment: .center,
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: .center,
-                  spacing: 16,
-                  children: [
-                    ConstrainedBox(
-                      constraints: BoxConstraints(
-                        // sane sizing for logo depending on screen size
-                        maxWidth:
-                            context.screenSize.width *
-                            (context.isLandscape ? 0.4 : 0.8),
-                        maxHeight:
-                            context.screenSize.height *
-                            (context.isLandscape ? 0.4 : 0.3),
-                      ),
-                      child: Images.logo,
+        child: context.isLandscape
+            ? Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: .center,
+                      spacing: 16,
+                      children: [logo, welcomeText],
                     ),
-                    Text(
-                      t.routes.startup.server_url.welcome,
-                      style: const TextStyle(fontSize: 56),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: FractionallySizedBox(
-                  widthFactor: 0.8,
-                  child: Column(
-                    mainAxisAlignment: .center,
-                    crossAxisAlignment: .stretch,
-                    spacing: 14,
-                    children: [
-                      FlixurInput(
-                        label: t.routes.startup.server_url.url.toUpperCase(),
-                        errorText: errorText.value,
-                        textField: (deco) => TextField(
-                          decoration: deco.copyWith(
-                            hintText: "https://demo.flixur.app",
-                          ),
-                          controller: serverUrlController,
-                          onSubmitted: (_) => submit(),
-                        ),
-                      ),
-                      StartupButton(
-                        text: t.routes.startup.server_url.connect,
-                        isLoading: isLoading.value,
-                        onPressed: submit,
-                      ),
-                    ],
                   ),
-                ),
+                  Expanded(child: input),
+                ],
+              )
+            : Column(
+                mainAxisAlignment: .center,
+                spacing: 16,
+                children: [logo, welcomeText, input],
               ),
-            ],
-          ),
-        ),
       ),
     );
   }
