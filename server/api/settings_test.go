@@ -2,7 +2,9 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
+	"reflect"
 	"testing"
 
 	"forge.xela.codes/xela/flixur/settings"
@@ -62,43 +64,45 @@ func TestSettingsDefinitions(t *testing.T) {
 		t.Fatalf("status = %d", resp.Code)
 	}
 	body := decode[SettingsDefinitionsBody](t, resp)
-	if len(body.List) < 6 {
-		t.Fatalf("expected at least 6 definitions, got %d", len(body.List))
+
+	// the response must mirror the client registry
+	defs := settings.ClientRegistry.All()
+	if len(defs) == 0 {
+		t.Fatal("client registry is empty, nothing to verify")
 	}
-	if len(body.Groups) < 4 {
-		t.Fatalf("expected at least 4 groups, got %d", len(body.Groups))
-	}
-	registryGroups := map[string]bool{}
-	for _, group := range body.Groups {
-		registryGroups[group.ID] = true
-	}
-	for _, expected := range []string{"ui", "ui.navigation", "ui.window", "ui.library"} {
-		if !registryGroups[expected] {
-			t.Errorf("missing group %s in the definitions response", expected)
-		}
+	if len(body.List) != len(defs) {
+		t.Fatalf("response has %d definitions, registry has %d", len(body.List), len(defs))
 	}
 
-	// spot check a bool, an int and a list definition
+	// every registry definition must survive the JSON round-trip intact
 	byID := map[string]*settings.SettingsDefinition{}
 	for _, def := range body.List {
 		byID[def.ID] = def
 	}
-	boolDef := byID["ui.window.startMaximized"]
-	if boolDef == nil || boolDef.Kind != settings.KindBool ||
-		boolDef.Bool == nil || !boolDef.Bool.Default {
-		t.Errorf("startMaximized definition = %+v", boolDef)
+	for _, want := range defs {
+		got := byID[want.ID]
+		if got == nil {
+			t.Errorf("missing definition %s", want.ID)
+			continue
+		}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("definition %s differs from registry:\n wire = %+v\n reg  = %+v", want.ID, got, want)
+		}
 	}
-	intDef := byID["ui.library.cardsPerRow"]
-	if intDef == nil || intDef.Kind != settings.KindInt ||
-		intDef.Int == nil || intDef.Int.Default != 6 {
-		t.Errorf("cardsPerRow definition = %+v", intDef)
+
+	// groups too
+	groups := settings.ClientRegistry.Groups()
+	if len(body.Groups) != len(groups) {
+		t.Fatalf("response has %d groups, registry has %d", len(body.Groups), len(groups))
 	}
-	listDef := byID["ui.navigation.shownSections"]
-	if listDef == nil || listDef.StringList == nil || len(listDef.StringList.Default) != 5 {
-		t.Errorf("shownSections definition = %+v", listDef)
+	respGroups := map[string]bool{}
+	for _, group := range body.Groups {
+		respGroups[group.ID] = true
 	}
-	if len(listDef.StringList.Choices) != 7 {
-		t.Errorf("shownSections choices = %+v", listDef.StringList.Choices)
+	for _, want := range groups {
+		if !respGroups[want.ID] {
+			t.Errorf("missing group %s in the definitions response", want.ID)
+		}
 	}
 }
 
@@ -186,12 +190,30 @@ func TestSettingsProfilesLifecycle(t *testing.T) {
 func TestSettingsProfileValues(t *testing.T) {
 	api, token := setupSettingsTest(t)
 
+	// search for a bool and a bounded int setting from the registry so this test
+	// doesn't depend on specific setting IDs or their bounds
+	var boolDef, intDef *settings.SettingsDefinition
+	for _, def := range settings.ClientRegistry.All() {
+		switch {
+		case def.Bool != nil && boolDef == nil:
+			boolDef = def
+		case def.Int != nil && def.Int.Min != nil && def.Int.Max != nil && intDef == nil:
+			intDef = def
+		}
+	}
+	if boolDef == nil {
+		t.Fatal("no bool setting in the client registry")
+	}
+	if intDef == nil {
+		t.Fatal("no bounded int setting in the client registry")
+	}
+
 	resp := api.Get("/settings/profiles", authHeaders(token)...)
 	profiles := decode[SettingsProfilesBody](t, resp)
 	profileID := profiles.List[0].ID
 
 	// set a bool override
-	resp = api.Put("/settings/profiles/"+profileID+"/values/ui.window.startMaximized",
+	resp = api.Put("/settings/profiles/"+profileID+"/values/"+boolDef.ID,
 		append(authHeaders(token), map[string]any{"value": "false"})...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("put bool status = %d, body = %s", resp.Code, resp.Body.String())
@@ -204,12 +226,12 @@ func TestSettingsProfileValues(t *testing.T) {
 	// get values contains it
 	resp = api.Get("/settings/profiles/"+profileID+"/values", authHeaders(token)...)
 	values := decode[SettingValuesBody](t, resp)
-	if len(values.Values) != 1 || values.Values["ui.window.startMaximized"].Value != "false" {
+	if len(values.Values) != 1 || values.Values[boolDef.ID].Value != "false" {
 		t.Fatalf("values = %+v", values.Values)
 	}
 
 	// update overwrites
-	resp = api.Put("/settings/profiles/"+profileID+"/values/ui.window.startMaximized",
+	resp = api.Put("/settings/profiles/"+profileID+"/values/"+boolDef.ID,
 		append(authHeaders(token), map[string]any{"value": "true"})...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("re-put bool status = %d", resp.Code)
@@ -220,15 +242,15 @@ func TestSettingsProfileValues(t *testing.T) {
 	}
 
 	// invalid value for the kind is rejected
-	resp = api.Put("/settings/profiles/"+profileID+"/values/ui.window.startMaximized",
+	resp = api.Put("/settings/profiles/"+profileID+"/values/"+boolDef.ID,
 		append(authHeaders(token), map[string]any{"value": "\"nope\""})...)
 	if resp.Code != http.StatusBadRequest {
 		t.Errorf("invalid bool status = %d", resp.Code)
 	}
 
 	// out-of-bounds int is rejected
-	resp = api.Put("/settings/profiles/"+profileID+"/values/ui.library.cardsPerRow",
-		append(authHeaders(token), map[string]any{"value": "999999"})...)
+	resp = api.Put("/settings/profiles/"+profileID+"/values/"+intDef.ID,
+		append(authHeaders(token), map[string]any{"value": fmt.Sprintf("%d", *intDef.Int.Max+1)})...)
 	if resp.Code != http.StatusBadRequest {
 		t.Errorf("out of bounds int status = %d", resp.Code)
 	}
