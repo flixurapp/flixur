@@ -15,7 +15,7 @@ class const SettingsView({super.key}) extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  String _searchTerm = "";
+  String searchTerm = "";
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class _SettingsViewState extends State<SettingsView> {
       builder: (context, _, _) => Column(
         crossAxisAlignment: .stretch,
         children: [
-          SettingsViewHeader((value) => setState(() => _searchTerm = value)),
+          SettingsViewHeader((value) => setState(() => searchTerm = value)),
           Expanded(
             child: ListView(
               padding: const .symmetric(horizontal: 16, vertical: 12),
@@ -38,20 +38,26 @@ class _SettingsViewState extends State<SettingsView> {
 
   /// Render a group's settings, then its children.
   List<Widget> renderGroup(BuildContext context, String? parent) {
+    final query = searchTerm.toLowerCase().trim();
+
     // direct child settings
     final definitions = Settings.definitions ?? [];
     final children = _sortSettings([
       for (final def in definitions)
-        if (parent != null && _groupParent(def.id) == parent) def,
+        if (parent != null &&
+            _groupParent(def.id) == parent &&
+            _settingMatches(def, query))
+          def,
     ], (d) => (d.id, settingName(d.id), d.order));
 
     // child groups
     final groups = Settings.groups ?? [];
     final childGroups = _sortSettings([
       for (final group in groups)
-        if (parent == null
-            ? !group.id.contains(".")
-            : _groupParent(group.id) == parent)
+        if ((parent == null
+                ? !group.id.contains(".")
+                : _groupParent(group.id) == parent) &&
+            _groupHasVisibleChildren(group.id, query))
           group,
     ], (g) => (g.id, settingGroupName(g.id), g.order));
 
@@ -80,6 +86,7 @@ class const _GroupTile(
 }
 
 class _GroupTileState extends State<_GroupTile> {
+  final _controller = ExpansibleController();
   // starts open, matching initiallyExpanded
   bool expanded = true;
 
@@ -89,6 +96,15 @@ class _GroupTileState extends State<_GroupTile> {
     final group = widget.group;
     final icon = group.icon;
 
+    // force categories to be expanded while searching
+    if (widget.parent.searchTerm.isNotEmpty && !_controller.isExpanded) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && widget.parent.searchTerm.isNotEmpty) {
+          _controller.expand();
+        }
+      });
+    }
+
     final bg = colors.crust;
     final shape = _groupParent(group.id) == null
         ? const RoundedRectangleBorder(borderRadius: .all(.circular(8)))
@@ -96,6 +112,7 @@ class _GroupTileState extends State<_GroupTile> {
 
     return ExpansionTile(
       key: ValueKey(group.id),
+      controller: _controller,
       collapsedBackgroundColor: bg,
       backgroundColor: bg,
       initiallyExpanded: true,
@@ -123,6 +140,12 @@ class _GroupTileState extends State<_GroupTile> {
       children: [...widget.parent.renderGroup(context, group.id)],
     );
   }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 }
 
 /// Returns the parent group of an ID. Null for toplevel groups.
@@ -149,3 +172,35 @@ List<T> _sortSettings<T>(
 
     return aId.compareTo(bId);
   });
+
+/// Whether a setting definition matches the [query].
+bool _settingMatches(SettingsDefinition def, String query) {
+  if (
+  // empty queries always match
+  query.isEmpty ||
+      // setting ID
+      def.id.toLowerCase().contains(query) ||
+      // translated name
+      settingName(def.id).toLowerCase().contains(query) ||
+      // translated description
+      settingDescription(def.id).toLowerCase().contains(query)) {
+    return true;
+  }
+  // any parent group name matches
+  for (
+    var group = _groupParent(def.id);
+    group != null;
+    group = _groupParent(group)
+  ) {
+    if (settingGroupName(group).toLowerCase().contains(query)) return true;
+  }
+  return false;
+}
+
+/// Whether a group has any child settings that match the [query].
+bool _groupHasVisibleChildren(String groupId, String query) {
+  final definitions = Settings.definitions ?? [];
+  return definitions
+      .where((def) => def.id.startsWith(groupId) && _settingMatches(def, query))
+      .isNotEmpty;
+}
