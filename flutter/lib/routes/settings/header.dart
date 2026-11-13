@@ -56,7 +56,10 @@ class const SettingsViewHeader(
                 fillColor: colors.mantle,
                 border: const UnderlineInputBorder(borderRadius: .zero),
                 enabledBorder: const UnderlineInputBorder(
-                  borderSide: .new(color: Colors.transparent),
+                  borderSide: .new(
+                    color: Colors.transparent,
+                    width: _topBorderWidth,
+                  ),
                   borderRadius: .zero,
                 ),
               ),
