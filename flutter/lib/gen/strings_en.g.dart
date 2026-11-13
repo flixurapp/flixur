@@ -188,6 +188,9 @@ class Translations$routes$settings$en {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+	Map<String, String> get create_rename_codes => {
+		'CONFLICT': 'Profile names must be unique!',
+	};
 
 	/// en: 'New Profile'
 	String get new_profile => 'New Profile';
@@ -328,6 +331,7 @@ extension on Translations {
 			'navigation.section_titles.settings' => 'Settings',
 			'or_line' => 'OR',
 			'password' => 'Password',
+			'routes.settings.create_rename_codes.CONFLICT' => 'Profile names must be unique!',
 			'routes.settings.new_profile' => 'New Profile',
 			'routes.settings.rename_profile' => 'Rename Profile',
 			'routes.settings.requires_restart_hint' => 'Requires a restart to take effect.',

@@ -50,12 +50,11 @@ class const LoginView({required final ServerLoginPayload serverInfo, super.key})
           await Storage.put(.sessionToken, data.sessionToken);
           if (!context.mounted) return;
           context.goNamed("home");
-        case ApiFailure(:final err, :final message):
+        case ApiFailure(:final translated):
           await showErrorDialog(
             context,
             title: t.routes.startup.login.failed,
-            message:
-                err?.translate(t.routes.startup.login.failed_codes) ?? message,
+            message: translated(t.routes.startup.login.failed_codes),
           );
       }
     }

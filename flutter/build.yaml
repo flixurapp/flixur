@@ -8,6 +8,7 @@ targets:
           input_file_pattern: .yaml
           maps:
             - navigation.section_titles
+            - routes.settings.create_rename_codes
             - routes.settings.profiles_failed_codes
             - routes.startup.login.failed_codes
             - routes.startup.setup.failed_codes

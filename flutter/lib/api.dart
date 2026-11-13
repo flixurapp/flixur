@@ -128,6 +128,9 @@ ${errorModel?.detail ?? ""}'''
     }
     return rawException.message ?? rawException.type.name;
   }
+
+  /// Return the translation for [err] or [message].
+  String translated(Map<String, String> map) => err?.translated(map) ?? message;
 }
 
 extension APIErrorKey on APIError {
@@ -135,5 +138,5 @@ extension APIErrorKey on APIError {
   String get key => "$code${detail != null ? ".$detail" : ""}";
 
   /// Return the translation for this error from the given translation [map].
-  String? translate(Map<String, String> map) => map[key];
+  String? translated(Map<String, String> map) => map[key];
 }

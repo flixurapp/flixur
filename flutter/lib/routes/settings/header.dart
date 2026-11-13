@@ -143,11 +143,11 @@ class const SettingsViewHeader(
         await Settings.sync();
         // select newly created profile
         await Settings.switchProfile(data.id);
-      case ApiFailure(:final message):
+      case ApiFailure(:final translated):
         await showErrorDialog(
           context,
-          title: t.routes.settings.new_profile,
-          message: message,
+          title: t.api_request_fail,
+          message: translated(t.routes.settings.create_rename_codes),
         );
     }
   }
@@ -178,7 +178,11 @@ class const SettingsViewHeader(
       case ApiSuccess():
         await Settings.sync();
       case ApiFailure(:final message):
-        await showErrorDialog(context, title: t.btn_rename, message: message);
+        await showErrorDialog(
+          context,
+          title: t.api_request_fail,
+          message: message,
+        );
     }
   }
 
@@ -195,7 +199,11 @@ class const SettingsViewHeader(
       case ApiSuccess():
         await Settings.sync();
       case ApiFailure(:final message):
-        await showErrorDialog(context, title: t.btn_delete, message: message);
+        await showErrorDialog(
+          context,
+          title: t.api_request_fail,
+          message: message,
+        );
     }
   }
 }

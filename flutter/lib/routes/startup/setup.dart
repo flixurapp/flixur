@@ -50,12 +50,11 @@ class const SetupView({required final ServerLoginPayload serverInfo, super.key})
           if (!context.mounted) return;
           // save was successful, so continue
           context.goNamed("home");
-        case ApiFailure(:final err, :final message):
+        case ApiFailure(:final translated):
           await showErrorDialog(
             context,
             title: t.routes.startup.setup.failed,
-            message:
-                err?.translate(t.routes.startup.setup.failed_codes) ?? message,
+            message: translated(t.routes.startup.setup.failed_codes),
           );
       }
     }

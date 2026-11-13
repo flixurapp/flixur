@@ -27,6 +27,8 @@ or_line: "OR"
 password: "Password"
 routes:
   settings:
+    create_rename_codes:
+      CONFLICT: "Profile names must be unique!"
     new_profile: "New Profile"
     rename_profile: "Rename Profile"
     requires_restart_hint: "Requires a restart to take effect."
