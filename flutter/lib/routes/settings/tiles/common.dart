@@ -1,3 +1,5 @@
+import "dart:math";
+
 import "package:flixur/routes/settings/index.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/utils.dart";
@@ -22,21 +24,38 @@ class const SettingsTileShell(
   @override
   Widget build(BuildContext context) {
     final desc = Text(def.description.isNotEmpty ? def.description : def.id);
+    final padLeft = SettingsView.paddingFor(context, def.id);
+    final padRight = SettingsView.paddingFor(context, "");
+    final trailingWidget = context.isLandscape
+        ? (vertical ?? trailing)
+        : trailing;
 
-    return ListTile(
-      title: Text(def.name),
-      isThreeLine: true,
-      subtitle: Column(
-        spacing: SettingsView.paddingFor(context, "") * 0.75,
-        crossAxisAlignment: .start,
-        children: [desc, if (!context.isLandscape) ?vertical, ?content],
-      ),
-      trailing: context.isLandscape ? (vertical ?? trailing) : trailing,
-      onTap: onTap,
-      contentPadding: .only(
-        left: SettingsView.paddingFor(context, def.id),
-        right: SettingsView.paddingFor(context, ""),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // cap the trailing widget so it can never throw an error
+        final double trailingMax = max(
+          0,
+          constraints.maxWidth - padLeft - padRight - 40,
+        );
+
+        return ListTile(
+          title: Text(def.name),
+          isThreeLine: true,
+          subtitle: Column(
+            spacing: SettingsView.paddingFor(context, "") * 0.75,
+            crossAxisAlignment: .start,
+            children: [desc, if (!context.isLandscape) ?vertical, ?content],
+          ),
+          trailing: trailingWidget == null
+              ? null
+              : ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: trailingMax),
+                  child: trailingWidget,
+                ),
+          onTap: onTap,
+          contentPadding: .only(left: padLeft, right: padRight),
+        );
+      },
     );
   }
 }
