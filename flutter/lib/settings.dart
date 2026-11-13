@@ -141,6 +141,9 @@ class Settings {
         unawaited(sync());
       }
     });
+
+    // sync with the server on startup
+    unawaited(sync());
   }
 
   /// Refresh the current setting overrides and notify listeners.
@@ -212,13 +215,21 @@ class Settings {
       );
       switch (profileList) {
         case ApiSuccess(:final data):
+          final oldProfiles = profiles;
           profiles = data.list.toList();
 
           await _box.put(_profilesKey, profiles);
 
           // switch to first profile if ours was deleted
-          final profile = data.list.any((item) => item.id == activeProfileID);
-          if (!profile) await switchProfile(data.list.firstOrNull?.id);
+          final hasActive = data.list.any((item) => item.id == activeProfileID);
+          if (!hasActive) await switchProfile(data.list.firstOrNull?.id);
+
+          // notify listeners when profiles changed
+          if (oldProfiles == null ||
+              oldProfiles.length != profiles!.length ||
+              oldProfiles.any((item) => profile(item.id)?.name != item.name)) {
+            _changes.add(.all());
+          }
         case ApiFailure():
           failure ??= profileList;
       }

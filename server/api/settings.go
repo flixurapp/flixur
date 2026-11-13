@@ -193,8 +193,8 @@ func RegisterSettingsRoutes(reg APIRegistry) {
 		Name:        "Rename Settings Profile",
 		Description: "Renames a settings profile.",
 		Errors: APIErrorCodes{
+			CodeConflict:      "Name already taken.",
 			CodeDatabaseError: "Failed to write to database.",
-			CodeInvalidInput:  "Name is empty or already taken.",
 		}}), "/profiles/{profile}", func(ctx context.Context, input *struct {
 		// Profile ID
 		Profile string `path:"profile"`
@@ -227,7 +227,7 @@ func RegisterSettingsRoutes(reg APIRegistry) {
 			return nil, CreateAPIError(CodeDatabaseError)
 		}
 		if existingProfile {
-			return nil, CreateAPIError(CodeInvalidInput)
+			return nil, CreateAPIError(CodeConflict)
 		}
 
 		// rename the profile

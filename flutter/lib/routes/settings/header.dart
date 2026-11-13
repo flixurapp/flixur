@@ -1,6 +1,7 @@
 import "dart:async";
 
 import "package:flixur/api.dart";
+import "package:flixur/hooks.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/ui/buttons.dart";
 import "package:flixur/ui/dialogs.dart";
@@ -17,9 +18,11 @@ const double _topBorderWidth = 2;
 class const SettingsViewHeader(
   final void Function(String) onChanged, {
   super.key,
-}) extends StatelessWidget {
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    useSettings([]);
+
     final colors = context.colors;
     return IntrinsicHeight(
       child: Flex(
@@ -57,6 +60,10 @@ class const SettingsViewHeader(
                   gate: !context.isLandscape,
                   wrapper: (child) => Expanded(child: child),
                   child: FlixurDropdownMenu(
+                    // use active profile name so a rename recreates dropdown
+                    key: ValueKey(
+                      Settings.profile(Settings.activeProfileID ?? "")?.name,
+                    ),
                     initialSelection: Settings.activeProfileID,
                     expandedInsets: context.isLandscape ? null : .zero,
                     requestFocusOnTap: false,
