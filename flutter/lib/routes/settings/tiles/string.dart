@@ -51,6 +51,8 @@ class _State extends State<SettingsTileString> {
             controller: controller,
             focusNode: focus,
             decoration: decoration,
+            obscureText: widget.def.string?.secret ?? false,
+            maxLength: widget.def.string?.maxLength,
             onChanged: (value) {
               final profileID = Settings.activeProfileID;
               debouncer.run(
