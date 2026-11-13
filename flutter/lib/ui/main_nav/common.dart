@@ -169,9 +169,13 @@ class const MainNavWrapper({
     }
 
     // mobile layout
+    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
     return Scaffold(
       body: navShell,
-      bottomNavigationBar: MainNavBottom(parent: this, onSelected: _onSelect),
+      // hide navbar when keyboard is open
+      bottomNavigationBar: keyboardOpen
+          ? null
+          : MainNavBottom(parent: this, onSelected: _onSelect),
     );
   }
 
