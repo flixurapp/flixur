@@ -1,5 +1,5 @@
+import "package:flixur/ui/dialogs/prompt.dart";
 import "package:flixur/ui/icons.dart";
-import "package:flixur/ui/inputs.dart";
 import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
 
@@ -67,43 +67,13 @@ Future<String?> showPromptDialog(
   String? hintText,
   List<Widget>? content,
   int? maxLength,
-}) async {
-  final controller = TextEditingController();
-  final res = await showDialog<String>(
-    context: context,
-    builder: (ctx) {
-      void submit() {
-        Navigator.of(ctx).pop(controller.text.trim());
-      }
-
-      return AlertDialog(
-        title: Text(title),
-        content: SingleChildScrollView(
-          child: Column(
-            children: [
-              ...?content,
-              FlixurInput(
-                textField: (decoration) => TextField(
-                  autofocus: true,
-                  controller: controller,
-                  onSubmitted: (_) => submit(),
-                  decoration: decoration.copyWith(hintText: hintText),
-                  maxLength: maxLength,
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(t.btn_cancel),
-          ),
-          TextButton(onPressed: submit, child: Text(submitText ?? t.btn_save)),
-        ],
-      );
-    },
-  );
-  //controller.dispose();
-  return res;
-}
+}) => showDialog<String>(
+  context: context,
+  builder: (ctx) => PromptDialog(
+    title: title,
+    submitText: submitText,
+    hintText: hintText,
+    content: content,
+    maxLength: maxLength,
+  ),
+);
