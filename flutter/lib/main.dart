@@ -7,6 +7,7 @@ import "package:flixur/titlebar.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/main_nav/common.dart";
 import "package:flixur/ui/main_nav/top.dart";
+import "package:flixur/ui/scrollbar.dart";
 import "package:flixur/utils.dart";
 import "package:flutter_web_plugins/url_strategy.dart";
 import "package:material_ui/material_ui.dart";
@@ -49,6 +50,7 @@ class const MainApp({super.key}) extends StatelessWidget {
     return MaterialApp.router(
       theme: AppTheme.dark.theme,
       routerConfig: router,
+      // new things should go in WindowFrame, trying to keep this slim
       builder: (context, page) =>
           WindowFrame(page: page ?? const Text("Uhm~ 4-oh-4...")),
     );
@@ -127,7 +129,10 @@ class _WindowFrameState extends State<WindowFrame> {
         child: PageTitleScope(
           // main app title slot
           slot: MainNavWrapper.titleSlot,
-          child: Scaffold(body: Overlay(initialEntries: [_overlayEntry])),
+          child: ScrollConfiguration(
+            behavior: const AppScrollBehavior(),
+            child: Scaffold(body: Overlay(initialEntries: [_overlayEntry])),
+          ),
         ),
       ),
     );
