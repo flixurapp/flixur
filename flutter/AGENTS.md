@@ -21,6 +21,8 @@
   Do NOT run bare `build_runner`/`dart run build_runner` - the nix wrapper mirrors the
   SDK layout because dart codegen can't resolve `dart:ui` under nix otherwise.
 
+When verifying changes FIRST run format and THEN analyze, unless format throws errors.
+
 ## Dart 3.13 language style - primary constructors
 
 The SDK constraint is `sdk: 3.13.3`. **Prefer primary constructors** for new code, and
