@@ -27,8 +27,8 @@ routes:
   settings:
     new_profile: "New Profile"
     rename_profile: "Rename Profile"
-    search_hint: "Search settings..."
     requires_restart_hint: "Requires a restart to take effect."
+    search_hint: "Search settings..."
   startup:
     login:
       failed: "Login Failed"
