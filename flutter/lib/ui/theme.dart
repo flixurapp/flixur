@@ -106,6 +106,12 @@ ThemeData buildAppTheme(AppColors colors) {
         disabledMouseCursor: SystemMouseCursors.forbidden,
       ),
     ),
+    iconButtonTheme: IconButtonThemeData(
+      style: IconButton.styleFrom(
+        enabledMouseCursor: SystemMouseCursors.click,
+        disabledMouseCursor: SystemMouseCursors.forbidden,
+      ),
+    ),
     textTheme: TextTheme(
       bodyMedium: TextStyle(color: colors.text),
       bodySmall: TextStyle(color: colors.textMuted),

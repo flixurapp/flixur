@@ -48,7 +48,6 @@ class const SettingsTileString(final SettingsDefinition def, {super.key})
                           obscured && (maxLength == null || !focus.hasFocus)
                           // show/hide button
                           ? IconButton(
-                              mouseCursor: SystemMouseCursors.click,
                               onPressed: () =>
                                   showObscured.value = !showObscured.value,
                               icon: showObscured.value
