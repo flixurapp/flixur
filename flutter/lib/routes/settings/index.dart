@@ -13,10 +13,9 @@ class const SettingsView({super.key}) extends HookWidget {
   /// Amount of padding to the left of setting items.
   static const tilePadding = 16.0;
 
-  /// Gets the padding for a specific definition.
-  /// Pass an empty string to always return x1.
-  static double paddingFor(BuildContext context, String id) =>
-      (id.isEmpty ? 1 : id.split(".").length) *
+  /// Gets the padding for a specific definition. Omit for x1.
+  static double paddingFor(BuildContext context, [String? id]) =>
+      (id == null ? 1 : id.split(".").length) *
       SettingsView.tilePadding *
       // halve the padding for mobile
       (context.isLandscape ? 1 : 0.5);
@@ -135,7 +134,7 @@ class const _GroupTile(final SettingsGroup group, final String searchTerm)
       // each child gets inset more
       tilePadding: .only(
         left: SettingsView.paddingFor(context, group.id),
-        right: SettingsView.paddingFor(context, ""),
+        right: SettingsView.paddingFor(context),
       ),
       childrenPadding: const .only(bottom: 4),
       children: [..._renderGroup(context, group.id, searchTerm)],

@@ -25,7 +25,7 @@ class const SettingsTileShell(
   Widget build(BuildContext context) {
     final desc = Text(def.description.isNotEmpty ? def.description : def.id);
     final padLeft = SettingsView.paddingFor(context, def.id);
-    final padRight = SettingsView.paddingFor(context, "");
+    final padRight = SettingsView.paddingFor(context);
     final trailingWidget = context.isLandscape
         ? (vertical ?? trailing)
         : trailing;
@@ -42,7 +42,7 @@ class const SettingsTileShell(
           title: Text(def.name),
           isThreeLine: true,
           subtitle: Column(
-            spacing: SettingsView.paddingFor(context, "") * 0.75,
+            spacing: SettingsView.paddingFor(context) * 0.75,
             crossAxisAlignment: .start,
             children: [desc, if (!context.isLandscape) ?vertical, ?content],
           ),
