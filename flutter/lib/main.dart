@@ -82,13 +82,19 @@ class const WindowFrame({required final Widget page, super.key})
         // main app title slot
         slot: MainNavWrapper.titleSlot,
         child: Scaffold(
-          body: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              // titlebar
-              const MainNavTop(),
-              // page
-              Expanded(child: page),
+          body: Overlay(
+            initialEntries: [
+              OverlayEntry(
+                builder: (context) => Column(
+                  crossAxisAlignment: .stretch,
+                  children: [
+                    // titlebar
+                    const MainNavTop(),
+                    // page
+                    Expanded(child: page),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
