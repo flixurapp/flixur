@@ -28,6 +28,14 @@ class _LoginViewState extends State<LoginView> {
   bool _isOidcLoading = false;
 
   @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _passwordFocus.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return PageTitle(
       t.routes.startup.login.title,

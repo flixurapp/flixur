@@ -21,6 +21,12 @@ class _ServerUrlViewState extends State<ServerUrlView> {
   bool _isLoading = false;
 
   @override
+  void dispose() {
+    _serverUrlController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return PageTitle(
       t.routes.startup.server_url.welcome,

@@ -26,6 +26,16 @@ class _SetupViewState extends State<SetupView> {
   bool _isLoading = false;
 
   @override
+  void dispose() {
+    _codeController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _usernameFocus.dispose();
+    _passwordFocus.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return PageTitle(
       t.routes.startup.setup.title,
