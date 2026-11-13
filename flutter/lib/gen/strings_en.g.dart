@@ -96,7 +96,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'ui.navigation.railDefaultExpanded': 'Whether the left navigation rail starts off expanded.',
 		'ui.navigation.shownSections': 'Choose which sections are shown in the main navigation.',
 		'ui.window.startMaximized': 'Open ${_root.app_name} maximized on launch.',
-		'ui.window.useCustom': 'Whether to use a custom titlebar.',
+		'ui.window.useCustom': 'Whether to use the custom titlebar. ${_root.routes.settings.requires_restart_hint}',
 	};
 	Map<String, String> get setting_group_names => {
 		'ui': 'User Interface',
@@ -191,6 +191,9 @@ class Translations$routes$settings$en {
 
 	/// en: 'Search settings...'
 	String get search_hint => 'Search settings...';
+
+	/// en: 'Requires a restart to take effect.'
+	String get requires_restart_hint => 'Requires a restart to take effect.';
 }
 
 // Path: routes.startup
@@ -317,6 +320,7 @@ extension on Translations {
 			'routes.settings.new_profile' => 'New Profile',
 			'routes.settings.rename_profile' => 'Rename Profile',
 			'routes.settings.search_hint' => 'Search settings...',
+			'routes.settings.requires_restart_hint' => 'Requires a restart to take effect.',
 			'routes.startup.login.failed' => 'Login Failed',
 			'routes.startup.login.failed_codes.INCORRECT_PASSWORD' => 'Incorrect password.',
 			'routes.startup.login.failed_codes.INCORRECT_USERNAME' => 'Username not found.',
@@ -341,7 +345,7 @@ extension on Translations {
 			'setting_descriptions."ui.navigation.railDefaultExpanded"' => 'Whether the left navigation rail starts off expanded.',
 			'setting_descriptions."ui.navigation.shownSections"' => 'Choose which sections are shown in the main navigation.',
 			'setting_descriptions."ui.window.startMaximized"' => 'Open ${_root.app_name} maximized on launch.',
-			'setting_descriptions."ui.window.useCustom"' => 'Whether to use a custom titlebar.',
+			'setting_descriptions."ui.window.useCustom"' => 'Whether to use the custom titlebar. ${_root.routes.settings.requires_restart_hint}',
 			'setting_group_names.ui' => 'User Interface',
 			'setting_group_names."ui.library"' => 'Library',
 			'setting_group_names."ui.navigation"' => 'Navigation',

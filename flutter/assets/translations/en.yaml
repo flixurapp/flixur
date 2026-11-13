@@ -28,6 +28,7 @@ routes:
     new_profile: "New Profile"
     rename_profile: "Rename Profile"
     search_hint: "Search settings..."
+    requires_restart_hint: "Requires a restart to take effect."
   startup:
     login:
       failed: "Login Failed"
@@ -59,7 +60,7 @@ setting_descriptions:
   ui.navigation.railDefaultExpanded: "Whether the left navigation rail starts off expanded."
   ui.navigation.shownSections: "Choose which sections are shown in the main navigation."
   ui.window.startMaximized: "Open @:app_name maximized on launch."
-  ui.window.useCustom: "Whether to use a custom titlebar."
+  ui.window.useCustom: "Whether to use the custom titlebar. @:routes.settings.requires_restart_hint"
 setting_group_names:
   ui: "User Interface"
   ui.library: "Library"
