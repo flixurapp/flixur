@@ -1,3 +1,6 @@
+import "dart:async";
+
+import "package:flixur/router.dart" show router;
 import "package:flixur/settings.dart";
 import "package:flixur/titlebar.dart";
 import "package:flixur/ui/buttons.dart";
@@ -6,6 +9,7 @@ import "package:flixur/ui/main_nav/common.dart";
 import "package:flixur/ui/main_nav/rail.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/foundation.dart";
+import "package:flutter/services.dart";
 import "package:material_ui/material_ui.dart";
 import "package:window_manager/window_manager.dart";
 
@@ -14,6 +18,22 @@ class const MainNavTop({super.key}) extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final height = context.isLandscape ? 38.0 : 44.0;
+
+    final moreMenuItems = [
+      // show hidden buttons on mobile
+      if (!context.isLandscape)
+        for (final section in MainNavWrapper.hiddenSections)
+          _MoreMenuItem(section: section),
+      // debug size button
+      if (kDebugMode && TitlebarManager.isSupported)
+        _MoreMenuItem(
+          section: null,
+          label: t.titlebar.minimize,
+          onPressed: TitlebarManager.debugResizeToPhone,
+          foreground: context.colors.tertiary,
+          iconName: "device-mobile",
+        ),
+    ];
 
     return Material(
       color: colors.mantle,
@@ -59,28 +79,15 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                   builder: (context, _) => Row(
                     crossAxisAlignment: .stretch,
                     children: [
-                      if (!context.isLandscape)
+                      if (moreMenuItems.isNotEmpty)
                         ValueListenableBuilder(
                           valueListenable: MainNavWrapper.activeSection,
-                          builder: (context, value, _) => _MainNavTopButton(
-                            label: t.titlebar.more,
-                            onTap: () {},
-                            square: true,
-                            color: context.colors.primary,
-                            noForeground: true,
-                            selected: MainNavWrapper.hiddenSections.contains(
-                              value,
-                            ),
-                            child: const _MainNavTopIcon("dots-three"),
-                          ),
-                        ),
-                      if (kDebugMode)
-                        _MainNavTopButton(
-                          label: t.titlebar.minimize,
-                          onTap: TitlebarManager.debugResizeToPhone,
-                          square: !context.isLandscape,
-                          color: context.colors.tertiary,
-                          child: const _MainNavTopIcon("device-mobile"),
+                          builder: (context, _, _) =>
+                              SettingsValue<List<String>>(
+                                "ui.navigation.shownSections",
+                                builder: (context, _) =>
+                                    _MoreMenu(children: moreMenuItems),
+                              ),
                         ),
                       if (TitlebarManager.shouldEnable) ...[
                         _MainNavTopButton(
@@ -189,5 +196,87 @@ class const _MainNavTopIcon(final String name) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Iconify(name, size: mainNavIconSize * 0.8);
+  }
+}
+
+/// Popup menu holding more navigation options.
+class const _MoreMenu({required final List<Widget> children})
+    extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return MenuAnchor(
+      style: .new(
+        backgroundColor: .all(colors.crust),
+        elevation: .all(6),
+        padding: .all(.zero),
+      ),
+      menuChildren: children,
+      builder: (context, controller, _) => _MainNavTopButton(
+        label: t.titlebar.more,
+        onTap: () {
+          if (controller.isOpen) {
+            controller.close();
+          } else {
+            controller.open();
+          }
+        },
+        square: true,
+        color: colors.primary,
+        noForeground: true,
+        selected:
+            !context.isLandscape &&
+            MainNavWrapper.hiddenSections.contains(
+              MainNavWrapper.activeSection.value,
+            ),
+        child: const _MainNavTopIcon("dots-three"),
+      ),
+    );
+  }
+}
+
+/// Entry for a single item inside [_MoreMenu].
+class const _MoreMenuItem({
+  required final MainNavSection? section,
+  final VoidCallback? onPressed,
+  final String? iconName,
+  final String? label,
+  final Color? foreground,
+}) extends StatelessWidget {
+  bool get active =>
+      section != null && MainNavWrapper.activeSection.value == section;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final fg = foreground ?? (active ? colors.primary : colors.textMuted);
+
+    return MenuItemButton(
+      onPressed: () {
+        unawaited(HapticFeedback.selectionClick());
+        if (onPressed != null) {
+          onPressed!();
+        } else if (section != null) {
+          router.goNamed(section!.name);
+        }
+      },
+      leadingIcon: Iconify(iconName ?? section?.icon ?? ""),
+      style: .new(
+        padding: .all(const .symmetric(horizontal: 18, vertical: 24)),
+        foregroundColor: .all(fg),
+        iconColor: .all(fg),
+        iconSize: .all(26),
+        mouseCursor: .resolveWith(
+          (s) => switch (s.mainState) {
+            _ when s.has(.hovered) => SystemMouseCursors.click,
+            _ => SystemMouseCursors.basic,
+          },
+        ),
+      ),
+      child: Text(
+        label ?? section?.label ?? "",
+        style: const TextStyle(fontSize: 16),
+      ),
+    );
   }
 }
