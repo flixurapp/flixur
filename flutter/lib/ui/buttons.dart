@@ -14,23 +14,41 @@ class const FlixurButton({
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    const disabledAlpha = 0.4;
     final bg = backgroundColor ?? context.colors.mantle;
     final fg = foregroundColor ?? context.colors.text;
+    final borderColor = tint ?? bg;
 
     return FilledButton(
       onPressed: onPressed,
       style: .new(
         backgroundColor: .all(bg),
-        foregroundColor: .all(fg),
         iconSize: .all(24),
-        iconColor: .all(fg),
-        shape: .all(
-          borderWidth > 0
-              ? LinearBorder.bottom(
-                  side: .new(color: tint ?? bg, width: borderWidth),
-                )
-              : const RoundedRectangleBorder(),
+        foregroundColor: .resolveWith(
+          (s) => switch (s.mainState) {
+            .disabled => fg.withValues(alpha: disabledAlpha),
+            _ => fg,
+          },
         ),
+        iconColor: .resolveWith(
+          (s) => switch (s.mainState) {
+            .disabled => fg.withValues(alpha: disabledAlpha),
+            _ => fg,
+          },
+        ),
+        shape: borderWidth > 0
+            ? .resolveWith(
+                (s) => LinearBorder.bottom(
+                  side: .new(
+                    color: switch (s.mainState) {
+                      .disabled => borderColor.withValues(alpha: disabledAlpha),
+                      _ => borderColor,
+                    },
+                    width: borderWidth,
+                  ),
+                ),
+              )
+            : .all(const RoundedRectangleBorder()),
         surfaceTintColor: .all(tint),
         // custom size requires no padding, let the Row() center elements
         padding: size != null ? .all(.zero) : null,
