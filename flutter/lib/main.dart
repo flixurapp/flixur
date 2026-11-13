@@ -106,24 +106,29 @@ class _WindowFrameState extends State<WindowFrame> {
 
   @override
   Widget build(BuildContext context) {
-    return GatedWidget(
-      gate: TitlebarManager.isSupported,
-      wrapper: (child) => ValueListenableBuilder(
-        valueListenable: TitlebarManager.isMaximizedNotifier,
-        builder: (context, maximized, child) => DragToResizeArea(
-          // only enable resize edges for the custom titlebar
-          // while the window isnt maximized
-          enableResizeEdges: TitlebarManager.shouldEnable && !maximized
-              ? null
-              : const [],
-          child: child!,
+    return GestureDetector(
+      // unfocus any input fields when clicked outside
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      behavior: .opaque,
+      child: GatedWidget(
+        gate: TitlebarManager.isSupported,
+        wrapper: (child) => ValueListenableBuilder(
+          valueListenable: TitlebarManager.isMaximizedNotifier,
+          builder: (context, maximized, child) => DragToResizeArea(
+            // only enable resize edges for the custom titlebar
+            // while the window isnt maximized
+            enableResizeEdges: TitlebarManager.shouldEnable && !maximized
+                ? null
+                : const [],
+            child: child!,
+          ),
+          child: child,
         ),
-        child: child,
-      ),
-      child: PageTitleScope(
-        // main app title slot
-        slot: MainNavWrapper.titleSlot,
-        child: Scaffold(body: Overlay(initialEntries: [_overlayEntry])),
+        child: PageTitleScope(
+          // main app title slot
+          slot: MainNavWrapper.titleSlot,
+          child: Scaffold(body: Overlay(initialEntries: [_overlayEntry])),
+        ),
       ),
     );
   }
