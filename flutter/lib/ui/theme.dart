@@ -153,6 +153,26 @@ ThemeData buildAppTheme(AppColors colors) {
       textStyle: .new(color: colors.text),
       padding: const .symmetric(horizontal: 12, vertical: 6),
     ),
+    scrollbarTheme: .new(
+      interactive: true,
+      crossAxisMargin: 0,
+      mainAxisMargin: 0,
+      minThumbLength: 48,
+      thickness: .resolveWith(
+        (s) => switch (s.mainState) {
+          .hovered || .dragged => 10,
+          _ => 8,
+        },
+      ),
+      radius: const .circular(4),
+      thumbColor: .resolveWith(
+        (s) => switch (s.mainState) {
+          .dragged => colors.text.withValues(alpha: 0.8),
+          .hovered => colors.text.withValues(alpha: 0.6),
+          _ => colors.text.withValues(alpha: 0.35),
+        },
+      ),
+    ),
   );
 }
 
