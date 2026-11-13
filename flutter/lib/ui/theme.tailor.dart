@@ -16,6 +16,7 @@ mixin _$AppColorsTailorMixin on ThemeExtension<AppColors> {
   Color get tertiary;
   Color get success;
   Color get error;
+  Color get warn;
   Color get crust;
   Color get mantle;
   Color get base;
@@ -32,6 +33,7 @@ mixin _$AppColorsTailorMixin on ThemeExtension<AppColors> {
     Color? tertiary,
     Color? success,
     Color? error,
+    Color? warn,
     Color? crust,
     Color? mantle,
     Color? base,
@@ -47,6 +49,7 @@ mixin _$AppColorsTailorMixin on ThemeExtension<AppColors> {
       tertiary: tertiary ?? this.tertiary,
       success: success ?? this.success,
       error: error ?? this.error,
+      warn: warn ?? this.warn,
       crust: crust ?? this.crust,
       mantle: mantle ?? this.mantle,
       base: base ?? this.base,
@@ -67,6 +70,7 @@ mixin _$AppColorsTailorMixin on ThemeExtension<AppColors> {
       tertiary: Color.lerp(tertiary, other.tertiary, t)!,
       success: Color.lerp(success, other.success, t)!,
       error: Color.lerp(error, other.error, t)!,
+      warn: Color.lerp(warn, other.warn, t)!,
       crust: Color.lerp(crust, other.crust, t)!,
       mantle: Color.lerp(mantle, other.mantle, t)!,
       base: Color.lerp(base, other.base, t)!,
@@ -99,6 +103,7 @@ mixin _$AppColorsTailorMixin on ThemeExtension<AppColors> {
             const DeepCollectionEquality().equals(tertiary, other.tertiary) &&
             const DeepCollectionEquality().equals(success, other.success) &&
             const DeepCollectionEquality().equals(error, other.error) &&
+            const DeepCollectionEquality().equals(warn, other.warn) &&
             const DeepCollectionEquality().equals(crust, other.crust) &&
             const DeepCollectionEquality().equals(mantle, other.mantle) &&
             const DeepCollectionEquality().equals(base, other.base) &&
@@ -124,6 +129,7 @@ mixin _$AppColorsTailorMixin on ThemeExtension<AppColors> {
       const DeepCollectionEquality().hash(tertiary),
       const DeepCollectionEquality().hash(success),
       const DeepCollectionEquality().hash(error),
+      const DeepCollectionEquality().hash(warn),
       const DeepCollectionEquality().hash(crust),
       const DeepCollectionEquality().hash(mantle),
       const DeepCollectionEquality().hash(base),

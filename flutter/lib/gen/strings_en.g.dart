@@ -200,6 +200,9 @@ class Translations$routes$settings$en {
 
 	/// en: 'Search settings...'
 	String get search_hint => 'Search settings...';
+
+	/// en: 'Sync will resume when the network reconnects.'
+	String get sync_offline => 'Sync will resume when the network reconnects.';
 }
 
 // Path: routes.startup
@@ -329,6 +332,7 @@ extension on Translations {
 			'routes.settings.rename_profile' => 'Rename Profile',
 			'routes.settings.requires_restart_hint' => 'Requires a restart to take effect.',
 			'routes.settings.search_hint' => 'Search settings...',
+			'routes.settings.sync_offline' => 'Sync will resume when the network reconnects.',
 			'routes.startup.login.failed' => 'Login Failed',
 			'routes.startup.login.failed_codes.INCORRECT_PASSWORD' => 'Incorrect password.',
 			'routes.startup.login.failed_codes.INCORRECT_USERNAME' => 'Username not found.',

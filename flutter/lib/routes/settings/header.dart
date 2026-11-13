@@ -7,8 +7,12 @@ import "package:flixur/ui/dialogs.dart";
 import "package:flixur/ui/dropdowns.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/utils.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
+
+/// Border width of the bottom of the top buttons.
+const double _topBorderWidth = 2;
 
 class const SettingsViewHeader(
   final void Function(String) onChanged, {
@@ -80,16 +84,17 @@ class const SettingsViewHeader(
                     },
                   ),
                 ),
+                const _SyncButton(),
                 FlixurButton(
                   onPressed: () => _createProfile(context),
-                  borderWidth: 2,
+                  borderWidth: _topBorderWidth,
                   tint: colors.success,
                   icon: const Iconify("plus"),
                   label: context.isLandscape ? Text(t.btn_new) : null,
                 ),
                 FlixurButton(
                   onPressed: () => _renameProfile(context),
-                  borderWidth: 2,
+                  borderWidth: _topBorderWidth,
                   tint: colors.primary,
                   icon: const Iconify("pencil-simple"),
                   label: context.isLandscape ? Text(t.btn_rename) : null,
@@ -98,7 +103,7 @@ class const SettingsViewHeader(
                   onPressed: (Settings.profiles?.length ?? 0) > 1
                       ? () => _deleteProfile(context)
                       : null,
-                  borderWidth: 2,
+                  borderWidth: _topBorderWidth,
                   tint: colors.error,
                   icon: const Iconify("trash-simple"),
                   label: context.isLandscape ? Text(t.btn_delete) : null,
@@ -185,5 +190,53 @@ class const SettingsViewHeader(
       case ApiFailure(:final message):
         await showErrorDialog(context, title: t.btn_delete, message: message);
     }
+  }
+}
+
+class const _SyncButton() extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final state = useListenable(Settings.syncState).value;
+
+    final spin = useAnimationController(
+      duration: const Duration(seconds: 1),
+      keys: const [],
+    );
+    useEffect(() {
+      if (state case SyncSyncing()) {
+        spin.repeat();
+        return spin.stop;
+      }
+      spin.value = 0;
+      return null;
+    }, [state]);
+
+    final (icon, color, tooltip) = switch (state) {
+      SyncOffline() => (
+        "cloud-slash",
+        context.colors.error,
+        t.routes.settings.sync_offline as String?,
+      ),
+      SyncError(:final message) => (
+        "exclamation-mark",
+        context.colors.warn,
+        message,
+      ),
+      _ => ("arrows-clockwise", null, null),
+    };
+
+    return FlixurButton(
+      onPressed: () => unawaited(Settings.sync()),
+      tint: color,
+      borderWidth: _topBorderWidth,
+      icon: GatedWidget(
+        gate: tooltip != null,
+        wrapper: (child) => Tooltip(message: tooltip, child: child),
+        child: RotationTransition(
+          turns: spin,
+          child: Iconify(icon, color: color),
+        ),
+      ),
+    );
   }
 }

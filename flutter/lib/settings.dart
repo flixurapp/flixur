@@ -1,5 +1,6 @@
 import "dart:async";
 import "dart:convert";
+import "dart:math";
 
 import "package:flixur/api.dart";
 import "package:flixur/gen/strings.g.dart";
@@ -45,6 +46,11 @@ class Settings {
   /// Broadcast stream of settings changes.
   static final StreamController<SettingsChange> _changes =
       StreamController<SettingsChange>.broadcast();
+
+  /// Current server sync state, for status indicators.
+  static final ValueNotifier<SettingsSyncState> syncState = ValueNotifier(
+    const SyncIdle(),
+  );
 
   /// Listens for changes affecting the given setting IDs.
   /// An empty [ids] listens to all settings.
@@ -149,56 +155,91 @@ class Settings {
     };
   }
 
+  /// If [sync] is running.
   static bool _syncing = false;
+
+  /// Amount of active data transfers to the server.
+  static int _activeSyncs = 0;
+
+  static void _beginSync() {
+    _activeSyncs++;
+    syncState.value = const SyncSyncing();
+  }
+
+  /// Ends a sync, putting [failure] into the resulting sync state.
+  static void _endSync(ApiFailure<dynamic>? failure) {
+    _activeSyncs = max(0, _activeSyncs - 1);
+    if (_activeSyncs > 0) return;
+    syncState.value = switch (failure) {
+      null => const SyncIdle(),
+      final f when f.rawException.response == null => const SyncOffline(),
+      final f => SyncError(f.message),
+    };
+  }
 
   /// Synchronizes local settings data with the server.
   static Future<void> sync() async {
     if (_syncing || !Api.canMakeAuthenticatedRequests) return;
     _syncing = true;
+    _beginSync();
+    ApiFailure<dynamic>? failure;
 
     try {
       // push pending updates to the server first
-      await _pushPending();
+      failure ??= await _pushPending();
 
       // definitions
       final defs = await Api.request(
         (a) => a.getSettingsApi().getClientSettingsDefinitions(),
       );
-      if (defs case ApiSuccess(:final data)) {
-        definitions = data.list.toList();
-        groups = data.groups.toList();
-        // defaults may have changed, notify listeners
-        _changes.add(.all());
+      switch (defs) {
+        case ApiSuccess(:final data):
+          definitions = data.list.toList();
+          groups = data.groups.toList();
+          // defaults may have changed, notify listeners
+          _changes.add(.all());
 
-        // persist for offline use
-        await _box.put(_definitionsKey, definitions);
-        await _box.put(_groupsKey, groups);
+          // persist for offline use
+          await _box.put(_definitionsKey, definitions);
+          await _box.put(_groupsKey, groups);
+        case ApiFailure():
+          failure ??= defs;
       }
 
       // profiles
       final profileList = await Api.request(
         (a) => a.getSettingsApi().getSettingsProfiles(),
       );
-      if (profileList case ApiSuccess(:final data)) {
-        profiles = data.list.toList();
+      switch (profileList) {
+        case ApiSuccess(:final data):
+          profiles = data.list.toList();
 
-        await _box.put(_profilesKey, profiles);
+          await _box.put(_profilesKey, profiles);
 
-        // switch to first profile if ours was deleted
-        final profile = data.list.any((item) => item.id == activeProfileID);
-        if (!profile) await switchProfile(data.list.firstOrNull?.id);
+          // switch to first profile if ours was deleted
+          final profile = data.list.any((item) => item.id == activeProfileID);
+          if (!profile) await switchProfile(data.list.firstOrNull?.id);
+        case ApiFailure():
+          failure ??= profileList;
       }
 
       // pull values if we have an active profile
       final active = activeProfileID;
-      if (active != null) await _pullValues(active);
+      if (active != null) {
+        failure ??= await _pullValues(active);
+      }
     } finally {
       _syncing = false;
+      _endSync(failure);
     }
   }
 
   /// Pushes pending updates to the server.
-  static Future<void> _pushPending() async {
+  /// Returns the failure response if the push failed.
+  static Future<ApiFailure<dynamic>?> _pushPending() async {
+    _beginSync();
+    ApiFailure<dynamic>? failure;
+
     final remaining = List.of(_pendingItems);
     for (final pending in remaining) {
       //TODO: if the server has a value newer than the pending push we should
@@ -217,33 +258,44 @@ class Settings {
           _storeValue(pending.profileID, pending.settingID, data);
           _pendingItems.remove(pending);
         case ApiFailure():
-          // keep it queued for the next sync
           //TODO: add retry counter on this and stop after so many tries
-          return;
+          //TODO: surface server errors to the user in a toast
+
+          // keep it queued for the next sync
+          // we only pass on the first failure, let everything else sync
+          failure ??= response;
       }
     }
+
     await _box.put(_pendingItemsKey, _pendingItems);
+    _endSync(failure);
+    return failure;
   }
 
   /// Pulls server values for [profileID], merging them with local ones.
-  static Future<void> _pullValues(String profileID) async {
+  /// Returns the failure response if the pull failed.
+  static Future<ApiFailure<dynamic>?> _pullValues(String profileID) async {
     final response = await Api.request(
       (a) => a.getSettingsApi().getSettingsProfileValues(profile: profileID),
     );
-    if (response case ApiSuccess(:final data)) {
-      final stored = _storedValues[profileID];
-      final changed = <String>[];
-      for (final entry in data.values.entries) {
-        final existing = stored?[entry.key];
-        // newer timestamp wins
-        if (existing == null ||
-            entry.value.updatedAt.isAfter(existing.updatedAt)) {
-          _storeValue(profileID, entry.key, entry.value);
-          changed.add(entry.key);
+    switch (response) {
+      case ApiSuccess(:final data):
+        final stored = _storedValues[profileID];
+        final changed = <String>[];
+        for (final entry in data.values.entries) {
+          final existing = stored?[entry.key];
+          // newer timestamp wins
+          if (existing == null ||
+              entry.value.updatedAt.isAfter(existing.updatedAt)) {
+            _storeValue(profileID, entry.key, entry.value);
+            changed.add(entry.key);
+          }
         }
-      }
-      _refreshOverrides();
-      if (changed.isNotEmpty) _changes.add(.new(changed));
+        _refreshOverrides();
+        if (changed.isNotEmpty) _changes.add(.new(changed));
+        return null;
+      case ApiFailure():
+        return response;
     }
   }
 
@@ -377,6 +429,14 @@ class Settings {
 class SettingsChange(final List<String> ids) {
   new all() : this(const []);
 }
+
+// we are using classes here so that we can pass message from the error one.
+/// Server sync state of settings.
+sealed class const SettingsSyncState();
+class const SyncIdle() extends SettingsSyncState;
+class const SyncSyncing() extends SettingsSyncState;
+class const SyncOffline() extends SettingsSyncState;
+class SyncError(final String message) extends SettingsSyncState;
 
 /// Listens for setting value changes and rebuilds, returning the value.
 class const SettingsValue<T extends Object>(

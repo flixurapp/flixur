@@ -31,6 +31,7 @@ routes:
     rename_profile: "Rename Profile"
     requires_restart_hint: "Requires a restart to take effect."
     search_hint: "Search settings..."
+    sync_offline: "Sync will resume when the network reconnects."
   startup:
     login:
       failed: "Login Failed"

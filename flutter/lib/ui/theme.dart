@@ -14,6 +14,7 @@ class const AppColors({
   required final Color tertiary,
   required final Color success,
   required final Color error,
+  required final Color warn,
   required final Color crust,
   required final Color mantle,
   required final Color base,
@@ -42,6 +43,7 @@ enum AppTheme(final AppColors colors) {
       tertiary: Color(0xFF33BCDE),
       success: Color(0xFF33DE55),
       error: Color(0xFFDE5533),
+      warn: Color(0xFFFF9100),
       crust: Color(0xFF040607),
       mantle: Color(0xFF090C12),
       base: Color(0xFF21252D),
@@ -55,14 +57,15 @@ enum AppTheme(final AppColors colors) {
       primary: Color(0xFFCBA6F7), // Mauve
       secondary: Color(0xFF94E2D5), // Teal
       tertiary: Color(0xFFF9E2AF), // Yellow
-      success: Color(0xFFA6E3A1),
-      error: Color(0xFFF38BA8),
-      crust: Color(0xFF11111B),
-      mantle: Color(0xFF181825),
-      base: Color(0xFF1E1E2E),
-      text: Color(0xFFCDD6F4),
-      textMuted: Color(0xFFA6ADC8),
-      onPrimaryOverride: Color(0xFF1E1E2E),
+      success: Color(0xFFA6E3A1), // Gree
+      error: Color(0xFFF38BA8), // Red
+      warn: Color(0xFFFAB387), // Peach
+      crust: Color(0xFF11111B), // Crust
+      mantle: Color(0xFF181825), // Mantle
+      base: Color(0xFF1E1E2E), // Base
+      text: Color(0xFFCDD6F4), // Text
+      textMuted: Color(0xFFA6ADC8), // Subtext 0
+      onPrimaryOverride: Color(0xFF1E1E2E), // Base
     ),
   );
 
