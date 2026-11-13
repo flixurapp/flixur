@@ -27,9 +27,9 @@ class const MainNavRail({
       color: colors.mantle,
       child: SafeArea(
         right: false,
-        child: SettingsValue<List<String>>(
-          "ui.navigation.shownSections",
-          builder: (context, _) => ValueListenableBuilder(
+        child: SettingsListen(
+          const ["ui.navigation.shownSections"],
+          builder: (context) => ValueListenableBuilder(
             valueListenable: isExpanded,
             builder: (context, expanded, _) => AnimatedContainer(
               duration: mainNavAnimationDuration,

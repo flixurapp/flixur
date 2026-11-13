@@ -82,12 +82,11 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                       if (moreMenuItems.isNotEmpty)
                         ValueListenableBuilder(
                           valueListenable: MainNavWrapper.activeSection,
-                          builder: (context, _, _) =>
-                              SettingsValue<List<String>>(
-                                "ui.navigation.shownSections",
-                                builder: (context, _) =>
-                                    _MoreMenu(children: moreMenuItems),
-                              ),
+                          builder: (context, _, _) => SettingsListen(
+                            const ["ui.navigation.shownSections"],
+                            builder: (context) =>
+                                _MoreMenu(children: moreMenuItems),
+                          ),
                         ),
                       if (TitlebarManager.shouldEnable) ...[
                         _MainNavTopButton(

@@ -3,8 +3,10 @@ import "dart:convert";
 
 import "package:flixur/api.dart";
 import "package:flixur/gen/strings.g.dart";
+import "package:flixur/hooks.dart";
 import "package:flixur/storage.dart";
 import "package:flutter/widgets.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:hive_ce_flutter/hive_ce_flutter.dart";
 import "package:openapi/openapi.dart";
 
@@ -40,8 +42,18 @@ class Settings {
   /// Setting overrides for the active profile. Values are the encoded JSON.
   static Map<String, String>? overrides;
 
-  /// Bumped whenever any settings property changes.
-  static ValueNotifier<int> changeNotifier = .new(0);
+  /// Broadcast stream of settings changes.
+  static final StreamController<SettingsChange> _changes =
+      StreamController<SettingsChange>.broadcast();
+
+  /// Listens for changes affecting the given setting IDs.
+  /// An empty [ids] listens to all settings.
+  static Stream<SettingsChange> watch(List<String> ids) {
+    if (ids.isEmpty) return _changes.stream;
+    return _changes.stream.where(
+      (event) => event.ids.isEmpty || event.ids.any(ids.contains),
+    );
+  }
 
   /// Get a definition by ID.
   static SettingsDefinition? definition(String id) =>
@@ -117,6 +129,7 @@ class Settings {
         overrides = null;
         _storedValues.clear();
         _pendingItems.clear();
+        _changes.add(.all());
       } else {
         // otherwise queue a sync because auth updated
         unawaited(sync());
@@ -134,7 +147,6 @@ class Settings {
       for (final entry in (_storedValues[activeProfileID] ?? const {}).entries)
         entry.key: entry.value.value,
     };
-    changeNotifier.value++;
   }
 
   static bool _syncing = false;
@@ -155,7 +167,8 @@ class Settings {
       if (defs case ApiSuccess(:final data)) {
         definitions = data.list.toList();
         groups = data.groups.toList();
-        changeNotifier.value++;
+        // defaults may have changed, notify listeners
+        _changes.add(.all());
 
         // persist for offline use
         await _box.put(_definitionsKey, definitions);
@@ -168,7 +181,6 @@ class Settings {
       );
       if (profileList case ApiSuccess(:final data)) {
         profiles = data.list.toList();
-        changeNotifier.value++;
 
         await _box.put(_profilesKey, profiles);
 
@@ -220,15 +232,18 @@ class Settings {
     );
     if (response case ApiSuccess(:final data)) {
       final stored = _storedValues[profileID];
+      final changed = <String>[];
       for (final entry in data.values.entries) {
         final existing = stored?[entry.key];
         // newer timestamp wins
         if (existing == null ||
             entry.value.updatedAt.isAfter(existing.updatedAt)) {
           _storeValue(profileID, entry.key, entry.value);
+          changed.add(entry.key);
         }
       }
       _refreshOverrides();
+      if (changed.isNotEmpty) _changes.add(.new(changed));
     }
   }
 
@@ -251,6 +266,8 @@ class Settings {
   static Future<void> switchProfile(String? id) async {
     // dont switch to nonexistent profile
     if (id != null && profile(id) == null) return;
+    // nothing to do
+    if (activeProfileID == id) return;
 
     activeProfileID = id;
     if (id != null) {
@@ -259,6 +276,7 @@ class Settings {
       await _box.delete(_activeProfileKey);
     }
     _refreshOverrides();
+    _changes.add(.all());
   }
 
   /// Reads a setting value from it's ID. Null if the setting is not found yet.
@@ -307,6 +325,7 @@ class Settings {
       ),
     );
     _refreshOverrides();
+    _changes.add(.new([id]));
 
     // remove any pending updates for this item
     _pendingItems.removeWhere(
@@ -353,19 +372,36 @@ class Settings {
       };
 }
 
-/// Listens for setting changes and rebuilds.
+/// A settings change event.
+/// An empty [ids] means a global change affecting every setting.
+class SettingsChange(final List<String> ids) {
+  new all() : this(const []);
+}
+
+/// Listens for setting value changes and rebuilds, returning the value.
 class const SettingsValue<T extends Object>(
   final String id, {
   required final Widget Function(BuildContext context, T value) builder,
   super.key,
-}) extends StatelessWidget {
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<int>(
-      valueListenable: Settings.changeNotifier,
-      builder: (context, revision, child) =>
-          builder(context, Settings.getValue<T>(id)),
-    );
+    useSettings([id]);
+    return builder(context, Settings.getValue<T>(id));
+  }
+}
+
+/// Listens for setting changes and rebuilds without reading a value.
+/// An empty [ids] listens to all settings.
+class const SettingsListen(
+  final List<String> ids, {
+  required final Widget Function(BuildContext context) builder,
+  super.key,
+}) extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    useSettings(ids);
+    return builder(context);
   }
 }
 

@@ -16,9 +16,9 @@ class const MainNavBottom({
       color: context.colors.mantle,
       child: SafeArea(
         top: false,
-        child: SettingsValue<List<String>>(
-          "ui.navigation.shownSections",
-          builder: (context, _) => SettingsValue<bool>(
+        child: SettingsListen(
+          const ["ui.navigation.shownSections"],
+          builder: (context) => SettingsValue<bool>(
             "ui.navigation.bottomLabels",
             builder: (context, showLabels) => Row(
               children: [

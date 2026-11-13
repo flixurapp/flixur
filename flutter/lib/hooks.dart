@@ -1,3 +1,4 @@
+import "package:flixur/settings.dart";
 import "package:flixur/utils.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
@@ -27,4 +28,17 @@ class _DebouncedHookState extends HookState<Debounced, _DebouncedHook> {
   Debounced build(BuildContext context) => debouncer;
   @override
   void dispose() => debouncer.dispose();
+}
+
+/// Rebuilds the calling HookWidget when any of [ids] change.
+/// An empty [ids] listens to all settings.
+/// Returns the current revision for use with [useEffect].
+int useSettings([List<String> ids = const []]) {
+  final revision = useState(0);
+  // key on the joined IDs instead of list object
+  final key = ids.join(",");
+  useEffect(() => Settings.watch(ids).listen((_) => revision.value++).cancel, [
+    key,
+  ]);
+  return revision.value;
 }

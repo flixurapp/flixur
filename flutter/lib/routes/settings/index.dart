@@ -1,3 +1,4 @@
+import "package:flixur/hooks.dart";
 import "package:flixur/routes/settings/header.dart";
 import "package:flixur/routes/settings/tiles/bool.dart";
 import "package:flixur/routes/settings/tiles/string.dart";
@@ -24,7 +25,7 @@ class const SettingsView({super.key}) extends HookWidget {
   Widget build(BuildContext context) {
     final searchTerm = useState("");
     // rebuild when any setting changes
-    useListenable(Settings.changeNotifier);
+    useSettings();
 
     return Column(
       crossAxisAlignment: .stretch,

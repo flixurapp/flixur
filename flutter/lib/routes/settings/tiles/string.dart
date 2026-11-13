@@ -20,21 +20,17 @@ class const SettingsTileString(final SettingsDefinition def, {super.key})
     final debouncer = useFlixurDebounced(flushOnDispose: true);
     final focus = useFocusNode();
     final controller = useTextEditingController(text: def.value<String>());
-    // if the "show" button was clicked on the obscured text
+
+    /// if the "show" button was clicked on the obscured text
     final showObscured = useState(false);
 
     // keep the controller in sync when the setting changes elsewhere
+    final revision = useSettings([def.id]);
     useEffect(() {
-      void syncValue() {
-        final value = def.value<String>();
-        if (!focus.hasFocus && controller.text != value) {
-          controller.text = value;
-        }
-      }
-
-      Settings.changeNotifier.addListener(syncValue);
-      return () => Settings.changeNotifier.removeListener(syncValue);
-    });
+      final value = def.value<String>();
+      if (!focus.hasFocus && controller.text != value) controller.text = value;
+      return null;
+    }, [revision]);
 
     return LayoutBuilder(
       builder: (context, constraints) => SettingsTileShell(
