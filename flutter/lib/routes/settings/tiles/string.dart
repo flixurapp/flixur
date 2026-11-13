@@ -83,6 +83,7 @@ class _State extends State<SettingsTileString> {
                               style: .new(
                                 iconColor: .all(context.colors.textMuted),
                               ),
+                              tooltip: _showObscured ? t.btn_hide : t.btn_show,
                             )
                           // character counter
                           : IntrinsicWidth(

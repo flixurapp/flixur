@@ -132,6 +132,16 @@ ThemeData buildAppTheme(AppColors colors) {
       ),
       overlayColor: .all(Colors.transparent),
     ),
+    tooltipTheme: .new(
+      preferBelow: false,
+      decoration: BoxDecoration(
+        border: .all(color: colors.textMuted.withValues(alpha: 0.5)),
+        borderRadius: const .all(.circular(4)),
+        color: colors.crust,
+      ),
+      textStyle: .new(color: colors.text),
+      padding: const .symmetric(horizontal: 12, vertical: 6),
+    ),
   );
 }
 
