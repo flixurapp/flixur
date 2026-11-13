@@ -282,19 +282,23 @@ class Settings {
     throw UnsupportedError("no default value for the type $T");
   }
 
-  /// Writes a typed value for a setting to the active profile.
+  /// Writes a typed value for a setting to [profileID] when given or current.
   /// Returns a boolean indicating success.
-  static Future<bool> set<T extends Object>(String id, T value) async {
+  static Future<bool> set<T extends Object>(
+    String id,
+    T value, {
+    String? profileID,
+  }) async {
     final def = definition(id);
-    final profileID = activeProfileID;
-    if (def == null || profileID == null) return false;
+    final targetProfileID = profileID ?? activeProfileID;
+    if (def == null || targetProfileID == null) return false;
 
     final encoded = _encode<T>(def, value);
     final updatedAt = DateTime.now().toUtc();
 
     // store/update value locally
     _storeValue(
-      profileID,
+      targetProfileID,
       id,
       SettingValueEntry(
         (b) => b
@@ -307,7 +311,7 @@ class Settings {
     // queue update for the server
     _pendingItems.add(
       SettingsPendingPushItem(
-        profileID: profileID,
+        profileID: targetProfileID,
         settingID: id,
         value: encoded,
         updatedAt: updatedAt,
