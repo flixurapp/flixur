@@ -79,6 +79,46 @@ class Images {
   static Image get logo => Image.asset("assets/logo.png", fit: .contain);
 }
 
+/// Cancels and restarts a timer on each [run] call.
+class Debounced({
+  final Duration duration = const Duration(milliseconds: 350),
+
+  /// Whether [dispose] should run the pending action instead of dropping it.
+  final bool flushOnDispose = false,
+}) {
+  Timer? _timer;
+  void Function()? _action;
+
+  void run(void Function() action) {
+    _timer?.cancel();
+    _timer = Timer(duration, _action = action);
+  }
+
+  void cancel() {
+    _timer?.cancel();
+    _action = null;
+  }
+
+  /// Runs the pending action immediately, if any.
+  void flush() {
+    final action = _action;
+    _timer?.cancel();
+    _action = null;
+    action?.call();
+  }
+
+  /// Destroys this debouncer, flushing it if enabled.
+  void dispose() {
+    if (flushOnDispose) {
+      flush();
+    } else {
+      _timer?.cancel();
+      _action = null;
+    }
+    _timer = null;
+  }
+}
+
 /// Conditionally wraps [child] using [wrapper] when [gate] is true.
 class const GatedWidget({
   required final bool gate,

@@ -1,5 +1,6 @@
 import "package:flixur/routes/settings/header.dart";
 import "package:flixur/routes/settings/tiles/bool.dart";
+import "package:flixur/routes/settings/tiles/string.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/utils.dart";
@@ -9,6 +10,14 @@ import "package:openapi/openapi.dart";
 class const SettingsView({super.key}) extends StatefulWidget {
   /// Amount of padding to the left of setting items.
   static const tilePadding = 16.0;
+
+  /// Gets the padding for a specific definition.
+  /// Pass an empty string to always return x1.
+  static double paddingFor(BuildContext context, String id) =>
+      (id.isEmpty ? 1 : id.split(".").length) *
+      SettingsView.tilePadding *
+      // halve the padding for mobile
+      (context.isLandscape ? 1 : 0.5);
 
   @override
   State<SettingsView> createState() => _SettingsViewState();
@@ -67,7 +76,7 @@ class _SettingsViewState extends State<SettingsView> {
           .bool_ => SettingsTileBool(def),
           //.int_ => SettingsTileInt(def),
           //.float => SettingsTileFloat(def),
-          //.string => SettingsTileString(def),
+          .string => SettingsTileString(def),
           //.enum_ => SettingsTileEnum(def),
           //.stringlist => SettingsTileStringList(def),
           _ => const SizedBox.shrink(),
@@ -133,8 +142,8 @@ class _GroupTileState extends State<_GroupTile> {
       collapsedShape: shape,
       // each child gets inset more
       tilePadding: .only(
-        left: group.id.split(".").length * SettingsView.tilePadding,
-        right: SettingsView.tilePadding,
+        left: SettingsView.paddingFor(context, group.id),
+        right: SettingsView.paddingFor(context, ""),
       ),
       childrenPadding: const .only(bottom: 4),
       children: [...widget.parent.renderGroup(context, group.id)],
