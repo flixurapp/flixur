@@ -176,8 +176,10 @@ class const _RailToggle() extends StatelessWidget {
               label: expanded
                   ? t.titlebar.rail_collapse
                   : t.titlebar.rail_expand,
-              onTap: () =>
-                  MainNavRail.isExpanded.value = !MainNavRail.isExpanded.value,
+              onTap: () {
+                unawaited(HapticFeedback.selectionClick());
+                MainNavRail.isExpanded.value = !MainNavRail.isExpanded.value;
+              },
               child: AnimatedRotation(
                 duration: mainNavAnimationDuration,
                 turns: expanded ? 0 : -1 / 2,
