@@ -308,7 +308,11 @@ class Settings {
     );
     _refreshOverrides();
 
-    // queue update for the server
+    // remove any pending updates for this item
+    _pendingItems.removeWhere(
+      (item) => item.profileID == targetProfileID && item.settingID == id,
+    );
+    // queue new update for the server
     _pendingItems.add(
       SettingsPendingPushItem(
         profileID: targetProfileID,
