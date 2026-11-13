@@ -23,6 +23,16 @@ class const SettingsViewHeader(
   Widget build(BuildContext context) {
     useSettings([]);
 
+    final activeName = Settings.profile(Settings.activeProfileID ?? "")?.name;
+    final profileController = useTextEditingController();
+    useEffect(() {
+      final text = activeName ?? "";
+      if (profileController.text != text) {
+        profileController.value = .new(text: text);
+      }
+      return null;
+    }, [activeName]);
+
     final colors = context.colors;
     return IntrinsicHeight(
       child: Flex(
@@ -60,11 +70,9 @@ class const SettingsViewHeader(
                   gate: !context.isLandscape,
                   wrapper: (child) => Expanded(child: child),
                   child: FlixurDropdownMenu(
-                    // use active profile name so a rename recreates dropdown
-                    key: ValueKey(
-                      Settings.profile(Settings.activeProfileID ?? "")?.name,
-                    ),
-                    initialSelection: Settings.activeProfileID,
+                    controller: profileController,
+                    searchCallback: (entries, text) =>
+                        entries.indexWhere((entry) => entry.label == text),
                     expandedInsets: context.isLandscape ? null : .zero,
                     requestFocusOnTap: false,
                     inputDecorationTheme: InputDecorationThemeData(

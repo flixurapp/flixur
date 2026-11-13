@@ -158,8 +158,8 @@ class Settings {
     };
   }
 
-  /// If [sync] is running.
-  static bool _syncing = false;
+  /// Tail of the sync queue, for chaining.
+  static Future<void> _syncTail = Future.value();
 
   /// Amount of active data transfers to the server.
   static int _activeSyncs = 0;
@@ -180,10 +180,16 @@ class Settings {
     };
   }
 
-  /// Synchronizes local settings data with the server.
-  static Future<void> sync() async {
-    if (_syncing || !Api.canMakeAuthenticatedRequests) return;
-    _syncing = true;
+  /// Synchronizes local settings data with the server. Calls are queued.
+  static Future<void> sync() {
+    final task = _syncTail.then((_) => _runSync());
+    // keep the chain alive even if a sync throws
+    _syncTail = task.catchError((_) {});
+    return task;
+  }
+
+  static Future<void> _runSync() async {
+    if (!Api.canMakeAuthenticatedRequests) return;
     _beginSync();
     ApiFailure<dynamic>? failure;
 
@@ -240,7 +246,6 @@ class Settings {
         failure ??= await _pullValues(active);
       }
     } finally {
-      _syncing = false;
       _endSync(failure);
     }
   }

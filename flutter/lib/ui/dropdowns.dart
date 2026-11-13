@@ -7,6 +7,8 @@ class const FlixurDropdownMenu<T>({
   super.trailingIcon = const Iconify("caret-down"),
   super.selectedTrailingIcon = const Iconify("caret-up"),
   super.initialSelection,
+  super.controller,
+  super.searchCallback,
   super.expandedInsets,
   super.inputDecorationTheme,
   super.onSelected,
