@@ -43,6 +43,8 @@ func newClientRegistry() *Registry {
 
 	reg.Register(Bool("ui.navigation.testing.bool", false).Order(1))
 	reg.Register(String("ui.navigation.testing.str", "").Order(1))
+	reg.Register(String("ui.navigation.testing.str_secret", "").Secret(true).Order(1))
+	reg.Register(String("ui.navigation.testing.str_max", "").MaxLength(16).Order(1))
 	reg.Register(Enum("ui.navigation.testing.enum", "").AddChoice("x", "x").AddChoice("y").AddChoice("extra_super_long_choice", "phone-disconnect").Order(1))
 
 	//==
