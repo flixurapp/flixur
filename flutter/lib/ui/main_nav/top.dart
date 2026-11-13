@@ -76,47 +76,50 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                 bottom: 0,
                 child: SettingsValue<bool>(
                   "ui.window.useCustom",
-                  builder: (context, _) => Row(
-                    crossAxisAlignment: .stretch,
-                    children: [
-                      if (moreMenuItems.isNotEmpty)
-                        ValueListenableBuilder(
-                          valueListenable: MainNavWrapper.activeSection,
-                          builder: (context, _, _) =>
-                              SettingsValue<List<String>>(
-                                "ui.navigation.shownSections",
-                                builder: (context, _) =>
-                                    _MoreMenu(children: moreMenuItems),
+                  builder: (context, _) => IconTheme(
+                    data: const .new(size: mainNavIconSize * 0.8),
+                    child: Row(
+                      crossAxisAlignment: .stretch,
+                      children: [
+                        if (moreMenuItems.isNotEmpty)
+                          ValueListenableBuilder(
+                            valueListenable: MainNavWrapper.activeSection,
+                            builder: (context, _, _) =>
+                                SettingsValue<List<String>>(
+                                  "ui.navigation.shownSections",
+                                  builder: (context, _) =>
+                                      _MoreMenu(children: moreMenuItems),
+                                ),
+                          ),
+                        if (TitlebarManager.shouldEnable) ...[
+                          _MainNavTopButton(
+                            label: t.titlebar.minimize,
+                            onTap: TitlebarManager.minimize,
+                            square: !context.isLandscape,
+                            child: const Iconify("minus"),
+                          ),
+                          _MainNavTopButton(
+                            label: t.titlebar.maximize,
+                            onTap: TitlebarManager.toggleMaximized,
+                            square: !context.isLandscape,
+                            child: ValueListenableBuilder(
+                              valueListenable:
+                                  TitlebarManager.isMaximizedNotifier,
+                              builder: (context, maximized, _) => Iconify(
+                                maximized ? "corners-in" : "corners-out",
                               ),
-                        ),
-                      if (TitlebarManager.shouldEnable) ...[
-                        _MainNavTopButton(
-                          label: t.titlebar.minimize,
-                          onTap: TitlebarManager.minimize,
-                          square: !context.isLandscape,
-                          child: const _MainNavTopIcon("minus"),
-                        ),
-                        _MainNavTopButton(
-                          label: t.titlebar.maximize,
-                          onTap: TitlebarManager.toggleMaximized,
-                          square: !context.isLandscape,
-                          child: ValueListenableBuilder(
-                            valueListenable:
-                                TitlebarManager.isMaximizedNotifier,
-                            builder: (context, maximized, _) => _MainNavTopIcon(
-                              maximized ? "corners-in" : "corners-out",
                             ),
                           ),
-                        ),
-                        _MainNavTopButton(
-                          label: t.titlebar.close,
-                          onTap: TitlebarManager.close,
-                          square: !context.isLandscape,
-                          color: colors.error,
-                          child: const _MainNavTopIcon("x"),
-                        ),
+                          _MainNavTopButton(
+                            label: t.titlebar.close,
+                            onTap: TitlebarManager.close,
+                            square: !context.isLandscape,
+                            color: colors.error,
+                            child: const Iconify("x"),
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -182,20 +185,13 @@ class const _RailToggle() extends StatelessWidget {
               child: AnimatedRotation(
                 duration: mainNavAnimationDuration,
                 turns: expanded ? 0 : -1 / 2,
-                child: const _MainNavTopIcon("caret-double-left"),
+                child: const Iconify("caret-double-left"),
               ),
             ),
           );
         },
       ),
     );
-  }
-}
-
-class const _MainNavTopIcon(final String name) extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Iconify(name, size: mainNavIconSize * 0.8);
   }
 }
 
@@ -229,7 +225,7 @@ class const _MoreMenu({required final List<Widget> children})
             MainNavWrapper.hiddenSections.contains(
               MainNavWrapper.activeSection.value,
             ),
-        child: const _MainNavTopIcon("dots-three"),
+        child: const Iconify("dots-three"),
       ),
     );
   }
