@@ -21,7 +21,7 @@ func newClientRegistry() *Registry {
 	reg.Register(
 		StringList(
 			"ui.navigation.shownSections",
-			[]string{"home", "library", "search", "activity", "explore", "admin", "settings"},
+			[]string{"home", "library", "search", "activity", "explore"},
 		).Order(1).
 			AddChoice("home", "house").
 			AddChoice("library", "folders").
