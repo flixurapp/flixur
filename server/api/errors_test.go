@@ -5,8 +5,33 @@ import (
 	"testing"
 
 	"github.com/cardinalby/hureg"
+	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/humatest"
 )
+
+func TestNewErrorWithContextHook(t *testing.T) {
+	// messages carrying an error code becomes an APIError
+	se := huma.NewErrorWithContext(nil, http.StatusUnauthorized, string(CodeInvalidToken))
+	apiErr, ok := se.(*APIError)
+	if !ok {
+		t.Fatalf("NewErrorWithContext = %T, want *APIError", se)
+	}
+	if apiErr.Code != CodeInvalidToken {
+		t.Errorf("code = %q, want %q", apiErr.Code, CodeInvalidToken)
+	}
+	if apiErr.GetStatus() != http.StatusUnauthorized {
+		t.Errorf("status = %d, want %d", apiErr.GetStatus(), http.StatusUnauthorized)
+	}
+
+	// other messages keep huma's default ErrorModel
+	se = huma.NewErrorWithContext(nil, http.StatusUnprocessableEntity, "validation failed")
+	if _, ok := se.(*APIError); ok {
+		t.Error("expected default ErrorModel for non-code message, got *APIError")
+	}
+	if se.GetStatus() != http.StatusUnprocessableEntity {
+		t.Errorf("status = %d, want %d", se.GetStatus(), http.StatusUnprocessableEntity)
+	}
+}
 
 func TestAPIError(t *testing.T) {
 	err := CreateAPIError(CodeInvalidInput)

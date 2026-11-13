@@ -40,6 +40,17 @@ func CreateAPIErrorDetail(code APIErrorCode, detail string) *APIError {
 	}
 }
 
+func init() {
+	huma.NewErrorWithContext = func(ctx huma.Context, status int, msg string, errs ...error) huma.StatusError {
+		// properly pass through APIErrors from middleware
+		if code := APIErrorCode(msg); APIErrorCodeStatusMap[code] != 0 {
+			return CreateAPIError(code)
+		}
+		// huma-internal errors stay the same
+		return huma.NewError(status, msg, errs...)
+	}
+}
+
 type APIErrorCodes = map[APIErrorCode]string
 
 func APIErrorResponses(api hureg.APIGen, descriptions APIErrorCodes) map[string]*huma.Response {

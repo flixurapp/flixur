@@ -141,15 +141,6 @@ func RegisterAPI(router chi.Router, client *ent.Client) APIRegistry {
 		},
 	}
 
-	huma.NewErrorWithContext = func(ctx huma.Context, status int, msg string, errs ...error) huma.StatusError {
-		// properly pass through APIErrors from middleware
-		if code := APIErrorCode(msg); APIErrorCodeStatusMap[code] != 0 {
-			return CreateAPIError(code)
-		}
-		// huma-internal errors stay the same
-		return huma.NewError(status, msg, errs...)
-	}
-
 	// Saved registry to be returned for tests.
 	var registry = APIRegistry{
 		DB:     client,
