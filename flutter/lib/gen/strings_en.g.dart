@@ -63,6 +63,9 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	/// en: 'Delete'
 	String get btn_delete => 'Delete';
 
+	/// en: 'Hide'
+	String get btn_hide => 'Hide';
+
 	/// en: 'New'
 	String get btn_new => 'New';
 
@@ -77,6 +80,9 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 
 	/// en: 'Save'
 	String get btn_save => 'Save';
+
+	/// en: 'Show'
+	String get btn_show => 'Show';
 
 	/// en: 'Are you sure?'
 	String get confirmation_dialog_title => 'Are you sure?';
@@ -189,11 +195,11 @@ class Translations$routes$settings$en {
 	/// en: 'Rename Profile'
 	String get rename_profile => 'Rename Profile';
 
-	/// en: 'Search settings...'
-	String get search_hint => 'Search settings...';
-
 	/// en: 'Requires a restart to take effect.'
 	String get requires_restart_hint => 'Requires a restart to take effect.';
+
+	/// en: 'Search settings...'
+	String get search_hint => 'Search settings...';
 }
 
 // Path: routes.startup
@@ -301,11 +307,13 @@ extension on Translations {
 			'btn_confirm' => 'Confirm',
 			'btn_create' => 'Create',
 			'btn_delete' => 'Delete',
+			'btn_hide' => 'Hide',
 			'btn_new' => 'New',
 			'btn_ok' => 'OK',
 			'btn_remove' => 'Remove',
 			'btn_rename' => 'Rename',
 			'btn_save' => 'Save',
+			'btn_show' => 'Show',
 			'confirmation_dialog_title' => 'Are you sure?',
 			'navigation.section_titles.activity' => 'Activity',
 			'navigation.section_titles.admin' => 'Admin',
@@ -319,8 +327,8 @@ extension on Translations {
 			'password' => 'Password',
 			'routes.settings.new_profile' => 'New Profile',
 			'routes.settings.rename_profile' => 'Rename Profile',
-			'routes.settings.search_hint' => 'Search settings...',
 			'routes.settings.requires_restart_hint' => 'Requires a restart to take effect.',
+			'routes.settings.search_hint' => 'Search settings...',
 			'routes.startup.login.failed' => 'Login Failed',
 			'routes.startup.login.failed_codes.INCORRECT_PASSWORD' => 'Incorrect password.',
 			'routes.startup.login.failed_codes.INCORRECT_USERNAME' => 'Username not found.',

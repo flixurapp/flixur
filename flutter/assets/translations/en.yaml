@@ -5,11 +5,13 @@ btn_cancel: "Cancel"
 btn_confirm: "Confirm"
 btn_create: "Create"
 btn_delete: "Delete"
+btn_hide: "Hide"
 btn_new: "New"
 btn_ok: "OK"
 btn_remove: "Remove"
 btn_rename: "Rename"
 btn_save: "Save"
+btn_show: "Show"
 confirmation_dialog_title: "Are you sure?"
 navigation:
   section_titles:
