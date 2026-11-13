@@ -18,9 +18,21 @@ class const SettingsTileString(final SettingsDefinition def, {super.key})
 
 class _State extends State<SettingsTileString> {
   final debouncer = Debounced(flushOnDispose: true);
+  final focus = FocusNode();
   late final controller = TextEditingController(
     text: widget.def.value<String>(),
   );
+
+  @override
+  void initState() {
+    super.initState();
+    Settings.changeNotifier.addListener(_syncValue);
+  }
+
+  void _syncValue() {
+    final value = widget.def.value<String>();
+    if (!focus.hasFocus && controller.text != value) controller.text = value;
+  }
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -37,10 +49,20 @@ class _State extends State<SettingsTileString> {
         child: FlixurInput(
           textField: (decoration) => TextField(
             controller: controller,
+            focusNode: focus,
             decoration: decoration,
-            onChanged: (value) => debouncer.run(
-              () => unawaited(Settings.set<String>(widget.def.id, value)),
-            ),
+            onChanged: (value) {
+              final profileID = Settings.activeProfileID;
+              debouncer.run(
+                () => unawaited(
+                  Settings.set<String>(
+                    widget.def.id,
+                    value,
+                    profileID: profileID,
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -49,8 +71,10 @@ class _State extends State<SettingsTileString> {
 
   @override
   void dispose() {
+    Settings.changeNotifier.removeListener(_syncValue);
     debouncer.dispose();
     controller.dispose();
+    focus.dispose();
     super.dispose();
   }
 }
