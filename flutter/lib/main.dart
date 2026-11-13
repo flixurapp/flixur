@@ -57,47 +57,73 @@ class const MainApp({super.key}) extends StatelessWidget {
 
 /// Window titlebar / buttons wrapping the entire app.
 class const WindowFrame({required final Widget page, super.key})
-    extends StatelessWidget {
+    extends StatefulWidget {
+  @override
+  State<WindowFrame> createState() => _WindowFrameState();
+}
+
+/// Wrapper to add a stateful overlay to the root of the app.
+class _WindowFrameState extends State<WindowFrame> {
+  OverlayEntry? _entry;
+
+  OverlayEntry get _overlayEntry {
+    var entry = _entry;
+    if (entry == null || !entry.mounted) {
+      entry = _entry = OverlayEntry(builder: (context) => _content);
+    }
+    return entry;
+  }
+
+  Widget get _content => Column(
+    crossAxisAlignment: .stretch,
+    children: [
+      // titlebar
+      const MainNavTop(),
+      // page
+      Expanded(child: widget.page),
+    ],
+  );
+
+  @override
+  void didUpdateWidget(WindowFrame old) {
+    super.didUpdateWidget(old);
+    final entry = _entry;
+    if (widget.page != old.page && entry != null && entry.mounted) {
+      entry.markNeedsBuild();
+    }
+  }
+
+  @override
+  void dispose() {
+    final entry = _entry;
+    if (entry != null && entry.mounted) {
+      entry
+        ..remove()
+        ..dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GatedWidget(
       gate: TitlebarManager.isSupported,
-      // wrap the entire app with resize edges if supported
-      wrapper: (child) => SettingsValue(
-        "ui.window.useCustom",
-        builder: (context, _) => ValueListenableBuilder(
-          valueListenable: TitlebarManager.isMaximizedNotifier,
-          builder: (context, maximized, child) => TitlebarManager.shouldEnable
-              ? DragToResizeArea(
-                  // only enable resize edges when the window isnt maximized
-                  enableResizeEdges: maximized ? [] : null,
-                  child: child!,
-                )
-              : child!,
-          child: child,
+      wrapper: (child) => ValueListenableBuilder(
+        valueListenable: TitlebarManager.isMaximizedNotifier,
+        builder: (context, maximized, child) => DragToResizeArea(
+          // only enable resize edges for the custom titlebar
+          // while the window isnt maximized
+          enableResizeEdges: TitlebarManager.shouldEnable && !maximized
+              ? null
+              : const [],
+          child: child!,
         ),
+        child: child,
       ),
-
       child: PageTitleScope(
         // main app title slot
         slot: MainNavWrapper.titleSlot,
-        child: Scaffold(
-          body: Overlay(
-            initialEntries: [
-              OverlayEntry(
-                builder: (context) => Column(
-                  crossAxisAlignment: .stretch,
-                  children: [
-                    // titlebar
-                    const MainNavTop(),
-                    // page
-                    Expanded(child: page),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        child: Scaffold(body: Overlay(initialEntries: [_overlayEntry])),
       ),
     );
   }

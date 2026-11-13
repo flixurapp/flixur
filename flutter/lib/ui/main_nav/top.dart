@@ -74,52 +74,49 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                 right: 0,
                 top: 0,
                 bottom: 0,
-                child: SettingsValue<bool>(
-                  "ui.window.useCustom",
-                  builder: (context, _) => IconTheme(
-                    data: const .new(size: mainNavIconSize * 0.8),
-                    child: Row(
-                      crossAxisAlignment: .stretch,
-                      children: [
-                        if (moreMenuItems.isNotEmpty)
-                          ValueListenableBuilder(
-                            valueListenable: MainNavWrapper.activeSection,
-                            builder: (context, _, _) =>
-                                SettingsValue<List<String>>(
-                                  "ui.navigation.shownSections",
-                                  builder: (context, _) =>
-                                      _MoreMenu(children: moreMenuItems),
-                                ),
-                          ),
-                        if (TitlebarManager.shouldEnable) ...[
-                          _MainNavTopButton(
-                            label: t.titlebar.minimize,
-                            onTap: TitlebarManager.minimize,
-                            square: !context.isLandscape,
-                            child: const Iconify("minus"),
-                          ),
-                          _MainNavTopButton(
-                            label: t.titlebar.maximize,
-                            onTap: TitlebarManager.toggleMaximized,
-                            square: !context.isLandscape,
-                            child: ValueListenableBuilder(
-                              valueListenable:
-                                  TitlebarManager.isMaximizedNotifier,
-                              builder: (context, maximized, _) => Iconify(
-                                maximized ? "corners-in" : "corners-out",
+                child: IconTheme(
+                  data: const .new(size: mainNavIconSize * 0.8),
+                  child: Row(
+                    crossAxisAlignment: .stretch,
+                    children: [
+                      if (moreMenuItems.isNotEmpty)
+                        ValueListenableBuilder(
+                          valueListenable: MainNavWrapper.activeSection,
+                          builder: (context, _, _) =>
+                              SettingsValue<List<String>>(
+                                "ui.navigation.shownSections",
+                                builder: (context, _) =>
+                                    _MoreMenu(children: moreMenuItems),
                               ),
+                        ),
+                      if (TitlebarManager.shouldEnable) ...[
+                        _MainNavTopButton(
+                          label: t.titlebar.minimize,
+                          onTap: TitlebarManager.minimize,
+                          square: !context.isLandscape,
+                          child: const Iconify("minus"),
+                        ),
+                        _MainNavTopButton(
+                          label: t.titlebar.maximize,
+                          onTap: TitlebarManager.toggleMaximized,
+                          square: !context.isLandscape,
+                          child: ValueListenableBuilder(
+                            valueListenable:
+                                TitlebarManager.isMaximizedNotifier,
+                            builder: (context, maximized, _) => Iconify(
+                              maximized ? "corners-in" : "corners-out",
                             ),
                           ),
-                          _MainNavTopButton(
-                            label: t.titlebar.close,
-                            onTap: TitlebarManager.close,
-                            square: !context.isLandscape,
-                            color: colors.error,
-                            child: const Iconify("x"),
-                          ),
-                        ],
+                        ),
+                        _MainNavTopButton(
+                          label: t.titlebar.close,
+                          onTap: TitlebarManager.close,
+                          square: !context.isLandscape,
+                          color: colors.error,
+                          child: const Iconify("x"),
+                        ),
                       ],
-                    ),
+                    ],
                   ),
                 ),
               ),

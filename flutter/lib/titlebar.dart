@@ -13,8 +13,7 @@ class TitlebarManager {
       !(kIsWeb || Platform.isAndroid || Platform.isIOS);
 
   /// Whether the title bar should be enabled.
-  static bool get shouldEnable =>
-      isSupported && Settings.getValue<bool>("ui.window.useCustom");
+  static bool get shouldEnable => isSupported && _wasEnabled;
 
   /// Get the current window instance.
   static Window? getWindow() {
@@ -22,10 +21,17 @@ class TitlebarManager {
     return WindowManager.instance.getCurrent();
   }
 
+  static bool _wasEnabled = false;
+
   static Future<void> init() async {
     final window = getWindow();
     if (window == null) return;
-    if (shouldEnable) _enable();
+    // we only enable once because changing this while the app is open
+    // causes a lot of rendering issues
+    if (Settings.getValue<bool>("ui.window.useCustom")) {
+      _wasEnabled = true;
+      window.titleBarStyle = .hidden;
+    }
     if (Settings.getValue<bool>("ui.window.startMaximized")) window.maximize();
 
     // keep the OS window title in sync with the main nav
@@ -39,25 +45,6 @@ class TitlebarManager {
     WindowManager.instance.addListener(
       (event) => isMaximizedNotifier.value = window.isMaximized,
     );
-
-    //TODO: this should be done better once streams are implemented
-    Settings.changeNotifier.addListener(() {
-      if (shouldEnable) {
-        _enable();
-      } else {
-        _disable();
-      }
-    });
-  }
-
-  static void _enable() {
-    final window = getWindow();
-    window?.titleBarStyle = .hidden;
-  }
-
-  static void _disable() {
-    final window = getWindow();
-    window?.titleBarStyle = .normal;
   }
 
   static void minimize() {
