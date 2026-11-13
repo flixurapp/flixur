@@ -35,6 +35,15 @@ class _State extends State<SettingsTileString> {
   }
 
   @override
+  void dispose() {
+    Settings.changeNotifier.removeListener(_syncValue);
+    debouncer.dispose();
+    controller.dispose();
+    focus.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) => SettingsTileShell(
       widget.def,
@@ -70,13 +79,4 @@ class _State extends State<SettingsTileString> {
       ),
     ),
   );
-
-  @override
-  void dispose() {
-    Settings.changeNotifier.removeListener(_syncValue);
-    debouncer.dispose();
-    controller.dispose();
-    focus.dispose();
-    super.dispose();
-  }
 }

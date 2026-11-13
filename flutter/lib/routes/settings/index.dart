@@ -100,6 +100,12 @@ class _GroupTileState extends State<_GroupTile> {
   bool expanded = true;
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final group = widget.group;
@@ -148,12 +154,6 @@ class _GroupTileState extends State<_GroupTile> {
       childrenPadding: const .only(bottom: 4),
       children: [...widget.parent.renderGroup(context, group.id)],
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }
 

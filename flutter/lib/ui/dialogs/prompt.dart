@@ -23,6 +23,12 @@ class _PromptDialogState extends State<PromptDialog> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(widget.title),
@@ -53,11 +59,5 @@ class _PromptDialogState extends State<PromptDialog> {
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }
