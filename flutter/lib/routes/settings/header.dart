@@ -74,8 +74,12 @@ class const SettingsViewHeader(
                   wrapper: (child) => Expanded(child: child),
                   child: FlixurDropdownMenu(
                     controller: profileController,
-                    searchCallback: (entries, text) =>
-                        entries.indexWhere((entry) => entry.label == text),
+                    searchCallback: (entries, text) {
+                      final index = entries.indexWhere(
+                        (entry) => entry.label == text,
+                      );
+                      return index == -1 ? null : index;
+                    },
                     expandedInsets: context.isLandscape ? null : .zero,
                     requestFocusOnTap: false,
                     inputDecorationTheme: InputDecorationThemeData(
