@@ -9,6 +9,7 @@ import (
 
 	"github.com/cardinalby/hureg"
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/danielgtaylor/huma/v2/validation"
 )
 
 type APIErrorCode string
@@ -46,9 +47,76 @@ func init() {
 		if code := APIErrorCode(msg); APIErrorCodeStatusMap[code] != 0 {
 			return CreateAPIError(code)
 		}
-		// huma-internal errors stay the same
-		return huma.NewError(status, msg, errs...)
+
+		// pass through errors that are already APIErrors
+		for _, err := range errs {
+			if apiErr, ok := err.(*APIError); ok {
+				return apiErr
+			}
+		}
+
+		// map internal validation errors into proper APIErrors
+		for _, err := range errs {
+			detail, ok := err.(*huma.ErrorDetail)
+			if !ok {
+				continue
+			}
+			code, found := apiErrorCodeForValidation(detail.Message)
+			if !found {
+				continue
+			}
+			target := validationMessageTarget(detail.Location)
+			if target == "" {
+				return CreateAPIError(code)
+			}
+			return CreateAPIErrorDetail(code, target)
+		}
+
+		// 500s are server-side unknown errors
+		if status >= 500 {
+			return CreateAPIError(CodeUnknown)
+		}
+		// <500 (400s) are usually client input errors
+		return CreateAPIError(CodeInvalidInput)
 	}
+}
+
+// Prefix of a message format up to its formatting placeholder.
+// Allows matching of validation errors by prefix.
+func validationMessagePrefix(format string) string {
+	if index := strings.IndexByte(format, '%'); index >= 0 {
+		return format[:index]
+	}
+	return format
+}
+
+// Map of internal huma validation errors to error codes.
+var validationMessageCodes = []struct {
+	prefix string
+	code   APIErrorCode
+}{
+	{validationMessagePrefix(validation.MsgExpectedMaxLength), CodeTooLong},
+	{validationMessagePrefix(validation.MsgExpectedMinLength), CodeTooShort},
+	{validationMessagePrefix(validation.MsgExpectedRequiredProperty), CodeInvalidInput},
+}
+
+// Matches a schema validation message against the prefix map.
+func apiErrorCodeForValidation(message string) (APIErrorCode, bool) {
+	for _, item := range validationMessageCodes {
+		if strings.HasPrefix(message, item.prefix) {
+			return item.code, true
+		}
+	}
+	return "", false
+}
+
+// The last location part of a huma error detail.
+// "body.name" => "name".
+func validationMessageTarget(location string) string {
+	if index := strings.LastIndexByte(location, '.'); index >= 0 {
+		return location[index+1:]
+	}
+	return location
 }
 
 type APIErrorCodes = map[APIErrorCode]string

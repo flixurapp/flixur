@@ -23,13 +23,60 @@ func TestNewErrorWithContextHook(t *testing.T) {
 		t.Errorf("status = %d, want %d", apiErr.GetStatus(), http.StatusUnauthorized)
 	}
 
-	// other messages keep huma's default ErrorModel
-	se = huma.NewErrorWithContext(nil, http.StatusUnprocessableEntity, "validation failed")
-	if _, ok := se.(*APIError); ok {
-		t.Error("expected default ErrorModel for non-code message, got *APIError")
+	// errors already typed as APIErrors pass through unchanged
+	passed := CreateAPIErrorDetail(CodeConflict, "name")
+	se = huma.NewErrorWithContext(nil, http.StatusInternalServerError, "failed", passed)
+	apiErr, ok = se.(*APIError)
+	if !ok {
+		t.Fatalf("NewErrorWithContext = %T, want *APIError", se)
 	}
-	if se.GetStatus() != http.StatusUnprocessableEntity {
-		t.Errorf("status = %d, want %d", se.GetStatus(), http.StatusUnprocessableEntity)
+	if apiErr.Code != CodeConflict || apiErr.Detail == nil || *apiErr.Detail != "name" {
+		t.Errorf("pass-through APIError = %+v", apiErr)
+	}
+
+	// built-in schema validation errors map to their codes
+	se = huma.NewErrorWithContext(nil, http.StatusUnprocessableEntity, "validation failed",
+		&huma.ErrorDetail{Location: "body.name", Message: "expected length <= 100"})
+	apiErr, ok = se.(*APIError)
+	if !ok {
+		t.Fatalf("NewErrorWithContext = %T, want *APIError", se)
+	}
+	if apiErr.Code != CodeTooLong {
+		t.Errorf("code = %q, want %q", apiErr.Code, CodeTooLong)
+	}
+	if apiErr.Detail == nil || *apiErr.Detail != "name" {
+		t.Errorf("detail = %v, want name", apiErr.Detail)
+	}
+
+	se = huma.NewErrorWithContext(nil, http.StatusUnprocessableEntity, "validation failed",
+		&huma.ErrorDetail{Location: "body.name", Message: "expected length >= 3"})
+	apiErr, ok = se.(*APIError)
+	if !ok {
+		t.Fatalf("NewErrorWithContext = %T, want *APIError", se)
+	}
+	if apiErr.Code != CodeTooShort {
+		t.Errorf("code = %q, want %q", apiErr.Code, CodeTooShort)
+	}
+
+	// unmapped validation errors become generic invalid input
+	se = huma.NewErrorWithContext(nil, http.StatusUnprocessableEntity, "validation failed",
+		&huma.ErrorDetail{Location: "body.limit", Message: "expected number >= 1"})
+	apiErr, ok = se.(*APIError)
+	if !ok {
+		t.Fatalf("NewErrorWithContext = %T, want *APIError", se)
+	}
+	if apiErr.Code != CodeInvalidInput {
+		t.Errorf("code = %q, want %q", apiErr.Code, CodeInvalidInput)
+	}
+
+	// server-side failures map to the unknown code
+	se = huma.NewErrorWithContext(nil, http.StatusInternalServerError, "panic!")
+	apiErr, ok = se.(*APIError)
+	if !ok {
+		t.Fatalf("NewErrorWithContext = %T, want *APIError", se)
+	}
+	if apiErr.Code != CodeUnknown || apiErr.GetStatus() != http.StatusInternalServerError {
+		t.Errorf("unknown error = %+v", apiErr)
 	}
 }
 

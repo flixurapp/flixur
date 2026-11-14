@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
+	"strings"
 	"testing"
 
 	"forge.xela.codes/xela/flixur/settings"
@@ -142,10 +143,24 @@ func TestSettingsProfilesLifecycle(t *testing.T) {
 		t.Errorf("duplicate create status = %d", resp.Code)
 	}
 
-	// empty name is rejected
+	// empty name is rejected with code
 	resp = api.Post("/settings/profiles", append(authHeaders(token), map[string]string{"name": ""})...)
-	if resp.Code != http.StatusUnprocessableEntity {
-		t.Errorf("empty name status = %d", resp.Code)
+	if resp.Code != http.StatusBadRequest {
+		t.Errorf("empty name status = %d, want 400", resp.Code)
+	}
+	if body := decode[APIError](t, resp); body.Code != CodeTooShort {
+		t.Errorf("empty name code = %q, want %q", body.Code, CodeTooShort)
+	}
+
+	// too long of a name is rejected with the proper code
+	resp = api.Post("/settings/profiles", append(authHeaders(token), map[string]string{
+		"name": strings.Repeat("a", 101),
+	})...)
+	if resp.Code != http.StatusBadRequest {
+		t.Errorf("long name status = %d, want 400", resp.Code)
+	}
+	if body := decode[APIError](t, resp); body.Code != CodeTooLong {
+		t.Errorf("long name code = %q, want %q", body.Code, CodeTooLong)
 	}
 
 	// rename works
@@ -162,10 +177,10 @@ func TestSettingsProfilesLifecycle(t *testing.T) {
 		t.Errorf("after rename = %v", names)
 	}
 
-	// renaming onto a taken name is rejected
+	// renaming onto a taken name is rejected as a conflict
 	resp = api.Put("/settings/profiles/"+created.ID, append(authHeaders(token), map[string]string{"name": "default"})...)
-	if resp.Code != http.StatusBadRequest {
-		t.Errorf("rename collision status = %d", resp.Code)
+	if resp.Code != http.StatusConflict {
+		t.Errorf("rename collision status = %d, want 409", resp.Code)
 	}
 
 	// delete the extra profile

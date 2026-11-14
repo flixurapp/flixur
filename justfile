@@ -2,6 +2,10 @@
 clean:
     nix run .#flutter-clean
 
-# Run treewide code generators.
+# Run repo-wide code generators.
 generate:
     nix run .#generate
+
+# Run repo-wide test suite.
+test:
+    nix run .#test-server

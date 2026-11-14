@@ -275,7 +275,7 @@ func TestAuthMiddlewareDBErrorMapsToInvalidToken(t *testing.T) {
 	}
 }
 
-func TestHumaValidationErrorsKeepErrorModel(t *testing.T) {
+func TestHumaValidationErrorsBecomeAPIErrors(t *testing.T) {
 	SetServerSetupCode(nil)
 	_, reg, api := newTestAPI(t)
 
@@ -288,22 +288,26 @@ func TestHumaValidationErrorsKeepErrorModel(t *testing.T) {
 			return CreateOutput(input.Body.Name), nil
 		})
 
+	// built-in schema validation surfaces as the proper APIError
 	resp := api.Post("/val-test", map[string]any{"name": "x"})
-	if resp.Code != http.StatusUnprocessableEntity {
-		t.Fatalf("status = %d, want %d", resp.Code, http.StatusUnprocessableEntity)
+	if resp.Code != http.StatusBadRequest {
+		t.Fatalf("status = %d, want %d", resp.Code, http.StatusBadRequest)
+	}
+	body := decode[APIError](t, resp)
+	if body.Code != CodeTooShort {
+		t.Errorf("code = %q, want %q", body.Code, CodeTooShort)
+	}
+	if body.Detail == nil || *body.Detail != "name" {
+		t.Errorf("detail = %v, want name", body.Detail)
 	}
 
-	// huma-internal validation errors must keep the default ErrorModel shape
-	// the NewErrorWithContext hook must not hijack them into APIErrors
-	body := decode[struct {
-		Title  string `json:"title"`
-		Detail string `json:"detail"`
-		Code   string `json:"code"`
-	}](t, resp)
-	if body.Title == "" {
-		t.Error("expected ErrorModel shape (title), got something else")
+	// wrong body types (no dedicated code) become generic invalid input
+	resp = api.Post("/val-test", map[string]any{"name": 5})
+	if resp.Code != http.StatusBadRequest {
+		t.Fatalf("status = %d, want %d", resp.Code, http.StatusBadRequest)
 	}
-	if body.Code != "" {
-		t.Errorf("code = %q, want empty (hook must not hijack validation errors)", body.Code)
+	body = decode[APIError](t, resp)
+	if body.Code != CodeInvalidInput {
+		t.Errorf("code = %q, want %q", body.Code, CodeInvalidInput)
 	}
 }
