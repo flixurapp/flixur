@@ -3,6 +3,7 @@ import "dart:io";
 
 import "package:dio/dio.dart";
 import "package:flixur/router.dart";
+import "package:flixur/settings.dart";
 import "package:flixur/storage.dart";
 import "package:openapi/openapi.dart";
 
@@ -100,6 +101,8 @@ class Api {
     if (full) {
       await Storage.delete(.serverUrl);
     }
+
+    await Settings.reset();
 
     // navigate back to root
     router.go("/");

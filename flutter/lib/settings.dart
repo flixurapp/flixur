@@ -442,6 +442,17 @@ class Settings {
         _ => jsonEncode(value),
       };
 
+  /// Completely reset the settings manager. Used for logout.
+  static Future<void> reset() async {
+    definitions = groups = activeProfileID = overrides = null;
+    _pendingItems.clear();
+    _storedValues.clear();
+    await _box.deleteAll([_definitionsKey, _groupsKey, _pendingItemsKey]);
+
+    _refreshSearchIndex();
+    _changes.add(.all());
+  }
+
   static Fuse<SettingsDefinition> searchIndex = .new(
     const [],
     options: .new(
