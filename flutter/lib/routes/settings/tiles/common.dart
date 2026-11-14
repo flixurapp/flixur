@@ -10,7 +10,7 @@ class const SettingsTileShell(
   final SettingsDefinition def, {
 
   /// Content to either show in place of [trailing] on landscape layouts
-  /// or between [content] and subtitle on mobile.
+  /// or after [content] on mobile.
   final Widget? vertical,
 
   /// Content to show under the title and description.
@@ -51,7 +51,7 @@ class const SettingsTileShell(
           subtitle: Column(
             spacing: SettingsView.paddingFor(context) * 0.75,
             crossAxisAlignment: .start,
-            children: [desc, if (!context.isLandscape) ?vertical, ?content],
+            children: [desc, ?content, if (!context.isLandscape) ?vertical],
           ),
           trailing: trailingWidget == null
               ? null
