@@ -84,8 +84,8 @@ func init() {
 // Prefix of a message format up to its formatting placeholder.
 // Allows matching of validation errors by prefix.
 func validationMessagePrefix(format string) string {
-	if index := strings.IndexByte(format, '%'); index >= 0 {
-		return format[:index]
+	if before, _, ok := strings.Cut(format, "%"); ok {
+		return before
 	}
 	return format
 }
