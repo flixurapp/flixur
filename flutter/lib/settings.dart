@@ -260,7 +260,19 @@ class Settings {
     ApiFailure<dynamic>? failure;
 
     final remaining = List.of(_pendingItems);
+    final profileList = profiles;
+    final definitionList = definitions;
     for (final pending in remaining) {
+      // drop pending items that no longer exist
+      // also drops all pending items if we have no server state
+      if (profileList == null ||
+          profileList.where((p) => p.id == pending.profileID).isEmpty ||
+          definitionList == null ||
+          definitionList.where((d) => d.id == pending.settingID).isEmpty) {
+        _pendingItems.remove(pending);
+        continue;
+      }
+
       //TODO: if the server has a value newer than the pending push we should
       // reject the pending push, we can send a timestamp to the server for ts
       final response = await Api.request(
