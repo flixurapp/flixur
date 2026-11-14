@@ -13,8 +13,11 @@ import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
 /// A string setting.
-class const SettingsTileString(final SettingsDefinition def, {super.key})
-    extends HookWidget {
+class const SettingsTileString(
+  final SettingsDefinition def, {
+  final bool isSearching = false,
+  super.key,
+}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final debouncer = useFlixurDebounced(flushOnDispose: true);
@@ -106,12 +109,16 @@ class const SettingsTileString(final SettingsDefinition def, {super.key})
 
         return SettingsTileShell(
           def,
+          isSearching: isSearching,
           vertical: context.isLandscape
               ? SizedBox(
                   width: max(
                     200,
                     (constraints.maxWidth * 0.4) -
-                        SettingsView.paddingFor(context, def.id),
+                        SettingsView.paddingFor(
+                          context,
+                          isSearching ? null : def.id,
+                        ),
                   ),
                   child: input,
                 )

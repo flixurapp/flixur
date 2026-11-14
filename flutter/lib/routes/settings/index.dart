@@ -26,81 +26,85 @@ class const SettingsView({super.key}) extends HookWidget {
     // rebuild when any setting changes
     useSettings();
 
+    final query = searchTerm.value.trim();
+
     return Column(
       crossAxisAlignment: .stretch,
       children: [
         SettingsViewHeader((value) => searchTerm.value = value),
         Expanded(
-          child: ListView(
-            padding: const .symmetric(horizontal: 16, vertical: 12),
-            children: [..._renderGroup(context, null, searchTerm.value)],
-          ),
+          child: query.isEmpty
+              ? ListView(
+                  padding: const .symmetric(horizontal: 16, vertical: 12),
+                  children: _renderGroup(context, null),
+                )
+              : _SearchResults(query),
         ),
       ],
     );
   }
 }
 
-/// Render a group's settings, then its children.
-List<Widget> _renderGroup(
-  BuildContext context,
-  String? parent,
-  String searchTerm,
-) {
-  final query = searchTerm.toLowerCase().trim();
+/// Renders search results as a flat list of tiles.
+class const _SearchResults(final String query) extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final results = useMemoized(() => Settings.searchIndex.search(query), [
+      query,
+      Settings.definitions,
+    ]);
 
+    return ListView(
+      padding: const .symmetric(horizontal: 16, vertical: 12),
+      children: [
+        for (final result in results) ?_settingsTile(result.item, true),
+      ],
+    );
+  }
+}
+
+/// Returns a setting tile for a given definition.
+Widget? _settingsTile(SettingsDefinition def, [bool isSearching = false]) =>
+    switch (def.kind) {
+      .bool_ => SettingsTileBool(def, isSearching: isSearching),
+      //.int_ => SettingsTileInt(def, search: search),
+      //.float => SettingsTileFloat(def, search: search),
+      .string => SettingsTileString(def, isSearching: isSearching),
+      //.enum_ => SettingsTileEnum(def, search: search),
+      //.stringlist => SettingsTileStringList(def, search: search),
+      _ => null,
+    };
+
+/// Render a group's settings, then its children.
+List<Widget> _renderGroup(BuildContext context, String? parent) {
   // direct child settings
   final definitions = Settings.definitions ?? [];
   final children = _sortSettings([
     for (final def in definitions)
-      if (parent != null &&
-          settingIDParent(def.id) == parent &&
-          _settingMatches(def, query))
-        def,
+      if (parent != null && settingIDParent(def.id) == parent) def,
   ], (d) => (d.id, settingName(d.id), d.order));
 
   // child groups
   final groups = Settings.groups ?? [];
   final childGroups = _sortSettings([
     for (final group in groups)
-      if ((parent == null
-              ? !group.id.contains(".")
-              : settingIDParent(group.id) == parent) &&
-          _groupHasVisibleChildren(group.id, query))
+      if (parent == null
+          ? !group.id.contains(".")
+          : settingIDParent(group.id) == parent)
         group,
   ], (g) => (g.id, settingGroupName(g.id), g.order));
 
   return [
-    for (final def in children)
-      switch (def.kind) {
-        .bool_ => SettingsTileBool(def),
-        //.int_ => SettingsTileInt(def),
-        //.float => SettingsTileFloat(def),
-        .string => SettingsTileString(def),
-        //.enum_ => SettingsTileEnum(def),
-        //.stringlist => SettingsTileStringList(def),
-        _ => const SizedBox.shrink(),
-      },
-    for (final group in childGroups) _GroupTile(group, searchTerm),
+    for (final def in children) ?_settingsTile(def),
+    for (final group in childGroups) _GroupTile(group),
   ];
 }
 
-class const _GroupTile(final SettingsGroup group, final String searchTerm)
-    extends HookWidget {
+class const _GroupTile(final SettingsGroup group) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useExpansibleController();
     final expanded = useState(true);
-
-    // force categories to be expanded while searching
-    useEffect(() {
-      if (searchTerm.isNotEmpty && !controller.isExpanded) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (context.mounted) controller.expand();
-        });
-      }
-      return null;
-    }, [searchTerm]);
 
     final colors = context.colors;
     final icon = group.icon;
@@ -137,7 +141,7 @@ class const _GroupTile(final SettingsGroup group, final String searchTerm)
         right: SettingsView.paddingFor(context),
       ),
       childrenPadding: const .only(bottom: 4),
-      children: [..._renderGroup(context, group.id, searchTerm)],
+      children: [..._renderGroup(context, group.id)],
     );
   }
 }
@@ -160,21 +164,3 @@ List<T> _sortSettings<T>(
 
     return aId.compareTo(bId);
   });
-
-/// Whether a setting definition matches the [query].
-bool _settingMatches(SettingsDefinition def, String query) {
-  // empty queries always match
-  if (query.isEmpty) return true;
-  return Settings.searchIndex
-      .search(query)
-      .where((result) => result.item.id == def.id)
-      .isNotEmpty;
-}
-
-/// Whether a group has any child settings that match the [query].
-bool _groupHasVisibleChildren(String groupId, String query) {
-  final definitions = Settings.definitions ?? [];
-  return definitions
-      .where((def) => def.id.startsWith(groupId) && _settingMatches(def, query))
-      .isNotEmpty;
-}

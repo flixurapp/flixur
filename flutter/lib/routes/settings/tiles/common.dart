@@ -19,12 +19,17 @@ class const SettingsTileShell(
   /// Content to show at the end of the box.
   final Widget? trailing,
   final VoidCallback? onTap,
+
+  /// Whether a search is currently active.
+  final bool isSearching = false,
   super.key,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final desc = Text(def.description.isNotEmpty ? def.description : def.id);
-    final padLeft = SettingsView.paddingFor(context, def.id);
+    final padLeft = isSearching
+        ? SettingsView.paddingFor(context)
+        : SettingsView.paddingFor(context, def.id);
     final padRight = SettingsView.paddingFor(context);
     final trailingWidget = context.isLandscape
         ? (vertical ?? trailing)
@@ -39,7 +44,9 @@ class const SettingsTileShell(
         );
 
         return ListTile(
-          title: Text(def.name),
+          title: Text(
+            isSearching ? settingTitleSegments(def.id).join(" > ") : def.name,
+          ),
           isThreeLine: true,
           subtitle: Column(
             spacing: SettingsView.paddingFor(context) * 0.75,

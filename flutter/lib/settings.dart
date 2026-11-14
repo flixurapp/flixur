@@ -445,27 +445,21 @@ class Settings {
   static Fuse<SettingsDefinition> searchIndex = .new(
     const [],
     options: .new(
+      includeScore: true,
       useTokenSearch: true,
       keys: <FuseKey<SettingsDefinition>>[
-        .new(name: "id", weight: 4, getFn: (d) => d.id),
-        .new(name: "title", weight: 3, getFn: (d) => settingName(d.id)),
+        .new(name: "title", weight: 5, getFn: (d) => settingName(d.id)),
         .new(
           name: "description",
-          weight: 2,
+          weight: 4,
           getFn: (d) => settingDescription(d.id),
         ),
+        .new(name: "id", weight: 2, getFn: (d) => d.id),
         .new(
           name: "parents",
           weight: 1,
-          getFn: (d) => [
-            // all of the group parent names in one string
-            for (
-              var group = settingIDParent(d.id);
-              group != null;
-              group = settingIDParent(group)
-            )
-              settingGroupName(group),
-          ].fold("", (prev, name) => "$prev\n$name"),
+          // all of the group path segments joined into one string
+          getFn: (d) => settingGroupSegments(d.id).join("\n"),
         ),
       ],
     ),
@@ -537,6 +531,22 @@ String? settingIDParent(String id) {
   final dot = id.lastIndexOf(".");
   return dot <= 0 ? null : id.substring(0, dot);
 }
+
+/// Translated group-name segments for a setting ID, outermost first.
+List<String> settingGroupSegments(String id) => [
+  for (
+    var group = settingIDParent(id);
+    group != null;
+    group = settingIDParent(group)
+  )
+    settingGroupName(group),
+].reversed.toList();
+
+/// Translated title path segments for a setting ID, including the setting name.
+List<String> settingTitleSegments(String id) => [
+  ...settingGroupSegments(id),
+  settingName(id),
+];
 
 /// The JSON-encoded default value of a definition.
 String _defaultEncoded(SettingsDefinition def) => switch (def.kind) {
