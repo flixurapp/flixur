@@ -12,6 +12,7 @@ const (
 	CodeServerNotSetup    APIErrorCode = "SERVER_NOT_SETUP"
 	CodeTooLong           APIErrorCode = "TOO_LONG"
 	CodeTooShort          APIErrorCode = "TOO_SHORT"
+	CodeUnknown           APIErrorCode = "UNKNOWN"
 )
 
 var APIErrorCodeStatusMap = map[APIErrorCode]int{
@@ -25,8 +26,9 @@ var APIErrorCodeStatusMap = map[APIErrorCode]int{
 	CodeServerNotSetup:    401,
 	CodeTooLong:           400,
 	CodeTooShort:          400,
+	CodeUnknown:           500,
 }
 
 type APIErrorCodesMixin struct {
-	Code APIErrorCode `json:"code" enum:"CONFLICT,DATABASE_ERROR,INCORRECT_PASSWORD,INCORRECT_USERNAME,INVALID_INPUT,INVALID_TOKEN,NOT_FOUND,SERVER_NOT_SETUP,TOO_LONG,TOO_SHORT"`
+	Code APIErrorCode `json:"code" enum:"CONFLICT,DATABASE_ERROR,INCORRECT_PASSWORD,INCORRECT_USERNAME,INVALID_INPUT,INVALID_TOKEN,NOT_FOUND,SERVER_NOT_SETUP,TOO_LONG,TOO_SHORT,UNKNOWN"`
 }

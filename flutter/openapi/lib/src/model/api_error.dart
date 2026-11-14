@@ -23,7 +23,7 @@ abstract class APIError implements Built<APIError, APIErrorBuilder> {
 
   @BuiltValueField(wireName: r'code')
   APIErrorCodeEnum get code;
-  // enum codeEnum {  CONFLICT,  DATABASE_ERROR,  INCORRECT_PASSWORD,  INCORRECT_USERNAME,  INVALID_INPUT,  INVALID_TOKEN,  NOT_FOUND,  SERVER_NOT_SETUP,  TOO_LONG,  TOO_SHORT,  };
+  // enum codeEnum {  CONFLICT,  DATABASE_ERROR,  INCORRECT_PASSWORD,  INCORRECT_USERNAME,  INVALID_INPUT,  INVALID_TOKEN,  NOT_FOUND,  SERVER_NOT_SETUP,  TOO_LONG,  TOO_SHORT,  UNKNOWN,  };
 
   @BuiltValueField(wireName: r'detail')
   String? get detail;
@@ -174,6 +174,8 @@ class APIErrorCodeEnum extends EnumClass {
   static const APIErrorCodeEnum TOO_LONG = _$aPIErrorCodeEnum_TOO_LONG;
   @BuiltValueEnumConst(wireName: r'TOO_SHORT')
   static const APIErrorCodeEnum TOO_SHORT = _$aPIErrorCodeEnum_TOO_SHORT;
+  @BuiltValueEnumConst(wireName: r'UNKNOWN')
+  static const APIErrorCodeEnum UNKNOWN = _$aPIErrorCodeEnum_UNKNOWN;
 
   static Serializer<APIErrorCodeEnum> get serializer =>
       _$aPIErrorCodeEnumSerializer;

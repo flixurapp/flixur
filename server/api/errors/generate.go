@@ -29,6 +29,7 @@ var errorCodeList = []errCode{
 	{"SERVER_NOT_SETUP", http.StatusUnauthorized},
 	{"TOO_LONG", http.StatusBadRequest},
 	{"TOO_SHORT", http.StatusBadRequest},
+	{"UNKNOWN", http.StatusInternalServerError},
 }
 
 // converts a SCREAMING_CASE string to PascalCase

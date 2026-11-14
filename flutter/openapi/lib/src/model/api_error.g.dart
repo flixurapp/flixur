@@ -26,6 +26,8 @@ const APIErrorCodeEnum _$aPIErrorCodeEnum_TOO_LONG =
     const APIErrorCodeEnum._('TOO_LONG');
 const APIErrorCodeEnum _$aPIErrorCodeEnum_TOO_SHORT =
     const APIErrorCodeEnum._('TOO_SHORT');
+const APIErrorCodeEnum _$aPIErrorCodeEnum_UNKNOWN =
+    const APIErrorCodeEnum._('UNKNOWN');
 
 APIErrorCodeEnum _$aPIErrorCodeEnumValueOf(String name) {
   switch (name) {
@@ -49,6 +51,8 @@ APIErrorCodeEnum _$aPIErrorCodeEnumValueOf(String name) {
       return _$aPIErrorCodeEnum_TOO_LONG;
     case 'TOO_SHORT':
       return _$aPIErrorCodeEnum_TOO_SHORT;
+    case 'UNKNOWN':
+      return _$aPIErrorCodeEnum_UNKNOWN;
     default:
       throw ArgumentError(name);
   }
@@ -66,6 +70,7 @@ final BuiltSet<APIErrorCodeEnum> _$aPIErrorCodeEnumValues =
   _$aPIErrorCodeEnum_SERVER_NOT_SETUP,
   _$aPIErrorCodeEnum_TOO_LONG,
   _$aPIErrorCodeEnum_TOO_SHORT,
+  _$aPIErrorCodeEnum_UNKNOWN,
 ]);
 
 Serializer<APIErrorCodeEnum> _$aPIErrorCodeEnumSerializer =
@@ -84,6 +89,7 @@ class _$APIErrorCodeEnumSerializer
     'SERVER_NOT_SETUP': 'SERVER_NOT_SETUP',
     'TOO_LONG': 'TOO_LONG',
     'TOO_SHORT': 'TOO_SHORT',
+    'UNKNOWN': 'UNKNOWN',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'CONFLICT': 'CONFLICT',
@@ -96,6 +102,7 @@ class _$APIErrorCodeEnumSerializer
     'SERVER_NOT_SETUP': 'SERVER_NOT_SETUP',
     'TOO_LONG': 'TOO_LONG',
     'TOO_SHORT': 'TOO_SHORT',
+    'UNKNOWN': 'UNKNOWN',
   };
 
   @override
