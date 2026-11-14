@@ -33,6 +33,8 @@ class const Iconify(
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    if (iconName.isEmpty) return const SizedBox.shrink();
+
     final icon = !iconName.contains(":") ? "$_defaultSet:$iconName" : iconName;
     final iconTheme = IconTheme.of(context);
 

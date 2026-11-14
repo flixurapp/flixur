@@ -66,7 +66,7 @@ class const SettingsTileString(
                           // character counter
                           : IntrinsicWidth(
                               child: Container(
-                                padding: const .directional(end: 2),
+                                padding: const .directional(end: 2, bottom: 1),
                                 alignment: .bottomEnd,
                                 child: Text(
                                   "${controller.text.characters.length}/$maxLength",

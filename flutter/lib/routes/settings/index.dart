@@ -1,6 +1,7 @@
 import "package:flixur/hooks.dart";
 import "package:flixur/routes/settings/header.dart";
 import "package:flixur/routes/settings/tiles/bool.dart";
+import "package:flixur/routes/settings/tiles/enum.dart";
 import "package:flixur/routes/settings/tiles/string.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/ui/icons.dart";
@@ -70,7 +71,7 @@ Widget? _settingsTile(SettingsDefinition def, [bool isSearching = false]) =>
       //.int_ => SettingsTileInt(def, search: search),
       //.float => SettingsTileFloat(def, search: search),
       .string => SettingsTileString(def, isSearching: isSearching),
-      //.enum_ => SettingsTileEnum(def, search: search),
+      .enum_ => SettingsTileEnum(def, isSearching: isSearching),
       //.stringlist => SettingsTileStringList(def, search: search),
       _ => null,
     };
