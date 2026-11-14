@@ -8,6 +8,7 @@ import "package:flixur/hooks.dart";
 import "package:flixur/storage.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
+import "package:fuse_dart/fuse_dart.dart";
 import "package:hive_ce_flutter/hive_ce_flutter.dart";
 import "package:openapi/openapi.dart";
 
@@ -125,6 +126,7 @@ class Settings {
       _storedValues[profileID]![settingID] = value;
     }
     _refreshOverrides();
+    _refreshSearchIndex();
 
     // watch for auth events
     Storage.watch(.sessionToken).listen((event) {
@@ -205,6 +207,7 @@ class Settings {
         case ApiSuccess(:final data):
           definitions = data.list.toList();
           groups = data.groups.toList();
+          _refreshSearchIndex();
           // defaults may have changed, notify listeners
           _changes.add(.all());
 
@@ -438,6 +441,39 @@ class Settings {
         .stringlist => jsonEncode((value as List<String>).toList()),
         _ => jsonEncode(value),
       };
+
+  static Fuse<SettingsDefinition> searchIndex = .new(
+    const [],
+    options: .new(
+      useTokenSearch: true,
+      keys: <FuseKey<SettingsDefinition>>[
+        .new(name: "id", weight: 4, getFn: (d) => d.id),
+        .new(name: "title", weight: 3, getFn: (d) => settingName(d.id)),
+        .new(
+          name: "description",
+          weight: 2,
+          getFn: (d) => settingDescription(d.id),
+        ),
+        .new(
+          name: "parents",
+          weight: 1,
+          getFn: (d) => [
+            // all of the group parent names in one string
+            for (
+              var group = settingIDParent(d.id);
+              group != null;
+              group = settingIDParent(group)
+            )
+              settingGroupName(group),
+          ].fold("", (prev, name) => "$prev\n$name"),
+        ),
+      ],
+    ),
+  );
+
+  /// Refreshes the stored documents in [searchIndex].
+  static void _refreshSearchIndex() =>
+      searchIndex.setCollection(definitions ?? const []);
 }
 
 /// A settings change event.
@@ -495,6 +531,12 @@ String settingDescription(String id) => t.setting_descriptions[id] ?? "";
 
 /// Translated name for a settings group.
 String settingGroupName(String id) => t.setting_group_names[id] ?? id;
+
+/// Returns the parent group of an ID. Null for toplevel groups.
+String? settingIDParent(String id) {
+  final dot = id.lastIndexOf(".");
+  return dot <= 0 ? null : id.substring(0, dot);
+}
 
 /// The JSON-encoded default value of a definition.
 String _defaultEncoded(SettingsDefinition def) => switch (def.kind) {

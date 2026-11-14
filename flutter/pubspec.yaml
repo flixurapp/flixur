@@ -19,6 +19,10 @@ dependencies:
   flutter_secure_storage: ^11.2.0
   flutter_web_plugins:
     sdk: flutter
+  fuse_dart:
+    git:
+      url: https://github.com/itzTheMeow/fuse_dart.git
+      ref: c40a665d9960d6607b08745b68e1f72e933f280e
   go_router: ^18.1.3
   hive_ce: ^2.23.3
   hive_ce_flutter: ^2.5.0

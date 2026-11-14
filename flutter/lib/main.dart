@@ -10,6 +10,7 @@ import "package:flixur/ui/main_nav/top.dart";
 import "package:flixur/ui/scrollbar.dart";
 import "package:flixur/utils.dart";
 import "package:flutter_web_plugins/url_strategy.dart";
+import "package:fuse_dart/fuse_dart.dart";
 import "package:material_ui/material_ui.dart";
 import "package:window_manager/window_manager.dart";
 
@@ -18,6 +19,11 @@ void main() async {
   usePathUrlStrategy();
   // ensure flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // configure fuse
+  Fuse.config
+    ..ignoreDiacritics = true
+    ..ignoreLocation = true;
 
   //! A LOT OF THIS HAS TO BE INITIALIZED IN ORDER SO LOOK BEFORE REORDERING
 

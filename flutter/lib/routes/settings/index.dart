@@ -54,7 +54,7 @@ List<Widget> _renderGroup(
   final children = _sortSettings([
     for (final def in definitions)
       if (parent != null &&
-          _groupParent(def.id) == parent &&
+          settingIDParent(def.id) == parent &&
           _settingMatches(def, query))
         def,
   ], (d) => (d.id, settingName(d.id), d.order));
@@ -65,7 +65,7 @@ List<Widget> _renderGroup(
     for (final group in groups)
       if ((parent == null
               ? !group.id.contains(".")
-              : _groupParent(group.id) == parent) &&
+              : settingIDParent(group.id) == parent) &&
           _groupHasVisibleChildren(group.id, query))
         group,
   ], (g) => (g.id, settingGroupName(g.id), g.order));
@@ -106,7 +106,7 @@ class const _GroupTile(final SettingsGroup group, final String searchTerm)
     final icon = group.icon;
 
     final bg = colors.crust;
-    final shape = _groupParent(group.id) == null
+    final shape = settingIDParent(group.id) == null
         ? const RoundedRectangleBorder(borderRadius: .all(.circular(8)))
         : const Border();
 
@@ -125,7 +125,7 @@ class const _GroupTile(final SettingsGroup group, final String searchTerm)
       leading: icon == null || icon.isEmpty ? null : Iconify(icon),
       title: Text(
         settingGroupName(group.id),
-        style: _groupParent(group.id) == null
+        style: settingIDParent(group.id) == null
             ? const TextStyle(fontSize: 18, fontWeight: .w600)
             : null,
       ),
@@ -140,12 +140,6 @@ class const _GroupTile(final SettingsGroup group, final String searchTerm)
       children: [..._renderGroup(context, group.id, searchTerm)],
     );
   }
-}
-
-/// Returns the parent group of an ID. Null for toplevel groups.
-String? _groupParent(String id) {
-  final dot = id.lastIndexOf(".");
-  return dot <= 0 ? null : id.substring(0, dot);
 }
 
 /// Sorts a list of settings/groups ([items]).
@@ -169,26 +163,12 @@ List<T> _sortSettings<T>(
 
 /// Whether a setting definition matches the [query].
 bool _settingMatches(SettingsDefinition def, String query) {
-  if (
   // empty queries always match
-  query.isEmpty ||
-      // setting ID
-      def.id.toLowerCase().contains(query) ||
-      // translated name
-      settingName(def.id).toLowerCase().contains(query) ||
-      // translated description
-      settingDescription(def.id).toLowerCase().contains(query)) {
-    return true;
-  }
-  // any parent group name matches
-  for (
-    var group = _groupParent(def.id);
-    group != null;
-    group = _groupParent(group)
-  ) {
-    if (settingGroupName(group).toLowerCase().contains(query)) return true;
-  }
-  return false;
+  if (query.isEmpty) return true;
+  return Settings.searchIndex
+      .search(query)
+      .where((result) => result.item.id == def.id)
+      .isNotEmpty;
 }
 
 /// Whether a group has any child settings that match the [query].
