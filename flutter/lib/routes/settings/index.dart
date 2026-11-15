@@ -2,6 +2,7 @@ import "package:flixur/hooks.dart";
 import "package:flixur/routes/settings/header.dart";
 import "package:flixur/routes/settings/tiles/bool.dart";
 import "package:flixur/routes/settings/tiles/enum.dart";
+import "package:flixur/routes/settings/tiles/number.dart";
 import "package:flixur/routes/settings/tiles/string.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/ui/icons.dart";
@@ -68,8 +69,7 @@ class const _SearchResults(final String query) extends HookWidget {
 Widget? _settingsTile(SettingsDefinition def, [bool isSearching = false]) =>
     switch (def.kind) {
       .bool_ => SettingsTileBool(def, isSearching: isSearching),
-      //.int_ => SettingsTileInt(def, search: search),
-      //.float => SettingsTileFloat(def, search: search),
+      .int_ || .float => SettingsTileNumber(def, isSearching: isSearching),
       .string => SettingsTileString(def, isSearching: isSearching),
       .enum_ => SettingsTileEnum(def, isSearching: isSearching),
       //.stringlist => SettingsTileStringList(def, search: search),

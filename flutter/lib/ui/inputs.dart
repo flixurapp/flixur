@@ -57,10 +57,22 @@ class const FlixurInput({
 
   /// Forwarded errorText to the input decoration. Used for error colors.
   final String? errorText,
+
+  /// Underlined input style used for numbers.
+  final bool underlined = false,
   super.key,
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final decoration = InputDecoration(
+      errorText: errorText,
+      hintStyle: .new(
+        color: (errorText != null ? context.colors.error : context.colors.text)
+            .withValues(alpha: 0.5),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8,
@@ -71,21 +83,13 @@ class const FlixurInput({
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
         textField(
-          InputDecoration(
-            errorText: errorText,
-            hintStyle: .new(
-              color:
-                  (errorText != null
-                          ? context.colors.error
-                          : context.colors.text)
-                      .withValues(alpha: 0.5),
-            ),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 10,
-            ),
-          ),
+          underlined
+              ? decoration
+              : decoration.copyWith(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
         ),
       ],
     );
