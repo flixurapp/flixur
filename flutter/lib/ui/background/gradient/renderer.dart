@@ -27,7 +27,7 @@ class const GradientRenderer({required final List<Color> colors, super.key})
           child: CustomPaint(
             size: .infinite,
             painter: _GradientPainter(
-              colors: colors.sublist(1),
+              colors: colors,
               base: HSLColor.fromColor(context.colors.base)
                   // lock saturation so theme changes dont mess with the image
                   .withSaturation(0.05)
