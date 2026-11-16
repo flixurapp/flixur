@@ -10,6 +10,7 @@ import "package:flixur/routes/search/index.dart";
 import "package:flixur/routes/settings/index.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/titlebar.dart";
+import "package:flixur/ui/background/background.dart";
 import "package:flixur/ui/main_nav/bottom.dart";
 import "package:flixur/ui/main_nav/rail.dart";
 import "package:flixur/utils.dart";
@@ -157,21 +158,33 @@ class const MainNavWrapper({
     _syncActiveSection();
 
     // landscape gets a side navbar instead of the bottom one
+    final content = context.isLandscape
+        ? Row(
+            children: [
+              MainNavRail(parent: this, onSelected: _onSelect),
+              Expanded(child: navShell),
+            ],
+          )
+        : navShell;
+
+    final body = Stack(
+      fit: .expand,
+      children: [
+        const Positioned.fill(child: BackgroundPainter()),
+        content,
+      ],
+    );
+    const backgroundColor = Colors.transparent;
+
     if (context.isLandscape) {
-      return Scaffold(
-        body: Row(
-          children: [
-            MainNavRail(parent: this, onSelected: _onSelect),
-            Expanded(child: navShell),
-          ],
-        ),
-      );
+      return Scaffold(backgroundColor: backgroundColor, body: body);
     }
 
     // mobile layout
     final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
     return Scaffold(
-      body: navShell,
+      backgroundColor: backgroundColor,
+      body: body,
       // hide navbar when keyboard is open
       bottomNavigationBar: keyboardOpen
           ? null
