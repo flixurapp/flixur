@@ -28,8 +28,7 @@ enum BackgroundAlgorithm {
     water => FluidBackground(
       imageProvider: provider,
       overlayDarken: 0.25,
-      transitionDuration: .zero,
-      // animate: true,
+      //transitionDuration: .zero,
       child: const SizedBox.expand(),
     ),
   };
