@@ -52,22 +52,22 @@ class BaseCard({
     return InkWell(
       onTap: onTap,
       child: Semantics(
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          AspectRatio(aspectRatio: 1, child: image),
-          if (_text != null) ...[
-            const SizedBox(height: 4),
-            _createText(context, _text, false),
-          ],
-          if (_subtext != null) ...[
-            if (_text != null)
-              const SizedBox(height: 2)
-            else
+        child: Column(
+          crossAxisAlignment: .stretch,
+          children: [
+            AspectRatio(aspectRatio: 1, child: image),
+            if (_text != null) ...[
               const SizedBox(height: 4),
-            _createText(context, _subtext, true),
+              _createText(context, _text, false),
+            ],
+            if (_subtext != null) ...[
+              if (_text != null)
+                const SizedBox(height: 2)
+              else
+                const SizedBox(height: 4),
+              _createText(context, _subtext, true),
+            ],
           ],
-        ],
         ),
       ),
     );
