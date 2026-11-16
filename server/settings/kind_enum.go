@@ -27,3 +27,10 @@ func (s EnumSetting) AddChoice(value string, icon ...string) EnumSetting {
 	s.Enum.Choices = append(s.Enum.Choices, newChoice(value, icon...))
 	return s
 }
+
+// Adds a new choice with the description flag set true.
+// See [EnumSetting.AddChoice]
+func (s EnumSetting) AddChoiceWithDescription(value string, icon ...string) EnumSetting {
+	s.Enum.Choices = append(s.Enum.Choices, newChoiceWithDescription(value, icon...))
+	return s
+}

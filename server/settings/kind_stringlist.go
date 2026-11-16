@@ -30,6 +30,13 @@ func (s StringListSetting) AddChoice(value string, icon ...string) StringListSet
 	return s
 }
 
+// Adds a new choice with the description flag set true.
+// See [StringListSetting.AddChoice]
+func (s StringListSetting) AddChoiceWithDescription(value string, icon ...string) StringListSetting {
+	s.Enum.Choices = append(s.Enum.Choices, newChoiceWithDescription(value, icon...))
+	return s
+}
+
 // See [StringListProps.maxItems]
 func (s StringListSetting) MaxItems(v int) StringListSetting {
 	s.StringList.MaxItems = new(v)

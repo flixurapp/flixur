@@ -11,10 +11,14 @@ part 'choice_spec.g.dart';
 /// ChoiceSpec
 ///
 /// Properties:
+/// * [hasDescription]
 /// * [icon]
 /// * [value]
 @BuiltValue()
 abstract class ChoiceSpec implements Built<ChoiceSpec, ChoiceSpecBuilder> {
+  @BuiltValueField(wireName: r'hasDescription')
+  bool? get hasDescription;
+
   @BuiltValueField(wireName: r'icon')
   String? get icon;
 
@@ -44,6 +48,13 @@ class _$ChoiceSpecSerializer implements PrimitiveSerializer<ChoiceSpec> {
     ChoiceSpec object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
+    if (object.hasDescription != null) {
+      yield r'hasDescription';
+      yield serializers.serialize(
+        object.hasDescription,
+        specifiedType: const FullType(bool),
+      );
+    }
     if (object.icon != null) {
       yield r'icon';
       yield serializers.serialize(
@@ -81,6 +92,14 @@ class _$ChoiceSpecSerializer implements PrimitiveSerializer<ChoiceSpec> {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
+        case r'hasDescription':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(bool),
+          ) as bool?;
+          if (valueDes == null) continue;
+          result.hasDescription = valueDes;
+          break;
         case r'icon':
           final valueDes = serializers.deserialize(
             value,

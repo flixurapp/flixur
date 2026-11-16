@@ -8,6 +8,8 @@ part of 'choice_spec.dart';
 
 class _$ChoiceSpec extends ChoiceSpec {
   @override
+  final bool? hasDescription;
+  @override
   final String? icon;
   @override
   final String value;
@@ -15,7 +17,8 @@ class _$ChoiceSpec extends ChoiceSpec {
   factory _$ChoiceSpec([void Function(ChoiceSpecBuilder)? updates]) =>
       (ChoiceSpecBuilder()..update(updates))._build();
 
-  _$ChoiceSpec._({this.icon, required this.value}) : super._();
+  _$ChoiceSpec._({this.hasDescription, this.icon, required this.value})
+      : super._();
   @override
   ChoiceSpec rebuild(void Function(ChoiceSpecBuilder) updates) =>
       (toBuilder()..update(updates)).build();
@@ -26,12 +29,16 @@ class _$ChoiceSpec extends ChoiceSpec {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is ChoiceSpec && icon == other.icon && value == other.value;
+    return other is ChoiceSpec &&
+        hasDescription == other.hasDescription &&
+        icon == other.icon &&
+        value == other.value;
   }
 
   @override
   int get hashCode {
     var _$hash = 0;
+    _$hash = $jc(_$hash, hasDescription.hashCode);
     _$hash = $jc(_$hash, icon.hashCode);
     _$hash = $jc(_$hash, value.hashCode);
     _$hash = $jf(_$hash);
@@ -41,6 +48,7 @@ class _$ChoiceSpec extends ChoiceSpec {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'ChoiceSpec')
+          ..add('hasDescription', hasDescription)
           ..add('icon', icon)
           ..add('value', value))
         .toString();
@@ -49,6 +57,11 @@ class _$ChoiceSpec extends ChoiceSpec {
 
 class ChoiceSpecBuilder implements Builder<ChoiceSpec, ChoiceSpecBuilder> {
   _$ChoiceSpec? _$v;
+
+  bool? _hasDescription;
+  bool? get hasDescription => _$this._hasDescription;
+  set hasDescription(bool? hasDescription) =>
+      _$this._hasDescription = hasDescription;
 
   String? _icon;
   String? get icon => _$this._icon;
@@ -65,6 +78,7 @@ class ChoiceSpecBuilder implements Builder<ChoiceSpec, ChoiceSpecBuilder> {
   ChoiceSpecBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
+      _hasDescription = $v.hasDescription;
       _icon = $v.icon;
       _value = $v.value;
       _$v = null;
@@ -88,6 +102,7 @@ class ChoiceSpecBuilder implements Builder<ChoiceSpec, ChoiceSpecBuilder> {
   _$ChoiceSpec _build() {
     final _$result = _$v ??
         _$ChoiceSpec._(
+          hasDescription: hasDescription,
           icon: icon,
           value: BuiltValueNullFieldError.checkNotNull(
               value, r'ChoiceSpec', 'value'),

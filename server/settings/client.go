@@ -79,5 +79,18 @@ func newClientRegistry() *Registry {
 			Step(1).Recommended(3, 12),
 	)
 
+	//==
+	//== Background
+	//==
+	reg.RegisterGroup(Group("ui.background").Order(1))
+
+	reg.Register(
+		Enum("ui.background.algorithm", "smoothie").Order(1).
+			AddChoiceWithDescription("smoothie").
+			AddChoiceWithDescription("water").
+			AddChoiceWithDescription("milk").
+			AddChoiceWithDescription("fizzy"),
+	)
+
 	return reg
 }

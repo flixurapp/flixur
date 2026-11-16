@@ -57,6 +57,9 @@ type ChoiceSpec struct {
 	Value string `json:"value"`
 	// Optional iconify icon name shown next to the choice on clients.
 	Icon string `json:"icon,omitempty"`
+	// Whether the choice has a description that should be displayed.
+	// The description itself should be in a translation file.
+	HasDescription bool `json:"hasDescription,omitempty"`
 }
 
 // Creates a choice spec with an optional iconify icon name.
@@ -69,6 +72,14 @@ func newChoice(value string, icon ...string) ChoiceSpec {
 		iconName = icon[0]
 	}
 	return ChoiceSpec{Value: value, Icon: iconName}
+}
+
+// Creates a choice spec with the description flag set to true among other details.
+// See [newChoice]
+func newChoiceWithDescription(value string, icon ...string) ChoiceSpec {
+	spec := newChoice(value, icon...)
+	spec.HasDescription = true
+	return spec
 }
 
 // Returns values of a choice spec list.
