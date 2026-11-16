@@ -546,6 +546,14 @@ String settingName(String id) => t.setting_names[id] ?? id;
 /// Translated description for a setting, empty when missing.
 String settingDescription(String id) => t.setting_descriptions[id] ?? "";
 
+/// Translated display name for a setting choice.
+String settingChoiceName(String id, String value) =>
+    t.setting_choices["$id.$value"] ?? value;
+
+/// Translated description for a setting choice, empty when missing.
+String settingChoiceDescription(String id, String value) =>
+    t.setting_choices["$id.$value.description"] ?? "";
+
 /// Translated name for a settings group.
 String settingGroupName(String id) => t.setting_group_names[id] ?? id;
 

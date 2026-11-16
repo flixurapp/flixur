@@ -5,6 +5,7 @@ import "package:flixur/routes/settings/tiles/common.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/ui/dropdowns.dart";
 import "package:flixur/ui/icons.dart";
+import "package:flixur/ui/theme.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
@@ -17,13 +18,15 @@ class const SettingsTileEnum(
 }) extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final controller = useTextEditingController(text: def.value<String>());
+    final controller = useTextEditingController(
+      text: settingChoiceName(def.id, def.value<String>()),
+    );
 
     // keep controller in sync
     final revision = useSettings([def.id]);
     useEffect(() {
-      final value = def.value<String>();
-      if (controller.text != value) controller.text = value;
+      final name = settingChoiceName(def.id, def.value<String>());
+      if (controller.text != name) controller.text = name;
       return null;
     }, [revision]);
 
@@ -33,16 +36,17 @@ class const SettingsTileEnum(
         isSearching: isSearching,
         vertical: FlixurDropdownMenu<String>(
           controller: controller,
-          initialSelection: def.value<String>(),
+          initialSelection: settingChoiceName(def.id, def.value<String>()),
           dropdownMenuEntries: [
             for (final choice
                 in def.enum_?.choices?.toList() ?? const <ChoiceSpec>[])
               DropdownMenuEntry(
                 value: choice.value,
-                label: choice.value,
+                label: settingChoiceName(def.id, choice.value),
                 leadingIcon: (choice.icon?.isNotEmpty ?? false)
                     ? Iconify(choice.icon!, size: 18)
                     : null,
+                labelWidget: _ChoiceLabel(def.id, choice),
               ),
           ],
           onSelected: (value) {
@@ -50,6 +54,31 @@ class const SettingsTileEnum(
           },
         ),
       ),
+    );
+  }
+}
+
+/// Dropdown entry label showing the title and description.
+class const _ChoiceLabel(final String id, final ChoiceSpec choice)
+    extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final name = settingChoiceName(id, choice.value);
+    final description = choice.hasDescription == true
+        ? settingChoiceDescription(id, choice.value)
+        : "";
+
+    return Column(
+      crossAxisAlignment: .start,
+      mainAxisSize: .min,
+      children: [
+        Text(name),
+        if (description.isNotEmpty)
+          Text(
+            description,
+            style: TextStyle(fontSize: 12, color: context.colors.textMuted),
+          ),
+      ],
     );
   }
 }
