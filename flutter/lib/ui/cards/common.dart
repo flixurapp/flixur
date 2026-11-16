@@ -30,6 +30,7 @@ class BaseCard({
   required final Widget image,
   final String? _text,
   final String? _subtext,
+  final VoidCallback? onTap,
   super.key,
 }) extends StatelessWidget {
   Text _createText(BuildContext context, String text, bool muted) {
@@ -48,7 +49,9 @@ class BaseCard({
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
+    return InkWell(
+      onTap: onTap,
+      child: Semantics(
       child: Column(
         crossAxisAlignment: .stretch,
         children: [
@@ -65,6 +68,7 @@ class BaseCard({
             _createText(context, _subtext, true),
           ],
         ],
+        ),
       ),
     );
   }

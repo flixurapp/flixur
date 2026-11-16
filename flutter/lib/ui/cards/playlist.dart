@@ -1,7 +1,10 @@
 import "package:flixur/ui/cards/common.dart";
 import "package:material_ui/material_ui.dart";
 
-class PlaylistCard({super.key}) extends BaseCard {
+class PlaylistCard({
+  final String imageURL = "https://i.postimg.cc/3xdSL2nV/image.png",
+  super.key,
+}) extends BaseCard {
   this
     : super(
         image: CustomPaint(
@@ -26,16 +29,15 @@ class PlaylistCard({super.key}) extends BaseCard {
                 );
                 // dart format on
 
-                const url = "https://i.postimg.cc/3xdSL2nV/image.png";
                 return Stack(
                   fit: .expand,
                   children: [
-                    Image.network(url, fit: .cover),
+                    Image.network(imageURL, fit: .cover),
                     ClipPath(
                       clipper: _FoldClipper(),
                       child: Transform(
                         transform: mirror,
-                        child: Image.network(url, fit: .cover),
+                        child: Image.network(imageURL, fit: .cover),
                       ),
                     ),
                   ],
@@ -46,6 +48,7 @@ class PlaylistCard({super.key}) extends BaseCard {
         ),
         text: "High Vibes",
         subtext: "2 days, 16 hours",
+        onTap: () => debugCardSetBackground(imageURL),
       );
 }
 

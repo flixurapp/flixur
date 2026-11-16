@@ -12,27 +12,28 @@ const _spreadRatio = 5.0;
 /// Size of the punch-out between layers.
 const _punchRatio = 1;
 
-class QueueCard({super.key}) extends BaseCard {
+class QueueCard({
+  final List<String> imageURLs = const [
+    "https://i.scdn.co/image/ab67616d0000b27349e234b2a0b7503d2df7ba7f",
+    "https://i.scdn.co/image/ab67616d0000b273aa03006b65521b34514eeb87",
+    "https://i.scdn.co/image/ab67616d0000b2733a80a2a102e7bf2543b943de",
+    "https://i.scdn.co/image/ab67616d0000b27351fc529ab704873f80b8779f",
+  ],
+  super.key,
+}) extends BaseCard {
   this
     : super(
         image: LayoutBuilder(
           builder: (context, constraints) {
-            const images = [
-              "https://i.scdn.co/image/ab67616d0000b27349e234b2a0b7503d2df7ba7f",
-              "https://i.scdn.co/image/ab67616d0000b273aa03006b65521b34514eeb87",
-              "https://i.scdn.co/image/ab67616d0000b2733a80a2a102e7bf2543b943de",
-              "https://i.scdn.co/image/ab67616d0000b27351fc529ab704873f80b8779f",
-            ];
-
             // ignore empty lists and just draw nothing
-            if (images.length <= 0) return const SizedBox.shrink();
+            if (imageURLs.length <= 0) return const SizedBox.shrink();
 
             final width = constraints.maxWidth;
             final punchSize = width * _punchRatio / 100;
 
             // grab 1-4 layers from the back of the list
-            final count = min(images.length, 4);
-            final kept = images.sublist(images.length - count);
+            final count = min(imageURLs.length, 4);
+            final kept = imageURLs.sublist(imageURLs.length - count);
 
             // build the stack front to back
             final layers = <(double, double, double)>[];
@@ -85,6 +86,7 @@ class QueueCard({super.key}) extends BaseCard {
           },
         ),
         subtext: "7/17/26 4:15pm",
+        onTap: () => debugCardSetBackground(imageURLs.last),
       );
 }
 

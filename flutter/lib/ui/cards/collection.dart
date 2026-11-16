@@ -15,20 +15,21 @@ const List<List<(double, double, double)>> _circleDefinitions = [
   [(4, 4, 64), (44, 20, 56), (10, 48, 50), (48, 60, 40)], // 4
 ];
 
-class CollectionCard({super.key}) extends BaseCard {
+class CollectionCard({
+  final List<String> imageURLs = const [
+    "https://i.scdn.co/image/ab67616d0000b27311e55e4aa68150f5a0bfa22f",
+    "https://i.scdn.co/image/ab67616d0000b273d9985092cd88bffd97653b58",
+    "https://i.scdn.co/image/ab67616d0000b273124e9249fada4ff3c3a0739c",
+    "https://i.scdn.co/image/ab67616d0000b27325c28f3c9fbdbab1a88dd619",
+  ],
+  super.key,
+}) extends BaseCard {
   this
     : super(
         image: LayoutBuilder(
           builder: (context, constraints) {
-            final images = [
-              "https://i.scdn.co/image/ab67616d0000b27311e55e4aa68150f5a0bfa22f",
-              "https://i.scdn.co/image/ab67616d0000b273d9985092cd88bffd97653b58",
-              "https://i.scdn.co/image/ab67616d0000b273124e9249fada4ff3c3a0739c",
-              "https://i.scdn.co/image/ab67616d0000b27325c28f3c9fbdbab1a88dd619",
-            ];
-
             // ignore empty lists and just draw nothing
-            if (images.length <= 0) return const SizedBox.shrink();
+            if (imageURLs.length <= 0) return const SizedBox.shrink();
 
             final width = constraints.maxWidth;
             final ringPunchSize = width * _ringPunchRatio / 100;
@@ -36,7 +37,7 @@ class CollectionCard({super.key}) extends BaseCard {
             // grab 1-4 circles based on the amount of images
             final layout =
                 _circleDefinitions[min(
-                      images.length,
+                      imageURLs.length,
                       _circleDefinitions.length,
                     ) -
                     1];
@@ -69,7 +70,7 @@ class CollectionCard({super.key}) extends BaseCard {
                                 .shift(-circles[i].topLeft),
                         ],
                       ),
-                      child: Image.network(images[i], fit: .cover),
+                      child: Image.network(imageURLs[i], fit: .cover),
                     ),
                   ),
               ],
@@ -78,6 +79,7 @@ class CollectionCard({super.key}) extends BaseCard {
         ),
         text: "brayden's collection",
         subtext: "42 albums",
+        onTap: () => debugCardSetBackground(imageURLs.first),
       );
 }
 
