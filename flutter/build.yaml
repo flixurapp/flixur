@@ -6,3 +6,11 @@ targets:
           base_locale: en
           input_directory: assets/translations
           input_file_pattern: .yaml
+          maps:
+            - navigation.section_titles
+            - routes.settings.create_rename_codes
+            - routes.startup.login.failed_codes
+            - routes.startup.setup.failed_codes
+            - setting_choices
+            - setting_definitions
+            - setting_groups

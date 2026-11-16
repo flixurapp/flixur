@@ -313,6 +313,11 @@
               # flutter stuff
               cd flutter
 
+              # slang maps config is derived from the (map) markers in the base locale
+              maps="$(yq -c '[paths(type == "object" and length > 0) | select(.[0] | type == "string") | select(.[-1] | test("\\(map[,)]")) | join(".") | sub("\\(.*$"; "")] | unique' assets/translations/en.yaml)"
+              # shellcheck disable=SC2016 # yq filter intentionally single-quoted, "$default" is for yq
+              yq -yi --argjson maps "$maps" '.targets["$default"].builders.slang_build_runner.options.maps = $maps' build.yaml
+
               # idk bro flutter hates nix
 
               # dart has to be laid out like flutter's SDK for dart:ui resolution
