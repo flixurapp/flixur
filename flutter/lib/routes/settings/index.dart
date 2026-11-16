@@ -104,13 +104,17 @@ List<Widget> _renderGroup(BuildContext context, String? parent) {
 class const _GroupTile(final SettingsGroup group) extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    useSettings(["ui.transparency"]);
     final controller = useExpansibleController();
     final expanded = useState(true);
 
     final colors = context.colors;
     final icon = group.icon;
 
-    final bg = colors.crust;
+    // only show bg on first layer since its transparent
+    final bg = group.id.split(".").length > 1
+        ? null
+        : colors.crust.withValues(alpha: SettingsDerived.transparency(0.7));
     final shape = settingIDParent(group.id) == null
         ? const RoundedRectangleBorder(borderRadius: .all(.circular(8)))
         : const Border();

@@ -1,6 +1,7 @@
 import "dart:async";
 import "dart:convert";
 import "dart:math";
+import "dart:ui";
 
 import "package:flixur/api.dart";
 import "package:flixur/gen/strings.g.dart";
@@ -578,6 +579,26 @@ List<String> settingTitleSegments(String id) => [
   ...settingGroupSegments(id),
   settingName(id),
 ];
+
+abstract class SettingsDerived {
+  /// Gets a 0-1 transparency value based on the transparency setting.
+  ///
+  /// The [target] is the opacity that should be returned when the setting
+  /// is at its DEFAULT value. Will be interpolated so that 0 is always
+  /// fully transparent, and 1 is always fully opaque.
+  static double transparency(double target) {
+    final value = Settings.getValue<double>("ui.transparency");
+    final def =
+        (Settings.definition("ui.transparency")?.float?.defaultValue ?? 0.5)
+            .clamp(0.0, 1.0);
+    return (value <= def
+            // if the value is less than the default then interpolate downward
+            ? lerpDouble(0, target, value / def)!
+            // if greater, interpolate upwards
+            : lerpDouble(target, 1, (value - def) / (1 - def))!)
+        .clamp(0, 1);
+  }
+}
 
 /// The JSON-encoded default value of a definition.
 String _defaultEncoded(SettingsDefinition def) => switch (def.kind) {

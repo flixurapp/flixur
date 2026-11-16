@@ -12,26 +12,25 @@ class const MainNavBottom({
 }) extends MainNavWidget {
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: context.colors.mantle,
-      child: SafeArea(
-        top: false,
-        child: SettingsListen(
-          const ["ui.navigation.shownSections"],
-          builder: (context) => SettingsValue<bool>(
-            "ui.navigation.bottomLabels",
-            builder: (context, showLabels) => Row(
-              children: [
-                for (final section in MainNavWrapper.shownSections)
-                  Expanded(
-                    child: _MainNavBottomItem(
-                      parent: this,
-                      section: section,
-                      showLabels: showLabels,
-                    ),
-                  ),
-              ],
-            ),
+    return SettingsListen(
+      const [
+        "ui.navigation.shownSections",
+        "ui.navigation.bottomLabels",
+        "ui.transparency",
+      ],
+      builder: (context) => Material(
+        color: context.colors.mantle.withValues(
+          alpha: SettingsDerived.transparency(0.5),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Row(
+            children: [
+              for (final section in MainNavWrapper.shownSections)
+                Expanded(
+                  child: _MainNavBottomItem(parent: this, section: section),
+                ),
+            ],
           ),
         ),
       ),
@@ -42,9 +41,9 @@ class const MainNavBottom({
 class const _MainNavBottomItem({
   required super.parent,
   required super.section,
-  required final bool showLabels,
   super.axis = .horizontal,
 }) extends MainNavItem {
+  bool get showLabels => Settings.getValue<bool>("ui.navigation.bottomLabels");
   @override
   double get height => showLabels ? 74 : 64;
 
@@ -53,7 +52,7 @@ class const _MainNavBottomItem({
     final colors = context.colors;
     final iconColor = selected ? colors.text : colors.textMuted;
 
-    return builder([
+    return builder(context, [
       MainNavItemHighlighter(axis: .horizontal, enabled: selected),
       Expanded(
         child: Iconify(section.icon, size: mainNavIconSize, color: iconColor),

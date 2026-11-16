@@ -12,6 +12,9 @@ func newClientRegistry() *Registry {
 	// UI
 	//
 	reg.RegisterGroup(Group("ui").Icon("layout").Order(1))
+	reg.Register(Float("ui.transparency", 0.5).Order(1).
+		Min(0).Max(1).
+		Recommended(0.3, 1).Step(0.05))
 
 	//==
 	//== Navigation

@@ -23,13 +23,15 @@ class const MainNavRail({
   Widget build(BuildContext context) {
     final colors = context.colors;
 
-    return Material(
-      color: colors.mantle,
-      child: SafeArea(
-        right: false,
-        child: SettingsListen(
-          const ["ui.navigation.shownSections"],
-          builder: (context) => ValueListenableBuilder(
+    return SettingsListen(
+      const ["ui.navigation.shownSections", "ui.transparency"],
+      builder: (context) => Material(
+        color: colors.mantle.withValues(
+          alpha: SettingsDerived.transparency(0.5),
+        ),
+        child: SafeArea(
+          right: false,
+          child: ValueListenableBuilder(
             valueListenable: isExpanded,
             builder: (context, expanded, _) => AnimatedContainer(
               duration: mainNavAnimationDuration,
@@ -39,7 +41,13 @@ class const MainNavRail({
                   : MainNavRail.collapsedWidth,
               // keeps some space between the button and page
               decoration: BoxDecoration(
-                border: Border(right: BorderSide(color: colors.mantle)),
+                border: Border(
+                  right: BorderSide(
+                    color: colors.mantle.withValues(
+                      alpha: SettingsDerived.transparency(0.1),
+                    ),
+                  ),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: .stretch,
@@ -88,7 +96,7 @@ class const _MainNavRailItem({
     final colors = context.colors;
     final iconColor = selected ? colors.text : colors.textMuted;
 
-    return builder([
+    return builder(context, [
       MainNavItemHighlighter(axis: .vertical, enabled: selected),
       _paddingBox,
       Iconify(section.icon, size: mainNavIconSize, color: iconColor),

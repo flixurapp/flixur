@@ -112,6 +112,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'ui.navigation.bottomLabels': 'Show text labels under the icons in the bottom navbar.',
 		'ui.navigation.railDefaultExpanded': 'Whether the left navigation rail starts off expanded.',
 		'ui.navigation.shownSections': 'Choose which sections are shown in the main navigation.',
+		'ui.transparency': 'Relative transparency of the UI elements. Set to 1 for fully opaque.',
 		'ui.window.startMaximized': 'Open ${_root.app_name} maximized on launch.',
 		'ui.window.useCustom': 'Whether to use the custom titlebar. ${_root.routes.settings.requires_restart_hint}',
 	};
@@ -128,6 +129,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'ui.navigation.bottomLabels': 'Bottom Nav Labels',
 		'ui.navigation.railDefaultExpanded': 'Expand Nav Rail',
 		'ui.navigation.shownSections': 'Navigation Sections',
+		'ui.transparency': 'Transparency',
 		'ui.window.startMaximized': 'Start Maximized',
 		'ui.window.useCustom': 'Custom Titlebar',
 	};
@@ -382,6 +384,7 @@ extension on Translations {
 			'setting_descriptions."ui.navigation.bottomLabels"' => 'Show text labels under the icons in the bottom navbar.',
 			'setting_descriptions."ui.navigation.railDefaultExpanded"' => 'Whether the left navigation rail starts off expanded.',
 			'setting_descriptions."ui.navigation.shownSections"' => 'Choose which sections are shown in the main navigation.',
+			'setting_descriptions."ui.transparency"' => 'Relative transparency of the UI elements. Set to 1 for fully opaque.',
 			'setting_descriptions."ui.window.startMaximized"' => 'Open ${_root.app_name} maximized on launch.',
 			'setting_descriptions."ui.window.useCustom"' => 'Whether to use the custom titlebar. ${_root.routes.settings.requires_restart_hint}',
 			'setting_group_names.ui' => 'User Interface',
@@ -394,6 +397,7 @@ extension on Translations {
 			'setting_names."ui.navigation.bottomLabels"' => 'Bottom Nav Labels',
 			'setting_names."ui.navigation.railDefaultExpanded"' => 'Expand Nav Rail',
 			'setting_names."ui.navigation.shownSections"' => 'Navigation Sections',
+			'setting_names."ui.transparency"' => 'Transparency',
 			'setting_names."ui.window.startMaximized"' => 'Start Maximized',
 			'setting_names."ui.window.useCustom"' => 'Custom Titlebar',
 			'titlebar.close' => 'Close',

@@ -287,7 +287,7 @@ abstract class const MainNavItem({
 }) extends StatelessWidget {
   bool get selected => parent.parent.selected == section.id;
 
-  Widget builder(List<Widget> children) {
+  Widget builder(BuildContext context, List<Widget> children) {
     return Semantics(
       label: section.label,
       selected: selected,
@@ -298,7 +298,12 @@ abstract class const MainNavItem({
           unawaited(HapticFeedback.selectionClick());
           parent.onSelected(section);
         },
-        child: SizedBox(
+        child: Container(
+          color: selected
+              ? context.colors.mantle.withValues(
+                  alpha: SettingsDerived.transparency(0.2),
+                )
+              : null,
           width: width,
           height: height,
           child: axis == .horizontal
