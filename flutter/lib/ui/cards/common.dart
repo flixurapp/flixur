@@ -1,3 +1,4 @@
+import "package:flixur/ui/background/background.dart";
 import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
 
@@ -24,6 +25,9 @@ class CardSizing {
       textGap +
       subtextFontSize * lineHeight;
 }
+
+void debugCardSetBackground(String url) =>
+    BackgroundState.setSource(BackgroundSourceImage(url));
 
 // ignore: prefer_const_constructors_in_immutables child card classes cant be const
 class BaseCard({
