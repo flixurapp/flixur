@@ -553,10 +553,11 @@ extension SettingsDefinitionHelpers on SettingsDefinition {
 
 abstract class SettingsTranslated {
   /// Translated name for a setting definition.
-  static String defName(String id) => t.setting_names[id] ?? id;
+  static String defName(String id) => t.setting_definitions[id] ?? id;
 
   /// Translated description for a setting definition, empty when missing.
-  static String defDescription(String id) => t.setting_descriptions[id] ?? "";
+  static String defDescription(String id) =>
+      t.setting_definitions["$id.description"] ?? "";
 
   /// Translated display name for a setting choice.
   static String choiceName(String id, String value) =>
@@ -567,7 +568,7 @@ abstract class SettingsTranslated {
       t.setting_choices["$id.$value.description"] ?? "";
 
   /// Translated name for a settings group.
-  static String groupName(String id) => t.setting_group_names[id] ?? id;
+  static String groupName(String id) => t.setting_groups[id] ?? id;
 
   /// Translated group-name segments for a setting ID, outermost first.
   static List<String> groupSegments(String id) => [
