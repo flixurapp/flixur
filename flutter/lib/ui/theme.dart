@@ -173,6 +173,7 @@ ThemeData buildAppTheme(AppColors colors) {
         },
       ),
     ),
+    splashColor: colors.text.withValues(alpha: 0.25),
   );
 }
 
