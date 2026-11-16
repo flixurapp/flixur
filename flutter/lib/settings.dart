@@ -472,18 +472,22 @@ abstract class Settings {
       includeScore: true,
       useTokenSearch: true,
       keys: <FuseKey<SettingsDefinition>>[
-        .new(name: "title", weight: 5, getFn: (d) => settingName(d.id)),
+        .new(
+          name: "title",
+          weight: 5,
+          getFn: (d) => SettingsTranslated.defName(d.id),
+        ),
         .new(
           name: "description",
           weight: 4,
-          getFn: (d) => settingDescription(d.id),
+          getFn: (d) => SettingsTranslated.defDescription(d.id),
         ),
         .new(name: "id", weight: 2, getFn: (d) => d.id),
         .new(
           name: "parents",
           weight: 1,
           // all of the group path segments joined into one string
-          getFn: (d) => settingGroupSegments(d.id).join("\n"),
+          getFn: (d) => SettingsTranslated.groupSegments(d.id).join("\n"),
         ),
       ],
     ),
@@ -535,50 +539,52 @@ class const SettingsListen(
   }
 }
 
-extension SettingsDefinitionHelpers on SettingsDefinition {
-  String get name => settingName(id);
-  String get description => settingDescription(id);
-  T value<T extends Object>() => Settings.getValue<T>(id);
-}
-
-/// Translated name for a setting.
-String settingName(String id) => t.setting_names[id] ?? id;
-
-/// Translated description for a setting, empty when missing.
-String settingDescription(String id) => t.setting_descriptions[id] ?? "";
-
-/// Translated display name for a setting choice.
-String settingChoiceName(String id, String value) =>
-    t.setting_choices["$id.$value"] ?? value;
-
-/// Translated description for a setting choice, empty when missing.
-String settingChoiceDescription(String id, String value) =>
-    t.setting_choices["$id.$value.description"] ?? "";
-
-/// Translated name for a settings group.
-String settingGroupName(String id) => t.setting_group_names[id] ?? id;
-
 /// Returns the parent group of an ID. Null for toplevel groups.
 String? settingIDParent(String id) {
   final dot = id.lastIndexOf(".");
   return dot <= 0 ? null : id.substring(0, dot);
 }
 
-/// Translated group-name segments for a setting ID, outermost first.
-List<String> settingGroupSegments(String id) => [
-  for (
-    var group = settingIDParent(id);
-    group != null;
-    group = settingIDParent(group)
-  )
-    settingGroupName(group),
-].reversed.toList();
+extension SettingsDefinitionHelpers on SettingsDefinition {
+  String get name => SettingsTranslated.defName(id);
+  String get description => SettingsTranslated.defDescription(id);
+  T value<T extends Object>() => Settings.getValue<T>(id);
+}
 
-/// Translated title path segments for a setting ID, including the setting name.
-List<String> settingTitleSegments(String id) => [
-  ...settingGroupSegments(id),
-  settingName(id),
-];
+abstract class SettingsTranslated {
+  /// Translated name for a setting definition.
+  static String defName(String id) => t.setting_names[id] ?? id;
+
+  /// Translated description for a setting definition, empty when missing.
+  static String defDescription(String id) => t.setting_descriptions[id] ?? "";
+
+  /// Translated display name for a setting choice.
+  static String choiceName(String id, String value) =>
+      t.setting_choices["$id.$value"] ?? value;
+
+  /// Translated description for a setting choice, empty when missing.
+  static String choiceDescription(String id, String value) =>
+      t.setting_choices["$id.$value.description"] ?? "";
+
+  /// Translated name for a settings group.
+  static String groupName(String id) => t.setting_group_names[id] ?? id;
+
+  /// Translated group-name segments for a setting ID, outermost first.
+  static List<String> groupSegments(String id) => [
+    for (
+      var group = settingIDParent(id);
+      group != null;
+      group = settingIDParent(group)
+    )
+      groupName(group),
+  ].reversed.toList();
+
+  /// Translated title path for a setting ID, including the definition name.
+  static List<String> defSegments(String id) => [
+    ...groupSegments(id),
+    defName(id),
+  ];
+}
 
 abstract class SettingsDerived {
   /// Gets a 0-1 transparency value based on the transparency setting.

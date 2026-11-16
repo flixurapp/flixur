@@ -19,13 +19,13 @@ class const SettingsTileEnum(
   @override
   Widget build(BuildContext context) {
     final controller = useTextEditingController(
-      text: settingChoiceName(def.id, def.value<String>()),
+      text: SettingsTranslated.choiceName(def.id, def.value<String>()),
     );
 
     // keep controller in sync
     final revision = useSettings([def.id]);
     useEffect(() {
-      final name = settingChoiceName(def.id, def.value<String>());
+      final name = SettingsTranslated.choiceName(def.id, def.value<String>());
       if (controller.text != name) controller.text = name;
       return null;
     }, [revision]);
@@ -36,13 +36,16 @@ class const SettingsTileEnum(
         isSearching: isSearching,
         vertical: FlixurDropdownMenu<String>(
           controller: controller,
-          initialSelection: settingChoiceName(def.id, def.value<String>()),
+          initialSelection: SettingsTranslated.choiceName(
+            def.id,
+            def.value<String>(),
+          ),
           dropdownMenuEntries: [
             for (final choice
                 in def.enum_?.choices?.toList() ?? const <ChoiceSpec>[])
               DropdownMenuEntry(
                 value: choice.value,
-                label: settingChoiceName(def.id, choice.value),
+                label: SettingsTranslated.choiceName(def.id, choice.value),
                 leadingIcon: (choice.icon?.isNotEmpty ?? false)
                     ? Iconify(choice.icon!, size: 18)
                     : null,
@@ -63,9 +66,9 @@ class const _ChoiceLabel(final String id, final ChoiceSpec choice)
     extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final name = settingChoiceName(id, choice.value);
+    final name = SettingsTranslated.choiceName(id, choice.value);
     final description = choice.hasDescription == true
-        ? settingChoiceDescription(id, choice.value)
+        ? SettingsTranslated.choiceDescription(id, choice.value)
         : "";
 
     return Column(

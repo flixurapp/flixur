@@ -83,7 +83,7 @@ List<Widget> _renderGroup(BuildContext context, String? parent) {
   final children = _sortSettings([
     for (final def in definitions)
       if (parent != null && settingIDParent(def.id) == parent) def,
-  ], (d) => (d.id, settingName(d.id), d.order));
+  ], (d) => (d.id, SettingsTranslated.defName(d.id), d.order));
 
   // child groups
   final groups = Settings.groups ?? [];
@@ -93,7 +93,7 @@ List<Widget> _renderGroup(BuildContext context, String? parent) {
           ? !group.id.contains(".")
           : settingIDParent(group.id) == parent)
         group,
-  ], (g) => (g.id, settingGroupName(g.id), g.order));
+  ], (g) => (g.id, SettingsTranslated.groupName(g.id), g.order));
 
   return [
     for (final def in children) ?_settingsTile(def),
@@ -133,7 +133,7 @@ class const _GroupTile(final SettingsGroup group) extends HookWidget {
       ),
       leading: icon == null || icon.isEmpty ? null : Iconify(icon),
       title: Text(
-        settingGroupName(group.id),
+        SettingsTranslated.groupName(group.id),
         style: settingIDParent(group.id) == null
             ? const TextStyle(fontSize: 18, fontWeight: .w600)
             : null,

@@ -45,7 +45,9 @@ class const SettingsTileShell(
 
         return ListTile(
           title: Text(
-            isSearching ? settingTitleSegments(def.id).join(" > ") : def.name,
+            isSearching
+                ? SettingsTranslated.defSegments(def.id).join(" > ")
+                : def.name,
           ),
           isThreeLine: true,
           subtitle: Column(
