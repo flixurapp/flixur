@@ -96,7 +96,18 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	String get password => 'Password';
 
 	late final Translations$routes$en routes = Translations$routes$en._(_root);
+	Map<String, String> get setting_choices => {
+		'ui.background.algorithm.fizzy': 'Fizzy',
+		'ui.background.algorithm.fizzy.description': 'Gradient sourced from the artwork\'s most common color.',
+		'ui.background.algorithm.milk': 'Milk',
+		'ui.background.algorithm.milk.description': 'Gradient sourced from the artwork\'s more vibrant colors.',
+		'ui.background.algorithm.smoothie': 'Smoothie',
+		'ui.background.algorithm.smoothie.description': 'Smooth blend of fizzy and milk.',
+		'ui.background.algorithm.water': 'Water',
+		'ui.background.algorithm.water.description': 'Blurred background that follows the shape of the artwork.',
+	};
 	Map<String, String> get setting_descriptions => {
+		'ui.background.algorithm': 'Algorithm to use for background effects.',
 		'ui.library.cardsPerRow': 'Maximum number of cards to show per row in library grids.',
 		'ui.navigation.bottomLabels': 'Show text labels under the icons in the bottom navbar.',
 		'ui.navigation.railDefaultExpanded': 'Whether the left navigation rail starts off expanded.',
@@ -106,11 +117,13 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	};
 	Map<String, String> get setting_group_names => {
 		'ui': 'User Interface',
+		'ui.background': 'Background',
 		'ui.library': 'Library',
 		'ui.navigation': 'Navigation',
 		'ui.window': 'Window',
 	};
 	Map<String, String> get setting_names => {
+		'ui.background.algorithm': 'Background Algorithm',
 		'ui.library.cardsPerRow': 'Cards Per Row',
 		'ui.navigation.bottomLabels': 'Bottom Nav Labels',
 		'ui.navigation.railDefaultExpanded': 'Expand Nav Rail',
@@ -356,6 +369,15 @@ extension on Translations {
 			'routes.startup.setup.failed_codes."TOO_SHORT.password"' => 'Password must be at least 12 characters.',
 			'routes.startup.setup.failed_codes."TOO_SHORT.username"' => 'Username must be at least 2 characters.',
 			'routes.startup.setup.title' => 'Welcome to ${_root.app_name}!',
+			'setting_choices."ui.background.algorithm.fizzy"' => 'Fizzy',
+			'setting_choices."ui.background.algorithm.fizzy.description"' => 'Gradient sourced from the artwork\'s most common color.',
+			'setting_choices."ui.background.algorithm.milk"' => 'Milk',
+			'setting_choices."ui.background.algorithm.milk.description"' => 'Gradient sourced from the artwork\'s more vibrant colors.',
+			'setting_choices."ui.background.algorithm.smoothie"' => 'Smoothie',
+			'setting_choices."ui.background.algorithm.smoothie.description"' => 'Smooth blend of fizzy and milk.',
+			'setting_choices."ui.background.algorithm.water"' => 'Water',
+			'setting_choices."ui.background.algorithm.water.description"' => 'Blurred background that follows the shape of the artwork.',
+			'setting_descriptions."ui.background.algorithm"' => 'Algorithm to use for background effects.',
 			'setting_descriptions."ui.library.cardsPerRow"' => 'Maximum number of cards to show per row in library grids.',
 			'setting_descriptions."ui.navigation.bottomLabels"' => 'Show text labels under the icons in the bottom navbar.',
 			'setting_descriptions."ui.navigation.railDefaultExpanded"' => 'Whether the left navigation rail starts off expanded.',
@@ -363,9 +385,11 @@ extension on Translations {
 			'setting_descriptions."ui.window.startMaximized"' => 'Open ${_root.app_name} maximized on launch.',
 			'setting_descriptions."ui.window.useCustom"' => 'Whether to use the custom titlebar. ${_root.routes.settings.requires_restart_hint}',
 			'setting_group_names.ui' => 'User Interface',
+			'setting_group_names."ui.background"' => 'Background',
 			'setting_group_names."ui.library"' => 'Library',
 			'setting_group_names."ui.navigation"' => 'Navigation',
 			'setting_group_names."ui.window"' => 'Window',
+			'setting_names."ui.background.algorithm"' => 'Background Algorithm',
 			'setting_names."ui.library.cardsPerRow"' => 'Cards Per Row',
 			'setting_names."ui.navigation.bottomLabels"' => 'Bottom Nav Labels',
 			'setting_names."ui.navigation.railDefaultExpanded"' => 'Expand Nav Rail',
