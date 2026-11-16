@@ -7,7 +7,7 @@ import "package:flixur/settings.dart";
 import "package:flixur/storage.dart";
 import "package:openapi/openapi.dart";
 
-class Api {
+abstract class Api {
   static Openapi client = .new();
 
   static bool get canMakeAuthenticatedRequests =>

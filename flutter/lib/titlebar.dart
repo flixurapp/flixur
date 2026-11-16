@@ -7,7 +7,7 @@ import "package:flutter/foundation.dart";
 import "package:material_ui/material_ui.dart";
 import "package:window_manager/window_manager.dart";
 
-class TitlebarManager {
+abstract class TitlebarManager {
   /// Whether the platform supports a custom titlebar.
   static bool get isSupported =>
       !(kIsWeb || Platform.isAndroid || Platform.isIOS);

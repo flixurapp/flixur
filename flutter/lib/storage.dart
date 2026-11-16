@@ -13,7 +13,7 @@ const _secureBox = "core_secure";
 enum Stored { serverUrl, sessionToken, playerID }
 
 /// Persistent storage wrapper for strings.
-class Storage {
+abstract class Storage {
   static const List<Stored> _secureKeys = [.sessionToken];
   static Box<String> boxFor(Stored key) =>
       _secureKeys.contains(key) ? secure : core;

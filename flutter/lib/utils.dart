@@ -14,7 +14,7 @@ export "package:flixur/ui/theme.dart";
 export "package:go_router/go_router.dart";
 
 /// Contains app/system information.
-class AppInfo {
+abstract class AppInfo {
   static final _deviceInfo = DeviceInfoPlugin();
   static late PackageInfo _info;
 
@@ -74,7 +74,7 @@ class AppInfo {
   static String get clientIdentifier => "$name/$versionString";
 }
 
-class Images {
+abstract class Images {
   // App logo.
   static Image get logo => Image.asset("assets/logo.png", fit: .contain);
 }

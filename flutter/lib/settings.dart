@@ -28,7 +28,7 @@ class SettingsPendingPushItem({
   required final DateTime updatedAt,
 });
 
-class Settings {
+abstract class Settings {
   /// All settings definitions provided by the server.
   static List<SettingsDefinition>? definitions;
 
