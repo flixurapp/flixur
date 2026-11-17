@@ -44,10 +44,20 @@ class const SettingsTileShell(
         );
 
         return ListTile(
-          title: Text(
-            isSearching
-                ? SettingsTranslated.defSegments(def.id).join(" > ")
-                : def.name,
+          title: Row(
+            mainAxisSize: .min,
+            children: [
+              Expanded(
+                child: Text(
+                  isSearching
+                      // use non-breaking spaces to force wrapping at divider
+                      ? SettingsTranslated.defSegments(def.id)
+                            .map((s) => s.replaceAll(" ", "\u00A0"))
+                            .join("\u00A0> ")
+                      : def.name,
+                ),
+              ),
+            ],
           ),
           isThreeLine: true,
           subtitle: Column(
