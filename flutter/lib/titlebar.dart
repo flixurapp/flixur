@@ -15,6 +15,9 @@ abstract class TitlebarManager {
   /// Whether the title bar should be enabled.
   static bool get shouldEnable => isSupported && _wasEnabled;
 
+  /// Width of the window resize edges.
+  static const resizeEdgeSize = 8.0;
+
   /// Get the current window instance.
   static Window? getWindow() {
     if (!isSupported) return null;

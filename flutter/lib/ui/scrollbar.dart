@@ -1,5 +1,6 @@
 import "dart:ui" show clampDouble, lerpDouble;
 
+import "package:flixur/titlebar.dart";
 import "package:flutter/gestures.dart";
 import "package:material_ui/material_ui.dart";
 
@@ -11,13 +12,29 @@ class const AppScrollBehavior() extends MaterialScrollBehavior {
     Widget child,
     ScrollableDetails details,
   ) {
-    return AppScrollbar(controller: details.controller, child: child);
+    return ValueListenableBuilder(
+      valueListenable: TitlebarManager.isMaximizedNotifier,
+      builder: (context, maximized, child) => AppScrollbar(
+        controller: details.controller,
+        // pad the scrollbar by the resize edge width so the
+        // resize handles dont cover it
+        crossAxisMargin: TitlebarManager.shouldEnable && !maximized
+            ? TitlebarManager.resizeEdgeSize
+            : 0,
+        child: child!,
+      ),
+      child: child,
+    );
   }
 }
 
 /// Custom app scrollbar.
-class const AppScrollbar({required super.child, super.controller, super.key})
-    extends RawScrollbar {
+class const AppScrollbar({
+  required super.child,
+  super.controller,
+  super.crossAxisMargin,
+  super.key,
+}) extends RawScrollbar {
   @override
   RawScrollbarState<AppScrollbar> createState() => _AppScrollbarState();
 }
