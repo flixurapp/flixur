@@ -94,6 +94,9 @@ func newClientRegistry() *Registry {
 			AddChoiceWithDescription("milk").
 			AddChoiceWithDescription("fizzy"),
 	)
+	reg.Register(Float("ui.background.brightness", 0.24).Order(1).
+		Min(0).Max(1).
+		Step(0.01).Recommended(0.1, 0.5))
 
 	return reg
 }

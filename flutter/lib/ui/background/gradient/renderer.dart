@@ -1,5 +1,6 @@
 import "dart:ui" as ui;
 
+import "package:flixur/settings.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/foundation.dart" show listEquals;
 import "package:material_ui/material_ui.dart";
@@ -31,8 +32,9 @@ class const GradientRenderer({required final List<Color> colors, super.key})
               base: HSLColor.fromColor(context.colors.base)
                   // lock saturation so theme changes dont mess with the image
                   .withSaturation(0.05)
-                  //TODO:setting
-                  .withLightness(0.24)
+                  .withLightness(
+                    Settings.getValue<double>("ui.background.brightness"),
+                  )
                   .toColor(),
             ),
           ),
@@ -114,5 +116,5 @@ class _GradientPainter({
 
   @override
   bool shouldRepaint(_GradientPainter oldDelegate) =>
-      !listEquals(oldDelegate.colors, colors);
+      !listEquals(oldDelegate.colors, colors) || oldDelegate.base != base;
 }

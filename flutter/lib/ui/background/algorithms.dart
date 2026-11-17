@@ -1,4 +1,5 @@
 import "package:adaptive_palette/adaptive_palette.dart";
+import "package:flixur/settings.dart";
 import "package:flixur/ui/background/colorgram.dart";
 import "package:flixur/ui/background/combined.dart";
 import "package:flixur/ui/background/gradient/gradient.dart";
@@ -18,29 +19,38 @@ enum BackgroundAlgorithm {
       smoothie;
 
   /// Builds the background for an artwork [provider].
-  Widget build(ImageProvider provider) => switch (this) {
-    // gradients
-    smoothie => GradientBackground(provider, extractSmoothieColors),
-    milk => GradientBackground(provider, extractMilkColors),
-    fizzy => GradientBackground(provider, extractFizzyColors),
+  Widget build(ImageProvider provider) => SettingsListen(
+    const ["ui.background.brightness"],
+    builder: (_) => switch (this) {
+      // gradients
+      smoothie => GradientBackground(provider, extractSmoothieColors),
+      milk => GradientBackground(provider, extractMilkColors),
+      fizzy => GradientBackground(provider, extractFizzyColors),
 
-    // fluid
-    water => ColorFiltered(
-      colorFilter: ColorFilter.mode(
-        //TODO:setting
-        Colors.black.withValues(alpha: 2 * 0.25),
-        .srcOver,
+      // fluid
+      water => ColorFiltered(
+        colorFilter: ColorFilter.mode(
+          // the math is like this so that brightness is affected on the lower
+          // half of the range
+          Colors.black.withValues(
+            alpha:
+                (1 - Settings.getValue<double>("ui.background.brightness") * 2)
+                    .clamp(0, 1),
+          ),
+          .srcOver,
+        ),
+        child: FluidBackground(
+          imageProvider: provider,
+          // we supply our own darkening
+          overlayDarken: 0,
+          smoothTransitions: true,
+          //TODO:setting
+          transitionDuration: const .new(milliseconds: 500),
+          child: const SizedBox.expand(),
+        ),
       ),
-      child: FluidBackground(
-        imageProvider: provider,
-        overlayDarken: 1,
-        smoothTransitions: true,
-        //TODO:setting
-        //transitionDuration: .zero,
-        child: const SizedBox.expand(),
-      ),
-    ),
-  };
+    },
+  );
 }
 
 Future<List<Color>> extractSmoothieColors(ImageProvider provider) async =>

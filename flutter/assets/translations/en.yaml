@@ -69,8 +69,10 @@ setting_choices(map):
   ui.background.algorithm.water: "Water"
   "ui.background.algorithm.water.description": "Blurred background that follows the shape of the artwork."
 setting_definitions(map):
-  ui.background.algorithm: "Background Algorithm"
+  ui.background.algorithm: "Algorithm"
   "ui.background.algorithm.description": "Algorithm to use for background effects."
+  ui.background.brightness: "Brightness"
+  "ui.background.brightness.description": "Change the brightness of the background. Higher numbers are brighter."
   ui.library.cardsPerRow: "Cards Per Row"
   "ui.library.cardsPerRow.description": "Maximum number of cards to show per row in library grids."
   ui.navigation.bottomLabels: "Bottom Nav Labels"

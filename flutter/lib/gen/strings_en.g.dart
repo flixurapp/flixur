@@ -107,8 +107,10 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 		'ui.background.algorithm.water.description': 'Blurred background that follows the shape of the artwork.',
 	};
 	Map<String, String> get setting_definitions => {
-		'ui.background.algorithm': 'Background Algorithm',
+		'ui.background.algorithm': 'Algorithm',
 		'ui.background.algorithm.description': 'Algorithm to use for background effects.',
+		'ui.background.brightness': 'Brightness',
+		'ui.background.brightness.description': 'Change the brightness of the background. Higher numbers are brighter.',
 		'ui.library.cardsPerRow': 'Cards Per Row',
 		'ui.library.cardsPerRow.description': 'Maximum number of cards to show per row in library grids.',
 		'ui.navigation.bottomLabels': 'Bottom Nav Labels',
@@ -377,8 +379,10 @@ extension on Translations {
 			'setting_choices."ui.background.algorithm.smoothie.description"' => 'Smooth blend of fizzy and milk.',
 			'setting_choices."ui.background.algorithm.water"' => 'Water',
 			'setting_choices."ui.background.algorithm.water.description"' => 'Blurred background that follows the shape of the artwork.',
-			'setting_definitions."ui.background.algorithm"' => 'Background Algorithm',
+			'setting_definitions."ui.background.algorithm"' => 'Algorithm',
 			'setting_definitions."ui.background.algorithm.description"' => 'Algorithm to use for background effects.',
+			'setting_definitions."ui.background.brightness"' => 'Brightness',
+			'setting_definitions."ui.background.brightness.description"' => 'Change the brightness of the background. Higher numbers are brighter.',
 			'setting_definitions."ui.library.cardsPerRow"' => 'Cards Per Row',
 			'setting_definitions."ui.library.cardsPerRow.description"' => 'Maximum number of cards to show per row in library grids.',
 			'setting_definitions."ui.navigation.bottomLabels"' => 'Bottom Nav Labels',
