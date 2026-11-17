@@ -25,11 +25,20 @@ enum BackgroundAlgorithm {
     fizzy => GradientBackground(provider, extractFizzyColors),
 
     // fluid
-    water => FluidBackground(
-      imageProvider: provider,
-      overlayDarken: 0.25,
-      //transitionDuration: .zero,
-      child: const SizedBox.expand(),
+    water => ColorFiltered(
+      colorFilter: ColorFilter.mode(
+        //TODO:setting
+        Colors.black.withValues(alpha: 2 * 0.25),
+        .srcOver,
+      ),
+      child: FluidBackground(
+        imageProvider: provider,
+        overlayDarken: 1,
+        smoothTransitions: true,
+        //TODO:setting
+        //transitionDuration: .zero,
+        child: const SizedBox.expand(),
+      ),
     ),
   };
 }

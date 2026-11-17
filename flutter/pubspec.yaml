@@ -7,7 +7,10 @@ environment:
   sdk: 3.13.3
 
 dependencies:
-  adaptive_palette: ^3.1.0
+  adaptive_palette:
+    git:
+      url: https://github.com/itzTheMeow/adaptive_palette.git
+      ref: 3fa190c04205b6118fb5316422d9260b40564a2f
   built_value: ^8.13.0
   collection: ^1.19.1
   device_info_plus: ^13.2.0
