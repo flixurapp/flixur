@@ -76,7 +76,11 @@ func (def *SettingsDefinition) validate() {
 		if len(def.Enum.Choices) == 0 {
 			panic("enum setting has no choices: " + def.ID)
 		}
-		if def.Enum.Default != "" && !slices.Contains(choiceValues(def.Enum.Choices), def.Enum.Default) {
+		// empty default uses first choice as fallback
+		if def.Enum.Default == "" && !slices.Contains(choiceValues(def.Enum.Choices), "") {
+			def.Enum.Default = def.Enum.Choices[0].Value
+		}
+		if !slices.Contains(choiceValues(def.Enum.Choices), def.Enum.Default) {
 			panic("enum default is not one of its choices: " + def.ID)
 		}
 	case def.StringList != nil:

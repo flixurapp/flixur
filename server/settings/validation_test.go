@@ -258,6 +258,29 @@ func TestValidateChainBuilding(t *testing.T) {
 	}
 }
 
+func TestEnumEmptyDefaultResolves(t *testing.T) {
+	registry := NewRegistry()
+	registry.RegisterGroup(Group("test"))
+
+	// an empty default falls back to the first choice
+	first := registry.Register(Enum("test.a", "").AddChoice("y").AddChoice("z"))
+	if first.Enum.Default != "y" {
+		t.Errorf("empty default did not fall back to the first choice, got %q", first.Enum.Default)
+	}
+
+	// an empty default is kept when "" is itself a choice
+	empty := registry.Register(Enum("test.b", "").AddChoice("y").AddChoice(""))
+	if empty.Enum.Default != "" {
+		t.Errorf(`"" choice default was not kept, got %q`, empty.Enum.Default)
+	}
+
+	// a non-empty default is kept
+	kept := registry.Register(Enum("test.c", "z").AddChoice("y").AddChoice("z"))
+	if kept.Enum.Default != "z" {
+		t.Errorf("non-empty default was changed, got %q", kept.Enum.Default)
+	}
+}
+
 func TestValidateDefinitionConstraints(t *testing.T) {
 	registry := NewRegistry()
 	registry.RegisterGroup(Group("test"))
