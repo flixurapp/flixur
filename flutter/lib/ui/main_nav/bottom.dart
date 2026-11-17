@@ -1,3 +1,5 @@
+import "dart:math";
+
 import "package:flixur/settings.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/main_nav/common.dart";
@@ -18,22 +20,37 @@ class const MainNavBottom({
         "ui.navigation.bottomLabels",
         "ui.transparency",
       ],
-      builder: (context) => Material(
-        color: context.colors.mantle.withValues(
-          alpha: SettingsDerived.transparency(0.5),
-        ),
-        child: SafeArea(
-          top: false,
-          child: Row(
-            children: [
-              for (final section in MainNavWrapper.shownSections)
-                Expanded(
-                  child: _MainNavBottomItem(parent: this, section: section),
-                ),
-            ],
+      builder: (context) {
+        final alpha = SettingsDerived.transparency(0.5);
+        final material = Material(
+          color: context.colors.mantle.withValues(alpha: alpha),
+          child: SafeArea(
+            top: false,
+            child: Row(
+              children: [
+                for (final section in MainNavWrapper.shownSections)
+                  Expanded(
+                    child: _MainNavBottomItem(parent: this, section: section),
+                  ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+
+        final double sigma = max(
+          24 * Settings.getValue<double>("ui.transparency"),
+          4,
+        );
+        // skip if theres no reaosn to blur
+        if (alpha >= 0.99) return material;
+
+        return ClipRect(
+          child: BackdropFilter(
+            filter: .blur(sigmaX: sigma, sigmaY: sigma),
+            child: material,
+          ),
+        );
+      },
     );
   }
 }

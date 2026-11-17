@@ -184,6 +184,7 @@ class const MainNavWrapper({
     final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
     return Scaffold(
       backgroundColor: backgroundColor,
+      extendBody: true,
       body: body,
       // hide navbar when keyboard is open
       bottomNavigationBar: keyboardOpen
