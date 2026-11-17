@@ -40,6 +40,13 @@ abstract class BackgroundState {
     revision.value++;
   }
 
+  /// Resets the background to normal.
+  static void reset() {
+    _source.value = null;
+    _overrides.clear();
+    revision.value++;
+  }
+
   /// The currently active source, if any.
   static BackgroundSource? source() =>
       _overrides.values.isEmpty ? _source.value : _overrides.values.last;
