@@ -7,6 +7,7 @@ import "package:flixur/ui/cards/collection.dart";
 import "package:flixur/ui/cards/common.dart";
 import "package:flixur/ui/cards/playlist.dart";
 import "package:flixur/ui/cards/queue.dart";
+import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
 
 class const LibraryView({super.key}) extends StatelessWidget {
@@ -72,7 +73,7 @@ class const LibraryView({super.key}) extends StatelessWidget {
 class const CardsGrid({
   required final int rowCount,
   required final List<Widget> children,
-  final EdgeInsetsGeometry padding = const .all(10),
+  final EdgeInsets padding = const .all(10),
   final double spacing = 10,
   super.key,
 }) extends StatelessWidget {
@@ -97,7 +98,7 @@ class const CardsGrid({
 
         return GridView.count(
           crossAxisCount: perRow,
-          padding: padding,
+          padding: padding + context.safeBottomPadding,
           mainAxisSpacing: spacing,
           crossAxisSpacing: spacing,
           // extent is the width (image 1:1 so image height) + text block height

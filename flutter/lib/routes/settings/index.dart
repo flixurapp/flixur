@@ -37,7 +37,9 @@ class const SettingsView({super.key}) extends HookWidget {
         Expanded(
           child: query.isEmpty
               ? ListView(
-                  padding: const .symmetric(horizontal: 16, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12) +
+                      context.safeBottomPadding,
                   children: _renderGroup(context, null),
                 )
               : _SearchResults(query),
@@ -57,7 +59,9 @@ class const _SearchResults(final String query) extends HookWidget {
     ]);
 
     return ListView(
-      padding: const .symmetric(horizontal: 16, vertical: 12),
+      padding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 12) +
+          context.safeBottomPadding,
       children: [
         for (final result in results) ?_settingsTile(result.item, true),
       ],

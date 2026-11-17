@@ -121,6 +121,12 @@ class Debounced({
   }
 }
 
+extension ContextUtilsX on BuildContext {
+  /// Returns the bottom padding of this context's [MediaQuery].
+  EdgeInsets get safeBottomPadding =>
+      .only(bottom: MediaQuery.paddingOf(this).bottom);
+}
+
 /// Conditionally wraps [child] using [wrapper] when [gate] is true.
 class const GatedWidget({
   required final bool gate,
