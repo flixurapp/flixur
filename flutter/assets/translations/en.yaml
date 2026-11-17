@@ -32,6 +32,7 @@ routes:
     new_profile: "New Profile"
     rename_profile: "Rename Profile"
     requires_restart_hint: "Requires a restart to take effect."
+    reset_setting: "Reset to Default"
     search_hint: "Search settings..."
     sync_offline: "Sync will resume when the network reconnects."
   startup:

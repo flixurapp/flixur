@@ -14,10 +14,8 @@ part "hive_adapters.g.dart";
 
 /// Stores an OpenAPI object through its built_value serializer.
 // ignore: prefer_const_constructors_in_immutables
-class OpenAPIAdapter<T extends Object>(
-  int typeId,
-  final Serializer<T> _serializer,
-) extends TypeAdapter<T> {
+class OpenAPIAdapter<T>(int typeId, final Serializer<T> _serializer)
+    extends TypeAdapter<T> {
   @override
   final typeId = typeId;
 

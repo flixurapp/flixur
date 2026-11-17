@@ -2,6 +2,7 @@ import "dart:math";
 
 import "package:flixur/routes/settings/index.dart";
 import "package:flixur/settings.dart";
+import "package:flixur/ui/icons.dart";
 import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
@@ -45,8 +46,16 @@ class const SettingsTileShell(
 
         return ListTile(
           title: Row(
-            mainAxisSize: .min,
+            spacing: 2,
             children: [
+              if (!def.isDefault(def.value()))
+                IconButton(
+                  onPressed: () =>
+                      Settings.set(def.id, def.getDefault<dynamic>()),
+                  icon: const Iconify("arrow-counter-clockwise"),
+                  tooltip: t.routes.settings.reset_setting,
+                  constraints: .tight(const .square(36)),
+                ),
               Expanded(
                 child: Text(
                   isSearching

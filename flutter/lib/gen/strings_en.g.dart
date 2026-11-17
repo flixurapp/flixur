@@ -216,6 +216,9 @@ class Translations$routes$settings$en {
 	/// en: 'Requires a restart to take effect.'
 	String get requires_restart_hint => 'Requires a restart to take effect.';
 
+	/// en: 'Reset to Default'
+	String get reset_setting => 'Reset to Default';
+
 	/// en: 'Search settings...'
 	String get search_hint => 'Search settings...';
 
@@ -350,6 +353,7 @@ extension on Translations {
 			'routes.settings.new_profile' => 'New Profile',
 			'routes.settings.rename_profile' => 'Rename Profile',
 			'routes.settings.requires_restart_hint' => 'Requires a restart to take effect.',
+			'routes.settings.reset_setting' => 'Reset to Default',
 			'routes.settings.search_hint' => 'Search settings...',
 			'routes.settings.sync_offline' => 'Sync will resume when the network reconnects.',
 			'routes.startup.login.failed' => 'Login Failed',

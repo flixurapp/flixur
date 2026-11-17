@@ -364,7 +364,7 @@ abstract class Settings {
   }
 
   /// Reads a setting value from it's ID. Null if the setting is not found yet.
-  static T? get<T extends Object>(String id) {
+  static T? get<T>(String id) {
     final def = definition(id);
     if (def == null) return null;
     final override = overrides?[id];
@@ -373,16 +373,11 @@ abstract class Settings {
   }
 
   /// Always returns a value for a setting, even if it's not found.
-  static T getValue<T extends Object>(String id) =>
-      get<T>(id) ?? _fallbackTypeValue<T>();
+  static T getValue<T>(String id) => get<T>(id) ?? _fallbackTypeValue<T>();
 
   /// Writes a typed value for a setting to [profileID] when given or current.
   /// Returns a boolean indicating success.
-  static Future<bool> set<T extends Object>(
-    String id,
-    T value, {
-    String? profileID,
-  }) async {
+  static Future<bool> set<T>(String id, T value, {String? profileID}) async {
     final def = definition(id);
     final targetProfileID = profileID ?? activeProfileID;
     if (def == null || targetProfileID == null) return false;
@@ -422,7 +417,7 @@ abstract class Settings {
   }
 
   /// Decodes a JSON-encoded value text into the setting's type.
-  static T? _decode<T extends Object>(SettingsDefinition def, String text) {
+  static T? _decode<T>(SettingsDefinition def, String text) {
     final value = switch (def.kind) {
       .bool_ => jsonDecode(text) as bool,
       .int_ => (jsonDecode(text) as num).toInt(),
@@ -437,7 +432,7 @@ abstract class Settings {
   }
 
   /// Encodes a typed value into the setting's JSON value string.
-  static String _encode<T extends Object>(SettingsDefinition def, T value) =>
+  static String _encode<T>(SettingsDefinition def, T value) =>
       switch (def.kind) {
         .bool_ => jsonEncode(value as bool),
         .int_ => jsonEncode(value as num),
@@ -505,7 +500,7 @@ class const SyncOffline() extends SettingsSyncState;
 class SyncError(final String message) extends SettingsSyncState;
 
 /// Listens for setting value changes and rebuilds, returning the value.
-class const SettingsValue<T extends Object>(
+class const SettingsValue<T>(
   final String id, {
   required final Widget Function(BuildContext context, T value) builder,
   super.key,
@@ -550,25 +545,35 @@ T _fallbackTypeValue<T>() {
 extension SettingsDefinitionHelpers on SettingsDefinition {
   String get name => SettingsTranslated.defName(id);
   String get description => SettingsTranslated.defDescription(id);
-  T value<T extends Object>() => Settings.getValue<T>(id);
+  T value<T>() => Settings.getValue<T>(id);
+
+  /// The raw default value of this definition.
+  Object? get rawDefault => switch (kind) {
+    .bool_ => bool_?.defaultValue ?? false,
+    .int_ => int_?.defaultValue ?? 0,
+    .float => float?.defaultValue ?? 0.0,
+    .string => string?.defaultValue ?? "",
+    .enum_ => enum_?.defaultValue ?? enum_?.choices?.firstOrNull?.value ?? "",
+    .stringlist => stringList?.defaultValue?.toList() ?? const <String>[],
+    _ => null,
+  };
 
   /// The typed default value of this definition, per its kind.
   /// Null if unsupported.
   T? typedDefault<T>() {
-    final value = switch (kind) {
-      .bool_ => bool_?.defaultValue ?? false,
-      .int_ => int_?.defaultValue ?? 0,
-      .float => float?.defaultValue ?? 0.0,
-      .string => string?.defaultValue ?? "",
-      .enum_ => enum_?.defaultValue ?? enum_?.choices?.firstOrNull?.value ?? "",
-      .stringlist => stringList?.defaultValue?.toList() ?? const <String>[],
-      _ => null,
-    };
+    final value = rawDefault;
     return value is T ? value : null;
   }
 
   /// Returns the default value of this definition. Always returns a value.
   T? getDefault<T>() => typedDefault() ?? _fallbackTypeValue<T>();
+
+  /// Whether [value] equals this definition's default value.
+  bool isDefault(Object? value) {
+    final defaultValue = rawDefault;
+    if (defaultValue == null) return false;
+    return jsonEncode(value) == jsonEncode(defaultValue);
+  }
 }
 
 abstract class SettingsTranslated {
