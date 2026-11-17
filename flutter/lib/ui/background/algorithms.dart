@@ -7,28 +7,34 @@ import "package:material_ui/material_ui.dart";
 
 /// Background color algorithms, names must match the setting.
 enum BackgroundAlgorithm {
-  smoothie,
-  water,
-  milk,
-  fizzy;
+  /// Smoothie
+  d,
+
+  /// Ice Cube
+  a,
+
+  /// Soda
+  b,
+
+  /// Milk
+  c;
 
   /// Resolves the algorithm for the background setting value.
-  /// Falls back to [BackgroundAlgorithm.smoothie].
+  /// Falls back to [BackgroundAlgorithm.d].
   static BackgroundAlgorithm fromSetting(String value) =>
-      values.where((algorithm) => algorithm.name == value).firstOrNull ??
-      smoothie;
+      values.where((algorithm) => algorithm.name == value).firstOrNull ?? d;
 
   /// Builds the background for an artwork [provider].
   Widget build(ImageProvider provider) => SettingsListen(
     const ["ui.background.brightness"],
     builder: (_) => switch (this) {
       // gradients
-      smoothie => GradientBackground(provider, extractSmoothieColors),
-      milk => GradientBackground(provider, extractMilkColors),
-      fizzy => GradientBackground(provider, extractFizzyColors),
+      d => GradientBackground(provider, extractDColors),
+      b => GradientBackground(provider, extractBColors),
+      c => GradientBackground(provider, extractCColors),
 
       // fluid
-      water => ColorFiltered(
+      a => ColorFiltered(
         colorFilter: ColorFilter.mode(
           // the math is like this so that brightness is affected on the lower
           // half of the range
@@ -53,7 +59,7 @@ enum BackgroundAlgorithm {
   );
 }
 
-Future<List<Color>> extractSmoothieColors(ImageProvider provider) async =>
+Future<List<Color>> extractDColors(ImageProvider provider) async =>
     combinePalettes(
       await Future.wait([
         extractColorgramColors(provider, count: paletteSize * 2),
@@ -61,8 +67,8 @@ Future<List<Color>> extractSmoothieColors(ImageProvider provider) async =>
       ]),
     );
 
-Future<List<Color>> extractMilkColors(ImageProvider provider) =>
+Future<List<Color>> extractBColors(ImageProvider provider) =>
     FluidPaletteExtractor.extractColors(provider, count: paletteSize);
 
-Future<List<Color>> extractFizzyColors(ImageProvider provider) =>
+Future<List<Color>> extractCColors(ImageProvider provider) =>
     extractColorgramColors(provider, count: paletteSize);

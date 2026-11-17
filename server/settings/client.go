@@ -88,11 +88,11 @@ func newClientRegistry() *Registry {
 	reg.RegisterGroup(Group("ui.background").Order(1))
 
 	reg.Register(
-		Enum("ui.background.algorithm", "smoothie").Order(1).
-			AddChoiceWithDescription("smoothie").
-			AddChoiceWithDescription("water").
-			AddChoiceWithDescription("milk").
-			AddChoiceWithDescription("fizzy"),
+		Enum("ui.background.algorithm", "d").Order(1).
+			AddChoiceWithDescription("a").
+			AddChoiceWithDescription("b").
+			AddChoiceWithDescription("c").
+			AddChoiceWithDescription("d"),
 	)
 	reg.Register(Float("ui.background.brightness", 0.24).Order(1).
 		Min(0).Max(1).
