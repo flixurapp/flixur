@@ -367,22 +367,14 @@ abstract class Settings {
   static T? get<T extends Object>(String id) {
     final def = definition(id);
     if (def == null) return null;
-    final text = overrides?[id] ?? _defaultEncoded(def);
-    return _decode<T>(def, text);
+    final override = overrides?[id];
+    if (override != null) return _decode<T>(def, override);
+    return def.typedDefault<T>();
   }
 
   /// Always returns a value for a setting, even if it's not found.
-  static T getValue<T extends Object>(String id) {
-    final resolved = get<T>(id);
-    if (resolved != null) return resolved;
-
-    if (T == bool) return false as T;
-    if (T == int) return 0 as T;
-    if (T == double) return 0.0 as T;
-    if (T == String) return "" as T;
-    if (T == List<String>) return List<String>.empty() as T;
-    throw UnsupportedError("no default value for the type $T");
-  }
+  static T getValue<T extends Object>(String id) =>
+      get<T>(id) ?? _fallbackTypeValue<T>();
 
   /// Writes a typed value for a setting to [profileID] when given or current.
   /// Returns a boolean indicating success.
@@ -545,10 +537,38 @@ String? settingIDParent(String id) {
   return dot <= 0 ? null : id.substring(0, dot);
 }
 
+/// Returns a fallback value for the given setting dart type.
+T _fallbackTypeValue<T>() {
+  if (T == bool) return false as T;
+  if (T == int) return 0 as T;
+  if (T == double) return 0.0 as T;
+  if (T == String) return "" as T;
+  if (T == List<String>) return List<String>.empty() as T;
+  throw UnsupportedError("no default value for the type $T");
+}
+
 extension SettingsDefinitionHelpers on SettingsDefinition {
   String get name => SettingsTranslated.defName(id);
   String get description => SettingsTranslated.defDescription(id);
   T value<T extends Object>() => Settings.getValue<T>(id);
+
+  /// The typed default value of this definition, per its kind.
+  /// Null if unsupported.
+  T? typedDefault<T>() {
+    final value = switch (kind) {
+      .bool_ => bool_?.defaultValue ?? false,
+      .int_ => int_?.defaultValue ?? 0,
+      .float => float?.defaultValue ?? 0.0,
+      .string => string?.defaultValue ?? "",
+      .enum_ => enum_?.defaultValue ?? enum_?.choices?.firstOrNull?.value ?? "",
+      .stringlist => stringList?.defaultValue?.toList() ?? const <String>[],
+      _ => null,
+    };
+    return value is T ? value : null;
+  }
+
+  /// Returns the default value of this definition. Always returns a value.
+  T? getDefault<T>() => typedDefault() ?? _fallbackTypeValue<T>();
 }
 
 abstract class SettingsTranslated {
@@ -596,7 +616,7 @@ abstract class SettingsDerived {
   static double transparency(double target) {
     final value = Settings.getValue<double>("ui.transparency");
     final def =
-        (Settings.definition("ui.transparency")?.float?.defaultValue ?? 0.5)
+        (Settings.definition("ui.transparency")?.typedDefault<double>() ?? 0.5)
             .clamp(0.0, 1.0);
     return (value <= def
             // if the value is less than the default then interpolate downward
@@ -606,16 +626,3 @@ abstract class SettingsDerived {
         .clamp(0, 1);
   }
 }
-
-/// The JSON-encoded default value of a definition.
-String _defaultEncoded(SettingsDefinition def) => switch (def.kind) {
-  .bool_ => jsonEncode(def.bool_?.defaultValue ?? false),
-  .int_ => jsonEncode(def.int_?.defaultValue ?? 0),
-  .float => jsonEncode(def.float?.defaultValue ?? 0.0),
-  .string => jsonEncode(def.string?.defaultValue ?? ""),
-  .enum_ => jsonEncode(
-    def.enum_?.defaultValue ?? def.enum_?.choices?.firstOrNull?.value ?? "",
-  ),
-  .stringlist => jsonEncode(def.stringList?.defaultValue?.toList() ?? []),
-  _ => jsonEncode(""),
-};
