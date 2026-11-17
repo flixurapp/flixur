@@ -29,9 +29,23 @@ enum BackgroundAlgorithm {
     const ["ui.background.brightness"],
     builder: (_) => switch (this) {
       // gradients
-      d => GradientBackground(provider, extractDColors),
-      b => GradientBackground(provider, extractBColors),
-      c => GradientBackground(provider, extractCColors),
+      b => GradientBackground(
+        provider,
+        (p) => FluidPaletteExtractor.extractColors(p, count: paletteSize),
+      ),
+      c => GradientBackground(
+        provider,
+        (p) => extractColorgramColors(p, count: paletteSize),
+      ),
+      d => GradientBackground(
+        provider,
+        (p) async => combinePalettes(
+          await Future.wait([
+            extractColorgramColors(p, count: paletteSize * 2),
+            FluidPaletteExtractor.extractColors(p, count: paletteSize + 2),
+          ]),
+        ),
+      ),
 
       // fluid
       a => ColorFiltered(
@@ -58,17 +72,3 @@ enum BackgroundAlgorithm {
     },
   );
 }
-
-Future<List<Color>> extractDColors(ImageProvider provider) async =>
-    combinePalettes(
-      await Future.wait([
-        extractColorgramColors(provider, count: paletteSize * 2),
-        FluidPaletteExtractor.extractColors(provider, count: paletteSize + 2),
-      ]),
-    );
-
-Future<List<Color>> extractBColors(ImageProvider provider) =>
-    FluidPaletteExtractor.extractColors(provider, count: paletteSize);
-
-Future<List<Color>> extractCColors(ImageProvider provider) =>
-    extractColorgramColors(provider, count: paletteSize);
