@@ -1,5 +1,6 @@
 import "dart:math";
 
+import "package:flixur/router.dart" show router;
 import "package:flixur/ui/cards/common.dart";
 import "package:material_ui/material_ui.dart";
 
@@ -86,7 +87,8 @@ class QueueCard({
           },
         ),
         subtext: "7/17/26 4:15pm",
-        onTap: () => debugCardSetBackground(imageURLs.last),
+        onTap: () => router.goNamed("home"),
+        onPlay: () => debugCardSetBackground(imageURLs.last),
       );
 }
 

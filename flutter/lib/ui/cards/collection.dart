@@ -1,5 +1,6 @@
 import "dart:math";
 
+import "package:flixur/router.dart" show router;
 import "package:flixur/ui/cards/common.dart";
 import "package:material_ui/material_ui.dart";
 
@@ -79,7 +80,8 @@ class CollectionCard({
         ),
         text: "brayden's collection",
         subtext: "42 albums",
-        onTap: () => debugCardSetBackground(imageURLs.first),
+        onTap: () => router.goNamed("home"),
+        onPlay: () => debugCardSetBackground(imageURLs.first),
       );
 }
 

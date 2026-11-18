@@ -1,3 +1,4 @@
+import "package:flixur/router.dart" show router;
 import "package:flixur/ui/cards/common.dart";
 import "package:material_ui/material_ui.dart";
 
@@ -10,6 +11,7 @@ class ArtistCard({
     : super(
         image: ClipOval(child: Image.network(imageURL, fit: .cover)),
         text: "Tyler the Creator",
-        onTap: () => debugCardSetBackground(imageURL),
+        onTap: () => router.goNamed("home"),
+        onPlay: () => debugCardSetBackground(imageURL),
       );
 }

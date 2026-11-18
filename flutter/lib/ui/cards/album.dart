@@ -1,3 +1,4 @@
+import "package:flixur/router.dart" show router;
 import "package:flixur/ui/cards/common.dart";
 import "package:material_ui/material_ui.dart";
 
@@ -16,6 +17,7 @@ class AlbumCard({
         ),
         text: "MYCELiUM",
         subtext: "Aluna",
-        onTap: () => debugCardSetBackground(imageURL),
+        onTap: () => router.goNamed("home"),
+        onPlay: () => debugCardSetBackground(imageURL),
       );
 }

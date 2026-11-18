@@ -1,3 +1,4 @@
+import "package:flixur/router.dart" show router;
 import "package:flixur/ui/cards/common.dart";
 import "package:material_ui/material_ui.dart";
 
@@ -48,7 +49,8 @@ class PlaylistCard({
         ),
         text: "High Vibes",
         subtext: "2 days, 16 hours",
-        onTap: () => debugCardSetBackground(imageURL),
+        onTap: () => router.goNamed("home"),
+        onPlay: () => debugCardSetBackground(imageURL),
       );
 }
 
