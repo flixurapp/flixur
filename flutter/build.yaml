@@ -6,6 +6,7 @@ targets:
           base_locale: en
           input_directory: assets/translations
           input_file_pattern: .yaml
+          timestamp: false
           maps:
             - navigation.section_titles
             - routes.settings.create_rename_codes
