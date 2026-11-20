@@ -325,21 +325,55 @@
 
               # dart has to be laid out like flutter's SDK for dart:ui resolution
               # during codegen: build_runner looks for pkg/sky_engine next to the
-              # running dart sdk, and the dart binary must be a real file, not a
-              # symlink, or that sdk path resolves away (nix'd dart is a symlink)
+              # running dart sdk, and the dart binaries must be real files, not
+              # symlinks, or that sdk path resolves away via /proc/self/exe
+              # (nix'd dart binaries are symlinks). dartaotruntime matters since
+              # build_runner 2.16 runs builders in an AOT child process: with a
+              # symlinked runtime the child resolves to the unwrapped store
+              # flutter, whose ../pkg/sky_engine does not exist, so the analyzer
+              # sdk summary is built without the flutter embedder and codegen
+              # emits InvalidType for dart:ui types (Color, Brightness, ...)
               mirror=".dart_tool/codegen-dart"
               flutter_sdk="${pkgs-unstable.flutter}"
               rm -rf "$mirror"
               mkdir -p "$mirror/bin/cache/pkg" "$mirror/bin/cache/dart-sdk"
               ln -sfn "$flutter_sdk/bin/cache/pkg/sky_engine" "$mirror/bin/cache/pkg/sky_engine"
               lndir -silent "$flutter_sdk/bin/cache/dart-sdk" "$mirror/bin/cache/dart-sdk"
-              rm "$mirror/bin/cache/dart-sdk/bin/dart"
-              cp -L "$flutter_sdk/bin/cache/dart-sdk/bin/dart" "$mirror/bin/cache/dart-sdk/bin/dart"
+              for bin in dart dartaotruntime; do
+                rm "$mirror/bin/cache/dart-sdk/bin/$bin"
+                cp -L "$flutter_sdk/bin/cache/dart-sdk/bin/$bin" "$mirror/bin/cache/dart-sdk/bin/$bin"
+              done
               # the env flutter's build wrapper provides (pkg-config paths, wayland
               # headers for the native build hooks)
               export NIX_CFLAGS_COMPILE="${pkgConfigCflags}"
               export NIX_LDFLAGS="${pkgConfigLdflags}"
-              FLUTTER_ROOT="$flutter_sdk" "$mirror/bin/cache/dart-sdk/bin/dart" run build_runner build
+              # run build_runner's bin directly instead of `dart run`:
+              # dart run attempts an implicit `dart pub get`, which cannot
+              # resolve the flutter sdk deps under plain dart and silently
+              # skips codegen (exit 0)
+              build_runner_uri="$(yq -r '.packages[] | select(.name == "build_runner") | .rootUri' .dart_tool/package_config.json)"
+              build_runner_bin="''${build_runner_uri#file://}/bin/build_runner.dart"
+              if [ ! -f "$build_runner_bin" ]; then
+                echo "build_runner not found at $build_runner_bin - did 'flutter pub get' run?" >&2
+                exit 1
+              fi
+              # the analyzer sdk summary cache (.dart_tool/build_resolvers) is
+              # keyed on dart version + pub package paths, but NOT on the sdk
+              # layout: a summary created outside this mirror (e.g. a bare
+              # `dart run build_runner`, no pkg/sky_engine next to the sdk)
+              # lacks dart:ui and poisons codegen with InvalidType types.
+              # always regenerate it under the mirror.
+              rm -rf .dart_tool/build_resolvers
+              # slang writes its outputs (strings.g.dart et al) via a
+              # post-process builder with dynamically declared paths; when the
+              # build cache is fresh (e.g. after `just clean`) those files
+              # still exist on disk and the builder fails with
+              # "Asset already exists". only safe to delete when the cache is
+              # gone, since an incremental run no-ops instead of rewriting.
+              if [ ! -f .dart_tool/build/asset_graph.json ]; then
+                rm -f lib/gen/strings.g.dart lib/gen/strings_en.g.dart
+              fi
+              FLUTTER_ROOT="$flutter_sdk" "$mirror/bin/cache/dart-sdk/bin/dart" --packages=.dart_tool/package_config.json "$build_runner_bin" build
 
               # we also need to generate the JSON file for the pubspec
               yq . pubspec.lock > pubspec.lock.json
