@@ -10,6 +10,7 @@ class const Darken({
   required final double progress,
 
   /// Darkness scale applied to the child when [progress] is complete.
+  /// Lower values are darker.
   required final double amount,
   required super.child,
   super.key,

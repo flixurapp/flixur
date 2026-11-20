@@ -5,7 +5,6 @@ import "package:theme_tailor_annotation/theme_tailor_annotation.dart";
 
 part "theme.tailor.dart";
 
-// copyWith / lerp / == / hashCode generated in theme.tailor.dart
 @TailorMixinComponent()
 class const AppColors({
   required final Brightness brightness,
@@ -25,11 +24,28 @@ class const AppColors({
   final Color? onTertiaryOverride,
 }) extends ThemeExtension<AppColors> with _$AppColorsTailorMixin;
 
+/// App color ordinals, used for buttons and such.
+enum AppColorOrdinal { primary, secondary, tertiary }
+
 // derived `on` colors
 extension AppColorsDerived on AppColors {
   Color get onPrimary => onPrimaryOverride ?? text;
   Color get onSecondary => onSecondaryOverride ?? text;
   Color get onTertiary => onTertiaryOverride ?? text;
+
+  /// Get a color given an [AppColorOrdinal].
+  Color fromOrdinal(AppColorOrdinal ordinal) => switch (ordinal) {
+    .primary => primary,
+    .secondary => secondary,
+    .tertiary => tertiary,
+  };
+
+  /// Get the color that is to be used on top of this [ordinal].
+  Color fromOrdinalOn(AppColorOrdinal ordinal) => switch (ordinal) {
+    .primary => onPrimary,
+    .secondary => onSecondary,
+    .tertiary => onTertiary,
+  };
 }
 
 extension AppThemeContext on BuildContext {

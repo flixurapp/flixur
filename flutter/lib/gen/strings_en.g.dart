@@ -63,14 +63,23 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	/// en: 'Delete'
 	String get btn_delete => 'Delete';
 
+	/// en: 'Edit'
+	String get btn_edit => 'Edit';
+
 	/// en: 'Hide'
 	String get btn_hide => 'Hide';
+
+	/// en: 'More'
+	String get btn_more => 'More';
 
 	/// en: 'New'
 	String get btn_new => 'New';
 
 	/// en: 'OK'
 	String get btn_ok => 'OK';
+
+	/// en: 'Play'
+	String get btn_play => 'Play';
 
 	/// en: 'Remove'
 	String get btn_remove => 'Remove';
@@ -80,6 +89,12 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 
 	/// en: 'Save'
 	String get btn_save => 'Save';
+
+	/// en: 'Select'
+	String get btn_select => 'Select';
+
+	/// en: 'Deselect'
+	String get btn_select_remove => 'Deselect';
 
 	/// en: 'Show'
 	String get btn_show => 'Show';
@@ -337,12 +352,17 @@ extension on Translations {
 			'btn_confirm' => 'Confirm',
 			'btn_create' => 'Create',
 			'btn_delete' => 'Delete',
+			'btn_edit' => 'Edit',
 			'btn_hide' => 'Hide',
+			'btn_more' => 'More',
 			'btn_new' => 'New',
 			'btn_ok' => 'OK',
+			'btn_play' => 'Play',
 			'btn_remove' => 'Remove',
 			'btn_rename' => 'Rename',
 			'btn_save' => 'Save',
+			'btn_select' => 'Select',
+			'btn_select_remove' => 'Deselect',
 			'btn_show' => 'Show',
 			'confirmation_dialog_title' => 'Are you sure?',
 			'navigation.section_titles.activity' => 'Activity',
