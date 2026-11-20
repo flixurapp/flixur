@@ -61,6 +61,9 @@ func newClientRegistry() *Registry {
 	reg.Register(String("ui.navigation.testing.str_max", "").MaxLength(16).Order(1))
 	reg.Register(String("ui.navigation.testing.str_secret_max", "").Secret(true).MaxLength(128).Order(1))
 	reg.Register(Enum("ui.navigation.testing.enum", "").AddChoice("x", "x").AddChoice("y").AddChoice("extra_super_long_choice", "phone-disconnect").Order(1))
+	reg.Register(StringList("ui.navigation.testing.stringlist", []string{}).AddChoice("x", "x").AddChoice("y").AddChoice("extra_super_long_choice", "phone-disconnect").Order(1))
+	reg.Register(StringList("ui.navigation.testing.stringlist_lim", []string{}).AddChoice("x", "x").AddChoiceWithDescription("y").AddChoice("extra_super_long_choice", "phone-disconnect").MaxItems(2).Order(1))
+	reg.Register(StringList("ui.navigation.testing.stringlist_mul", []string{}).AddChoice("x", "x").AddChoice("y").AddChoice("extra_super_long_choice", "phone-disconnect").AllowDuplicates(true).Order(1))
 
 	//==
 	//== Window

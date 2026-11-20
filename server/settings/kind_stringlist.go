@@ -8,6 +8,8 @@ type StringListProps struct {
 	Choices []ChoiceSpec `json:"choices"`
 	// Maximum total selected items.
 	MaxItems *int `json:"maxItems,omitempty"`
+	// Whether the same value may be selected more than once.
+	AllowDuplicates *bool `json:"allowDuplicates,omitempty"`
 }
 
 // Creates a stringlist setting definition with [def] as the default.
@@ -40,5 +42,11 @@ func (s StringListSetting) AddChoiceWithDescription(value string, icon ...string
 // See [StringListProps.maxItems]
 func (s StringListSetting) MaxItems(v int) StringListSetting {
 	s.StringList.MaxItems = new(v)
+	return s
+}
+
+// See [StringListProps.allowDuplicates]
+func (s StringListSetting) AllowDuplicates(v bool) StringListSetting {
+	s.StringList.AllowDuplicates = new(v)
 	return s
 }
