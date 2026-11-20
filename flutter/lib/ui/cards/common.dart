@@ -102,60 +102,68 @@ class BaseCard({
                     left: null,
                     child: Opacity(
                       opacity: isSelected ? 1 : animationValue,
-                      child: Padding(
-                        padding: .all(width * 0.05),
-                        child: _BaseCardButton(
-                          size: playSize * 0.5,
-                          icon: isSelected
-                              ? const Iconify("check-circle")
-                              : const Iconify("circle"),
-                          tooltip: t.btn_select,
-                          onPressed: toggleSelection,
-                          ordinal: .tertiary,
-                          overrideColor: isSelected
-                              ? context.colors.tertiary
-                              : null,
-                        ),
-                      ),
+                      child: animationValue == 0
+                          ? null
+                          : Padding(
+                              padding: .all(width * 0.05),
+                              child: _BaseCardButton(
+                                size: playSize * 0.5,
+                                icon: isSelected
+                                    ? const Iconify("check-circle")
+                                    : const Iconify("circle"),
+                                tooltip: t.btn_select,
+                                onPressed: toggleSelection,
+                                ordinal: .tertiary,
+                                overrideColor: isSelected
+                                    ? context.colors.tertiary
+                                    : null,
+                              ),
+                            ),
                     ),
                   ),
                   if (!_parentHasSelection && !isSelected)
                     Positioned.fill(
                       child: Opacity(
                         opacity: animationValue,
-                        child: Padding(
-                          padding: .all(width * 0.05),
-                          child: Row(
-                            mainAxisAlignment: isTooSmall ? .center : .start,
-                            crossAxisAlignment: isTooSmall ? .center : .end,
-                            children: [
-                              _BaseCardButton(
-                                size: playSize,
-                                icon: const Iconify("play-fill"),
-                                tooltip: t.btn_play,
-                                onPressed: onPlay,
+                        child: animationValue == 0
+                            ? null
+                            : Padding(
+                                padding: .all(width * 0.05),
+                                child: Row(
+                                  mainAxisAlignment: isTooSmall
+                                      ? .center
+                                      : .start,
+                                  crossAxisAlignment: isTooSmall
+                                      ? .center
+                                      : .end,
+                                  children: [
+                                    _BaseCardButton(
+                                      size: playSize,
+                                      icon: const Iconify("play-fill"),
+                                      tooltip: t.btn_play,
+                                      onPressed: onPlay,
+                                    ),
+                                    if (!isTooSmall) ...[
+                                      const Spacer(),
+                                      _BaseCardButton(
+                                        size: playSize * 0.6,
+                                        icon: const Iconify("pencil-simple"),
+                                        tooltip: t.btn_edit,
+                                        onPressed: onEdit,
+                                        ordinal: .secondary,
+                                      ),
+                                      SizedBox(width: width * 0.02),
+                                      _BaseCardButton(
+                                        size: playSize * 0.6,
+                                        icon: const Iconify("dots-three-bold"),
+                                        tooltip: t.btn_more,
+                                        onPressed: onMore,
+                                        ordinal: .secondary,
+                                      ),
+                                    ],
+                                  ],
+                                ),
                               ),
-                              if (!isTooSmall) ...[
-                                const Spacer(),
-                                _BaseCardButton(
-                                  size: playSize * 0.6,
-                                  icon: const Iconify("pencil-simple"),
-                                  tooltip: t.btn_edit,
-                                  onPressed: onEdit,
-                                  ordinal: .secondary,
-                                ),
-                                SizedBox(width: width * 0.02),
-                                _BaseCardButton(
-                                  size: playSize * 0.6,
-                                  icon: const Iconify("dots-three-bold"),
-                                  tooltip: t.btn_more,
-                                  onPressed: onMore,
-                                  ordinal: .secondary,
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
                       ),
                     ),
                 ],
