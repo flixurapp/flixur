@@ -12,6 +12,7 @@ func TestValidateValue(t *testing.T) {
 	stringDef := String("test.string", "").MaxLength(4)
 	enumDef := Enum("test.enum", "a").AddChoice("a").AddChoice("b")
 	listDef := StringList("test.list", nil).MaxItems(2)
+	dupListDef := StringList("test.list.dup", nil).MaxItems(3).AllowDuplicates(true)
 
 	cases := []struct {
 		name    string
@@ -48,6 +49,12 @@ func TestValidateValue(t *testing.T) {
 		{"list null", listDef.SettingsDefinition, `null`, "[]", false},
 		{"list too many", listDef.SettingsDefinition, `["a","b","c"]`, "", true},
 		{"list non-strings", listDef.SettingsDefinition, `[1]`, "", true},
+		{"list duplicate", listDef.SettingsDefinition, `["a","a"]`, "", true},
+		{"list duplicate spread", listDef.SettingsDefinition, `["a","b","a"]`, "", true},
+		{"list duplicates ok", dupListDef.SettingsDefinition, `["a","a"]`, `["a","a"]`, false},
+		{"list duplicates ok spread", dupListDef.SettingsDefinition, `["a","b","a"]`, `["a","b","a"]`, false},
+		{"list duplicates ok at max", dupListDef.SettingsDefinition, `["a","a","b"]`, `["a","a","b"]`, false},
+		{"list duplicates still maxed", dupListDef.SettingsDefinition, `["a","a","b","c"]`, "", true},
 		{"invalid json", boolDef.SettingsDefinition, `{`, "", true},
 	}
 
@@ -244,10 +251,12 @@ func TestValidateChainBuilding(t *testing.T) {
 		MaxItems(4).
 		AddChoice("x").
 		AddChoice("y", "star").
+		AllowDuplicates(true).
 		Order(1))
 	if listDef.StringList.MaxItems == nil || *listDef.StringList.MaxItems != 4 ||
 		len(listDef.StringList.Choices) != 2 ||
 		listDef.StringList.Choices[1].Icon != "star" ||
+		listDef.StringList.AllowDuplicates == nil || !*listDef.StringList.AllowDuplicates ||
 		listDef.Order != 1 {
 		t.Fatal("stringlist chain did not apply its properties")
 	}
@@ -318,6 +327,9 @@ func TestValidateDefinitionConstraints(t *testing.T) {
 		},
 		"list default exceeds max items": func() {
 			registry.Register(StringList("test.a", []string{"x", "y"}).MaxItems(1))
+		},
+		"list default has duplicates": func() {
+			registry.Register(StringList("test.a", []string{"x", "x"}))
 		},
 	} {
 		t.Run(name, func(t *testing.T) {

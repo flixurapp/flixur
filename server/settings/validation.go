@@ -94,11 +94,26 @@ func ValidateValue(def *SettingsDefinition, text string) (string, error) {
 		if value == nil {
 			value = []string{}
 		}
-		if p := def.StringList; p != nil && p.MaxItems != nil && len(value) > *p.MaxItems {
-			return "", fmt.Errorf("value must have no more than %d items", *p.MaxItems)
+		if p := def.StringList; p != nil {
+			if p.MaxItems != nil && len(value) > *p.MaxItems {
+				return "", fmt.Errorf("value must have no more than %d items", *p.MaxItems)
+			}
+			// duplicates are only allowed when enabled
+			if p.AllowDuplicates == nil || !*p.AllowDuplicates {
+				if hasDuplicates(value) {
+					return "", errors.New("value must not contain duplicate items")
+				}
+			}
 		}
 		return Encode(value)
 	}
 
 	return "", fmt.Errorf("unknown setting kind: %s", def.Kind)
+}
+
+// Whether the list contains duplicate values.
+func hasDuplicates(values []string) bool {
+	sorted := slices.Clone(values)
+	slices.Sort(sorted)
+	return len(slices.Compact(sorted)) != len(values)
 }

@@ -87,6 +87,11 @@ func (def *SettingsDefinition) validate() {
 		if def.StringList.MaxItems != nil && len(def.StringList.Default) > *def.StringList.MaxItems {
 			panic("stringlist default exceeds its max items: " + def.ID)
 		}
+		if def.StringList.AllowDuplicates == nil || !*def.StringList.AllowDuplicates {
+			if hasDuplicates(def.StringList.Default) {
+				panic("stringlist default has duplicate items but duplicates are not allowed: " + def.ID)
+			}
+		}
 	}
 }
 
