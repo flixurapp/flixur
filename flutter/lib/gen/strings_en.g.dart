@@ -180,6 +180,12 @@ class Translations$titlebar$en {
 	/// en: 'Close'
 	String get close => 'Close';
 
+	/// en: 'Log Out'
+	String get logout => 'Log Out';
+
+	/// en: 'Are you sure that you want to log out?'
+	String get logout_confirmation => 'Are you sure that you want to log out?';
+
 	/// en: 'Maximize'
 	String get maximize => 'Maximize';
 
@@ -407,6 +413,8 @@ extension on Translations {
 			'setting_groups."ui.navigation"' => 'Navigation',
 			'setting_groups."ui.window"' => 'Window',
 			'titlebar.close' => 'Close',
+			'titlebar.logout' => 'Log Out',
+			'titlebar.logout_confirmation' => 'Are you sure that you want to log out?',
 			'titlebar.maximize' => 'Maximize',
 			'titlebar.minimize' => 'Minimize',
 			'titlebar.more' => 'More Options',

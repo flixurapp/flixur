@@ -96,6 +96,8 @@ setting_groups(map):
   ui.window: "Window"
 titlebar:
   close: "Close"
+  logout: "Log Out"
+  logout_confirmation: "Are you sure that you want to log out?"
   maximize: "Maximize"
   minimize: "Minimize"
   more: "More Options"
