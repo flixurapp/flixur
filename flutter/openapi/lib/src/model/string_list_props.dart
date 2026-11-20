@@ -13,12 +13,16 @@ part 'string_list_props.g.dart';
 /// StringListProps
 ///
 /// Properties:
+/// * [allowDuplicates]
 /// * [choices]
 /// * [defaultValue]
 /// * [maxItems]
 @BuiltValue()
 abstract class StringListProps
     implements Built<StringListProps, StringListPropsBuilder> {
+  @BuiltValueField(wireName: r'allowDuplicates')
+  bool? get allowDuplicates;
+
   @BuiltValueField(wireName: r'choices')
   BuiltList<ChoiceSpec>? get choices;
 
@@ -54,6 +58,13 @@ class _$StringListPropsSerializer
     StringListProps object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
+    if (object.allowDuplicates != null) {
+      yield r'allowDuplicates';
+      yield serializers.serialize(
+        object.allowDuplicates,
+        specifiedType: const FullType(bool),
+      );
+    }
     yield r'choices';
     yield object.choices == null
         ? null
@@ -102,6 +113,14 @@ class _$StringListPropsSerializer
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
+        case r'allowDuplicates':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(bool),
+          ) as bool?;
+          if (valueDes == null) continue;
+          result.allowDuplicates = valueDes;
+          break;
         case r'choices':
           final valueDes = serializers.deserialize(
             value,

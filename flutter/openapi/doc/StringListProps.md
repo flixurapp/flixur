@@ -8,6 +8,7 @@ import 'package:openapi/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**allowDuplicates** | **bool** |  | [optional] 
 **choices** | [**BuiltList&lt;ChoiceSpec&gt;**](ChoiceSpec.md) |  | 
 **defaultValue** | **BuiltList&lt;String&gt;** |  | 
 **maxItems** | **int** |  | [optional] 

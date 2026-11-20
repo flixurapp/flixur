@@ -8,6 +8,8 @@ part of 'string_list_props.dart';
 
 class _$StringListProps extends StringListProps {
   @override
+  final bool? allowDuplicates;
+  @override
   final BuiltList<ChoiceSpec>? choices;
   @override
   final BuiltList<String>? defaultValue;
@@ -17,7 +19,8 @@ class _$StringListProps extends StringListProps {
   factory _$StringListProps([void Function(StringListPropsBuilder)? updates]) =>
       (StringListPropsBuilder()..update(updates))._build();
 
-  _$StringListProps._({this.choices, this.defaultValue, this.maxItems})
+  _$StringListProps._(
+      {this.allowDuplicates, this.choices, this.defaultValue, this.maxItems})
       : super._();
   @override
   StringListProps rebuild(void Function(StringListPropsBuilder) updates) =>
@@ -30,6 +33,7 @@ class _$StringListProps extends StringListProps {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is StringListProps &&
+        allowDuplicates == other.allowDuplicates &&
         choices == other.choices &&
         defaultValue == other.defaultValue &&
         maxItems == other.maxItems;
@@ -38,6 +42,7 @@ class _$StringListProps extends StringListProps {
   @override
   int get hashCode {
     var _$hash = 0;
+    _$hash = $jc(_$hash, allowDuplicates.hashCode);
     _$hash = $jc(_$hash, choices.hashCode);
     _$hash = $jc(_$hash, defaultValue.hashCode);
     _$hash = $jc(_$hash, maxItems.hashCode);
@@ -48,6 +53,7 @@ class _$StringListProps extends StringListProps {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'StringListProps')
+          ..add('allowDuplicates', allowDuplicates)
           ..add('choices', choices)
           ..add('defaultValue', defaultValue)
           ..add('maxItems', maxItems))
@@ -58,6 +64,11 @@ class _$StringListProps extends StringListProps {
 class StringListPropsBuilder
     implements Builder<StringListProps, StringListPropsBuilder> {
   _$StringListProps? _$v;
+
+  bool? _allowDuplicates;
+  bool? get allowDuplicates => _$this._allowDuplicates;
+  set allowDuplicates(bool? allowDuplicates) =>
+      _$this._allowDuplicates = allowDuplicates;
 
   ListBuilder<ChoiceSpec>? _choices;
   ListBuilder<ChoiceSpec> get choices =>
@@ -81,6 +92,7 @@ class StringListPropsBuilder
   StringListPropsBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
+      _allowDuplicates = $v.allowDuplicates;
       _choices = $v.choices?.toBuilder();
       _defaultValue = $v.defaultValue?.toBuilder();
       _maxItems = $v.maxItems;
@@ -107,6 +119,7 @@ class StringListPropsBuilder
     try {
       _$result = _$v ??
           _$StringListProps._(
+            allowDuplicates: allowDuplicates,
             choices: _choices?.build(),
             defaultValue: _defaultValue?.build(),
             maxItems: maxItems,
