@@ -35,7 +35,7 @@ func (s StringListSetting) AddChoice(value string, icon ...string) StringListSet
 // Adds a new choice with the description flag set true.
 // See [StringListSetting.AddChoice]
 func (s StringListSetting) AddChoiceWithDescription(value string, icon ...string) StringListSetting {
-	s.Enum.Choices = append(s.Enum.Choices, newChoiceWithDescription(value, icon...))
+	s.StringList.Choices = append(s.StringList.Choices, newChoiceWithDescription(value, icon...))
 	return s
 }
 
