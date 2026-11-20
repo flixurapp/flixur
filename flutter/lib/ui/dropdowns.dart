@@ -14,5 +14,6 @@ class const FlixurDropdownMenu<T>({
   super.onSelected,
   super.enabled,
   super.requestFocusOnTap,
+  super.hintText,
   super.key,
 }) extends DropdownMenu<T>;
