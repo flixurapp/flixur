@@ -16,6 +16,8 @@ class const AppScrollBehavior() extends MaterialScrollBehavior {
       valueListenable: TitlebarManager.isMaximizedNotifier,
       builder: (context, maximized, child) => AppScrollbar(
         controller: details.controller,
+        // forward bottom padding
+        padding: .only(bottom: MediaQuery.paddingOf(context).bottom),
         // pad the scrollbar by the resize edge width so the
         // resize handles dont cover it
         crossAxisMargin: TitlebarManager.shouldEnable && !maximized
@@ -33,6 +35,7 @@ class const AppScrollbar({
   required super.child,
   super.controller,
   super.crossAxisMargin,
+  super.padding,
   super.key,
 }) extends RawScrollbar {
   @override
@@ -179,7 +182,9 @@ class _AppScrollbarState extends RawScrollbarState<AppScrollbar> {
     if (!position.physics.shouldAcceptUserOffset(position)) return null;
 
     final textDirection = Directionality.of(context);
-    final padding = MediaQuery.paddingOf(context);
+    // only offset by bottom padding, as the top will always be covered by a nav
+    final padding = MediaQuery.paddingOf(context)
+        .copyWith(top: 0, left: 0, right: 0);
     final mainAxisMargin = _scrollbarTheme.mainAxisMargin ?? 0;
     final reversed = switch (position.axisDirection) {
       AxisDirection.up || AxisDirection.left => true,
