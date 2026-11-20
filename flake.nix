@@ -299,6 +299,7 @@
               commands.proto
               commands.tygo
               commands.openapi
+              commands.flutter-wrapped
             ];
             text = ''
               ${setup}
@@ -312,6 +313,8 @@
 
               # flutter stuff
               cd flutter
+
+              flutter pub get
 
               # slang maps config is derived from the (map) markers in the base locale
               maps="$(yq -c '[paths(type == "object" and length > 0) | select(.[0] | type == "string") | select(.[-1] | test("\\(map[,)]")) | join(".") | sub("\\(.*$"; "")] | unique' assets/translations/en.yaml)"
@@ -410,10 +413,17 @@
           # clean up stale flutter caches
           flutter-clean = pkgs.writeShellApplication {
             name = "flutter-clean";
-            runtimeInputs = [ commands.flutter-wrapped ];
+            runtimeInputs = [
+              commands.flutter-wrapped
+              pkgs.coreutils
+            ];
             text = ''
               ${setup}
-              rm -rf flutter/build flutter/.dart_tool
+              cd flutter
+              flutter clean
+              # the openapi client is its own package
+              cd openapi
+              flutter clean
             '';
           };
         };
