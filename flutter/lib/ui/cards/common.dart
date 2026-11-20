@@ -82,7 +82,8 @@ class BaseCard({
       child: LayoutBuilder(
         builder: (context, constraints) {
           final width = constraints.maxWidth;
-          final playSize = width * 0.3;
+          final isTooSmall = width <= 140;
+          final playSize = width * (isTooSmall ? 0.4 : 0.3);
           return AnimatedBuilder(
             animation: animation,
             child: image,
@@ -120,13 +121,13 @@ class BaseCard({
                   ),
                   if (!_parentHasSelection && !isSelected)
                     Positioned.fill(
-                      top: null,
                       child: Opacity(
                         opacity: animationValue,
                         child: Padding(
                           padding: .all(width * 0.05),
                           child: Row(
-                            crossAxisAlignment: .end,
+                            mainAxisAlignment: isTooSmall ? .center : .start,
+                            crossAxisAlignment: isTooSmall ? .center : .end,
                             children: [
                               _BaseCardButton(
                                 size: playSize,
@@ -134,22 +135,24 @@ class BaseCard({
                                 tooltip: t.btn_play,
                                 onPressed: onPlay,
                               ),
-                              const Spacer(),
-                              _BaseCardButton(
-                                size: playSize * 0.6,
-                                icon: const Iconify("pencil-simple"),
-                                tooltip: t.btn_edit,
-                                onPressed: onEdit,
-                                ordinal: .secondary,
-                              ),
-                              SizedBox(width: width * 0.02),
-                              _BaseCardButton(
-                                size: playSize * 0.6,
-                                icon: const Iconify("dots-three-bold"),
-                                tooltip: t.btn_more,
-                                onPressed: onMore,
-                                ordinal: .secondary,
-                              ),
+                              if (!isTooSmall) ...[
+                                const Spacer(),
+                                _BaseCardButton(
+                                  size: playSize * 0.6,
+                                  icon: const Iconify("pencil-simple"),
+                                  tooltip: t.btn_edit,
+                                  onPressed: onEdit,
+                                  ordinal: .secondary,
+                                ),
+                                SizedBox(width: width * 0.02),
+                                _BaseCardButton(
+                                  size: playSize * 0.6,
+                                  icon: const Iconify("dots-three-bold"),
+                                  tooltip: t.btn_more,
+                                  onPressed: onMore,
+                                  ordinal: .secondary,
+                                ),
+                              ],
                             ],
                           ),
                         ),
