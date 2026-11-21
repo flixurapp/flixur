@@ -20,7 +20,7 @@ type PluginManifest struct {
 	// Version string, formatted YYYY.MM.DD
 	Version string `json:"version"`
 	// List of plugin IDs that should be loaded before this plugin.
-	Dependencies []string `json:"dependencies"`
+	Dependencies []string `json:"dependencies,omitempty"`
 	// List of feature IDs this plugin implements.
 	Features []pb.Feature `json:"features"`
 	// Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
@@ -32,7 +32,7 @@ type PluginManifest struct {
 	// Direct link to the source code of the plugin.
 	Url string `json:"url"`
 	// Absolute path to the binary file to run for the plugin. Only present on the server.
-	Binary string `json:"bin"`
+	Binary string `json:"bin,omitempty"`
 }
 
 // Custom unmarshal wrapper to decode features properly.

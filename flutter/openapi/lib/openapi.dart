@@ -12,6 +12,7 @@ export 'package:openapi/src/model/date.dart';
 
 export 'package:openapi/src/api/artists_api.dart';
 export 'package:openapi/src/api/authentication_api.dart';
+export 'package:openapi/src/api/management_api.dart';
 export 'package:openapi/src/api/settings_api.dart';
 
 export 'package:openapi/src/model/api_error.dart';
@@ -28,6 +29,8 @@ export 'package:openapi/src/model/int_props.dart';
 export 'package:openapi/src/model/oidc_init_body.dart';
 export 'package:openapi/src/model/output_success_body.dart';
 export 'package:openapi/src/model/ping_body.dart';
+export 'package:openapi/src/model/plugin_manifest.dart';
+export 'package:openapi/src/model/plugins_body.dart';
 export 'package:openapi/src/model/post_auth_login_request.dart';
 export 'package:openapi/src/model/post_auth_setup_request.dart';
 export 'package:openapi/src/model/rename_settings_profile_request.dart';

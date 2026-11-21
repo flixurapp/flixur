@@ -3,6 +3,7 @@ import "dart:io";
 
 import "package:dio/dio.dart";
 import "package:flixur/router.dart";
+import "package:flixur/server.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/storage.dart";
 import "package:flixur/ui/background/background.dart";
@@ -104,6 +105,7 @@ abstract class Api {
     }
 
     BackgroundState.reset();
+    ServerState.clear();
     await Settings.reset();
 
     // navigate back to root

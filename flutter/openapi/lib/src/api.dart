@@ -11,6 +11,7 @@ import 'package:openapi/src/auth/bearer_auth.dart';
 import 'package:openapi/src/auth/oauth.dart';
 import 'package:openapi/src/api/artists_api.dart';
 import 'package:openapi/src/api/authentication_api.dart';
+import 'package:openapi/src/api/management_api.dart';
 import 'package:openapi/src/api/settings_api.dart';
 
 class Openapi {
@@ -143,6 +144,12 @@ class Openapi {
   /// by doing that all interceptors will not be executed
   AuthenticationApi getAuthenticationApi() {
     return AuthenticationApi(dio, serializers);
+  }
+
+  /// Get ManagementApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  ManagementApi getManagementApi() {
+    return ManagementApi(dio, serializers);
   }
 
   /// Get SettingsApi instance, base route and serializer can be overridden by a given but be careful,

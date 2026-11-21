@@ -28,6 +28,8 @@ import 'package:openapi/src/model/int_props.dart';
 import 'package:openapi/src/model/oidc_init_body.dart';
 import 'package:openapi/src/model/output_success_body.dart';
 import 'package:openapi/src/model/ping_body.dart';
+import 'package:openapi/src/model/plugin_manifest.dart';
+import 'package:openapi/src/model/plugins_body.dart';
 import 'package:openapi/src/model/post_auth_login_request.dart';
 import 'package:openapi/src/model/post_auth_setup_request.dart';
 import 'package:openapi/src/model/rename_settings_profile_request.dart';
@@ -61,6 +63,8 @@ part 'serializers.g.dart';
   OIDCInitBody,
   OutputSuccessBody,
   PingBody,
+  PluginManifest,
+  PluginsBody,
   PostAuthLoginRequest,
   PostAuthSetupRequest,
   RenameSettingsProfileRequest,
@@ -100,16 +104,20 @@ Serializers serializers = (_$serializers.toBuilder()
         () => ListBuilder<SettingsDefinition>(),
       )
       ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(PluginManifest)]),
+        () => ListBuilder<PluginManifest>(),
+      )
+      ..addBuilderFactory(
         const FullType(BuiltList, [FullType(ChoiceSpec)]),
         () => ListBuilder<ChoiceSpec>(),
       )
       ..addBuilderFactory(
-        const FullType(BuiltList, [FullType(SettingProfileBody)]),
-        () => ListBuilder<SettingProfileBody>(),
-      )
-      ..addBuilderFactory(
         const FullType(BuiltList, [FullType(String)]),
         () => ListBuilder<String>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(SettingProfileBody)]),
+        () => ListBuilder<SettingProfileBody>(),
       )
       ..add(const OneOfSerializer())
       ..add(const AnyOfSerializer())

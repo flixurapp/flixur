@@ -15,9 +15,12 @@ doc/ErrorDetail.md
 doc/ErrorModel.md
 doc/FloatProps.md
 doc/IntProps.md
+doc/ManagementApi.md
 doc/OIDCInitBody.md
 doc/OutputSuccessBody.md
 doc/PingBody.md
+doc/PluginManifest.md
+doc/PluginsBody.md
 doc/PostAuthLoginRequest.md
 doc/PostAuthSetupRequest.md
 doc/RenameSettingsProfileRequest.md
@@ -38,6 +41,7 @@ lib/openapi.dart
 lib/src/api.dart
 lib/src/api/artists_api.dart
 lib/src/api/authentication_api.dart
+lib/src/api/management_api.dart
 lib/src/api/settings_api.dart
 lib/src/api_util.dart
 lib/src/auth/api_key_auth.dart
@@ -61,6 +65,8 @@ lib/src/model/int_props.dart
 lib/src/model/oidc_init_body.dart
 lib/src/model/output_success_body.dart
 lib/src/model/ping_body.dart
+lib/src/model/plugin_manifest.dart
+lib/src/model/plugins_body.dart
 lib/src/model/post_auth_login_request.dart
 lib/src/model/post_auth_setup_request.dart
 lib/src/model/rename_settings_profile_request.dart
@@ -91,9 +97,12 @@ test/error_detail_test.dart
 test/error_model_test.dart
 test/float_props_test.dart
 test/int_props_test.dart
+test/management_api_test.dart
 test/oidc_init_body_test.dart
 test/output_success_body_test.dart
 test/ping_body_test.dart
+test/plugin_manifest_test.dart
+test/plugins_body_test.dart
 test/post_auth_login_request_test.dart
 test/post_auth_setup_request_test.dart
 test/rename_settings_profile_request_test.dart

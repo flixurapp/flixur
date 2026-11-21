@@ -161,6 +161,7 @@ func RegisterAPI(router chi.Router, client *ent.Client) APIRegistry {
 
 		RegisterAuthenticationRoutes(registry)
 		RegisterMusicArtistsRoutes(registry)
+		RegisterManageRoutes(registry)
 		RegisterSettingsRoutes(registry)
 
 		//TODO:testing

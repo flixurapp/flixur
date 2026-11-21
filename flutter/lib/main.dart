@@ -1,6 +1,7 @@
 import "package:flixur/api.dart";
 import "package:flixur/hive/hive_adapters.dart";
 import "package:flixur/router.dart";
+import "package:flixur/server.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/storage.dart";
 import "package:flixur/titlebar.dart";
@@ -40,6 +41,9 @@ void main() async {
 
   // init API client
   Api.init();
+
+  // init server state manager
+  await ServerState.init();
 
   // init settings manager
   await Settings.init();

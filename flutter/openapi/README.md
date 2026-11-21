@@ -70,6 +70,7 @@ Class | Method | HTTP request | Description
 [*AuthenticationApi*](doc/AuthenticationApi.md) | [**getPing**](doc/AuthenticationApi.md#getping) | **GET** /ping | Ping Server
 [*AuthenticationApi*](doc/AuthenticationApi.md) | [**postAuthLogin**](doc/AuthenticationApi.md#postauthlogin) | **POST** /auth/login | Login
 [*AuthenticationApi*](doc/AuthenticationApi.md) | [**postAuthSetup**](doc/AuthenticationApi.md#postauthsetup) | **POST** /auth/setup | Setup Server
+[*ManagementApi*](doc/ManagementApi.md) | [**listPlugins**](doc/ManagementApi.md#listplugins) | **GET** /manage/plugins | List Plugins
 [*SettingsApi*](doc/SettingsApi.md) | [**createSettingsProfile**](doc/SettingsApi.md#createsettingsprofile) | **POST** /settings/profiles | Create Settings Profile
 [*SettingsApi*](doc/SettingsApi.md) | [**deleteSettingsProfile**](doc/SettingsApi.md#deletesettingsprofile) | **DELETE** /settings/profiles/{profile} | Delete Settings Profile
 [*SettingsApi*](doc/SettingsApi.md) | [**getClientSettingsDefinitions**](doc/SettingsApi.md#getclientsettingsdefinitions) | **GET** /settings/definitions | Get Client Settings Definitions
@@ -95,6 +96,8 @@ Class | Method | HTTP request | Description
  - [OIDCInitBody](doc/OIDCInitBody.md)
  - [OutputSuccessBody](doc/OutputSuccessBody.md)
  - [PingBody](doc/PingBody.md)
+ - [PluginManifest](doc/PluginManifest.md)
+ - [PluginsBody](doc/PluginsBody.md)
  - [PostAuthLoginRequest](doc/PostAuthLoginRequest.md)
  - [PostAuthSetupRequest](doc/PostAuthSetupRequest.md)
  - [RenameSettingsProfileRequest](doc/RenameSettingsProfileRequest.md)

@@ -22,6 +22,9 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(OIDCInitBody.serializer)
       ..add(OutputSuccessBody.serializer)
       ..add(PingBody.serializer)
+      ..add(PluginManifest.serializer)
+      ..add(PluginManifestFeaturesEnum.serializer)
+      ..add(PluginsBody.serializer)
       ..add(PostAuthLoginRequest.serializer)
       ..add(PostAuthSetupRequest.serializer)
       ..add(RenameSettingsProfileRequest.serializer)
@@ -54,6 +57,9 @@ Serializers _$serializers = (Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(ErrorDetail)]),
           () => ListBuilder<ErrorDetail>())
       ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(PluginManifest)]),
+          () => ListBuilder<PluginManifest>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(SettingProfileBody)]),
           () => ListBuilder<SettingProfileBody>())
       ..addBuilderFactory(
@@ -62,6 +68,13 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(SettingsDefinition)]),
           () => ListBuilder<SettingsDefinition>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => ListBuilder<String>())
+      ..addBuilderFactory(
+          const FullType(
+              BuiltList, const [const FullType(PluginManifestFeaturesEnum)]),
+          () => ListBuilder<PluginManifestFeaturesEnum>())
       ..addBuilderFactory(
           const FullType(BuiltMap, const [
             const FullType(String),

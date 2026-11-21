@@ -1,6 +1,7 @@
 import "package:flixur/api.dart";
 import "package:flixur/routes/startup/components.dart";
 import "package:flixur/routes/startup/server_url.dart";
+import "package:flixur/server.dart";
 import "package:flixur/storage.dart";
 import "package:flixur/titlebar.dart";
 import "package:flixur/ui/dialogs.dart";
@@ -47,6 +48,7 @@ class const SetupView({required final ServerLoginPayload serverInfo, super.key})
         case ApiSuccess(:final data):
           await Storage.put(.serverUrl, serverInfo.url);
           await Storage.put(.sessionToken, data.sessionToken);
+          await ServerState.init();
           if (!context.mounted) return;
           // save was successful, so continue
           context.goNamed("home");
