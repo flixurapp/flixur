@@ -48,6 +48,7 @@ func newPluginClient(bin string) pluginClient {
 var pluginClientFactory = newPluginClient
 
 func RegisterPlugins(pluginPath string) {
+	log.Debug().Str("path", pluginPath).Msg("Loading plugins...")
 	dir, err := os.ReadDir(pluginPath)
 	if err != nil {
 		log.Err(err).Str("path", pluginPath).Msg("Failed to read plugin directory.")
