@@ -7,6 +7,7 @@ import "package:flixur/ui/buttons.dart";
 import "package:flixur/ui/dialogs.dart";
 import "package:flixur/ui/dropdowns.dart";
 import "package:flixur/ui/icons.dart";
+import "package:flixur/ui/main_nav/common.dart";
 import "package:flixur/utils.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
@@ -33,6 +34,16 @@ class const SettingsViewHeader(
       return null;
     }, [activeName]);
 
+    // focus the search bar when nav is hit again
+    final searchFocus = useFocusNode();
+    final rootTapSignal = MainNavWrapper.sectionFromID(.settings)
+        ?.rootTapSignal;
+    useEffect(() {
+      if (rootTapSignal == null) return null;
+      rootTapSignal.addListener(searchFocus.requestFocus);
+      return () => rootTapSignal.removeListener(searchFocus.requestFocus);
+    }, [rootTapSignal]);
+
     final colors = context.colors;
     return IntrinsicHeight(
       child: Flex(
@@ -42,6 +53,7 @@ class const SettingsViewHeader(
           Expanded(
             child: TextField(
               textAlignVertical: .center,
+              focusNode: searchFocus,
               onChanged: onChanged,
               decoration: InputDecoration(
                 // hate hate hate hate

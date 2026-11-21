@@ -53,9 +53,16 @@ class MainNavSection({
   /// Title slot for this section.
   final titleSlot = PageTitleSlot();
 
+  /// Navigator key for this section's shell branch.
+  final navigatorKey = GlobalKey<NavigatorState>();
+
+  /// Bumped whenever this section is re-selected.
+  final rootTapSignal = ValueNotifier<int>(0);
+
   /// Builds the shell branch hosting this section.
   StatefulShellBranch toBranch() {
     return StatefulShellBranch(
+      navigatorKey: navigatorKey,
       routes: [
         GoRoute(
           name: name,
@@ -194,11 +201,16 @@ class const MainNavWrapper({
   }
 
   void _onSelect(MainNavSection section) {
+    final reselected = section.id == selected;
+    // re-selecting the active tab goes back its root
+    // if it is already at its root, notify pages instead
+    if (reselected && !(section.navigatorKey.currentState?.canPop() ?? false)) {
+      section.rootTapSignal.value++;
+    }
     navShell.goBranch(
       // there should always be a branch index for any given ID
       branchIndexFromID(section.id)!,
-      // re-selecting the active tab goes back its root
-      initialLocation: section.id == selected,
+      initialLocation: reselected,
     );
   }
 
