@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **author** | **String** |  | 
 **bin** | **String** |  | [optional] 
+**color** | **String** |  | 
 **dependencies** | **BuiltList&lt;String&gt;** |  | [optional] 
 **description** | **String** |  | 
 **features** | **BuiltList&lt;String&gt;** |  | 

@@ -42,10 +42,14 @@
       "minItems": 1,
       "description": "List of feature IDs this plugin implements."
     },
+    "color": {
+      "type": "string",
+      "description": "Hex color used as a primary theme color for this plugin, including the hash."
+    },
     "icon": {
       "type": "string",
       "pattern": "^[a-z0-9-]+:[a-z0-9-]+$",
-      "description": "Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)"
+      "description": "The full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)"
     },
     "description": {
       "type": "string",

@@ -59,6 +59,8 @@ class _$PluginManifest extends PluginManifest {
   @override
   final String? bin;
   @override
+  final String color;
+  @override
   final BuiltList<String>? dependencies;
   @override
   final String description;
@@ -81,6 +83,7 @@ class _$PluginManifest extends PluginManifest {
   _$PluginManifest._(
       {required this.author,
       this.bin,
+      required this.color,
       this.dependencies,
       required this.description,
       this.features,
@@ -103,6 +106,7 @@ class _$PluginManifest extends PluginManifest {
     return other is PluginManifest &&
         author == other.author &&
         bin == other.bin &&
+        color == other.color &&
         dependencies == other.dependencies &&
         description == other.description &&
         features == other.features &&
@@ -118,6 +122,7 @@ class _$PluginManifest extends PluginManifest {
     var _$hash = 0;
     _$hash = $jc(_$hash, author.hashCode);
     _$hash = $jc(_$hash, bin.hashCode);
+    _$hash = $jc(_$hash, color.hashCode);
     _$hash = $jc(_$hash, dependencies.hashCode);
     _$hash = $jc(_$hash, description.hashCode);
     _$hash = $jc(_$hash, features.hashCode);
@@ -135,6 +140,7 @@ class _$PluginManifest extends PluginManifest {
     return (newBuiltValueToStringHelper(r'PluginManifest')
           ..add('author', author)
           ..add('bin', bin)
+          ..add('color', color)
           ..add('dependencies', dependencies)
           ..add('description', description)
           ..add('features', features)
@@ -158,6 +164,10 @@ class PluginManifestBuilder
   String? _bin;
   String? get bin => _$this._bin;
   set bin(String? bin) => _$this._bin = bin;
+
+  String? _color;
+  String? get color => _$this._color;
+  set color(String? color) => _$this._color = color;
 
   ListBuilder<String>? _dependencies;
   ListBuilder<String> get dependencies =>
@@ -204,6 +214,7 @@ class PluginManifestBuilder
     if ($v != null) {
       _author = $v.author;
       _bin = $v.bin;
+      _color = $v.color;
       _dependencies = $v.dependencies?.toBuilder();
       _description = $v.description;
       _features = $v.features?.toBuilder();
@@ -238,6 +249,8 @@ class PluginManifestBuilder
             author: BuiltValueNullFieldError.checkNotNull(
                 author, r'PluginManifest', 'author'),
             bin: bin,
+            color: BuiltValueNullFieldError.checkNotNull(
+                color, r'PluginManifest', 'color'),
             dependencies: _dependencies?.build(),
             description: BuiltValueNullFieldError.checkNotNull(
                 description, r'PluginManifest', 'description'),

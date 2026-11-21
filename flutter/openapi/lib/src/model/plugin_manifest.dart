@@ -14,6 +14,7 @@ part 'plugin_manifest.g.dart';
 /// Properties:
 /// * [author]
 /// * [bin]
+/// * [color]
 /// * [dependencies]
 /// * [description]
 /// * [features]
@@ -30,6 +31,9 @@ abstract class PluginManifest
 
   @BuiltValueField(wireName: r'bin')
   String? get bin;
+
+  @BuiltValueField(wireName: r'color')
+  String get color;
 
   @BuiltValueField(wireName: r'dependencies')
   BuiltList<String>? get dependencies;
@@ -94,6 +98,11 @@ class _$PluginManifestSerializer
         specifiedType: const FullType(String),
       );
     }
+    yield r'color';
+    yield serializers.serialize(
+      object.color,
+      specifiedType: const FullType(String),
+    );
     if (object.dependencies != null) {
       yield r'dependencies';
       yield serializers.serialize(
@@ -178,6 +187,13 @@ class _$PluginManifestSerializer
           ) as String?;
           if (valueDes == null) continue;
           result.bin = valueDes;
+          break;
+        case r'color':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.color = valueDes;
           break;
         case r'dependencies':
           final valueDes = serializers.deserialize(

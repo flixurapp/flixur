@@ -23,7 +23,9 @@ type PluginManifest struct {
 	Dependencies []string `json:"dependencies,omitempty"`
 	// List of feature IDs this plugin implements.
 	Features []pb.Feature `json:"features"`
-	// Should be the full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
+	// Hex color used as a primary theme color for this plugin, including the hash.
+	Color string `json:"color"`
+	// The full identifier of an Iconify icon for this plugin. (https://icon-sets.iconify.design)
 	Icon string `json:"icon"`
 	// Short description of the plugin.
 	Description string `json:"description"`
