@@ -7,23 +7,26 @@ import "package:go_router/go_router.dart";
 import "package:material_ui/material_ui.dart";
 
 // extracts `extra` from state and casts it to the proper type
-T? extractExtra<T>(GoRouterState state) {
+T? _extractExtra<T>(GoRouterState state) {
   final extra = state.extra;
   return extra is T ? extra : null;
 }
+
+/// Returns whether [path] is a setup route.
+bool testSetupRoute(String path) =>
+    path == "/" || path == "/startup" || path.startsWith("/startup/");
 
 final router = GoRouter(
   initialLocation: "/",
   redirect: (context, state) {
     final path = state.matchedLocation;
 
-    final isStartupRoute =
-        path == "/" || path == "/startup" || path.startsWith("/startup/");
-
     // if logged in then bypass startup routes
-    if (Storage.has(.sessionToken)) return isStartupRoute ? "/home" : null;
+    if (Storage.has(.sessionToken)) {
+      return testSetupRoute(path) ? "/home" : null;
+    }
     // otherwise, logged out, redirect everything back to startup
-    return !isStartupRoute ? "/" : null;
+    return !testSetupRoute(path) ? "/" : null;
   },
   routes: [
     GoRoute(
@@ -70,11 +73,11 @@ GoRoute _startupRoute(
     path: type,
     // redirect back to URL setup if we navigate directly to the login page
     redirect: (context, state) =>
-        extractExtra<ServerLoginPayload>(state) == null
+        _extractExtra<ServerLoginPayload>(state) == null
         ? context.namedLocation("startup_home")
         : null,
     pageBuilder: (context, state) {
-      final serverResponse = extractExtra<ServerLoginPayload>(state);
+      final serverResponse = _extractExtra<ServerLoginPayload>(state);
       // should realistically never happen as the page should be redirected
       if (serverResponse == null) {
         return const MaterialPage(child: Text("Error"));

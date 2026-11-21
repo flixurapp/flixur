@@ -1,6 +1,6 @@
 import "dart:async";
 
-import "package:flixur/router.dart" show router;
+import "package:flixur/router.dart" show router, testSetupRoute;
 import "package:flixur/settings.dart";
 import "package:flixur/titlebar.dart";
 import "package:flixur/ui/buttons.dart";
@@ -82,10 +82,20 @@ class const MainNavTop({super.key}) extends StatelessWidget {
                       if (moreMenuItems.isNotEmpty)
                         ValueListenableBuilder(
                           valueListenable: MainNavWrapper.activeSection,
-                          builder: (context, _, _) => SettingsListen(
-                            const ["ui.navigation.shownSections"],
-                            builder: (context) =>
-                                _MoreMenu(children: moreMenuItems),
+                          builder: (context, _, _) => ValueListenableBuilder(
+                            valueListenable: router.routeInformationProvider,
+                            builder: (context, location, _) {
+                              // drop button on setup pages
+                              if (testSetupRoute(location.uri.path)) {
+                                return const SizedBox.shrink();
+                              }
+
+                              return SettingsListen(
+                                const ["ui.navigation.shownSections"],
+                                builder: (context) =>
+                                    _MoreMenu(children: moreMenuItems),
+                              );
+                            },
                           ),
                         ),
                       if (TitlebarManager.shouldEnable) ...[
