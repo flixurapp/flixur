@@ -172,6 +172,8 @@ class const SettingsTileStringList(
       children: [if (items.value.isNotEmpty) list, ?addControl],
     );
 
+    final selectionText =
+        "${items.value.length}${maxItems == null ? "" : "/$maxItems"}";
     return SettingsTileShell(
       def,
       isSearching: isSearching,
@@ -180,8 +182,9 @@ class const SettingsTileStringList(
         crossAxisAlignment: .start,
         children: [
           Text(
-            "${items.value.length}${maxItems == null ? "" : "/$maxItems"}"
-            " items selected",
+            items.value.length == 1 && maxItems == null
+                ? t.items_selected.single(n: selectionText)
+                : t.items_selected.many(n: selectionText),
             style: TextStyle(fontSize: 12, color: context.colors.textMuted),
           ),
           if (expanded.value) editor,

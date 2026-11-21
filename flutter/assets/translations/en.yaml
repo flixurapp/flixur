@@ -18,6 +18,9 @@ btn_select: "Select"
 btn_select_remove: "Deselect"
 btn_show: "Show"
 confirmation_dialog_title: "Are you sure?"
+items_selected:
+  many: "$n items selected"
+  single: "$n item selected"
 navigation:
   section_titles(map):
     activity: "Activity"

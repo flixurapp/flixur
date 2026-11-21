@@ -102,6 +102,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	/// en: 'Are you sure?'
 	String get confirmation_dialog_title => 'Are you sure?';
 
+	late final Translations$items_selected$en items_selected = Translations$items_selected$en._(_root);
 	late final Translations$navigation$en navigation = Translations$navigation$en._(_root);
 
 	/// en: 'OR'
@@ -160,6 +161,21 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 
 	/// en: 'Username'
 	String get username => 'Username';
+}
+
+// Path: items_selected
+class Translations$items_selected$en {
+	Translations$items_selected$en._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: '$n items selected'
+	String many({required Object n}) => '${n} items selected';
+
+	/// en: '$n item selected'
+	String single({required Object n}) => '${n} item selected';
 }
 
 // Path: navigation
@@ -373,6 +389,8 @@ extension on Translations {
 			'btn_select_remove' => 'Deselect',
 			'btn_show' => 'Show',
 			'confirmation_dialog_title' => 'Are you sure?',
+			'items_selected.many' => ({required Object n}) => '${n} items selected',
+			'items_selected.single' => ({required Object n}) => '${n} item selected',
 			'navigation.section_titles.activity' => 'Activity',
 			'navigation.section_titles.admin' => 'Admin',
 			'navigation.section_titles.downloads' => 'Downloads',
