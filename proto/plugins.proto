@@ -10,6 +10,11 @@ enum Feature {
   FEATURE_UNSPECIFIED = 0;
   // Implements `Artist*`, `Album*`, `Track*` RPC calls
   FEATURE_MUSIC_METADATA = 1;
+
+  // Returns a list of artist portraits.
+  FEATURE_ARTIST_COVERS = 2;
+  // Returns a list of album covers.
+  FEATURE_ALBUM_COVERS = 3;
 }
 
 // Empty message for RPC calls that don't require input.
@@ -37,4 +42,7 @@ service FlixurPluginService {
   rpc TrackGet(music_features.TrackGetRequest) returns (music_features.TrackGetResponse);
   // Search for tracks by name.
   rpc TrackSearch(music_features.TrackSearchRequest) returns (music_features.TrackSearchResponse);
+
+  // Feature: Artist Covers
+  rpc ArtistCovers(music_features.ArtistCoversRequest) returns (music_features.ArtistCoversResponse);
 }

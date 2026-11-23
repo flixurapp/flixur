@@ -8,11 +8,19 @@ part of 'plugin_manifest.dart';
 
 const PluginManifestFeaturesEnum _$pluginManifestFeaturesEnum_MUSIC_METADATA =
     const PluginManifestFeaturesEnum._('MUSIC_METADATA');
+const PluginManifestFeaturesEnum _$pluginManifestFeaturesEnum_ARTIST_COVERS =
+    const PluginManifestFeaturesEnum._('ARTIST_COVERS');
+const PluginManifestFeaturesEnum _$pluginManifestFeaturesEnum_ALBUM_COVERS =
+    const PluginManifestFeaturesEnum._('ALBUM_COVERS');
 
 PluginManifestFeaturesEnum _$pluginManifestFeaturesEnumValueOf(String name) {
   switch (name) {
     case 'MUSIC_METADATA':
       return _$pluginManifestFeaturesEnum_MUSIC_METADATA;
+    case 'ARTIST_COVERS':
+      return _$pluginManifestFeaturesEnum_ARTIST_COVERS;
+    case 'ALBUM_COVERS':
+      return _$pluginManifestFeaturesEnum_ALBUM_COVERS;
     default:
       throw ArgumentError(name);
   }
@@ -21,6 +29,8 @@ PluginManifestFeaturesEnum _$pluginManifestFeaturesEnumValueOf(String name) {
 final BuiltSet<PluginManifestFeaturesEnum> _$pluginManifestFeaturesEnumValues =
     BuiltSet<PluginManifestFeaturesEnum>(const <PluginManifestFeaturesEnum>[
   _$pluginManifestFeaturesEnum_MUSIC_METADATA,
+  _$pluginManifestFeaturesEnum_ARTIST_COVERS,
+  _$pluginManifestFeaturesEnum_ALBUM_COVERS,
 ]);
 
 Serializer<PluginManifestFeaturesEnum> _$pluginManifestFeaturesEnumSerializer =
@@ -30,9 +40,13 @@ class _$PluginManifestFeaturesEnumSerializer
     implements PrimitiveSerializer<PluginManifestFeaturesEnum> {
   static const Map<String, Object> _toWire = const <String, Object>{
     'MUSIC_METADATA': 'MUSIC_METADATA',
+    'ARTIST_COVERS': 'ARTIST_COVERS',
+    'ALBUM_COVERS': 'ALBUM_COVERS',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'MUSIC_METADATA': 'MUSIC_METADATA',
+    'ARTIST_COVERS': 'ARTIST_COVERS',
+    'ALBUM_COVERS': 'ALBUM_COVERS',
   };
 
   @override

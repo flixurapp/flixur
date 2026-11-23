@@ -34,7 +34,9 @@
       "items": {
         "type": "string",
         "enum": [
-          "MUSIC_METADATA"
+          "MUSIC_METADATA",
+          "ARTIST_COVERS",
+          "ALBUM_COVERS"
         ],
         "description": "Feature IDs this plugin implements, from the Feature enum."
       },

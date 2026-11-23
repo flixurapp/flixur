@@ -25,6 +25,7 @@ const (
 	FlixurPluginService_AlbumSearch_FullMethodName  = "/flixur.plugins.FlixurPluginService/AlbumSearch"
 	FlixurPluginService_TrackGet_FullMethodName     = "/flixur.plugins.FlixurPluginService/TrackGet"
 	FlixurPluginService_TrackSearch_FullMethodName  = "/flixur.plugins.FlixurPluginService/TrackSearch"
+	FlixurPluginService_ArtistCovers_FullMethodName = "/flixur.plugins.FlixurPluginService/ArtistCovers"
 )
 
 // FlixurPluginServiceClient is the client API for FlixurPluginService service.
@@ -45,6 +46,8 @@ type FlixurPluginServiceClient interface {
 	TrackGet(ctx context.Context, in *TrackGetRequest, opts ...grpc.CallOption) (*TrackGetResponse, error)
 	// Search for tracks by name.
 	TrackSearch(ctx context.Context, in *TrackSearchRequest, opts ...grpc.CallOption) (*TrackSearchResponse, error)
+	// Feature: Artist Covers
+	ArtistCovers(ctx context.Context, in *ArtistCoversRequest, opts ...grpc.CallOption) (*ArtistCoversResponse, error)
 }
 
 type flixurPluginServiceClient struct {
@@ -115,6 +118,16 @@ func (c *flixurPluginServiceClient) TrackSearch(ctx context.Context, in *TrackSe
 	return out, nil
 }
 
+func (c *flixurPluginServiceClient) ArtistCovers(ctx context.Context, in *ArtistCoversRequest, opts ...grpc.CallOption) (*ArtistCoversResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ArtistCoversResponse)
+	err := c.cc.Invoke(ctx, FlixurPluginService_ArtistCovers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FlixurPluginServiceServer is the server API for FlixurPluginService service.
 // All implementations must embed UnimplementedFlixurPluginServiceServer
 // for forward compatibility.
@@ -133,6 +146,8 @@ type FlixurPluginServiceServer interface {
 	TrackGet(context.Context, *TrackGetRequest) (*TrackGetResponse, error)
 	// Search for tracks by name.
 	TrackSearch(context.Context, *TrackSearchRequest) (*TrackSearchResponse, error)
+	// Feature: Artist Covers
+	ArtistCovers(context.Context, *ArtistCoversRequest) (*ArtistCoversResponse, error)
 	mustEmbedUnimplementedFlixurPluginServiceServer()
 }
 
@@ -160,6 +175,9 @@ func (UnimplementedFlixurPluginServiceServer) TrackGet(context.Context, *TrackGe
 }
 func (UnimplementedFlixurPluginServiceServer) TrackSearch(context.Context, *TrackSearchRequest) (*TrackSearchResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TrackSearch not implemented")
+}
+func (UnimplementedFlixurPluginServiceServer) ArtistCovers(context.Context, *ArtistCoversRequest) (*ArtistCoversResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ArtistCovers not implemented")
 }
 func (UnimplementedFlixurPluginServiceServer) mustEmbedUnimplementedFlixurPluginServiceServer() {}
 func (UnimplementedFlixurPluginServiceServer) testEmbeddedByValue()                             {}
@@ -290,6 +308,24 @@ func _FlixurPluginService_TrackSearch_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FlixurPluginService_ArtistCovers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ArtistCoversRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FlixurPluginServiceServer).ArtistCovers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FlixurPluginService_ArtistCovers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FlixurPluginServiceServer).ArtistCovers(ctx, req.(*ArtistCoversRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FlixurPluginService_ServiceDesc is the grpc.ServiceDesc for FlixurPluginService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -320,6 +356,10 @@ var FlixurPluginService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TrackSearch",
 			Handler:    _FlixurPluginService_TrackSearch_Handler,
+		},
+		{
+			MethodName: "ArtistCovers",
+			Handler:    _FlixurPluginService_ArtistCovers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

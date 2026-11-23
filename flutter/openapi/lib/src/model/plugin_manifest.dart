@@ -43,7 +43,7 @@ abstract class PluginManifest
 
   @BuiltValueField(wireName: r'features')
   BuiltList<PluginManifestFeaturesEnum>? get features;
-  // enum featuresEnum {  MUSIC_METADATA,  };
+  // enum featuresEnum {  MUSIC_METADATA,  ARTIST_COVERS,  ALBUM_COVERS,  };
 
   @BuiltValueField(wireName: r'icon')
   String get icon;
@@ -288,6 +288,12 @@ class PluginManifestFeaturesEnum extends EnumClass {
   @BuiltValueEnumConst(wireName: r'MUSIC_METADATA')
   static const PluginManifestFeaturesEnum MUSIC_METADATA =
       _$pluginManifestFeaturesEnum_MUSIC_METADATA;
+  @BuiltValueEnumConst(wireName: r'ARTIST_COVERS')
+  static const PluginManifestFeaturesEnum ARTIST_COVERS =
+      _$pluginManifestFeaturesEnum_ARTIST_COVERS;
+  @BuiltValueEnumConst(wireName: r'ALBUM_COVERS')
+  static const PluginManifestFeaturesEnum ALBUM_COVERS =
+      _$pluginManifestFeaturesEnum_ALBUM_COVERS;
 
   static Serializer<PluginManifestFeaturesEnum> get serializer =>
       _$pluginManifestFeaturesEnumSerializer;

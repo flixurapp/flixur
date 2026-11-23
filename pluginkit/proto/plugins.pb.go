@@ -28,6 +28,10 @@ const (
 	Feature_UNSPECIFIED Feature = 0
 	// Implements `Artist*`, `Album*`, `Track*` RPC calls
 	Feature_MUSIC_METADATA Feature = 1
+	// Returns a list of artist portraits.
+	Feature_ARTIST_COVERS Feature = 2
+	// Returns a list of album covers.
+	Feature_ALBUM_COVERS Feature = 3
 )
 
 // Enum value maps for Feature.
@@ -35,10 +39,14 @@ var (
 	Feature_name = map[int32]string{
 		0: "FEATURE_UNSPECIFIED",
 		1: "FEATURE_MUSIC_METADATA",
+		2: "FEATURE_ARTIST_COVERS",
+		3: "FEATURE_ALBUM_COVERS",
 	}
 	Feature_value = map[string]int32{
 		"FEATURE_UNSPECIFIED":    0,
 		"FEATURE_MUSIC_METADATA": 1,
+		"FEATURE_ARTIST_COVERS":  2,
+		"FEATURE_ALBUM_COVERS":   3,
 	}
 )
 
@@ -111,17 +119,20 @@ var File_plugins_proto protoreflect.FileDescriptor
 const file_plugins_proto_rawDesc = "" +
 	"\n" +
 	"\rplugins.proto\x12\x0eflixur.plugins\x1a\x14music_features.proto\"\x0e\n" +
-	"\fEmptyRequest*>\n" +
+	"\fEmptyRequest*s\n" +
 	"\aFeature\x12\x17\n" +
 	"\x13FEATURE_UNSPECIFIED\x10\x00\x12\x1a\n" +
-	"\x16FEATURE_MUSIC_METADATA\x10\x012\xe4\x04\n" +
+	"\x16FEATURE_MUSIC_METADATA\x10\x01\x12\x19\n" +
+	"\x15FEATURE_ARTIST_COVERS\x10\x02\x12\x18\n" +
+	"\x14FEATURE_ALBUM_COVERS\x10\x032\xcd\x05\n" +
 	"\x13FlixurPluginService\x12^\n" +
 	"\tArtistGet\x12'.flixur.music_features.ArtistGetRequest\x1a(.flixur.music_features.ArtistGetResponse\x12g\n" +
 	"\fArtistSearch\x12*.flixur.music_features.ArtistSearchRequest\x1a+.flixur.music_features.ArtistSearchResponse\x12[\n" +
 	"\bAlbumGet\x12&.flixur.music_features.AlbumGetRequest\x1a'.flixur.music_features.AlbumGetResponse\x12d\n" +
 	"\vAlbumSearch\x12).flixur.music_features.AlbumSearchRequest\x1a*.flixur.music_features.AlbumSearchResponse\x12[\n" +
 	"\bTrackGet\x12&.flixur.music_features.TrackGetRequest\x1a'.flixur.music_features.TrackGetResponse\x12d\n" +
-	"\vTrackSearch\x12).flixur.music_features.TrackSearchRequest\x1a*.flixur.music_features.TrackSearchResponseB.Z,forge.xela.codes/xela/flixur/pluginkit/protob\x06proto3"
+	"\vTrackSearch\x12).flixur.music_features.TrackSearchRequest\x1a*.flixur.music_features.TrackSearchResponse\x12g\n" +
+	"\fArtistCovers\x12*.flixur.music_features.ArtistCoversRequest\x1a+.flixur.music_features.ArtistCoversResponseB.Z,forge.xela.codes/xela/flixur/pluginkit/protob\x06proto3"
 
 var (
 	file_plugins_proto_rawDescOnce sync.Once
@@ -146,12 +157,14 @@ var file_plugins_proto_goTypes = []any{
 	(*AlbumSearchRequest)(nil),   // 5: flixur.music_features.AlbumSearchRequest
 	(*TrackGetRequest)(nil),      // 6: flixur.music_features.TrackGetRequest
 	(*TrackSearchRequest)(nil),   // 7: flixur.music_features.TrackSearchRequest
-	(*ArtistGetResponse)(nil),    // 8: flixur.music_features.ArtistGetResponse
-	(*ArtistSearchResponse)(nil), // 9: flixur.music_features.ArtistSearchResponse
-	(*AlbumGetResponse)(nil),     // 10: flixur.music_features.AlbumGetResponse
-	(*AlbumSearchResponse)(nil),  // 11: flixur.music_features.AlbumSearchResponse
-	(*TrackGetResponse)(nil),     // 12: flixur.music_features.TrackGetResponse
-	(*TrackSearchResponse)(nil),  // 13: flixur.music_features.TrackSearchResponse
+	(*ArtistCoversRequest)(nil),  // 8: flixur.music_features.ArtistCoversRequest
+	(*ArtistGetResponse)(nil),    // 9: flixur.music_features.ArtistGetResponse
+	(*ArtistSearchResponse)(nil), // 10: flixur.music_features.ArtistSearchResponse
+	(*AlbumGetResponse)(nil),     // 11: flixur.music_features.AlbumGetResponse
+	(*AlbumSearchResponse)(nil),  // 12: flixur.music_features.AlbumSearchResponse
+	(*TrackGetResponse)(nil),     // 13: flixur.music_features.TrackGetResponse
+	(*TrackSearchResponse)(nil),  // 14: flixur.music_features.TrackSearchResponse
+	(*ArtistCoversResponse)(nil), // 15: flixur.music_features.ArtistCoversResponse
 }
 var file_plugins_proto_depIdxs = []int32{
 	2,  // 0: flixur.plugins.FlixurPluginService.ArtistGet:input_type -> flixur.music_features.ArtistGetRequest
@@ -160,14 +173,16 @@ var file_plugins_proto_depIdxs = []int32{
 	5,  // 3: flixur.plugins.FlixurPluginService.AlbumSearch:input_type -> flixur.music_features.AlbumSearchRequest
 	6,  // 4: flixur.plugins.FlixurPluginService.TrackGet:input_type -> flixur.music_features.TrackGetRequest
 	7,  // 5: flixur.plugins.FlixurPluginService.TrackSearch:input_type -> flixur.music_features.TrackSearchRequest
-	8,  // 6: flixur.plugins.FlixurPluginService.ArtistGet:output_type -> flixur.music_features.ArtistGetResponse
-	9,  // 7: flixur.plugins.FlixurPluginService.ArtistSearch:output_type -> flixur.music_features.ArtistSearchResponse
-	10, // 8: flixur.plugins.FlixurPluginService.AlbumGet:output_type -> flixur.music_features.AlbumGetResponse
-	11, // 9: flixur.plugins.FlixurPluginService.AlbumSearch:output_type -> flixur.music_features.AlbumSearchResponse
-	12, // 10: flixur.plugins.FlixurPluginService.TrackGet:output_type -> flixur.music_features.TrackGetResponse
-	13, // 11: flixur.plugins.FlixurPluginService.TrackSearch:output_type -> flixur.music_features.TrackSearchResponse
-	6,  // [6:12] is the sub-list for method output_type
-	0,  // [0:6] is the sub-list for method input_type
+	8,  // 6: flixur.plugins.FlixurPluginService.ArtistCovers:input_type -> flixur.music_features.ArtistCoversRequest
+	9,  // 7: flixur.plugins.FlixurPluginService.ArtistGet:output_type -> flixur.music_features.ArtistGetResponse
+	10, // 8: flixur.plugins.FlixurPluginService.ArtistSearch:output_type -> flixur.music_features.ArtistSearchResponse
+	11, // 9: flixur.plugins.FlixurPluginService.AlbumGet:output_type -> flixur.music_features.AlbumGetResponse
+	12, // 10: flixur.plugins.FlixurPluginService.AlbumSearch:output_type -> flixur.music_features.AlbumSearchResponse
+	13, // 11: flixur.plugins.FlixurPluginService.TrackGet:output_type -> flixur.music_features.TrackGetResponse
+	14, // 12: flixur.plugins.FlixurPluginService.TrackSearch:output_type -> flixur.music_features.TrackSearchResponse
+	15, // 13: flixur.plugins.FlixurPluginService.ArtistCovers:output_type -> flixur.music_features.ArtistCoversResponse
+	7,  // [7:14] is the sub-list for method output_type
+	0,  // [0:7] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

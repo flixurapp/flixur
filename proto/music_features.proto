@@ -64,3 +64,15 @@ message TrackSearchRequest {
 message TrackSearchResponse {
   repeated music.Track results = 1;
 }
+
+/* ArtistCover */
+message ArtistCoversRequest {
+  // ID of the artist to get a cover for. This should match the upstream provider's ID format.
+  string id = 1;
+  // Limit the amount of covers returned
+  optional int32 limit = 2;
+}
+message ArtistCoversResponse {
+  // List of image URLs.
+  repeated string results = 1;
+}

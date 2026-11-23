@@ -582,6 +582,106 @@ func (x *TrackSearchResponse) GetResults() []*Track {
 	return nil
 }
 
+// ArtistCover
+type ArtistCoversRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// ID of the artist to get a cover for. This should match the upstream provider's ID format.
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id"`
+	// Limit the amount of covers returned
+	Limit         *int32 `protobuf:"varint,2,opt,name=limit,proto3,oneof" json:"limit,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ArtistCoversRequest) Reset() {
+	*x = ArtistCoversRequest{}
+	mi := &file_music_features_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ArtistCoversRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ArtistCoversRequest) ProtoMessage() {}
+
+func (x *ArtistCoversRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_music_features_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ArtistCoversRequest.ProtoReflect.Descriptor instead.
+func (*ArtistCoversRequest) Descriptor() ([]byte, []int) {
+	return file_music_features_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ArtistCoversRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *ArtistCoversRequest) GetLimit() int32 {
+	if x != nil && x.Limit != nil {
+		return *x.Limit
+	}
+	return 0
+}
+
+type ArtistCoversResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// List of image URLs.
+	Results       []string `protobuf:"bytes,1,rep,name=results,proto3" json:"results"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ArtistCoversResponse) Reset() {
+	*x = ArtistCoversResponse{}
+	mi := &file_music_features_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ArtistCoversResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ArtistCoversResponse) ProtoMessage() {}
+
+func (x *ArtistCoversResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_music_features_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ArtistCoversResponse.ProtoReflect.Descriptor instead.
+func (*ArtistCoversResponse) Descriptor() ([]byte, []int) {
+	return file_music_features_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *ArtistCoversResponse) GetResults() []string {
+	if x != nil {
+		return x.Results
+	}
+	return nil
+}
+
 var File_music_features_proto protoreflect.FileDescriptor
 
 const file_music_features_proto_rawDesc = "" +
@@ -613,7 +713,13 @@ const file_music_features_proto_rawDesc = "" +
 	"\x05query\x18\x01 \x01(\tR\x05query\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\"D\n" +
 	"\x13TrackSearchResponse\x12-\n" +
-	"\aresults\x18\x01 \x03(\v2\x13.flixur.music.TrackR\aresultsB.Z,forge.xela.codes/xela/flixur/pluginkit/protob\x06proto3"
+	"\aresults\x18\x01 \x03(\v2\x13.flixur.music.TrackR\aresults\"J\n" +
+	"\x13ArtistCoversRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
+	"\x05limit\x18\x02 \x01(\x05H\x00R\x05limit\x88\x01\x01B\b\n" +
+	"\x06_limit\"0\n" +
+	"\x14ArtistCoversResponse\x12\x18\n" +
+	"\aresults\x18\x01 \x03(\tR\aresultsB.Z,forge.xela.codes/xela/flixur/pluginkit/protob\x06proto3"
 
 var (
 	file_music_features_proto_rawDescOnce sync.Once
@@ -627,7 +733,7 @@ func file_music_features_proto_rawDescGZIP() []byte {
 	return file_music_features_proto_rawDescData
 }
 
-var file_music_features_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_music_features_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_music_features_proto_goTypes = []any{
 	(*ArtistGetRequest)(nil),     // 0: flixur.music_features.ArtistGetRequest
 	(*ArtistGetResponse)(nil),    // 1: flixur.music_features.ArtistGetResponse
@@ -641,17 +747,19 @@ var file_music_features_proto_goTypes = []any{
 	(*TrackGetResponse)(nil),     // 9: flixur.music_features.TrackGetResponse
 	(*TrackSearchRequest)(nil),   // 10: flixur.music_features.TrackSearchRequest
 	(*TrackSearchResponse)(nil),  // 11: flixur.music_features.TrackSearchResponse
-	(*Artist)(nil),               // 12: flixur.music.Artist
-	(*Album)(nil),                // 13: flixur.music.Album
-	(*Track)(nil),                // 14: flixur.music.Track
+	(*ArtistCoversRequest)(nil),  // 12: flixur.music_features.ArtistCoversRequest
+	(*ArtistCoversResponse)(nil), // 13: flixur.music_features.ArtistCoversResponse
+	(*Artist)(nil),               // 14: flixur.music.Artist
+	(*Album)(nil),                // 15: flixur.music.Album
+	(*Track)(nil),                // 16: flixur.music.Track
 }
 var file_music_features_proto_depIdxs = []int32{
-	12, // 0: flixur.music_features.ArtistGetResponse.artist:type_name -> flixur.music.Artist
-	12, // 1: flixur.music_features.ArtistSearchResponse.results:type_name -> flixur.music.Artist
-	13, // 2: flixur.music_features.AlbumGetResponse.album:type_name -> flixur.music.Album
-	13, // 3: flixur.music_features.AlbumSearchResponse.results:type_name -> flixur.music.Album
-	14, // 4: flixur.music_features.TrackGetResponse.track:type_name -> flixur.music.Track
-	14, // 5: flixur.music_features.TrackSearchResponse.results:type_name -> flixur.music.Track
+	14, // 0: flixur.music_features.ArtistGetResponse.artist:type_name -> flixur.music.Artist
+	14, // 1: flixur.music_features.ArtistSearchResponse.results:type_name -> flixur.music.Artist
+	15, // 2: flixur.music_features.AlbumGetResponse.album:type_name -> flixur.music.Album
+	15, // 3: flixur.music_features.AlbumSearchResponse.results:type_name -> flixur.music.Album
+	16, // 4: flixur.music_features.TrackGetResponse.track:type_name -> flixur.music.Track
+	16, // 5: flixur.music_features.TrackSearchResponse.results:type_name -> flixur.music.Track
 	6,  // [6:6] is the sub-list for method output_type
 	6,  // [6:6] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
@@ -665,13 +773,14 @@ func file_music_features_proto_init() {
 		return
 	}
 	file_music_proto_init()
+	file_music_features_proto_msgTypes[12].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_music_features_proto_rawDesc), len(file_music_features_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
