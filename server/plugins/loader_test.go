@@ -1,7 +1,6 @@
 package plugins
 
 import (
-	"context"
 	"errors"
 	"os"
 	"path/filepath"
@@ -23,29 +22,11 @@ func (m *mockClientProtocol) Dispense(name string) (any, error) {
 }
 func (m *mockClientProtocol) Ping() error { return nil }
 
-// mockFlixurPlugin implements pluginkit.FlixurPlugin.
-type mockFlixurPlugin struct{}
+type mockFlixurPlugin struct {
+	pb.FlixurPluginServiceClient
+}
 
 var _ pluginkit.FlixurPlugin = (*mockFlixurPlugin)(nil)
-
-func (m *mockFlixurPlugin) ArtistGet(context.Context, *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error) {
-	return nil, nil
-}
-func (m *mockFlixurPlugin) ArtistSearch(context.Context, *pb.ArtistSearchRequest) (*pb.ArtistSearchResponse, error) {
-	return nil, nil
-}
-func (m *mockFlixurPlugin) AlbumGet(context.Context, *pb.AlbumGetRequest) (*pb.AlbumGetResponse, error) {
-	return nil, nil
-}
-func (m *mockFlixurPlugin) AlbumSearch(context.Context, *pb.AlbumSearchRequest) (*pb.AlbumSearchResponse, error) {
-	return nil, nil
-}
-func (m *mockFlixurPlugin) TrackGet(context.Context, *pb.TrackGetRequest) (*pb.TrackGetResponse, error) {
-	return nil, nil
-}
-func (m *mockFlixurPlugin) TrackSearch(context.Context, *pb.TrackSearchRequest) (*pb.TrackSearchResponse, error) {
-	return nil, nil
-}
 
 func TestRegisterPluginsMissingDir(t *testing.T) {
 	resetPlugins(t, map[string]*Plugin{})

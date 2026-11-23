@@ -3,13 +3,14 @@ package pluginkit
 import (
 	"os"
 
+	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
 	"github.com/rs/zerolog"
 )
 
 // Serve the plugin using a custom log level. (if you arent using zerolog)
-func ServeWithLevel(impl FlixurPlugin, logLevel hclog.Level) {
+func ServeWithLevel(impl pb.FlixurPluginServiceServer, logLevel hclog.Level) {
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: HandshakeConfig,
 		Plugins: map[string]plugin.Plugin{
@@ -25,6 +26,6 @@ func ServeWithLevel(impl FlixurPlugin, logLevel hclog.Level) {
 }
 
 // Serve is a convenience function for plugins. It sets up the go-plugin framework.
-func Serve(impl FlixurPlugin) {
+func Serve(impl pb.FlixurPluginServiceServer) {
 	ServeWithLevel(impl, ZerologLevelToHCLevel(zerolog.GlobalLevel()))
 }
