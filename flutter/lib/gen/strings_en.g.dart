@@ -204,6 +204,7 @@ class Translations$routes$en {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+	late final Translations$routes$search$en search = Translations$routes$search$en._(_root);
 	late final Translations$routes$settings$en settings = Translations$routes$settings$en._(_root);
 	late final Translations$routes$startup$en startup = Translations$routes$startup$en._(_root);
 }
@@ -239,6 +240,21 @@ class Translations$titlebar$en {
 
 	/// en: 'Expand Navigation'
 	String get rail_expand => 'Expand Navigation';
+}
+
+// Path: routes.search
+class Translations$routes$search$en {
+	Translations$routes$search$en._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'No results'
+	String get no_results => 'No results';
+
+	/// en: 'Search...'
+	String get search_hint => 'Search...';
 }
 
 // Path: routes.settings
@@ -401,6 +417,8 @@ extension on Translations {
 			'navigation.section_titles.settings' => 'Settings',
 			'or_line' => 'OR',
 			'password' => 'Password',
+			'routes.search.no_results' => 'No results',
+			'routes.search.search_hint' => 'Search...',
 			'routes.settings.create_rename_codes.CONFLICT' => 'Profile names must be unique!',
 			'routes.settings.new_profile' => 'New Profile',
 			'routes.settings.rename_profile' => 'Rename Profile',

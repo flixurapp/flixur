@@ -34,6 +34,9 @@ navigation:
 or_line: "OR"
 password: "Password"
 routes:
+  search:
+    no_results: "No results"
+    search_hint: "Search..."
   settings:
     create_rename_codes(map):
       CONFLICT: "Profile names must be unique!"
