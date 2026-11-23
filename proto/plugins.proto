@@ -2,6 +2,7 @@ syntax = "proto3";
 package flixur.plugins;
 
 import "music_features.proto";
+import "settings.proto";
 
 option go_package = "forge.xela.codes/xela/flixur/pluginkit/proto";
 
@@ -17,11 +18,37 @@ enum Feature {
   FEATURE_ALBUM_COVERS = 3;
 }
 
-// Empty message for RPC calls that don't require input.
-message EmptyRequest {}
+// Sent by the server to initialize a plugin right after connecting.
+message InitRequest {}
+
+// The plugin's response to the init handshake.
+message InitResponse {
+  // Settings groups registered by this plugin.
+  // IDs are relative to the plugin, the server keeps them under `server.plugins.<plugin id>`.
+  repeated flixur.settings.SettingsGroup groups = 1;
+  // Setting definitions registered by this plugin.
+  // IDs are relative to the plugin, the server keeps them under `server.plugins.<plugin id>`.
+  repeated flixur.settings.SettingsDefinition definitions = 2;
+}
+
+// A full snapshot of a plugin's current setting values.
+message SettingsUpdateRequest {
+  // Current setting overrides keyed by fully-scoped setting ID.
+  // Values are JSON-encoded text, settings without an entry use their default.
+  map<string, string> values = 1;
+}
+message SettingsUpdateResponse {}
 
 // The main plugin service. Plugins implement this gRPC service.
 service FlixurPluginService {
+  // Init handshake, called once by the server after connecting.
+  // Receives the plugin's registered settings among other future data.
+  rpc Init(InitRequest) returns (InitResponse);
+
+  // Pushes a full snapshot of the plugin's current setting values.
+  // Sent once after init and again whenever a value changes server-side.
+  rpc SettingsUpdate(SettingsUpdateRequest) returns (SettingsUpdateResponse);
+
   // === Artist Methods ===
 
   // Get a specific artist by ID.

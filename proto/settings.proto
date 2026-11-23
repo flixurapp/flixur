@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+package flixur.settings;
+
+option go_package = "forge.xela.codes/xela/flixur/pluginkit/proto";
+
+// Kind of a setting value.
+enum Kind {
+  KIND_UNSPECIFIED = 0;
+  KIND_BOOL = 1;
+  KIND_INT = 2;
+  KIND_FLOAT = 3;
+  KIND_STRING = 4;
+  KIND_ENUM = 5;
+  KIND_STRINGLIST = 6;
+}
+
+// A single choice of a setting.
+message SettingsChoice {
+  // Choice value.
+  string value = 1;
+  // Optional iconify icon name shown next to the choice on clients.
+  optional string icon = 2;
+  // Whether the choice has a description that should be displayed.
+  // The description itself should be in a translation file.
+  optional bool has_description = 3;
+}
+
+// A boolean setting's properties.
+message BoolProps {
+  // Default setting value.
+  bool default_value = 1;
+}
+
+// An int setting's properties.
+message IntProps {
+  // Default setting value.
+  int64 default_value = 1;
+  // Optional lowest value the setting can be.
+  optional int64 min = 2;
+  // Optional highest value the setting can be.
+  optional int64 max = 3;
+  // Optional step value used for sliders on clients.
+  optional int64 step = 4;
+  // A "recommended" minimum, values down to min can still be set.
+  // This is the slider range start for clients. Min by default.
+  optional int64 recommended_min = 5;
+  // Slider range end for clients, max by default.
+  optional int64 recommended_max = 6;
+}
+
+// A float setting's properties.
+message FloatProps {
+  // Default setting value.
+  double default_value = 1;
+  // Optional lowest value the setting can be.
+  optional double min = 2;
+  // Optional highest value the setting can be.
+  optional double max = 3;
+  // Optional step value used for sliders on clients.
+  optional double step = 4;
+  // A "recommended" minimum, values down to min can still be set.
+  // This is the slider range start for clients. Min by default.
+  optional double recommended_min = 5;
+  // Slider range end for clients, max by default.
+  optional double recommended_max = 6;
+}
+
+// A string setting's properties.
+message StringProps {
+  // Default setting value.
+  string default_value = 1;
+  // Maximum character length.
+  optional int64 max_length = 2;
+  // Whether this setting value is considered secret. Used for API keys.
+  optional bool secret = 3;
+}
+
+// An enum setting's properties.
+message EnumProps {
+  // Default setting value.
+  string default_value = 1;
+  // Available choices.
+  repeated SettingsChoice choices = 2;
+}
+
+// A stringlist setting's properties.
+message StringListProps {
+  // Default setting value.
+  repeated string default_value = 1;
+  // Choices offered to clients for adding items.
+  repeated SettingsChoice choices = 2;
+  // Maximum total selected items.
+  optional uint32 max_items = 3;
+  // Whether the same value may be selected more than once.
+  optional bool allow_duplicates = 4;
+}
+
+// Definition of a single setting.
+// Defines base data and each Kind has its own prop for its requirements.
+message SettingsDefinition {
+  // Unique dotted ID for the setting.
+  string id = 1;
+  // Type of this setting.
+  Kind kind = 2;
+  // Sort order hint for the client.
+  int32 order = 3;
+
+  optional BoolProps bool = 4;
+  optional IntProps int = 5;
+  optional FloatProps float = 6;
+  optional StringProps string = 7;
+  optional EnumProps enum = 8;
+  optional StringListProps string_list = 9;
+}
+
+// A group of settings.
+message SettingsGroup {
+  // Dotted prefix that child settings will fall under.
+  string id = 1;
+  // Sort order among sibling groups.
+  int32 order = 2;
+  // Optional iconify icon name shown next to the group name on clients.
+  optional string icon = 3;
+}
