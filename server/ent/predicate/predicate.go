@@ -6,6 +6,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// ServerSetting is the predicate function for serversetting builders.
+type ServerSetting func(*sql.Selector)
+
 // SettingProfile is the predicate function for settingprofile builders.
 type SettingProfile func(*sql.Selector)
 

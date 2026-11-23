@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"forge.xela.codes/xela/flixur/ent/serversetting"
 	"forge.xela.codes/xela/flixur/ent/settingprofile"
 	"forge.xela.codes/xela/flixur/ent/settingvalue"
 	"forge.xela.codes/xela/flixur/ent/user"
@@ -77,6 +78,7 @@ var (
 func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
+			serversetting.Table:  serversetting.ValidColumn,
 			settingprofile.Table: settingprofile.ValidColumn,
 			settingvalue.Table:   settingvalue.ValidColumn,
 			user.Table:           user.ValidColumn,

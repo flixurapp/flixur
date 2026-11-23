@@ -8,6 +8,26 @@ import (
 )
 
 var (
+	// ServerSettingsColumns holds the columns for the "server_settings" table.
+	ServerSettingsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true},
+		{Name: "setting_id", Type: field.TypeString},
+		{Name: "value", Type: field.TypeOther, SchemaType: map[string]string{"postgres": "text", "sqlite3": "text"}},
+		{Name: "updated_at", Type: field.TypeTime},
+	}
+	// ServerSettingsTable holds the schema information for the "server_settings" table.
+	ServerSettingsTable = &schema.Table{
+		Name:       "server_settings",
+		Columns:    ServerSettingsColumns,
+		PrimaryKey: []*schema.Column{ServerSettingsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "serversetting_setting_id",
+				Unique:  true,
+				Columns: []*schema.Column{ServerSettingsColumns[1]},
+			},
+		},
+	}
 	// SettingProfilesColumns holds the columns for the "setting_profiles" table.
 	SettingProfilesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true},
@@ -133,6 +153,7 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		ServerSettingsTable,
 		SettingProfilesTable,
 		SettingValuesTable,
 		UsersTable,

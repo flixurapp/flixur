@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"forge.xela.codes/xela/flixur/ent"
 	"forge.xela.codes/xela/flixur/pluginkit"
 	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 	"github.com/hashicorp/go-hclog"
@@ -48,7 +49,7 @@ func newPluginClient(bin string) pluginClient {
 // Creates a pluginClient for a given binary path, overridable for tests.
 var pluginClientFactory = newPluginClient
 
-func RegisterPlugins(pluginPath string) {
+func RegisterPlugins(pluginPath string, db *ent.Client) {
 	log.Debug().Str("path", pluginPath).Msg("Loading plugins...")
 	dir, err := os.ReadDir(pluginPath)
 	if err != nil {
@@ -72,16 +73,16 @@ func RegisterPlugins(pluginPath string) {
 			log.Err(err).Str("path", name).Msg("Failed to parse plugin manifest.")
 			continue
 		}
-		InitPlugin(manifest)
+		InitPlugin(manifest, db)
 	}
 	log.Info().Msgf("Loaded %d plugins.", len(Plugins))
 }
 
-func InitPlugin(manifest *pluginkit.PluginManifest) {
-	initPlugin(manifest, pluginClientFactory)
+func InitPlugin(manifest *pluginkit.PluginManifest, db *ent.Client) {
+	initPlugin(manifest, pluginClientFactory, db)
 }
 
-func initPlugin(manifest *pluginkit.PluginManifest, factory func(string) pluginClient) {
+func initPlugin(manifest *pluginkit.PluginManifest, factory func(string) pluginClient, db *ent.Client) {
 	if manifest.Binary == "" {
 		log.Warn().Str("id", manifest.Id).Str("name", manifest.Name).Msg("Plugin manifest has no binary path. Ignoring...")
 		return
@@ -122,6 +123,14 @@ func initPlugin(manifest *pluginkit.PluginManifest, factory func(string) pluginC
 		RPC:      flixurPlugin,
 		destroy:  client.Kill,
 	}
+
+	// run the init handshake and register the plugin's settings
+	if err := initPluginSettings(plugin, db); err != nil {
+		log.Err(err).Str("id", manifest.Id).Str("name", manifest.Name).Msg("Plugin settings registration failed, killing plugin.")
+		client.Kill()
+		return
+	}
+
 	Plugins[manifest.Id] = plugin
 	log.Info().Interface("info", manifest).Msg("Loaded plugin.")
 }

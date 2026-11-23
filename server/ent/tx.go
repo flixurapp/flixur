@@ -12,6 +12,8 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
+	// ServerSetting is the client for interacting with the ServerSetting builders.
+	ServerSetting *ServerSettingClient
 	// SettingProfile is the client for interacting with the SettingProfile builders.
 	SettingProfile *SettingProfileClient
 	// SettingValue is the client for interacting with the SettingValue builders.
@@ -153,6 +155,7 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
+	tx.ServerSetting = NewServerSettingClient(tx.config)
 	tx.SettingProfile = NewSettingProfileClient(tx.config)
 	tx.SettingValue = NewSettingValueClient(tx.config)
 	tx.User = NewUserClient(tx.config)
@@ -167,7 +170,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: SettingProfile.QueryXXX(), the query will be executed
+// applies a query, for example: ServerSetting.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

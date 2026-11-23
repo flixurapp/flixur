@@ -19,13 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FlixurPluginService_ArtistGet_FullMethodName    = "/flixur.plugins.FlixurPluginService/ArtistGet"
-	FlixurPluginService_ArtistSearch_FullMethodName = "/flixur.plugins.FlixurPluginService/ArtistSearch"
-	FlixurPluginService_AlbumGet_FullMethodName     = "/flixur.plugins.FlixurPluginService/AlbumGet"
-	FlixurPluginService_AlbumSearch_FullMethodName  = "/flixur.plugins.FlixurPluginService/AlbumSearch"
-	FlixurPluginService_TrackGet_FullMethodName     = "/flixur.plugins.FlixurPluginService/TrackGet"
-	FlixurPluginService_TrackSearch_FullMethodName  = "/flixur.plugins.FlixurPluginService/TrackSearch"
-	FlixurPluginService_ArtistCovers_FullMethodName = "/flixur.plugins.FlixurPluginService/ArtistCovers"
+	FlixurPluginService_Init_FullMethodName           = "/flixur.plugins.FlixurPluginService/Init"
+	FlixurPluginService_SettingsUpdate_FullMethodName = "/flixur.plugins.FlixurPluginService/SettingsUpdate"
+	FlixurPluginService_ArtistGet_FullMethodName      = "/flixur.plugins.FlixurPluginService/ArtistGet"
+	FlixurPluginService_ArtistSearch_FullMethodName   = "/flixur.plugins.FlixurPluginService/ArtistSearch"
+	FlixurPluginService_AlbumGet_FullMethodName       = "/flixur.plugins.FlixurPluginService/AlbumGet"
+	FlixurPluginService_AlbumSearch_FullMethodName    = "/flixur.plugins.FlixurPluginService/AlbumSearch"
+	FlixurPluginService_TrackGet_FullMethodName       = "/flixur.plugins.FlixurPluginService/TrackGet"
+	FlixurPluginService_TrackSearch_FullMethodName    = "/flixur.plugins.FlixurPluginService/TrackSearch"
+	FlixurPluginService_ArtistCovers_FullMethodName   = "/flixur.plugins.FlixurPluginService/ArtistCovers"
 )
 
 // FlixurPluginServiceClient is the client API for FlixurPluginService service.
@@ -34,6 +36,12 @@ const (
 //
 // The main plugin service. Plugins implement this gRPC service.
 type FlixurPluginServiceClient interface {
+	// Init handshake, called once by the server after connecting.
+	// Receives the plugin's registered settings among other future data.
+	Init(ctx context.Context, in *InitRequest, opts ...grpc.CallOption) (*InitResponse, error)
+	// Pushes a full snapshot of the plugin's current setting values.
+	// Sent once after init and again whenever a value changes server-side.
+	SettingsUpdate(ctx context.Context, in *SettingsUpdateRequest, opts ...grpc.CallOption) (*SettingsUpdateResponse, error)
 	// Get a specific artist by ID.
 	ArtistGet(ctx context.Context, in *ArtistGetRequest, opts ...grpc.CallOption) (*ArtistGetResponse, error)
 	// Search for artists by name.
@@ -56,6 +64,26 @@ type flixurPluginServiceClient struct {
 
 func NewFlixurPluginServiceClient(cc grpc.ClientConnInterface) FlixurPluginServiceClient {
 	return &flixurPluginServiceClient{cc}
+}
+
+func (c *flixurPluginServiceClient) Init(ctx context.Context, in *InitRequest, opts ...grpc.CallOption) (*InitResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(InitResponse)
+	err := c.cc.Invoke(ctx, FlixurPluginService_Init_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *flixurPluginServiceClient) SettingsUpdate(ctx context.Context, in *SettingsUpdateRequest, opts ...grpc.CallOption) (*SettingsUpdateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SettingsUpdateResponse)
+	err := c.cc.Invoke(ctx, FlixurPluginService_SettingsUpdate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *flixurPluginServiceClient) ArtistGet(ctx context.Context, in *ArtistGetRequest, opts ...grpc.CallOption) (*ArtistGetResponse, error) {
@@ -134,6 +162,12 @@ func (c *flixurPluginServiceClient) ArtistCovers(ctx context.Context, in *Artist
 //
 // The main plugin service. Plugins implement this gRPC service.
 type FlixurPluginServiceServer interface {
+	// Init handshake, called once by the server after connecting.
+	// Receives the plugin's registered settings among other future data.
+	Init(context.Context, *InitRequest) (*InitResponse, error)
+	// Pushes a full snapshot of the plugin's current setting values.
+	// Sent once after init and again whenever a value changes server-side.
+	SettingsUpdate(context.Context, *SettingsUpdateRequest) (*SettingsUpdateResponse, error)
 	// Get a specific artist by ID.
 	ArtistGet(context.Context, *ArtistGetRequest) (*ArtistGetResponse, error)
 	// Search for artists by name.
@@ -158,6 +192,12 @@ type FlixurPluginServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedFlixurPluginServiceServer struct{}
 
+func (UnimplementedFlixurPluginServiceServer) Init(context.Context, *InitRequest) (*InitResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Init not implemented")
+}
+func (UnimplementedFlixurPluginServiceServer) SettingsUpdate(context.Context, *SettingsUpdateRequest) (*SettingsUpdateResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SettingsUpdate not implemented")
+}
 func (UnimplementedFlixurPluginServiceServer) ArtistGet(context.Context, *ArtistGetRequest) (*ArtistGetResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ArtistGet not implemented")
 }
@@ -198,6 +238,42 @@ func RegisterFlixurPluginServiceServer(s grpc.ServiceRegistrar, srv FlixurPlugin
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&FlixurPluginService_ServiceDesc, srv)
+}
+
+func _FlixurPluginService_Init_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(InitRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FlixurPluginServiceServer).Init(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FlixurPluginService_Init_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FlixurPluginServiceServer).Init(ctx, req.(*InitRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FlixurPluginService_SettingsUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SettingsUpdateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FlixurPluginServiceServer).SettingsUpdate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FlixurPluginService_SettingsUpdate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FlixurPluginServiceServer).SettingsUpdate(ctx, req.(*SettingsUpdateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _FlixurPluginService_ArtistGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -333,6 +409,14 @@ var FlixurPluginService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "flixur.plugins.FlixurPluginService",
 	HandlerType: (*FlixurPluginServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Init",
+			Handler:    _FlixurPluginService_Init_Handler,
+		},
+		{
+			MethodName: "SettingsUpdate",
+			Handler:    _FlixurPluginService_SettingsUpdate_Handler,
+		},
 		{
 			MethodName: "ArtistGet",
 			Handler:    _FlixurPluginService_ArtistGet_Handler,

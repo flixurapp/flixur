@@ -15,6 +15,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"forge.xela.codes/xela/flixur/ent/serversetting"
 	"forge.xela.codes/xela/flixur/ent/settingprofile"
 	"forge.xela.codes/xela/flixur/ent/settingvalue"
 	"forge.xela.codes/xela/flixur/ent/user"
@@ -27,6 +28,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// ServerSetting is the client for interacting with the ServerSetting builders.
+	ServerSetting *ServerSettingClient
 	// SettingProfile is the client for interacting with the SettingProfile builders.
 	SettingProfile *SettingProfileClient
 	// SettingValue is the client for interacting with the SettingValue builders.
@@ -48,6 +51,7 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.ServerSetting = NewServerSettingClient(c.config)
 	c.SettingProfile = NewSettingProfileClient(c.config)
 	c.SettingValue = NewSettingValueClient(c.config)
 	c.User = NewUserClient(c.config)
@@ -145,6 +149,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	return &Tx{
 		ctx:            ctx,
 		config:         cfg,
+		ServerSetting:  NewServerSettingClient(cfg),
 		SettingProfile: NewSettingProfileClient(cfg),
 		SettingValue:   NewSettingValueClient(cfg),
 		User:           NewUserClient(cfg),
@@ -169,6 +174,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		ctx:            ctx,
 		config:         cfg,
+		ServerSetting:  NewServerSettingClient(cfg),
 		SettingProfile: NewSettingProfileClient(cfg),
 		SettingValue:   NewSettingValueClient(cfg),
 		User:           NewUserClient(cfg),
@@ -180,7 +186,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		SettingProfile.
+//		ServerSetting.
 //		Query().
 //		Count(ctx)
 func (c *Client) Debug() *Client {
@@ -202,26 +208,30 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.SettingProfile.Use(hooks...)
-	c.SettingValue.Use(hooks...)
-	c.User.Use(hooks...)
-	c.UserLinkedOIDC.Use(hooks...)
-	c.UserSession.Use(hooks...)
+	for _, n := range []interface{ Use(...Hook) }{
+		c.ServerSetting, c.SettingProfile, c.SettingValue, c.User, c.UserLinkedOIDC,
+		c.UserSession,
+	} {
+		n.Use(hooks...)
+	}
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
-	c.SettingProfile.Intercept(interceptors...)
-	c.SettingValue.Intercept(interceptors...)
-	c.User.Intercept(interceptors...)
-	c.UserLinkedOIDC.Intercept(interceptors...)
-	c.UserSession.Intercept(interceptors...)
+	for _, n := range []interface{ Intercept(...Interceptor) }{
+		c.ServerSetting, c.SettingProfile, c.SettingValue, c.User, c.UserLinkedOIDC,
+		c.UserSession,
+	} {
+		n.Intercept(interceptors...)
+	}
 }
 
 // Mutate implements the ent.Mutator interface.
 func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
+	case *ServerSettingMutation:
+		return c.ServerSetting.mutate(ctx, m)
 	case *SettingProfileMutation:
 		return c.SettingProfile.mutate(ctx, m)
 	case *SettingValueMutation:
@@ -234,6 +244,139 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.UserSession.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
+	}
+}
+
+// ServerSettingClient is a client for the ServerSetting schema.
+type ServerSettingClient struct {
+	config
+}
+
+// NewServerSettingClient returns a client for the ServerSetting from the given config.
+func NewServerSettingClient(c config) *ServerSettingClient {
+	return &ServerSettingClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `serversetting.Hooks(f(g(h())))`.
+func (c *ServerSettingClient) Use(hooks ...Hook) {
+	c.hooks.ServerSetting = append(c.hooks.ServerSetting, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `serversetting.Intercept(f(g(h())))`.
+func (c *ServerSettingClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ServerSetting = append(c.inters.ServerSetting, interceptors...)
+}
+
+// Create returns a builder for creating a ServerSetting entity.
+func (c *ServerSettingClient) Create() *ServerSettingCreate {
+	mutation := newServerSettingMutation(c.config, OpCreate)
+	return &ServerSettingCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of ServerSetting entities.
+func (c *ServerSettingClient) CreateBulk(builders ...*ServerSettingCreate) *ServerSettingCreateBulk {
+	return &ServerSettingCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ServerSettingClient) MapCreateBulk(slice any, setFunc func(*ServerSettingCreate, int)) *ServerSettingCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ServerSettingCreateBulk{err: fmt.Errorf("calling to ServerSettingClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ServerSettingCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ServerSettingCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for ServerSetting.
+func (c *ServerSettingClient) Update() *ServerSettingUpdate {
+	mutation := newServerSettingMutation(c.config, OpUpdate)
+	return &ServerSettingUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ServerSettingClient) UpdateOne(_m *ServerSetting) *ServerSettingUpdateOne {
+	mutation := newServerSettingMutation(c.config, OpUpdateOne, withServerSetting(_m))
+	return &ServerSettingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ServerSettingClient) UpdateOneID(id string) *ServerSettingUpdateOne {
+	mutation := newServerSettingMutation(c.config, OpUpdateOne, withServerSettingID(id))
+	return &ServerSettingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for ServerSetting.
+func (c *ServerSettingClient) Delete() *ServerSettingDelete {
+	mutation := newServerSettingMutation(c.config, OpDelete)
+	return &ServerSettingDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ServerSettingClient) DeleteOne(_m *ServerSetting) *ServerSettingDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ServerSettingClient) DeleteOneID(id string) *ServerSettingDeleteOne {
+	builder := c.Delete().Where(serversetting.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ServerSettingDeleteOne{builder}
+}
+
+// Query returns a query builder for ServerSetting.
+func (c *ServerSettingClient) Query() *ServerSettingQuery {
+	return &ServerSettingQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeServerSetting},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a ServerSetting entity by its id.
+func (c *ServerSettingClient) Get(ctx context.Context, id string) (*ServerSetting, error) {
+	return c.Query().Where(serversetting.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ServerSettingClient) GetX(ctx context.Context, id string) *ServerSetting {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *ServerSettingClient) Hooks() []Hook {
+	return c.hooks.ServerSetting
+}
+
+// Interceptors returns the client interceptors.
+func (c *ServerSettingClient) Interceptors() []Interceptor {
+	return c.inters.ServerSetting
+}
+
+func (c *ServerSettingClient) mutate(ctx context.Context, m *ServerSettingMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ServerSettingCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ServerSettingUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ServerSettingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ServerSettingDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown ServerSetting mutation op: %q", m.Op())
 	}
 }
 
@@ -1035,10 +1178,11 @@ func (c *UserSessionClient) mutate(ctx context.Context, m *UserSessionMutation) 
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		SettingProfile, SettingValue, User, UserLinkedOIDC, UserSession []ent.Hook
+		ServerSetting, SettingProfile, SettingValue, User, UserLinkedOIDC,
+		UserSession []ent.Hook
 	}
 	inters struct {
-		SettingProfile, SettingValue, User, UserLinkedOIDC,
+		ServerSetting, SettingProfile, SettingValue, User, UserLinkedOIDC,
 		UserSession []ent.Interceptor
 	}
 )

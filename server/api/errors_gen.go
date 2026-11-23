@@ -4,6 +4,7 @@ package api
 const (
 	CodeConflict          APIErrorCode = "CONFLICT"
 	CodeDatabaseError     APIErrorCode = "DATABASE_ERROR"
+	CodeForbidden         APIErrorCode = "FORBIDDEN"
 	CodeIncorrectPassword APIErrorCode = "INCORRECT_PASSWORD"
 	CodeIncorrectUsername APIErrorCode = "INCORRECT_USERNAME"
 	CodeInvalidInput      APIErrorCode = "INVALID_INPUT"
@@ -18,6 +19,7 @@ const (
 var APIErrorCodeStatusMap = map[APIErrorCode]int{
 	CodeConflict:          409,
 	CodeDatabaseError:     500,
+	CodeForbidden:         403,
 	CodeIncorrectPassword: 401,
 	CodeIncorrectUsername: 401,
 	CodeInvalidInput:      400,
@@ -30,5 +32,5 @@ var APIErrorCodeStatusMap = map[APIErrorCode]int{
 }
 
 type APIErrorCodesMixin struct {
-	Code APIErrorCode `json:"code" enum:"CONFLICT,DATABASE_ERROR,INCORRECT_PASSWORD,INCORRECT_USERNAME,INVALID_INPUT,INVALID_TOKEN,NOT_FOUND,SERVER_NOT_SETUP,TOO_LONG,TOO_SHORT,UNKNOWN"`
+	Code APIErrorCode `json:"code" enum:"CONFLICT,DATABASE_ERROR,FORBIDDEN,INCORRECT_PASSWORD,INCORRECT_USERNAME,INVALID_INPUT,INVALID_TOKEN,NOT_FOUND,SERVER_NOT_SETUP,TOO_LONG,TOO_SHORT,UNKNOWN"`
 }

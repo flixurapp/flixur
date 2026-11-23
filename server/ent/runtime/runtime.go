@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"forge.xela.codes/xela/flixur/ent/schema"
+	"forge.xela.codes/xela/flixur/ent/serversetting"
 	"forge.xela.codes/xela/flixur/ent/settingprofile"
 	"forge.xela.codes/xela/flixur/ent/settingvalue"
 	"forge.xela.codes/xela/flixur/ent/user"
@@ -17,6 +18,25 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	serversettingMixin := schema.ServerSetting{}.Mixin()
+	serversettingMixinFields0 := serversettingMixin[0].Fields()
+	_ = serversettingMixinFields0
+	serversettingFields := schema.ServerSetting{}.Fields()
+	_ = serversettingFields
+	// serversettingDescSettingID is the schema descriptor for setting_id field.
+	serversettingDescSettingID := serversettingFields[0].Descriptor()
+	// serversetting.SettingIDValidator is a validator for the "setting_id" field. It is called by the builders before save.
+	serversetting.SettingIDValidator = serversettingDescSettingID.Validators[0].(func(string) error)
+	// serversettingDescUpdatedAt is the schema descriptor for updated_at field.
+	serversettingDescUpdatedAt := serversettingFields[2].Descriptor()
+	// serversetting.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	serversetting.DefaultUpdatedAt = serversettingDescUpdatedAt.Default.(func() time.Time)
+	// serversetting.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	serversetting.UpdateDefaultUpdatedAt = serversettingDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// serversettingDescID is the schema descriptor for id field.
+	serversettingDescID := serversettingMixinFields0[0].Descriptor()
+	// serversetting.DefaultID holds the default value on creation for the id field.
+	serversetting.DefaultID = serversettingDescID.Default.(func() string)
 	settingprofileMixin := schema.SettingProfile{}.Mixin()
 	settingprofileMixinFields0 := settingprofileMixin[0].Fields()
 	_ = settingprofileMixinFields0

@@ -21,6 +21,7 @@ type errCode struct {
 var errorCodeList = []errCode{
 	{"CONFLICT", http.StatusConflict},
 	{"DATABASE_ERROR", http.StatusInternalServerError},
+	{"FORBIDDEN", http.StatusForbidden},
 	{"INCORRECT_PASSWORD", http.StatusUnauthorized},
 	{"INCORRECT_USERNAME", http.StatusUnauthorized},
 	{"INVALID_INPUT", http.StatusBadRequest},

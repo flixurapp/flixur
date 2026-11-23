@@ -77,27 +77,27 @@ func (Feature) EnumDescriptor() ([]byte, []int) {
 	return file_plugins_proto_rawDescGZIP(), []int{0}
 }
 
-// Empty message for RPC calls that don't require input.
-type EmptyRequest struct {
+// Sent by the server to initialize a plugin right after connecting.
+type InitRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *EmptyRequest) Reset() {
-	*x = EmptyRequest{}
+func (x *InitRequest) Reset() {
+	*x = InitRequest{}
 	mi := &file_plugins_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *EmptyRequest) String() string {
+func (x *InitRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*EmptyRequest) ProtoMessage() {}
+func (*InitRequest) ProtoMessage() {}
 
-func (x *EmptyRequest) ProtoReflect() protoreflect.Message {
+func (x *InitRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_plugins_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -109,23 +109,174 @@ func (x *EmptyRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EmptyRequest.ProtoReflect.Descriptor instead.
-func (*EmptyRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use InitRequest.ProtoReflect.Descriptor instead.
+func (*InitRequest) Descriptor() ([]byte, []int) {
 	return file_plugins_proto_rawDescGZIP(), []int{0}
+}
+
+// The plugin's response to the init handshake.
+type InitResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Settings groups registered by this plugin.
+	// IDs are relative to the plugin, the server keeps them under `server.plugins.<plugin id>`.
+	Groups []*SettingsGroup `protobuf:"bytes,1,rep,name=groups,proto3" json:"groups,omitempty"`
+	// Setting definitions registered by this plugin.
+	// IDs are relative to the plugin, the server keeps them under `server.plugins.<plugin id>`.
+	Definitions   []*SettingsDefinition `protobuf:"bytes,2,rep,name=definitions,proto3" json:"definitions,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *InitResponse) Reset() {
+	*x = InitResponse{}
+	mi := &file_plugins_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *InitResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*InitResponse) ProtoMessage() {}
+
+func (x *InitResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_plugins_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use InitResponse.ProtoReflect.Descriptor instead.
+func (*InitResponse) Descriptor() ([]byte, []int) {
+	return file_plugins_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *InitResponse) GetGroups() []*SettingsGroup {
+	if x != nil {
+		return x.Groups
+	}
+	return nil
+}
+
+func (x *InitResponse) GetDefinitions() []*SettingsDefinition {
+	if x != nil {
+		return x.Definitions
+	}
+	return nil
+}
+
+// A full snapshot of a plugin's current setting values.
+type SettingsUpdateRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Current setting overrides keyed by fully-scoped setting ID.
+	// Values are JSON-encoded text, settings without an entry use their default.
+	Values        map[string]string `protobuf:"bytes,1,rep,name=values,proto3" json:"values" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SettingsUpdateRequest) Reset() {
+	*x = SettingsUpdateRequest{}
+	mi := &file_plugins_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SettingsUpdateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SettingsUpdateRequest) ProtoMessage() {}
+
+func (x *SettingsUpdateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_plugins_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SettingsUpdateRequest.ProtoReflect.Descriptor instead.
+func (*SettingsUpdateRequest) Descriptor() ([]byte, []int) {
+	return file_plugins_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *SettingsUpdateRequest) GetValues() map[string]string {
+	if x != nil {
+		return x.Values
+	}
+	return nil
+}
+
+type SettingsUpdateResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SettingsUpdateResponse) Reset() {
+	*x = SettingsUpdateResponse{}
+	mi := &file_plugins_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SettingsUpdateResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SettingsUpdateResponse) ProtoMessage() {}
+
+func (x *SettingsUpdateResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_plugins_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SettingsUpdateResponse.ProtoReflect.Descriptor instead.
+func (*SettingsUpdateResponse) Descriptor() ([]byte, []int) {
+	return file_plugins_proto_rawDescGZIP(), []int{3}
 }
 
 var File_plugins_proto protoreflect.FileDescriptor
 
 const file_plugins_proto_rawDesc = "" +
 	"\n" +
-	"\rplugins.proto\x12\x0eflixur.plugins\x1a\x14music_features.proto\"\x0e\n" +
-	"\fEmptyRequest*s\n" +
+	"\rplugins.proto\x12\x0eflixur.plugins\x1a\x14music_features.proto\x1a\x0esettings.proto\"\r\n" +
+	"\vInitRequest\"\x8d\x01\n" +
+	"\fInitResponse\x126\n" +
+	"\x06groups\x18\x01 \x03(\v2\x1e.flixur.settings.SettingsGroupR\x06groups\x12E\n" +
+	"\vdefinitions\x18\x02 \x03(\v2#.flixur.settings.SettingsDefinitionR\vdefinitions\"\x9d\x01\n" +
+	"\x15SettingsUpdateRequest\x12I\n" +
+	"\x06values\x18\x01 \x03(\v21.flixur.plugins.SettingsUpdateRequest.ValuesEntryR\x06values\x1a9\n" +
+	"\vValuesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x18\n" +
+	"\x16SettingsUpdateResponse*s\n" +
 	"\aFeature\x12\x17\n" +
 	"\x13FEATURE_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16FEATURE_MUSIC_METADATA\x10\x01\x12\x19\n" +
 	"\x15FEATURE_ARTIST_COVERS\x10\x02\x12\x18\n" +
-	"\x14FEATURE_ALBUM_COVERS\x10\x032\xcd\x05\n" +
-	"\x13FlixurPluginService\x12^\n" +
+	"\x14FEATURE_ALBUM_COVERS\x10\x032\xf1\x06\n" +
+	"\x13FlixurPluginService\x12A\n" +
+	"\x04Init\x12\x1b.flixur.plugins.InitRequest\x1a\x1c.flixur.plugins.InitResponse\x12_\n" +
+	"\x0eSettingsUpdate\x12%.flixur.plugins.SettingsUpdateRequest\x1a&.flixur.plugins.SettingsUpdateResponse\x12^\n" +
 	"\tArtistGet\x12'.flixur.music_features.ArtistGetRequest\x1a(.flixur.music_features.ArtistGetResponse\x12g\n" +
 	"\fArtistSearch\x12*.flixur.music_features.ArtistSearchRequest\x1a+.flixur.music_features.ArtistSearchResponse\x12[\n" +
 	"\bAlbumGet\x12&.flixur.music_features.AlbumGetRequest\x1a'.flixur.music_features.AlbumGetResponse\x12d\n" +
@@ -147,45 +298,58 @@ func file_plugins_proto_rawDescGZIP() []byte {
 }
 
 var file_plugins_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_plugins_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_plugins_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_plugins_proto_goTypes = []any{
-	(Feature)(0),                 // 0: flixur.plugins.Feature
-	(*EmptyRequest)(nil),         // 1: flixur.plugins.EmptyRequest
-	(*ArtistGetRequest)(nil),     // 2: flixur.music_features.ArtistGetRequest
-	(*ArtistSearchRequest)(nil),  // 3: flixur.music_features.ArtistSearchRequest
-	(*AlbumGetRequest)(nil),      // 4: flixur.music_features.AlbumGetRequest
-	(*AlbumSearchRequest)(nil),   // 5: flixur.music_features.AlbumSearchRequest
-	(*TrackGetRequest)(nil),      // 6: flixur.music_features.TrackGetRequest
-	(*TrackSearchRequest)(nil),   // 7: flixur.music_features.TrackSearchRequest
-	(*ArtistCoversRequest)(nil),  // 8: flixur.music_features.ArtistCoversRequest
-	(*ArtistGetResponse)(nil),    // 9: flixur.music_features.ArtistGetResponse
-	(*ArtistSearchResponse)(nil), // 10: flixur.music_features.ArtistSearchResponse
-	(*AlbumGetResponse)(nil),     // 11: flixur.music_features.AlbumGetResponse
-	(*AlbumSearchResponse)(nil),  // 12: flixur.music_features.AlbumSearchResponse
-	(*TrackGetResponse)(nil),     // 13: flixur.music_features.TrackGetResponse
-	(*TrackSearchResponse)(nil),  // 14: flixur.music_features.TrackSearchResponse
-	(*ArtistCoversResponse)(nil), // 15: flixur.music_features.ArtistCoversResponse
+	(Feature)(0),                   // 0: flixur.plugins.Feature
+	(*InitRequest)(nil),            // 1: flixur.plugins.InitRequest
+	(*InitResponse)(nil),           // 2: flixur.plugins.InitResponse
+	(*SettingsUpdateRequest)(nil),  // 3: flixur.plugins.SettingsUpdateRequest
+	(*SettingsUpdateResponse)(nil), // 4: flixur.plugins.SettingsUpdateResponse
+	nil,                            // 5: flixur.plugins.SettingsUpdateRequest.ValuesEntry
+	(*SettingsGroup)(nil),          // 6: flixur.settings.SettingsGroup
+	(*SettingsDefinition)(nil),     // 7: flixur.settings.SettingsDefinition
+	(*ArtistGetRequest)(nil),       // 8: flixur.music_features.ArtistGetRequest
+	(*ArtistSearchRequest)(nil),    // 9: flixur.music_features.ArtistSearchRequest
+	(*AlbumGetRequest)(nil),        // 10: flixur.music_features.AlbumGetRequest
+	(*AlbumSearchRequest)(nil),     // 11: flixur.music_features.AlbumSearchRequest
+	(*TrackGetRequest)(nil),        // 12: flixur.music_features.TrackGetRequest
+	(*TrackSearchRequest)(nil),     // 13: flixur.music_features.TrackSearchRequest
+	(*ArtistCoversRequest)(nil),    // 14: flixur.music_features.ArtistCoversRequest
+	(*ArtistGetResponse)(nil),      // 15: flixur.music_features.ArtistGetResponse
+	(*ArtistSearchResponse)(nil),   // 16: flixur.music_features.ArtistSearchResponse
+	(*AlbumGetResponse)(nil),       // 17: flixur.music_features.AlbumGetResponse
+	(*AlbumSearchResponse)(nil),    // 18: flixur.music_features.AlbumSearchResponse
+	(*TrackGetResponse)(nil),       // 19: flixur.music_features.TrackGetResponse
+	(*TrackSearchResponse)(nil),    // 20: flixur.music_features.TrackSearchResponse
+	(*ArtistCoversResponse)(nil),   // 21: flixur.music_features.ArtistCoversResponse
 }
 var file_plugins_proto_depIdxs = []int32{
-	2,  // 0: flixur.plugins.FlixurPluginService.ArtistGet:input_type -> flixur.music_features.ArtistGetRequest
-	3,  // 1: flixur.plugins.FlixurPluginService.ArtistSearch:input_type -> flixur.music_features.ArtistSearchRequest
-	4,  // 2: flixur.plugins.FlixurPluginService.AlbumGet:input_type -> flixur.music_features.AlbumGetRequest
-	5,  // 3: flixur.plugins.FlixurPluginService.AlbumSearch:input_type -> flixur.music_features.AlbumSearchRequest
-	6,  // 4: flixur.plugins.FlixurPluginService.TrackGet:input_type -> flixur.music_features.TrackGetRequest
-	7,  // 5: flixur.plugins.FlixurPluginService.TrackSearch:input_type -> flixur.music_features.TrackSearchRequest
-	8,  // 6: flixur.plugins.FlixurPluginService.ArtistCovers:input_type -> flixur.music_features.ArtistCoversRequest
-	9,  // 7: flixur.plugins.FlixurPluginService.ArtistGet:output_type -> flixur.music_features.ArtistGetResponse
-	10, // 8: flixur.plugins.FlixurPluginService.ArtistSearch:output_type -> flixur.music_features.ArtistSearchResponse
-	11, // 9: flixur.plugins.FlixurPluginService.AlbumGet:output_type -> flixur.music_features.AlbumGetResponse
-	12, // 10: flixur.plugins.FlixurPluginService.AlbumSearch:output_type -> flixur.music_features.AlbumSearchResponse
-	13, // 11: flixur.plugins.FlixurPluginService.TrackGet:output_type -> flixur.music_features.TrackGetResponse
-	14, // 12: flixur.plugins.FlixurPluginService.TrackSearch:output_type -> flixur.music_features.TrackSearchResponse
-	15, // 13: flixur.plugins.FlixurPluginService.ArtistCovers:output_type -> flixur.music_features.ArtistCoversResponse
-	7,  // [7:14] is the sub-list for method output_type
-	0,  // [0:7] is the sub-list for method input_type
-	0,  // [0:0] is the sub-list for extension type_name
-	0,  // [0:0] is the sub-list for extension extendee
-	0,  // [0:0] is the sub-list for field type_name
+	6,  // 0: flixur.plugins.InitResponse.groups:type_name -> flixur.settings.SettingsGroup
+	7,  // 1: flixur.plugins.InitResponse.definitions:type_name -> flixur.settings.SettingsDefinition
+	5,  // 2: flixur.plugins.SettingsUpdateRequest.values:type_name -> flixur.plugins.SettingsUpdateRequest.ValuesEntry
+	1,  // 3: flixur.plugins.FlixurPluginService.Init:input_type -> flixur.plugins.InitRequest
+	3,  // 4: flixur.plugins.FlixurPluginService.SettingsUpdate:input_type -> flixur.plugins.SettingsUpdateRequest
+	8,  // 5: flixur.plugins.FlixurPluginService.ArtistGet:input_type -> flixur.music_features.ArtistGetRequest
+	9,  // 6: flixur.plugins.FlixurPluginService.ArtistSearch:input_type -> flixur.music_features.ArtistSearchRequest
+	10, // 7: flixur.plugins.FlixurPluginService.AlbumGet:input_type -> flixur.music_features.AlbumGetRequest
+	11, // 8: flixur.plugins.FlixurPluginService.AlbumSearch:input_type -> flixur.music_features.AlbumSearchRequest
+	12, // 9: flixur.plugins.FlixurPluginService.TrackGet:input_type -> flixur.music_features.TrackGetRequest
+	13, // 10: flixur.plugins.FlixurPluginService.TrackSearch:input_type -> flixur.music_features.TrackSearchRequest
+	14, // 11: flixur.plugins.FlixurPluginService.ArtistCovers:input_type -> flixur.music_features.ArtistCoversRequest
+	2,  // 12: flixur.plugins.FlixurPluginService.Init:output_type -> flixur.plugins.InitResponse
+	4,  // 13: flixur.plugins.FlixurPluginService.SettingsUpdate:output_type -> flixur.plugins.SettingsUpdateResponse
+	15, // 14: flixur.plugins.FlixurPluginService.ArtistGet:output_type -> flixur.music_features.ArtistGetResponse
+	16, // 15: flixur.plugins.FlixurPluginService.ArtistSearch:output_type -> flixur.music_features.ArtistSearchResponse
+	17, // 16: flixur.plugins.FlixurPluginService.AlbumGet:output_type -> flixur.music_features.AlbumGetResponse
+	18, // 17: flixur.plugins.FlixurPluginService.AlbumSearch:output_type -> flixur.music_features.AlbumSearchResponse
+	19, // 18: flixur.plugins.FlixurPluginService.TrackGet:output_type -> flixur.music_features.TrackGetResponse
+	20, // 19: flixur.plugins.FlixurPluginService.TrackSearch:output_type -> flixur.music_features.TrackSearchResponse
+	21, // 20: flixur.plugins.FlixurPluginService.ArtistCovers:output_type -> flixur.music_features.ArtistCoversResponse
+	12, // [12:21] is the sub-list for method output_type
+	3,  // [3:12] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_plugins_proto_init() }
@@ -194,13 +358,14 @@ func file_plugins_proto_init() {
 		return
 	}
 	file_music_features_proto_init()
+	file_settings_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_plugins_proto_rawDesc), len(file_plugins_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   1,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

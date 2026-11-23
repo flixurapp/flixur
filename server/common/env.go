@@ -52,6 +52,10 @@ type config struct {
 	// If TrustProxy is enabled, the comma-separated list of CIDRs to trust. Defaults to all trusted.
 	TrustedProxyCIDRs ipCIDRs `env:"TRUSTED_PROXY_CIDRS" envSeparator:","`
 
+	// Hex-encoded 32-byte key used to encrypt server setting secrets.
+	// Required to encrypt secret values. Omit to not encrypt secrets.
+	SettingsKey string `env:"SETTINGS_KEY"`
+
 	/* These are more for development and not really for configuring the server itself. */
 	// Runs the server in development mode, some features may act differently.
 	DevelopmentMode bool `env:"DEVELOPMENT_MODE" envDefault:"false"`

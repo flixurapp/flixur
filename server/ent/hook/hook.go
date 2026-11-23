@@ -9,6 +9,18 @@ import (
 	"forge.xela.codes/xela/flixur/ent"
 )
 
+// The ServerSettingFunc type is an adapter to allow the use of ordinary
+// function as ServerSetting mutator.
+type ServerSettingFunc func(context.Context, *ent.ServerSettingMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ServerSettingFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ServerSettingMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ServerSettingMutation", m)
+}
+
 // The SettingProfileFunc type is an adapter to allow the use of ordinary
 // function as SettingProfile mutator.
 type SettingProfileFunc func(context.Context, *ent.SettingProfileMutation) (ent.Value, error)

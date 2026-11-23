@@ -1,14 +1,23 @@
 package plugins
 
 import (
+	"context"
 	"errors"
 	"os"
 	"path/filepath"
 	"testing"
 
+	"forge.xela.codes/xela/flixur/common"
+	"forge.xela.codes/xela/flixur/ent/enttest"
 	"forge.xela.codes/xela/flixur/pluginkit"
 	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
+	"forge.xela.codes/xela/flixur/pluginkit/settings"
+	serverSettings "forge.xela.codes/xela/flixur/settings"
 	"github.com/hashicorp/go-plugin"
+	_ "github.com/mattn/go-sqlite3"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // mockClientProtocol implements plugin.ClientProtocol for tests.
@@ -24,14 +33,36 @@ func (m *mockClientProtocol) Ping() error { return nil }
 
 type mockFlixurPlugin struct {
 	pb.FlixurPluginServiceClient
+	initResp  *pb.InitResponse
+	initErr   error
+	initCalls int
+	// recorded settings snapshots
+	updates   []*pb.SettingsUpdateRequest
+	updateErr error
 }
 
 var _ pb.FlixurPluginServiceClient = (*mockFlixurPlugin)(nil)
 
+func (m *mockFlixurPlugin) Init(ctx context.Context, req *pb.InitRequest, _ ...grpc.CallOption) (*pb.InitResponse, error) {
+	m.initCalls++
+	if m.initResp == nil && m.initErr == nil {
+		return nil, status.Error(codes.Unimplemented, "not implemented")
+	}
+	return m.initResp, m.initErr
+}
+
+func (m *mockFlixurPlugin) SettingsUpdate(ctx context.Context, req *pb.SettingsUpdateRequest, _ ...grpc.CallOption) (*pb.SettingsUpdateResponse, error) {
+	m.updates = append(m.updates, req)
+	if m.updateErr != nil {
+		return nil, m.updateErr
+	}
+	return &pb.SettingsUpdateResponse{}, nil
+}
+
 func TestRegisterPluginsMissingDir(t *testing.T) {
 	resetPlugins(t, map[string]*Plugin{})
 
-	RegisterPlugins("/definitely/does/not/exist")
+	RegisterPlugins("/definitely/does/not/exist", nil)
 	if len(Plugins) != 0 {
 		t.Errorf("expected no plugins, got %d", len(Plugins))
 	}
@@ -63,7 +94,7 @@ func TestRegisterPluginsOnlyLoadsJSON(t *testing.T) {
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
-	RegisterPlugins(dir)
+	RegisterPlugins(dir, nil)
 	if len(got) != 1 || got[0] != "/tmp/bar" {
 		t.Errorf("expected factory to only be called for bar.json with /tmp/bar, got %v", got)
 	}
@@ -84,7 +115,7 @@ func TestRegisterPluginsInvalidJSON(t *testing.T) {
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
-	RegisterPlugins(dir)
+	RegisterPlugins(dir, nil)
 	if len(Plugins) != 0 {
 		t.Errorf("expected no plugins, got %d", len(Plugins))
 	}
@@ -111,7 +142,7 @@ func TestRegisterPluginsDuplicateID(t *testing.T) {
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
-	RegisterPlugins(dir)
+	RegisterPlugins(dir, nil)
 	if len(Plugins) != 1 {
 		t.Errorf("expected 1 plugin, got %d", len(Plugins))
 	}
@@ -129,7 +160,7 @@ func TestInitPluginClientError(t *testing.T) {
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
-	InitPlugin(&pluginkit.PluginManifest{Id: "x", Binary: "/tmp/fake"})
+	InitPlugin(&pluginkit.PluginManifest{Id: "x", Binary: "/tmp/fake"}, nil)
 	if len(Plugins) != 0 {
 		t.Errorf("expected no plugins, got %d", len(Plugins))
 	}
@@ -150,7 +181,7 @@ func TestInitPluginDispenseError(t *testing.T) {
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
-	InitPlugin(&pluginkit.PluginManifest{Id: "x", Binary: "/tmp/fake"})
+	InitPlugin(&pluginkit.PluginManifest{Id: "x", Binary: "/tmp/fake"}, nil)
 	if len(Plugins) != 0 {
 		t.Errorf("expected no plugins, got %d", len(Plugins))
 	}
@@ -166,7 +197,7 @@ func TestInitPluginMissingBinary(t *testing.T) {
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
-	InitPlugin(&pluginkit.PluginManifest{Id: "x"})
+	InitPlugin(&pluginkit.PluginManifest{Id: "x"}, nil)
 	if len(Plugins) != 0 {
 		t.Errorf("expected no plugins, got %d", len(Plugins))
 	}
@@ -189,7 +220,7 @@ func TestInitPluginDuplicateID(t *testing.T) {
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
-	InitPlugin(&pluginkit.PluginManifest{Id: "existing", Binary: "/tmp/fake"})
+	InitPlugin(&pluginkit.PluginManifest{Id: "existing", Binary: "/tmp/fake"}, nil)
 	if len(Plugins) != 1 {
 		t.Errorf("expected 1 plugin, got %d", len(Plugins))
 	}
@@ -212,7 +243,7 @@ func TestInitPluginSuccess(t *testing.T) {
 	}
 	defer func() { pluginClientFactory = oldFactory }()
 
-	InitPlugin(&pluginkit.PluginManifest{Id: "new", Binary: "/tmp/fake"})
+	InitPlugin(&pluginkit.PluginManifest{Id: "new", Binary: "/tmp/fake"}, nil)
 	if len(Plugins) != 1 {
 		t.Fatalf("expected 1 plugin, got %d", len(Plugins))
 	}
@@ -222,6 +253,140 @@ func TestInitPluginSuccess(t *testing.T) {
 	Plugins["new"].destroy()
 	if !killed {
 		t.Error("expected destroy to call Kill")
+	}
+}
+
+// Swaps the server registry for a fresh one for the duration of the test.
+func resetServerRegistry(t *testing.T) {
+	t.Helper()
+	old := serverSettings.ServerRegistry
+	serverSettings.ServerRegistry = serverSettings.NewServerRegistry()
+	t.Cleanup(func() { serverSettings.ServerRegistry = old })
+}
+
+// Creates a test plugin whose mock RPC is configured by the caller.
+func mockPlugin(t *testing.T, id string, configure func(*mockFlixurPlugin)) (killed *bool) {
+	t.Helper()
+	resetPlugins(t, map[string]*Plugin{})
+	resetServerRegistry(t)
+
+	wasKilled := false
+	killed = &wasKilled
+	mock := &mockFlixurPlugin{}
+	if configure != nil {
+		configure(mock)
+	}
+	oldFactory := pluginClientFactory
+	pluginClientFactory = func(bin string) pluginClient {
+		return &mockPluginClient{
+			killFunc: func() { *killed = true },
+			proto: &mockClientProtocol{
+				dispense: func(string) (any, error) {
+					return mock, nil
+				},
+			},
+		}
+	}
+	t.Cleanup(func() { pluginClientFactory = oldFactory })
+	return killed
+}
+
+func TestInitPluginSettingsRegistered(t *testing.T) {
+	killed := mockPlugin(t, "settingsplugin", func(m *mockFlixurPlugin) {
+		m.initResp = settings.Snapshot(func() *settings.Registry {
+			reg := settings.NewRegistry()
+			reg.RegisterGroup(settings.Group("cache").Icon("mdi:cache").Order(1))
+			reg.Register(settings.Bool("cache.enabled", true).Order(1))
+			reg.Register(settings.String("cache.key", "").Secret(true).Order(2))
+			return reg
+		}())
+	})
+
+	InitPlugin(&pluginkit.PluginManifest{Id: "settingsplugin", Binary: "/tmp/fake", Icon: "mdi:rock"}, nil)
+	if *killed {
+		t.Fatal("plugin was killed")
+	}
+
+	def := serverSettings.ServerRegistry.Find("server.plugins.settingsplugin.cache.enabled")
+	if def == nil || def.Bool == nil || !def.Bool.DefaultValue {
+		t.Fatalf("definition not namespaced correctly: %+v", def)
+	}
+	if serverSettings.ServerRegistry.FindGroup("server.plugins") == nil {
+		t.Error("auto-created server.plugins group missing")
+	}
+	pluginGroup := serverSettings.ServerRegistry.FindGroup("server.plugins.settingsplugin")
+	if pluginGroup == nil || pluginGroup.Icon == nil || *pluginGroup.Icon != "mdi:rock" {
+		t.Errorf("plugin group = %+v", pluginGroup)
+	}
+}
+
+func TestInitPluginSettingsErrorKillsPlugin(t *testing.T) {
+	t.Run("invalid definition", func(t *testing.T) {
+		killed := mockPlugin(t, "brokenplugin", func(m *mockFlixurPlugin) {
+			// definition without its group
+			m.initResp = &pb.InitResponse{
+				Definitions: []*pb.SettingsDefinition{settings.Bool("orphan.setting", true).SettingsDefinition},
+			}
+		})
+
+		InitPlugin(&pluginkit.PluginManifest{Id: "brokenplugin", Binary: "/tmp/fake"}, nil)
+		if len(Plugins) != 0 {
+			t.Error("broken plugin was still registered")
+		}
+		if !*killed {
+			t.Error("broken plugin was not killed")
+		}
+	})
+
+	t.Run("handshake error", func(t *testing.T) {
+		killed := mockPlugin(t, "errplugin", func(m *mockFlixurPlugin) {
+			m.initErr = status.Error(codes.Internal, "boom")
+		})
+
+		InitPlugin(&pluginkit.PluginManifest{Id: "errplugin", Binary: "/tmp/fake"}, nil)
+		if len(Plugins) != 0 {
+			t.Error("failing plugin was still registered")
+		}
+		if !*killed {
+			t.Error("failing plugin was not killed")
+		}
+	})
+}
+
+func TestInitPluginSettingsValuePush(t *testing.T) {
+	client := enttest.Open(t, "sqlite3", common.TestDSN(t))
+	t.Cleanup(func() { client.Close() })
+
+	var mock *mockFlixurPlugin
+	killed := mockPlugin(t, "valuesplugin", func(m *mockFlixurPlugin) {
+		mock = m
+		m.initResp = settings.Snapshot(func() *settings.Registry {
+			reg := settings.NewRegistry()
+			reg.RegisterGroup(settings.Group("cache"))
+			reg.Register(settings.Int("cache.size", 10).Order(1))
+			return reg
+		}())
+	})
+
+	// store a value for the plugin to receive
+	ctx := context.Background()
+	if _, err := client.ServerSetting.Create().
+		SetSettingID("server.plugins.valuesplugin.cache.size").
+		SetValue(serverSettings.SettingText{Raw: "42"}).
+		Save(ctx); err != nil {
+		t.Fatal(err)
+	}
+
+	InitPlugin(&pluginkit.PluginManifest{Id: "valuesplugin", Binary: "/tmp/fake"}, client)
+	if *killed {
+		t.Fatal("plugin was killed")
+	}
+	if len(mock.updates) != 1 {
+		t.Fatalf("expected 1 settings push, got %d", len(mock.updates))
+	}
+	snapshot := mock.updates[0]
+	if got := snapshot.Values["server.plugins.valuesplugin.cache.size"]; got != "42" {
+		t.Errorf("pushed values = %v", snapshot.Values)
 	}
 }
 
