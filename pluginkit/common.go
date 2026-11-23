@@ -80,8 +80,6 @@ var HandshakeConfig = plugin.HandshakeConfig{
 	MagicCookieValue: "i am REAL",
 }
 
-type FlixurPlugin = pb.FlixurPluginServiceClient
-
 // The go-plugin wrapper that handles gRPC communication.
 type FlixurGRPCPlugin struct {
 	plugin.NetRPCUnsupportedPlugin

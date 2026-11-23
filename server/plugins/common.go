@@ -10,7 +10,7 @@ import (
 
 type Plugin struct {
 	Manifest *pluginkit.PluginManifest
-	RPC      pluginkit.FlixurPlugin
+	RPC      pb.FlixurPluginServiceClient
 	destroy  func()
 }
 

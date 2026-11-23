@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"forge.xela.codes/xela/flixur/pluginkit"
+	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
 	"github.com/rs/zerolog"
@@ -106,7 +107,7 @@ func initPlugin(manifest *pluginkit.PluginManifest, factory func(string) pluginC
 		return
 	}
 
-	flixurPlugin := raw.(pluginkit.FlixurPlugin)
+	flixurPlugin := raw.(pb.FlixurPluginServiceClient)
 
 	// Check if plugin with same ID already exists
 	if FindPluginByID(manifest.Id) != nil {

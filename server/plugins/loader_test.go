@@ -26,7 +26,7 @@ type mockFlixurPlugin struct {
 	pb.FlixurPluginServiceClient
 }
 
-var _ pluginkit.FlixurPlugin = (*mockFlixurPlugin)(nil)
+var _ pb.FlixurPluginServiceClient = (*mockFlixurPlugin)(nil)
 
 func TestRegisterPluginsMissingDir(t *testing.T) {
 	resetPlugins(t, map[string]*Plugin{})
