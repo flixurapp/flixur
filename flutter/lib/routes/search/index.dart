@@ -1,3 +1,4 @@
+import "package:dio/dio.dart";
 import "package:flixur/api.dart";
 import "package:flixur/hooks.dart";
 import "package:flixur/settings.dart";
@@ -24,8 +25,18 @@ class const SearchView({super.key}) extends HookWidget {
       return () => rootTapSignal.removeListener(searchFocus.requestFocus);
     }, [rootTapSignal]);
 
-    final searchFuture = useState<Future<ApiResult<ArtistSearchBody>>?>(null);
-    final results = useFuture(searchFuture.value);
+    final searchFuture =
+        useState<
+          ({Future<ApiResult<ArtistSearchBody>> future, VoidCallback cancel})?
+        >(null);
+    final results = useFuture(searchFuture.value?.future);
+
+    // cancel search when leaving the view
+    useEffect(
+      () =>
+          () => searchFuture.value?.cancel(),
+      const [],
+    );
 
     return ListView(
       children: [
@@ -34,19 +45,27 @@ class const SearchView({super.key}) extends HookWidget {
           focusNode: searchFocus,
           onChanged: (value) {
             if (value.isEmpty) {
+              searchDebounce.cancel();
+              searchFuture.value?.cancel();
               searchFuture.value = null;
               return;
             }
 
             searchDebounce.run(() {
-              searchFuture.value = Api.request(
-                (a) => a.getArtistsApi().searchArtists(
-                  searchArtistsRequest: .new(
-                    (req) => req
-                      ..query = value
-                      ..plugin = "musicbrainz",
+              searchFuture.value?.cancel();
+              final cancelToken = CancelToken();
+              searchFuture.value = (
+                future: Api.request(
+                  (a) => a.getArtistsApi().searchArtists(
+                    searchArtistsRequest: .new(
+                      (req) => req
+                        ..query = value
+                        ..plugin = "musicbrainz",
+                    ),
+                    cancelToken: cancelToken,
                   ),
                 ),
+                cancel: cancelToken.cancel,
               );
             });
           },
