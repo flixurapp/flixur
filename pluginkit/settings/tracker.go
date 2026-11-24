@@ -49,8 +49,6 @@ func (t *SettingsTracker) All() map[string]string {
 	t.mutex.RLock()
 	defer t.mutex.RUnlock()
 	values := make(map[string]string, len(t.values))
-	for id, value := range t.values {
-		values[id] = value
-	}
+	maps.Copy(values, t.values)
 	return values
 }
