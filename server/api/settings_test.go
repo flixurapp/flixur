@@ -2,12 +2,14 @@
 package api
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"reflect"
 	"strings"
 	"testing"
 
+	"forge.xela.codes/xela/flixur/common"
 	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 	"forge.xela.codes/xela/flixur/settings"
 	"github.com/danielgtaylor/huma/v2/humatest"
@@ -282,5 +284,56 @@ func TestSettingsProfileValues(t *testing.T) {
 	resp = api.Get("/settings/profiles/unknown123/values", authHeaders(token)...)
 	if resp.Code != http.StatusNotFound {
 		t.Errorf("unknown profile status = %d", resp.Code)
+	}
+}
+
+// Client settings marked secret are encrypted at rest.
+// API should still return plaintext.
+func TestSettingsProfileSecretStorage(t *testing.T) {
+	api, token := setupSettingsTest(t)
+	resetConfig(t)
+	common.Config.SettingsKey = strings.Repeat("ab", 32)
+
+	// the client registry ships a secret string setting
+	const secretID = "ui.navigation.testing.str_secret"
+	def := settings.ClientRegistry.Find(secretID)
+	if def == nil || !def.IsSecret() {
+		t.Fatalf("missing secret test setting %s", secretID)
+	}
+
+	// grab the default profile
+	resp := api.Get("/settings/profiles", authHeaders(token)...)
+	profiles := decode[SettingsProfilesBody](t, resp)
+	profileID := profiles.List[0].ID
+
+	// the value comes back decrypted so it can be edited by clients
+	resp = api.Put("/settings/profiles/"+profileID+"/values/"+secretID,
+		append(authHeaders(token), map[string]any{"value": `"super-secret"`})...)
+	if resp.Code != http.StatusOK {
+		t.Fatalf("put status = %d, body = %s", resp.Code, resp.Body.String())
+	}
+	if got := decode[SettingValueEntry](t, resp).Value; got != `"super-secret"` {
+		t.Errorf("response value = %q, want the plaintext", got)
+	}
+	resp = api.Get("/settings/profiles/"+profileID+"/values", authHeaders(token)...)
+	if got := decode[SettingValuesBody](t, resp).Values[secretID].Value; got != `"super-secret"` {
+		t.Errorf("listed value = %q, want the plaintext", got)
+	}
+
+	// ...but the database only holds ciphertext while reads transparently decrypt
+	db, err := sql.Open("sqlite3", common.TestDSN(t))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	var stored string
+	if err := db.QueryRow(`SELECT value FROM setting_values WHERE setting_id = ?`, secretID).Scan(&stored); err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(stored, "super-secret") {
+		t.Error("plaintext leaked into the database")
+	}
+	if plain, err := settings.DecryptSecret(stored); err != nil || plain != `"super-secret"` {
+		t.Errorf("stored value = %q (decrypt: %v), want a round-tripping ciphertext", stored, err)
 	}
 }

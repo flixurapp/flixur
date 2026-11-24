@@ -316,7 +316,7 @@ func RegisterSettingsRoutes(reg APIRegistry) {
 		list := make(map[string]*SettingValueEntry, len(values))
 		for _, item := range values {
 			list[item.SettingID] = &SettingValueEntry{
-				Value:     item.Value,
+				Value:     item.Value.Raw,
 				UpdatedAt: item.UpdatedAt,
 			}
 		}
@@ -360,6 +360,8 @@ func RegisterSettingsRoutes(reg APIRegistry) {
 			return nil, CreateAPIErrorDetail(CodeInvalidInput, "value")
 		}
 
+		text := settings.SettingText{Raw: value, Secret: def.IsSecret()}
+
 		var entry *SettingValueEntry
 
 		// grab an existing override
@@ -378,7 +380,7 @@ func RegisterSettingsRoutes(reg APIRegistry) {
 			// create the override
 			created, err := reg.DB.SettingValue.Create().
 				SetSettingID(input.SettingID).
-				SetValue(value).
+				SetValue(text).
 				SetProfile(profile).
 				Save(ctx)
 			if err != nil {
@@ -386,18 +388,18 @@ func RegisterSettingsRoutes(reg APIRegistry) {
 				return nil, CreateAPIError(CodeDatabaseError)
 			}
 
-			entry = &SettingValueEntry{Value: created.Value, UpdatedAt: created.UpdatedAt}
+			entry = &SettingValueEntry{Value: created.Value.Raw, UpdatedAt: created.UpdatedAt}
 		} else {
 			// otherwise update the existing override
 			updated, err := existing.Update().
-				SetValue(value).
+				SetValue(text).
 				Save(ctx)
 			if err != nil {
 				log.Err(err).Msg("Failed to update setting override.")
 				return nil, CreateAPIError(CodeDatabaseError)
 			}
 
-			entry = &SettingValueEntry{Value: updated.Value, UpdatedAt: updated.UpdatedAt}
+			entry = &SettingValueEntry{Value: updated.Value.Raw, UpdatedAt: updated.UpdatedAt}
 		}
 
 		return CreateOutput(*entry), nil
