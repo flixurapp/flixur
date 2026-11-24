@@ -124,12 +124,16 @@ class _WindowFrameState extends State<WindowFrame> {
       behavior: .opaque,
       child: GatedWidget(
         gate: TitlebarManager.isSupported,
-        wrapper: (child) => ValueListenableBuilder(
-          valueListenable: TitlebarManager.isMaximizedNotifier,
-          builder: (context, maximized, child) => DragToResizeArea(
+        wrapper: (child) => ListenableBuilder(
+          listenable: Listenable.merge([
+            TitlebarManager.isMaximizedNotifier,
+            TitlebarManager.enabledNotifier,
+          ]),
+          builder: (context, child) => DragToResizeArea(
             // only enable resize edges for the custom titlebar
             // while the window isnt maximized
-            enableResizeEdges: TitlebarManager.shouldEnable && !maximized
+            enableResizeEdges:
+                TitlebarManager.shouldEnable && !TitlebarManager.isMaximized
                 ? null
                 : const [],
             child: child!,

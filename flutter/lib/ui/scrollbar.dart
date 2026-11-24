@@ -12,15 +12,19 @@ class const AppScrollBehavior() extends MaterialScrollBehavior {
     Widget child,
     ScrollableDetails details,
   ) {
-    return ValueListenableBuilder(
-      valueListenable: TitlebarManager.isMaximizedNotifier,
-      builder: (context, maximized, child) => AppScrollbar(
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        TitlebarManager.isMaximizedNotifier,
+        TitlebarManager.enabledNotifier,
+      ]),
+      builder: (context, child) => AppScrollbar(
         controller: details.controller,
         // forward bottom padding
         padding: .only(bottom: MediaQuery.paddingOf(context).bottom),
         // pad the scrollbar by the resize edge width so the
         // resize handles dont cover it
-        crossAxisMargin: TitlebarManager.shouldEnable && !maximized
+        crossAxisMargin:
+            TitlebarManager.shouldEnable && !TitlebarManager.isMaximized
             ? TitlebarManager.resizeEdgeSize
             : 0,
         child: child!,
