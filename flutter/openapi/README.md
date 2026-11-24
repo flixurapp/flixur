@@ -74,9 +74,12 @@ Class | Method | HTTP request | Description
 [*SettingsApi*](doc/SettingsApi.md) | [**createSettingsProfile**](doc/SettingsApi.md#createsettingsprofile) | **POST** /settings/profiles | Create Settings Profile
 [*SettingsApi*](doc/SettingsApi.md) | [**deleteSettingsProfile**](doc/SettingsApi.md#deletesettingsprofile) | **DELETE** /settings/profiles/{profile} | Delete Settings Profile
 [*SettingsApi*](doc/SettingsApi.md) | [**getClientSettingsDefinitions**](doc/SettingsApi.md#getclientsettingsdefinitions) | **GET** /settings/definitions | Get Client Settings Definitions
+[*SettingsApi*](doc/SettingsApi.md) | [**getServerSettingsDefinitions**](doc/SettingsApi.md#getserversettingsdefinitions) | **GET** /admin/settings/definitions | Get Server Settings Definitions
+[*SettingsApi*](doc/SettingsApi.md) | [**getServerSettingsValues**](doc/SettingsApi.md#getserversettingsvalues) | **GET** /admin/settings/values | Get Server Settings Values
 [*SettingsApi*](doc/SettingsApi.md) | [**getSettingsProfileValues**](doc/SettingsApi.md#getsettingsprofilevalues) | **GET** /settings/profiles/{profile}/values | Get Settings Profile Values
 [*SettingsApi*](doc/SettingsApi.md) | [**getSettingsProfiles**](doc/SettingsApi.md#getsettingsprofiles) | **GET** /settings/profiles | Get Settings Profiles
 [*SettingsApi*](doc/SettingsApi.md) | [**renameSettingsProfile**](doc/SettingsApi.md#renamesettingsprofile) | **PUT** /settings/profiles/{profile} | Rename Settings Profile
+[*SettingsApi*](doc/SettingsApi.md) | [**updateServerSettingValue**](doc/SettingsApi.md#updateserversettingvalue) | **PUT** /admin/settings/values/{settingID} | Update Server Setting Value
 [*SettingsApi*](doc/SettingsApi.md) | [**updateSettingsProfileValue**](doc/SettingsApi.md#updatesettingsprofilevalue) | **PUT** /settings/profiles/{profile}/values/{settingID} | Update Settings Profile Value
 
 
@@ -86,7 +89,6 @@ Class | Method | HTTP request | Description
  - [Artist](doc/Artist.md)
  - [ArtistSearchBody](doc/ArtistSearchBody.md)
  - [BoolProps](doc/BoolProps.md)
- - [ChoiceSpec](doc/ChoiceSpec.md)
  - [CreateSettingsProfileRequest](doc/CreateSettingsProfileRequest.md)
  - [EnumProps](doc/EnumProps.md)
  - [ErrorDetail](doc/ErrorDetail.md)
@@ -106,12 +108,14 @@ Class | Method | HTTP request | Description
  - [SettingProfileBody](doc/SettingProfileBody.md)
  - [SettingValueEntry](doc/SettingValueEntry.md)
  - [SettingValuesBody](doc/SettingValuesBody.md)
+ - [SettingsChoice](doc/SettingsChoice.md)
  - [SettingsDefinition](doc/SettingsDefinition.md)
  - [SettingsDefinitionsBody](doc/SettingsDefinitionsBody.md)
  - [SettingsGroup](doc/SettingsGroup.md)
  - [SettingsProfilesBody](doc/SettingsProfilesBody.md)
  - [StringListProps](doc/StringListProps.md)
  - [StringProps](doc/StringProps.md)
+ - [UpdateServerSettingValueRequest](doc/UpdateServerSettingValueRequest.md)
  - [UpdateSettingsProfileValueRequest](doc/UpdateSettingsProfileValueRequest.md)
 
 

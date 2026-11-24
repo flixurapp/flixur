@@ -47,7 +47,7 @@ abstract class SettingsDefinition
 
   @BuiltValueField(wireName: r'kind')
   SettingsDefinitionKindEnum get kind;
-  // enum kindEnum {  bool,  int,  float,  string,  enum,  stringlist,  };
+  // enum kindEnum {  enum,  stringlist,  bool,  int,  float,  string,  };
 
   @BuiltValueField(wireName: r'order')
   int get order;
@@ -55,7 +55,7 @@ abstract class SettingsDefinition
   @BuiltValueField(wireName: r'string')
   StringProps? get string;
 
-  @BuiltValueField(wireName: r'stringList')
+  @BuiltValueField(wireName: r'string_list')
   StringListProps? get stringList;
 
   SettingsDefinition._();
@@ -135,7 +135,7 @@ class _$SettingsDefinitionSerializer
       );
     }
     if (object.stringList != null) {
-      yield r'stringList';
+      yield r'string_list';
       yield serializers.serialize(
         object.stringList,
         specifiedType: const FullType(StringListProps),
@@ -227,7 +227,7 @@ class _$SettingsDefinitionSerializer
           if (valueDes == null) continue;
           result.string.replace(valueDes);
           break;
-        case r'stringList':
+        case r'string_list':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType.nullable(StringListProps),
@@ -265,6 +265,12 @@ class _$SettingsDefinitionSerializer
 }
 
 class SettingsDefinitionKindEnum extends EnumClass {
+  @BuiltValueEnumConst(wireName: r'enum')
+  static const SettingsDefinitionKindEnum enum_ =
+      _$settingsDefinitionKindEnum_enum_;
+  @BuiltValueEnumConst(wireName: r'stringlist')
+  static const SettingsDefinitionKindEnum stringlist =
+      _$settingsDefinitionKindEnum_stringlist;
   @BuiltValueEnumConst(wireName: r'bool')
   static const SettingsDefinitionKindEnum bool_ =
       _$settingsDefinitionKindEnum_bool_;
@@ -277,12 +283,6 @@ class SettingsDefinitionKindEnum extends EnumClass {
   @BuiltValueEnumConst(wireName: r'string')
   static const SettingsDefinitionKindEnum string =
       _$settingsDefinitionKindEnum_string;
-  @BuiltValueEnumConst(wireName: r'enum')
-  static const SettingsDefinitionKindEnum enum_ =
-      _$settingsDefinitionKindEnum_enum_;
-  @BuiltValueEnumConst(wireName: r'stringlist')
-  static const SettingsDefinitionKindEnum stringlist =
-      _$settingsDefinitionKindEnum_stringlist;
 
   static Serializer<SettingsDefinitionKindEnum> get serializer =>
       _$settingsDefinitionKindEnumSerializer;

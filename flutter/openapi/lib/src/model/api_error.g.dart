@@ -10,6 +10,8 @@ const APIErrorCodeEnum _$aPIErrorCodeEnum_CONFLICT =
     const APIErrorCodeEnum._('CONFLICT');
 const APIErrorCodeEnum _$aPIErrorCodeEnum_DATABASE_ERROR =
     const APIErrorCodeEnum._('DATABASE_ERROR');
+const APIErrorCodeEnum _$aPIErrorCodeEnum_FORBIDDEN =
+    const APIErrorCodeEnum._('FORBIDDEN');
 const APIErrorCodeEnum _$aPIErrorCodeEnum_INCORRECT_PASSWORD =
     const APIErrorCodeEnum._('INCORRECT_PASSWORD');
 const APIErrorCodeEnum _$aPIErrorCodeEnum_INCORRECT_USERNAME =
@@ -35,6 +37,8 @@ APIErrorCodeEnum _$aPIErrorCodeEnumValueOf(String name) {
       return _$aPIErrorCodeEnum_CONFLICT;
     case 'DATABASE_ERROR':
       return _$aPIErrorCodeEnum_DATABASE_ERROR;
+    case 'FORBIDDEN':
+      return _$aPIErrorCodeEnum_FORBIDDEN;
     case 'INCORRECT_PASSWORD':
       return _$aPIErrorCodeEnum_INCORRECT_PASSWORD;
     case 'INCORRECT_USERNAME':
@@ -62,6 +66,7 @@ final BuiltSet<APIErrorCodeEnum> _$aPIErrorCodeEnumValues =
     BuiltSet<APIErrorCodeEnum>(const <APIErrorCodeEnum>[
   _$aPIErrorCodeEnum_CONFLICT,
   _$aPIErrorCodeEnum_DATABASE_ERROR,
+  _$aPIErrorCodeEnum_FORBIDDEN,
   _$aPIErrorCodeEnum_INCORRECT_PASSWORD,
   _$aPIErrorCodeEnum_INCORRECT_USERNAME,
   _$aPIErrorCodeEnum_INVALID_INPUT,
@@ -81,6 +86,7 @@ class _$APIErrorCodeEnumSerializer
   static const Map<String, Object> _toWire = const <String, Object>{
     'CONFLICT': 'CONFLICT',
     'DATABASE_ERROR': 'DATABASE_ERROR',
+    'FORBIDDEN': 'FORBIDDEN',
     'INCORRECT_PASSWORD': 'INCORRECT_PASSWORD',
     'INCORRECT_USERNAME': 'INCORRECT_USERNAME',
     'INVALID_INPUT': 'INVALID_INPUT',
@@ -94,6 +100,7 @@ class _$APIErrorCodeEnumSerializer
   static const Map<Object, String> _fromWire = const <Object, String>{
     'CONFLICT': 'CONFLICT',
     'DATABASE_ERROR': 'DATABASE_ERROR',
+    'FORBIDDEN': 'FORBIDDEN',
     'INCORRECT_PASSWORD': 'INCORRECT_PASSWORD',
     'INCORRECT_USERNAME': 'INCORRECT_USERNAME',
     'INVALID_INPUT': 'INVALID_INPUT',

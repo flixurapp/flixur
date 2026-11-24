@@ -78,7 +78,7 @@ func resetLoadedPlugins(t *testing.T) {
 func TestServerSettingsRequiredAuth(t *testing.T) {
 	api, _, admin, user := setupServerSettingsTest(t)
 
-	for _, path := range []string{"/settings/server/definitions", "/settings/server/values"} {
+	for _, path := range []string{"/admin/settings/definitions", "/admin/settings/values"} {
 		if resp := api.Get(path); resp.Code != http.StatusUnauthorized {
 			t.Errorf("no token %s status = %d, want %d", path, resp.Code, http.StatusUnauthorized)
 		}
@@ -99,7 +99,7 @@ func TestServerSettingsRequiredAuth(t *testing.T) {
 	}
 
 	// setting values requires admin too
-	resp := api.Put("/settings/server/values/ui.navigation.testing.bool", append(authHeaders(user), map[string]any{"value": "true"})...)
+	resp := api.Put("/admin/settings/values/ui.navigation.testing.bool", append(authHeaders(user), map[string]any{"value": "true"})...)
 	if resp.Code != http.StatusForbidden {
 		t.Errorf("non-admin put status = %d, want %d", resp.Code, http.StatusForbidden)
 	}
@@ -119,7 +119,7 @@ func TestServerSettingsDefinitions(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	resp := api.Get("/settings/server/definitions", authHeaders(admin)...)
+	resp := api.Get("/admin/settings/definitions", authHeaders(admin)...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("status = %d", resp.Code)
 	}
@@ -164,7 +164,7 @@ func TestServerSettingValues(t *testing.T) {
 	intDef := settings.ServerRegistry.Register(plugSettings.Int("server.test.int", 0).Min(1).Max(10).Order(2))
 
 	// set a bool value
-	resp := api.Put("/settings/server/values/"+boolDef.Id, append(authHeaders(admin), map[string]any{"value": "true"})...)
+	resp := api.Put("/admin/settings/values/"+boolDef.Id, append(authHeaders(admin), map[string]any{"value": "true"})...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("put status = %d, body = %s", resp.Code, resp.Body.String())
 	}
@@ -174,36 +174,36 @@ func TestServerSettingValues(t *testing.T) {
 	}
 
 	// get values contains it
-	resp = api.Get("/settings/server/values", authHeaders(admin)...)
+	resp = api.Get("/admin/settings/values", authHeaders(admin)...)
 	values := decode[SettingValuesBody](t, resp)
 	if len(values.Values) != 1 || values.Values[boolDef.Id].Value != "true" {
 		t.Fatalf("values = %+v", values.Values)
 	}
 
 	// update overwrites instead of duplicating
-	resp = api.Put("/settings/server/values/"+boolDef.Id, append(authHeaders(admin), map[string]any{"value": "false"})...)
+	resp = api.Put("/admin/settings/values/"+boolDef.Id, append(authHeaders(admin), map[string]any{"value": "false"})...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("re-put status = %d", resp.Code)
 	}
-	resp = api.Get("/settings/server/values", authHeaders(admin)...)
+	resp = api.Get("/admin/settings/values", authHeaders(admin)...)
 	if n := len(decode[SettingValuesBody](t, resp).Values); n != 1 {
 		t.Errorf("expected 1 stored value, got %d", n)
 	}
 
 	// invalid value for the kind is rejected
-	resp = api.Put("/settings/server/values/"+boolDef.Id, append(authHeaders(admin), map[string]any{"value": `"nope"`})...)
+	resp = api.Put("/admin/settings/values/"+boolDef.Id, append(authHeaders(admin), map[string]any{"value": `"nope"`})...)
 	if resp.Code != http.StatusBadRequest {
 		t.Errorf("invalid value status = %d", resp.Code)
 	}
 
 	// out-of-bounds int is rejected
-	resp = api.Put("/settings/server/values/"+intDef.Id, append(authHeaders(admin), map[string]any{"value": fmt.Sprintf("%d", *intDef.Int.Max+1)})...)
+	resp = api.Put("/admin/settings/values/"+intDef.Id, append(authHeaders(admin), map[string]any{"value": fmt.Sprintf("%d", *intDef.Int.Max+1)})...)
 	if resp.Code != http.StatusBadRequest {
 		t.Errorf("out of bounds int status = %d", resp.Code)
 	}
 
 	// unknown setting 404s
-	resp = api.Put("/settings/server/values/server.unknown", append(authHeaders(admin), map[string]any{"value": "1"})...)
+	resp = api.Put("/admin/settings/values/server.unknown", append(authHeaders(admin), map[string]any{"value": "1"})...)
 	if resp.Code != http.StatusNotFound {
 		t.Errorf("unknown setting status = %d", resp.Code)
 	}
@@ -222,14 +222,14 @@ func TestServerSettingSecretStorage(t *testing.T) {
 	fallbackDef := settings.ServerRegistry.Register(plugSettings.String("server.test.fallbackKey", "").Secret(true).Order(2))
 
 	// the value comes back unmasked so it can be edited by clients
-	resp := api.Put("/settings/server/values/"+def.Id, append(authHeaders(admin), map[string]any{"value": `"super-secret"`})...)
+	resp := api.Put("/admin/settings/values/"+def.Id, append(authHeaders(admin), map[string]any{"value": `"super-secret"`})...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("put status = %d, body = %s", resp.Code, resp.Body.String())
 	}
 	if got := decode[SettingValueEntry](t, resp).Value; got != `"super-secret"` {
 		t.Errorf("response value = %q, want the plaintext", got)
 	}
-	resp = api.Get("/settings/server/values", authHeaders(admin)...)
+	resp = api.Get("/admin/settings/values", authHeaders(admin)...)
 	if got := decode[SettingValuesBody](t, resp).Values[def.Id].Value; got != `"super-secret"` {
 		t.Errorf("listed value = %q, want the plaintext", got)
 	}
@@ -257,7 +257,7 @@ func TestServerSettingSecretStorage(t *testing.T) {
 	if err := settings.CheckSecretKey(); err != nil {
 		t.Errorf("missing key errored: %v", err)
 	}
-	resp = api.Put("/settings/server/values/"+fallbackDef.Id, append(authHeaders(admin), map[string]any{"value": `"plain-fallback"`})...)
+	resp = api.Put("/admin/settings/values/"+fallbackDef.Id, append(authHeaders(admin), map[string]any{"value": `"plain-fallback"`})...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("plaintext fallback put status = %d, body = %s", resp.Code, resp.Body.String())
 	}
@@ -312,7 +312,7 @@ func TestServerSettingChangeNotifiesPlugin(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	resp := api.Put("/settings/server/values/server.plugins.example.greeting.apiKey",
+	resp := api.Put("/admin/settings/values/server.plugins.example.greeting.apiKey",
 		append(authHeaders(admin), map[string]any{"value": `"new-key"`})...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("put status = %d, body = %s", resp.Code, resp.Body.String())

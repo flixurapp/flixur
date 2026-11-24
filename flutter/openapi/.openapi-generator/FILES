@@ -8,7 +8,6 @@ doc/ArtistSearchBody.md
 doc/ArtistsApi.md
 doc/AuthenticationApi.md
 doc/BoolProps.md
-doc/ChoiceSpec.md
 doc/CreateSettingsProfileRequest.md
 doc/EnumProps.md
 doc/ErrorDetail.md
@@ -30,12 +29,14 @@ doc/SettingProfileBody.md
 doc/SettingValueEntry.md
 doc/SettingValuesBody.md
 doc/SettingsApi.md
+doc/SettingsChoice.md
 doc/SettingsDefinition.md
 doc/SettingsDefinitionsBody.md
 doc/SettingsGroup.md
 doc/SettingsProfilesBody.md
 doc/StringListProps.md
 doc/StringProps.md
+doc/UpdateServerSettingValueRequest.md
 doc/UpdateSettingsProfileValueRequest.md
 lib/openapi.dart
 lib/src/api.dart
@@ -54,7 +55,6 @@ lib/src/model/api_error.dart
 lib/src/model/artist.dart
 lib/src/model/artist_search_body.dart
 lib/src/model/bool_props.dart
-lib/src/model/choice_spec.dart
 lib/src/model/create_settings_profile_request.dart
 lib/src/model/date.dart
 lib/src/model/enum_props.dart
@@ -75,12 +75,14 @@ lib/src/model/session_token_body.dart
 lib/src/model/setting_profile_body.dart
 lib/src/model/setting_value_entry.dart
 lib/src/model/setting_values_body.dart
+lib/src/model/settings_choice.dart
 lib/src/model/settings_definition.dart
 lib/src/model/settings_definitions_body.dart
 lib/src/model/settings_group.dart
 lib/src/model/settings_profiles_body.dart
 lib/src/model/string_list_props.dart
 lib/src/model/string_props.dart
+lib/src/model/update_server_setting_value_request.dart
 lib/src/model/update_settings_profile_value_request.dart
 lib/src/serializers.dart
 pubspec.yaml
@@ -90,7 +92,6 @@ test/artist_test.dart
 test/artists_api_test.dart
 test/authentication_api_test.dart
 test/bool_props_test.dart
-test/choice_spec_test.dart
 test/create_settings_profile_request_test.dart
 test/enum_props_test.dart
 test/error_detail_test.dart
@@ -112,10 +113,12 @@ test/setting_profile_body_test.dart
 test/setting_value_entry_test.dart
 test/setting_values_body_test.dart
 test/settings_api_test.dart
+test/settings_choice_test.dart
 test/settings_definition_test.dart
 test/settings_definitions_body_test.dart
 test/settings_group_test.dart
 test/settings_profiles_body_test.dart
 test/string_list_props_test.dart
 test/string_props_test.dart
+test/update_server_setting_value_request_test.dart
 test/update_settings_profile_value_request_test.dart

@@ -6,17 +6,18 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
-part 'choice_spec.g.dart';
+part 'settings_choice.g.dart';
 
-/// ChoiceSpec
+/// SettingsChoice
 ///
 /// Properties:
 /// * [hasDescription]
 /// * [icon]
 /// * [value]
 @BuiltValue()
-abstract class ChoiceSpec implements Built<ChoiceSpec, ChoiceSpecBuilder> {
-  @BuiltValueField(wireName: r'hasDescription')
+abstract class SettingsChoice
+    implements Built<SettingsChoice, SettingsChoiceBuilder> {
+  @BuiltValueField(wireName: r'has_description')
   bool? get hasDescription;
 
   @BuiltValueField(wireName: r'icon')
@@ -25,31 +26,34 @@ abstract class ChoiceSpec implements Built<ChoiceSpec, ChoiceSpecBuilder> {
   @BuiltValueField(wireName: r'value')
   String get value;
 
-  ChoiceSpec._();
+  SettingsChoice._();
 
-  factory ChoiceSpec([void updates(ChoiceSpecBuilder b)]) = _$ChoiceSpec;
+  factory SettingsChoice([void updates(SettingsChoiceBuilder b)]) =
+      _$SettingsChoice;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(ChoiceSpecBuilder b) => b;
+  static void _defaults(SettingsChoiceBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<ChoiceSpec> get serializer => _$ChoiceSpecSerializer();
+  static Serializer<SettingsChoice> get serializer =>
+      _$SettingsChoiceSerializer();
 }
 
-class _$ChoiceSpecSerializer implements PrimitiveSerializer<ChoiceSpec> {
+class _$SettingsChoiceSerializer
+    implements PrimitiveSerializer<SettingsChoice> {
   @override
-  final Iterable<Type> types = const [ChoiceSpec, _$ChoiceSpec];
+  final Iterable<Type> types = const [SettingsChoice, _$SettingsChoice];
 
   @override
-  final String wireName = r'ChoiceSpec';
+  final String wireName = r'SettingsChoice';
 
   Iterable<Object?> _serializeProperties(
     Serializers serializers,
-    ChoiceSpec object, {
+    SettingsChoice object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
     if (object.hasDescription != null) {
-      yield r'hasDescription';
+      yield r'has_description';
       yield serializers.serialize(
         object.hasDescription,
         specifiedType: const FullType(bool),
@@ -72,7 +76,7 @@ class _$ChoiceSpecSerializer implements PrimitiveSerializer<ChoiceSpec> {
   @override
   Object serialize(
     Serializers serializers,
-    ChoiceSpec object, {
+    SettingsChoice object, {
     FullType specifiedType = FullType.unspecified,
   }) {
     return _serializeProperties(serializers, object,
@@ -85,14 +89,14 @@ class _$ChoiceSpecSerializer implements PrimitiveSerializer<ChoiceSpec> {
     Object serialized, {
     FullType specifiedType = FullType.unspecified,
     required List<Object?> serializedList,
-    required ChoiceSpecBuilder result,
+    required SettingsChoiceBuilder result,
     required List<Object?> unhandled,
   }) {
     for (var i = 0; i < serializedList.length; i += 2) {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
-        case r'hasDescription':
+        case r'has_description':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType.nullable(bool),
@@ -124,12 +128,12 @@ class _$ChoiceSpecSerializer implements PrimitiveSerializer<ChoiceSpec> {
   }
 
   @override
-  ChoiceSpec deserialize(
+  SettingsChoice deserialize(
     Serializers serializers,
     Object serialized, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    final result = ChoiceSpecBuilder();
+    final result = SettingsChoiceBuilder();
     final serializedList = (serialized as Iterable<Object?>).toList();
     final unhandled = <Object?>[];
     _deserializeProperties(

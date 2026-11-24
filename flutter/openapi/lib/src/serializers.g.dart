@@ -12,7 +12,6 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(Artist.serializer)
       ..add(ArtistSearchBody.serializer)
       ..add(BoolProps.serializer)
-      ..add(ChoiceSpec.serializer)
       ..add(CreateSettingsProfileRequest.serializer)
       ..add(EnumProps.serializer)
       ..add(ErrorDetail.serializer)
@@ -33,6 +32,7 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(SettingProfileBody.serializer)
       ..add(SettingValueEntry.serializer)
       ..add(SettingValuesBody.serializer)
+      ..add(SettingsChoice.serializer)
       ..add(SettingsDefinition.serializer)
       ..add(SettingsDefinitionKindEnum.serializer)
       ..add(SettingsDefinitionsBody.serializer)
@@ -40,19 +40,11 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(SettingsProfilesBody.serializer)
       ..add(StringListProps.serializer)
       ..add(StringProps.serializer)
+      ..add(UpdateServerSettingValueRequest.serializer)
       ..add(UpdateSettingsProfileValueRequest.serializer)
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Artist)]),
           () => ListBuilder<Artist>())
-      ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(ChoiceSpec)]),
-          () => ListBuilder<ChoiceSpec>())
-      ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(ChoiceSpec)]),
-          () => ListBuilder<ChoiceSpec>())
-      ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(String)]),
-          () => ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(ErrorDetail)]),
           () => ListBuilder<ErrorDetail>())
@@ -62,6 +54,15 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(SettingProfileBody)]),
           () => ListBuilder<SettingProfileBody>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SettingsChoice)]),
+          () => ListBuilder<SettingsChoice>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SettingsChoice)]),
+          () => ListBuilder<SettingsChoice>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(SettingsGroup)]),
           () => ListBuilder<SettingsGroup>())

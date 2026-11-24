@@ -18,7 +18,6 @@ import 'package:openapi/src/model/api_error.dart';
 import 'package:openapi/src/model/artist.dart';
 import 'package:openapi/src/model/artist_search_body.dart';
 import 'package:openapi/src/model/bool_props.dart';
-import 'package:openapi/src/model/choice_spec.dart';
 import 'package:openapi/src/model/create_settings_profile_request.dart';
 import 'package:openapi/src/model/enum_props.dart';
 import 'package:openapi/src/model/error_detail.dart';
@@ -38,12 +37,14 @@ import 'package:openapi/src/model/session_token_body.dart';
 import 'package:openapi/src/model/setting_profile_body.dart';
 import 'package:openapi/src/model/setting_value_entry.dart';
 import 'package:openapi/src/model/setting_values_body.dart';
+import 'package:openapi/src/model/settings_choice.dart';
 import 'package:openapi/src/model/settings_definition.dart';
 import 'package:openapi/src/model/settings_definitions_body.dart';
 import 'package:openapi/src/model/settings_group.dart';
 import 'package:openapi/src/model/settings_profiles_body.dart';
 import 'package:openapi/src/model/string_list_props.dart';
 import 'package:openapi/src/model/string_props.dart';
+import 'package:openapi/src/model/update_server_setting_value_request.dart';
 import 'package:openapi/src/model/update_settings_profile_value_request.dart';
 
 part 'serializers.g.dart';
@@ -53,7 +54,6 @@ part 'serializers.g.dart';
   Artist,
   ArtistSearchBody,
   BoolProps,
-  ChoiceSpec,
   CreateSettingsProfileRequest,
   EnumProps,
   ErrorDetail,
@@ -73,12 +73,14 @@ part 'serializers.g.dart';
   SettingProfileBody,
   SettingValueEntry,
   SettingValuesBody,
+  SettingsChoice,
   SettingsDefinition,
   SettingsDefinitionsBody,
   SettingsGroup,
   SettingsProfilesBody,
   StringListProps,
   StringProps,
+  UpdateServerSettingValueRequest,
   UpdateSettingsProfileValueRequest,
 ])
 Serializers serializers = (_$serializers.toBuilder()
@@ -100,16 +102,16 @@ Serializers serializers = (_$serializers.toBuilder()
         () => MapBuilder<String, SettingValueEntry>(),
       )
       ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(SettingsChoice)]),
+        () => ListBuilder<SettingsChoice>(),
+      )
+      ..addBuilderFactory(
         const FullType(BuiltList, [FullType(SettingsDefinition)]),
         () => ListBuilder<SettingsDefinition>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(PluginManifest)]),
         () => ListBuilder<PluginManifest>(),
-      )
-      ..addBuilderFactory(
-        const FullType(BuiltList, [FullType(ChoiceSpec)]),
-        () => ListBuilder<ChoiceSpec>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(String)]),

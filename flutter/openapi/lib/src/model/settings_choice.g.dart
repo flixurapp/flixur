@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'choice_spec.dart';
+part of 'settings_choice.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-class _$ChoiceSpec extends ChoiceSpec {
+class _$SettingsChoice extends SettingsChoice {
   @override
   final bool? hasDescription;
   @override
@@ -14,22 +14,22 @@ class _$ChoiceSpec extends ChoiceSpec {
   @override
   final String value;
 
-  factory _$ChoiceSpec([void Function(ChoiceSpecBuilder)? updates]) =>
-      (ChoiceSpecBuilder()..update(updates))._build();
+  factory _$SettingsChoice([void Function(SettingsChoiceBuilder)? updates]) =>
+      (SettingsChoiceBuilder()..update(updates))._build();
 
-  _$ChoiceSpec._({this.hasDescription, this.icon, required this.value})
+  _$SettingsChoice._({this.hasDescription, this.icon, required this.value})
       : super._();
   @override
-  ChoiceSpec rebuild(void Function(ChoiceSpecBuilder) updates) =>
+  SettingsChoice rebuild(void Function(SettingsChoiceBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  ChoiceSpecBuilder toBuilder() => ChoiceSpecBuilder()..replace(this);
+  SettingsChoiceBuilder toBuilder() => SettingsChoiceBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is ChoiceSpec &&
+    return other is SettingsChoice &&
         hasDescription == other.hasDescription &&
         icon == other.icon &&
         value == other.value;
@@ -47,7 +47,7 @@ class _$ChoiceSpec extends ChoiceSpec {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(r'ChoiceSpec')
+    return (newBuiltValueToStringHelper(r'SettingsChoice')
           ..add('hasDescription', hasDescription)
           ..add('icon', icon)
           ..add('value', value))
@@ -55,8 +55,9 @@ class _$ChoiceSpec extends ChoiceSpec {
   }
 }
 
-class ChoiceSpecBuilder implements Builder<ChoiceSpec, ChoiceSpecBuilder> {
-  _$ChoiceSpec? _$v;
+class SettingsChoiceBuilder
+    implements Builder<SettingsChoice, SettingsChoiceBuilder> {
+  _$SettingsChoice? _$v;
 
   bool? _hasDescription;
   bool? get hasDescription => _$this._hasDescription;
@@ -71,11 +72,11 @@ class ChoiceSpecBuilder implements Builder<ChoiceSpec, ChoiceSpecBuilder> {
   String? get value => _$this._value;
   set value(String? value) => _$this._value = value;
 
-  ChoiceSpecBuilder() {
-    ChoiceSpec._defaults(this);
+  SettingsChoiceBuilder() {
+    SettingsChoice._defaults(this);
   }
 
-  ChoiceSpecBuilder get _$this {
+  SettingsChoiceBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _hasDescription = $v.hasDescription;
@@ -87,25 +88,25 @@ class ChoiceSpecBuilder implements Builder<ChoiceSpec, ChoiceSpecBuilder> {
   }
 
   @override
-  void replace(ChoiceSpec other) {
-    _$v = other as _$ChoiceSpec;
+  void replace(SettingsChoice other) {
+    _$v = other as _$SettingsChoice;
   }
 
   @override
-  void update(void Function(ChoiceSpecBuilder)? updates) {
+  void update(void Function(SettingsChoiceBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  ChoiceSpec build() => _build();
+  SettingsChoice build() => _build();
 
-  _$ChoiceSpec _build() {
+  _$SettingsChoice _build() {
     final _$result = _$v ??
-        _$ChoiceSpec._(
+        _$SettingsChoice._(
           hasDescription: hasDescription,
           icon: icon,
           value: BuiltValueNullFieldError.checkNotNull(
-              value, r'ChoiceSpec', 'value'),
+              value, r'SettingsChoice', 'value'),
         );
     replace(_$result);
     return _$result;

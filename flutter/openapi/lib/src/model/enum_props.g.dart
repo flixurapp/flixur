@@ -8,7 +8,7 @@ part of 'enum_props.dart';
 
 class _$EnumProps extends EnumProps {
   @override
-  final BuiltList<ChoiceSpec>? choices;
+  final BuiltList<SettingsChoice>? choices;
   @override
   final String defaultValue;
 
@@ -52,10 +52,11 @@ class _$EnumProps extends EnumProps {
 class EnumPropsBuilder implements Builder<EnumProps, EnumPropsBuilder> {
   _$EnumProps? _$v;
 
-  ListBuilder<ChoiceSpec>? _choices;
-  ListBuilder<ChoiceSpec> get choices =>
-      _$this._choices ??= ListBuilder<ChoiceSpec>();
-  set choices(ListBuilder<ChoiceSpec>? choices) => _$this._choices = choices;
+  ListBuilder<SettingsChoice>? _choices;
+  ListBuilder<SettingsChoice> get choices =>
+      _$this._choices ??= ListBuilder<SettingsChoice>();
+  set choices(ListBuilder<SettingsChoice>? choices) =>
+      _$this._choices = choices;
 
   String? _defaultValue;
   String? get defaultValue => _$this._defaultValue;

@@ -4,7 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:built_collection/built_collection.dart';
-import 'package:openapi/src/model/choice_spec.dart';
+import 'package:openapi/src/model/settings_choice.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -20,16 +20,16 @@ part 'string_list_props.g.dart';
 @BuiltValue()
 abstract class StringListProps
     implements Built<StringListProps, StringListPropsBuilder> {
-  @BuiltValueField(wireName: r'allowDuplicates')
+  @BuiltValueField(wireName: r'allow_duplicates')
   bool? get allowDuplicates;
 
   @BuiltValueField(wireName: r'choices')
-  BuiltList<ChoiceSpec>? get choices;
+  BuiltList<SettingsChoice>? get choices;
 
-  @BuiltValueField(wireName: r'defaultValue')
+  @BuiltValueField(wireName: r'default_value')
   BuiltList<String>? get defaultValue;
 
-  @BuiltValueField(wireName: r'maxItems')
+  @BuiltValueField(wireName: r'max_items')
   int? get maxItems;
 
   StringListProps._();
@@ -59,21 +59,21 @@ class _$StringListPropsSerializer
     FullType specifiedType = FullType.unspecified,
   }) sync* {
     if (object.allowDuplicates != null) {
-      yield r'allowDuplicates';
+      yield r'allow_duplicates';
       yield serializers.serialize(
         object.allowDuplicates,
         specifiedType: const FullType(bool),
       );
     }
-    yield r'choices';
-    yield object.choices == null
-        ? null
-        : serializers.serialize(
-            object.choices,
-            specifiedType:
-                const FullType.nullable(BuiltList, [FullType(ChoiceSpec)]),
-          );
-    yield r'defaultValue';
+    if (object.choices != null) {
+      yield r'choices';
+      yield serializers.serialize(
+        object.choices,
+        specifiedType:
+            const FullType.nullable(BuiltList, [FullType(SettingsChoice)]),
+      );
+    }
+    yield r'default_value';
     yield object.defaultValue == null
         ? null
         : serializers.serialize(
@@ -82,7 +82,7 @@ class _$StringListPropsSerializer
                 const FullType.nullable(BuiltList, [FullType(String)]),
           );
     if (object.maxItems != null) {
-      yield r'maxItems';
+      yield r'max_items';
       yield serializers.serialize(
         object.maxItems,
         specifiedType: const FullType(int),
@@ -113,7 +113,7 @@ class _$StringListPropsSerializer
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
-        case r'allowDuplicates':
+        case r'allow_duplicates':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType.nullable(bool),
@@ -125,12 +125,12 @@ class _$StringListPropsSerializer
           final valueDes = serializers.deserialize(
             value,
             specifiedType:
-                const FullType.nullable(BuiltList, [FullType(ChoiceSpec)]),
-          ) as BuiltList<ChoiceSpec>?;
+                const FullType.nullable(BuiltList, [FullType(SettingsChoice)]),
+          ) as BuiltList<SettingsChoice>?;
           if (valueDes == null) continue;
           result.choices.replace(valueDes);
           break;
-        case r'defaultValue':
+        case r'default_value':
           final valueDes = serializers.deserialize(
             value,
             specifiedType:
@@ -139,7 +139,7 @@ class _$StringListPropsSerializer
           if (valueDes == null) continue;
           result.defaultValue.replace(valueDes);
           break;
-        case r'maxItems':
+        case r'max_items':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType.nullable(int),

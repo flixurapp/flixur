@@ -19,7 +19,7 @@ part 'int_props.g.dart';
 /// * [step]
 @BuiltValue()
 abstract class IntProps implements Built<IntProps, IntPropsBuilder> {
-  @BuiltValueField(wireName: r'defaultValue')
+  @BuiltValueField(wireName: r'default_value')
   int get defaultValue;
 
   @BuiltValueField(wireName: r'max')
@@ -28,10 +28,10 @@ abstract class IntProps implements Built<IntProps, IntPropsBuilder> {
   @BuiltValueField(wireName: r'min')
   int? get min;
 
-  @BuiltValueField(wireName: r'recommendedMax')
+  @BuiltValueField(wireName: r'recommended_max')
   int? get recommendedMax;
 
-  @BuiltValueField(wireName: r'recommendedMin')
+  @BuiltValueField(wireName: r'recommended_min')
   int? get recommendedMin;
 
   @BuiltValueField(wireName: r'step')
@@ -60,7 +60,7 @@ class _$IntPropsSerializer implements PrimitiveSerializer<IntProps> {
     IntProps object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'defaultValue';
+    yield r'default_value';
     yield serializers.serialize(
       object.defaultValue,
       specifiedType: const FullType(int),
@@ -80,14 +80,14 @@ class _$IntPropsSerializer implements PrimitiveSerializer<IntProps> {
       );
     }
     if (object.recommendedMax != null) {
-      yield r'recommendedMax';
+      yield r'recommended_max';
       yield serializers.serialize(
         object.recommendedMax,
         specifiedType: const FullType(int),
       );
     }
     if (object.recommendedMin != null) {
-      yield r'recommendedMin';
+      yield r'recommended_min';
       yield serializers.serialize(
         object.recommendedMin,
         specifiedType: const FullType(int),
@@ -125,7 +125,7 @@ class _$IntPropsSerializer implements PrimitiveSerializer<IntProps> {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
-        case r'defaultValue':
+        case r'default_value':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(int),
@@ -148,7 +148,7 @@ class _$IntPropsSerializer implements PrimitiveSerializer<IntProps> {
           if (valueDes == null) continue;
           result.min = valueDes;
           break;
-        case r'recommendedMax':
+        case r'recommended_max':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType.nullable(int),
@@ -156,7 +156,7 @@ class _$IntPropsSerializer implements PrimitiveSerializer<IntProps> {
           if (valueDes == null) continue;
           result.recommendedMax = valueDes;
           break;
-        case r'recommendedMin':
+        case r'recommended_min':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType.nullable(int),

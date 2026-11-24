@@ -10,7 +10,7 @@ class _$StringListProps extends StringListProps {
   @override
   final bool? allowDuplicates;
   @override
-  final BuiltList<ChoiceSpec>? choices;
+  final BuiltList<SettingsChoice>? choices;
   @override
   final BuiltList<String>? defaultValue;
   @override
@@ -70,10 +70,11 @@ class StringListPropsBuilder
   set allowDuplicates(bool? allowDuplicates) =>
       _$this._allowDuplicates = allowDuplicates;
 
-  ListBuilder<ChoiceSpec>? _choices;
-  ListBuilder<ChoiceSpec> get choices =>
-      _$this._choices ??= ListBuilder<ChoiceSpec>();
-  set choices(ListBuilder<ChoiceSpec>? choices) => _$this._choices = choices;
+  ListBuilder<SettingsChoice>? _choices;
+  ListBuilder<SettingsChoice> get choices =>
+      _$this._choices ??= ListBuilder<SettingsChoice>();
+  set choices(ListBuilder<SettingsChoice>? choices) =>
+      _$this._choices = choices;
 
   ListBuilder<String>? _defaultValue;
   ListBuilder<String> get defaultValue =>

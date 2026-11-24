@@ -16,10 +16,10 @@ part 'string_props.g.dart';
 /// * [secret]
 @BuiltValue()
 abstract class StringProps implements Built<StringProps, StringPropsBuilder> {
-  @BuiltValueField(wireName: r'defaultValue')
+  @BuiltValueField(wireName: r'default_value')
   String get defaultValue;
 
-  @BuiltValueField(wireName: r'maxLength')
+  @BuiltValueField(wireName: r'max_length')
   int? get maxLength;
 
   @BuiltValueField(wireName: r'secret')
@@ -48,13 +48,13 @@ class _$StringPropsSerializer implements PrimitiveSerializer<StringProps> {
     StringProps object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'defaultValue';
+    yield r'default_value';
     yield serializers.serialize(
       object.defaultValue,
       specifiedType: const FullType(String),
     );
     if (object.maxLength != null) {
-      yield r'maxLength';
+      yield r'max_length';
       yield serializers.serialize(
         object.maxLength,
         specifiedType: const FullType(int),
@@ -92,14 +92,14 @@ class _$StringPropsSerializer implements PrimitiveSerializer<StringProps> {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
-        case r'defaultValue':
+        case r'default_value':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(String),
           ) as String;
           result.defaultValue = valueDes;
           break;
-        case r'maxLength':
+        case r'max_length':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType.nullable(int),

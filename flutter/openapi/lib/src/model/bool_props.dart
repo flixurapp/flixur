@@ -14,7 +14,7 @@ part 'bool_props.g.dart';
 /// * [defaultValue]
 @BuiltValue()
 abstract class BoolProps implements Built<BoolProps, BoolPropsBuilder> {
-  @BuiltValueField(wireName: r'defaultValue')
+  @BuiltValueField(wireName: r'default_value')
   bool get defaultValue;
 
   BoolProps._();
@@ -40,7 +40,7 @@ class _$BoolPropsSerializer implements PrimitiveSerializer<BoolProps> {
     BoolProps object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'defaultValue';
+    yield r'default_value';
     yield serializers.serialize(
       object.defaultValue,
       specifiedType: const FullType(bool),
@@ -70,7 +70,7 @@ class _$BoolPropsSerializer implements PrimitiveSerializer<BoolProps> {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
-        case r'defaultValue':
+        case r'default_value':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(bool),

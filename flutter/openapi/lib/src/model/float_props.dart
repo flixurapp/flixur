@@ -19,7 +19,7 @@ part 'float_props.g.dart';
 /// * [step]
 @BuiltValue()
 abstract class FloatProps implements Built<FloatProps, FloatPropsBuilder> {
-  @BuiltValueField(wireName: r'defaultValue')
+  @BuiltValueField(wireName: r'default_value')
   double get defaultValue;
 
   @BuiltValueField(wireName: r'max')
@@ -28,10 +28,10 @@ abstract class FloatProps implements Built<FloatProps, FloatPropsBuilder> {
   @BuiltValueField(wireName: r'min')
   double? get min;
 
-  @BuiltValueField(wireName: r'recommendedMax')
+  @BuiltValueField(wireName: r'recommended_max')
   double? get recommendedMax;
 
-  @BuiltValueField(wireName: r'recommendedMin')
+  @BuiltValueField(wireName: r'recommended_min')
   double? get recommendedMin;
 
   @BuiltValueField(wireName: r'step')
@@ -60,7 +60,7 @@ class _$FloatPropsSerializer implements PrimitiveSerializer<FloatProps> {
     FloatProps object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'defaultValue';
+    yield r'default_value';
     yield serializers.serialize(
       object.defaultValue,
       specifiedType: const FullType(double),
@@ -80,14 +80,14 @@ class _$FloatPropsSerializer implements PrimitiveSerializer<FloatProps> {
       );
     }
     if (object.recommendedMax != null) {
-      yield r'recommendedMax';
+      yield r'recommended_max';
       yield serializers.serialize(
         object.recommendedMax,
         specifiedType: const FullType(double),
       );
     }
     if (object.recommendedMin != null) {
-      yield r'recommendedMin';
+      yield r'recommended_min';
       yield serializers.serialize(
         object.recommendedMin,
         specifiedType: const FullType(double),
@@ -125,7 +125,7 @@ class _$FloatPropsSerializer implements PrimitiveSerializer<FloatProps> {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
-        case r'defaultValue':
+        case r'default_value':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(double),
@@ -148,7 +148,7 @@ class _$FloatPropsSerializer implements PrimitiveSerializer<FloatProps> {
           if (valueDes == null) continue;
           result.min = valueDes;
           break;
-        case r'recommendedMax':
+        case r'recommended_max':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType.nullable(double),
@@ -156,7 +156,7 @@ class _$FloatPropsSerializer implements PrimitiveSerializer<FloatProps> {
           if (valueDes == null) continue;
           result.recommendedMax = valueDes;
           break;
-        case r'recommendedMin':
+        case r'recommended_min':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType.nullable(double),

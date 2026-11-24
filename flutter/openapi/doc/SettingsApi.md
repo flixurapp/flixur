@@ -12,9 +12,12 @@ Method | HTTP request | Description
 [**createSettingsProfile**](SettingsApi.md#createsettingsprofile) | **POST** /settings/profiles | Create Settings Profile
 [**deleteSettingsProfile**](SettingsApi.md#deletesettingsprofile) | **DELETE** /settings/profiles/{profile} | Delete Settings Profile
 [**getClientSettingsDefinitions**](SettingsApi.md#getclientsettingsdefinitions) | **GET** /settings/definitions | Get Client Settings Definitions
+[**getServerSettingsDefinitions**](SettingsApi.md#getserversettingsdefinitions) | **GET** /admin/settings/definitions | Get Server Settings Definitions
+[**getServerSettingsValues**](SettingsApi.md#getserversettingsvalues) | **GET** /admin/settings/values | Get Server Settings Values
 [**getSettingsProfileValues**](SettingsApi.md#getsettingsprofilevalues) | **GET** /settings/profiles/{profile}/values | Get Settings Profile Values
 [**getSettingsProfiles**](SettingsApi.md#getsettingsprofiles) | **GET** /settings/profiles | Get Settings Profiles
 [**renameSettingsProfile**](SettingsApi.md#renamesettingsprofile) | **PUT** /settings/profiles/{profile} | Rename Settings Profile
+[**updateServerSettingValue**](SettingsApi.md#updateserversettingvalue) | **PUT** /admin/settings/values/{settingID} | Update Server Setting Value
 [**updateSettingsProfileValue**](SettingsApi.md#updatesettingsprofilevalue) | **PUT** /settings/profiles/{profile}/values/{settingID} | Update Settings Profile Value
 
 
@@ -143,6 +146,84 @@ This endpoint does not need any parameter.
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **getServerSettingsDefinitions**
+> SettingsDefinitionsBody getServerSettingsDefinitions()
+
+Get Server Settings Definitions
+
+Gets all server setting definitions and groups.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api = Openapi().getSettingsApi();
+
+try {
+    final response = api.getServerSettingsDefinitions();
+    print(response);
+} on DioException catch (e) {
+    print('Exception when calling SettingsApi->getServerSettingsDefinitions: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**SettingsDefinitionsBody**](SettingsDefinitionsBody.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json, application/problem+json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getServerSettingsValues**
+> SettingValuesBody getServerSettingsValues()
+
+Get Server Settings Values
+
+Gets all stored server setting overrides.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api = Openapi().getSettingsApi();
+
+try {
+    final response = api.getServerSettingsValues();
+    print(response);
+} on DioException catch (e) {
+    print('Exception when calling SettingsApi->getServerSettingsValues: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**SettingValuesBody**](SettingValuesBody.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **getSettingsProfileValues**
 > SettingValuesBody getSettingsProfileValues(profile)
 
@@ -258,6 +339,51 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**OutputSuccessBody**](OutputSuccessBody.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateServerSettingValue**
+> SettingValueEntry updateServerSettingValue(settingID, updateServerSettingValueRequest)
+
+Update Server Setting Value
+
+Sets a server setting value.
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api = Openapi().getSettingsApi();
+final String settingID = settingID_example; // String | 
+final UpdateServerSettingValueRequest updateServerSettingValueRequest = ; // UpdateServerSettingValueRequest | 
+
+try {
+    final response = api.updateServerSettingValue(settingID, updateServerSettingValueRequest);
+    print(response);
+} on DioException catch (e) {
+    print('Exception when calling SettingsApi->updateServerSettingValue: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **settingID** | **String**|  | 
+ **updateServerSettingValueRequest** | [**UpdateServerSettingValueRequest**](UpdateServerSettingValueRequest.md)|  | 
+
+### Return type
+
+[**SettingValueEntry**](SettingValueEntry.md)
 
 ### Authorization
 

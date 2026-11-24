@@ -4,7 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:built_collection/built_collection.dart';
-import 'package:openapi/src/model/choice_spec.dart';
+import 'package:openapi/src/model/settings_choice.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -18,9 +18,9 @@ part 'enum_props.g.dart';
 @BuiltValue()
 abstract class EnumProps implements Built<EnumProps, EnumPropsBuilder> {
   @BuiltValueField(wireName: r'choices')
-  BuiltList<ChoiceSpec>? get choices;
+  BuiltList<SettingsChoice>? get choices;
 
-  @BuiltValueField(wireName: r'defaultValue')
+  @BuiltValueField(wireName: r'default_value')
   String get defaultValue;
 
   EnumProps._();
@@ -46,15 +46,15 @@ class _$EnumPropsSerializer implements PrimitiveSerializer<EnumProps> {
     EnumProps object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'choices';
-    yield object.choices == null
-        ? null
-        : serializers.serialize(
-            object.choices,
-            specifiedType:
-                const FullType.nullable(BuiltList, [FullType(ChoiceSpec)]),
-          );
-    yield r'defaultValue';
+    if (object.choices != null) {
+      yield r'choices';
+      yield serializers.serialize(
+        object.choices,
+        specifiedType:
+            const FullType.nullable(BuiltList, [FullType(SettingsChoice)]),
+      );
+    }
+    yield r'default_value';
     yield serializers.serialize(
       object.defaultValue,
       specifiedType: const FullType(String),
@@ -88,12 +88,12 @@ class _$EnumPropsSerializer implements PrimitiveSerializer<EnumProps> {
           final valueDes = serializers.deserialize(
             value,
             specifiedType:
-                const FullType.nullable(BuiltList, [FullType(ChoiceSpec)]),
-          ) as BuiltList<ChoiceSpec>?;
+                const FullType.nullable(BuiltList, [FullType(SettingsChoice)]),
+          ) as BuiltList<SettingsChoice>?;
           if (valueDes == null) continue;
           result.choices.replace(valueDes);
           break;
-        case r'defaultValue':
+        case r'default_value':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(String),
