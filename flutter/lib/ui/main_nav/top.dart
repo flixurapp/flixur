@@ -1,9 +1,11 @@
 import "dart:async";
 
+import "package:flixur/api.dart";
 import "package:flixur/router.dart" show router, testSetupRoute;
 import "package:flixur/settings.dart";
 import "package:flixur/titlebar.dart";
 import "package:flixur/ui/buttons.dart";
+import "package:flixur/ui/dialogs.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/main_nav/common.dart";
 import "package:flixur/ui/main_nav/rail.dart";
@@ -32,6 +34,21 @@ class const MainNavTop({super.key}) extends StatelessWidget {
           onPressed: TitlebarManager.debugResizeToPhone,
           foreground: context.colors.tertiary,
           iconName: "device-mobile",
+        ),
+      // log out when logged in
+      if (Api.canMakeAuthenticatedRequests)
+        _MoreMenuItem(
+          section: null,
+          label: t.titlebar.logout,
+          onPressed: () async {
+            final confirmed = await showConfirmDialog(
+              context,
+              message: t.titlebar.logout_confirmation,
+            );
+            if (confirmed) unawaited(Api.logout());
+          },
+          foreground: context.colors.error,
+          iconName: "sign-out",
         ),
     ];
 
