@@ -163,6 +163,42 @@ func TestRegistryRegister(t *testing.T) {
 	registry.Register(Bool("test.a", true))
 }
 
+// Leading underscores are allowed so IDs with preceding numbers will work.
+func TestRegistryUnderscoreIDs(t *testing.T) {
+	registry := NewRegistry()
+	registry.RegisterGroup(Group("_test"))
+	created := registry.Register(Bool("_test._1setting", false))
+	if registry.Find("_test._1setting") != created {
+		t.Fatal("underscore-leading IDs were not registered")
+	}
+}
+
+func TestValidateSegment(t *testing.T) {
+	cases := []struct {
+		id    string
+		valid bool
+	}{
+		{"example", true},
+		{"_1itemwithnumbers", true},
+		{"_Spotify", true},
+		{"a", true},
+		{"Spotify", false},
+		{"9lives", false},
+		{"my-plugin", false},
+		{"a.b", false},
+		{"a b", false},
+		{"", false},
+	}
+	for _, tc := range cases {
+		t.Run(tc.id, func(t *testing.T) {
+			err := ValidateSegment(tc.id)
+			if tc.valid != (err == nil) {
+				t.Errorf("ValidateSegment(%q) = %v, want valid=%v", tc.id, err, tc.valid)
+			}
+		})
+	}
+}
+
 func TestRegistryGroups(t *testing.T) {
 	registry := NewRegistry()
 

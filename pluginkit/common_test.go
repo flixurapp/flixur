@@ -86,6 +86,37 @@ func TestParsePluginManifestInvalidJSON(t *testing.T) {
 	}
 }
 
+// Plugin IDs must be singular valid setting ID segments so the server can
+// register their settings.
+func TestParsePluginManifestID(t *testing.T) {
+	cases := []struct {
+		id    string
+		valid bool
+	}{
+		{"example", true},
+		{"_1itemwithnumbers", true},
+		{"_Spotify", true},
+		{"a", true},
+		{"Spotify", false},
+		{"99lives", false},
+		{"my-plugin", false},
+		{"a.b", false},
+		{"a b", false},
+		{"", false},
+	}
+	for _, tc := range cases {
+		t.Run(tc.id, func(t *testing.T) {
+			_, err := ParsePluginManifest([]byte(`{"id":"` + tc.id + `","features":[]}`))
+			if tc.valid && err != nil {
+				t.Errorf("ParsePluginManifest(%q) errored: %v", tc.id, err)
+			}
+			if !tc.valid && err == nil {
+				t.Errorf("ParsePluginManifest(%q) accepted an invalid ID", tc.id)
+			}
+		})
+	}
+}
+
 // Generated JSON schema for plugin manifests, checked to match the Go struct.
 const manifestSchemaPath = "manifest.schema.json"
 

@@ -38,8 +38,28 @@ func NewRegistry() *Registry {
 	}
 }
 
+// A single valid ID segment.
+const idSegment = `[_a-z][a-zA-Z0-9_]*`
+
+// Pattern matching a single segment only.
+const SegmentPattern = "^" + idSegment + "$"
+
 // Regex matching a setting ID.
-var validIDRegex = regexp.MustCompile(`^[a-z][a-zA-Z0-9_]*(\.[a-z][a-zA-Z0-9_]*)*$`)
+var validIDRegex = regexp.MustCompile(`^` + idSegment + `(\.` + idSegment + `)*$`)
+
+// Regex matching a single ID segment.
+var segmentRegex = regexp.MustCompile(SegmentPattern)
+
+// Validates that id is a single valid ID segment only.
+func ValidateSegment(id string) error {
+	if strings.Contains(id, ".") {
+		return fmt.Errorf("must be a single segment (no dots)")
+	}
+	if !segmentRegex.MatchString(id) {
+		return fmt.Errorf("must start with a letter or underscore and contain only letters, digits or underscores")
+	}
+	return nil
+}
 
 // Maximum length of a setting ID.
 const maxIDLength = 128

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
+	"forge.xela.codes/xela/flixur/pluginkit/settings"
 	"github.com/hashicorp/go-plugin"
 )
 
@@ -70,6 +71,10 @@ func ParsePluginManifest(data []byte) (*PluginManifest, error) {
 	var m PluginManifest
 	if err := json.Unmarshal(data, &m); err != nil {
 		return nil, fmt.Errorf("invalid manifest.json: %w", err)
+	}
+	// the ID becomes part of setting IDs, so it must be a valid ID segment
+	if err := settings.ValidateSegment(m.Id); err != nil {
+		return nil, fmt.Errorf("invalid plugin ID %q: %w", m.Id, err)
 	}
 	return &m, nil
 }

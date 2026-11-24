@@ -11,6 +11,7 @@ import (
 
 	pluginkit "forge.xela.codes/xela/flixur/pluginkit"
 	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
+	"forge.xela.codes/xela/flixur/pluginkit/settings"
 	"github.com/invopop/jsonschema"
 )
 
@@ -73,7 +74,7 @@ func run() error {
 		icon.Pattern = "^[a-z0-9-]+:[a-z0-9-]+$"
 	}
 	if id, ok := props.Get("id"); ok {
-		id.MinLength = u64(1)
+		id.Pattern = settings.SegmentPattern
 	}
 	if name, ok := props.Get("name"); ok {
 		name.MinLength = u64(1)
