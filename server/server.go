@@ -17,6 +17,7 @@ import (
 	"forge.xela.codes/xela/flixur/common"
 	"forge.xela.codes/xela/flixur/ent"
 	"forge.xela.codes/xela/flixur/plugins"
+	"forge.xela.codes/xela/flixur/settings"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/zerolog"
@@ -78,6 +79,11 @@ func runServer() error {
 			plugins.RegisterPlugins(pluginDir, client)
 		}
 		defer plugins.DestroyAllPlugins()
+
+		// check settings secret key
+		if err := settings.CheckSecretKey(); err != nil {
+			return err
+		}
 
 		// serve the frontend if available
 		if dir := common.Config.FrontendDir; dir != "" {
