@@ -2,7 +2,10 @@
 package settings
 
 import (
+	"strings"
 	"testing"
+
+	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 )
 
 func TestValidateValue(t *testing.T) {
@@ -16,7 +19,7 @@ func TestValidateValue(t *testing.T) {
 
 	cases := []struct {
 		name    string
-		def     SettingsDefinition
+		def     *pb.SettingsDefinition
 		input   string
 		want    string // want "" to expect a validation error
 		wantErr bool
@@ -60,7 +63,7 @@ func TestValidateValue(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			got, err := ValidateValue(&tc.def, tc.input)
+			got, err := ValidateValue(tc.def, tc.input)
 			if tc.wantErr {
 				if err == nil {
 					t.Fatalf("expected error, got %q", got)
@@ -78,23 +81,23 @@ func TestValidateValue(t *testing.T) {
 }
 
 func TestValidateValueUnknownKind(t *testing.T) {
-	if _, err := ValidateValue(&SettingsDefinition{ID: "test.x", Kind: "nope"}, "1"); err == nil {
+	if _, err := ValidateValue(&pb.SettingsDefinition{Id: "test.x", Kind: 99}, "1"); err == nil {
 		t.Fatal("expected error for unknown kind")
 	}
 }
 
 func TestBuilders(t *testing.T) {
 	// the kind constructors create the matching props struct
-	if !Bool("test.a", true).Bool.Default {
+	if !Bool("test.a", true).Bool.DefaultValue {
 		t.Error("Bool did not create its props")
 	}
-	if Int("test.a", 1).Int.Default != 1 {
+	if Int("test.a", 1).Int.DefaultValue != 1 {
 		t.Error("Int did not create its props")
 	}
-	if Float("test.a", 1).Float.Default != 1 {
+	if Float("test.a", 1).Float.DefaultValue != 1 {
 		t.Error("Float did not create its props")
 	}
-	if String("test.a", "").String.Default != "" {
+	if String("test.a", "").String_.DefaultValue != "" {
 		t.Error("String did not create its props")
 	}
 	if Enum("test.a", "").Enum == nil {
@@ -103,7 +106,7 @@ func TestBuilders(t *testing.T) {
 	if StringList("test.a", nil).StringList == nil {
 		t.Error("StringList did not create its props")
 	}
-	if Group("test.a").SettingsGroup.ID != "test.a" {
+	if Group("test.a").SettingsGroup.Id != "test.a" {
 		t.Error("Group did not create its props")
 	}
 }
@@ -138,6 +141,7 @@ func TestRegistryRegister(t *testing.T) {
 		{"numeric segment", "test.1a"},
 		{"no owner group", "other.a"},
 		{"no group at all", "bare"},
+		{"too long", strings.Repeat("a.", 70) + "b"},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -187,7 +191,7 @@ func TestRegistryGroups(t *testing.T) {
 	if len(registry.Groups()) != 1 || registry.Groups()[0] != root {
 		t.Fatal("root group not registered")
 	}
-	if root.Icon != "sliders-horizontal" || root.Order != 1 {
+	if root.Icon == nil || *root.Icon != "sliders-horizontal" || root.Order != 1 {
 		t.Fatal("group builder properties were not applied")
 	}
 	child := registry.RegisterGroup(Group("ui.nav").Order(2))
@@ -255,7 +259,7 @@ func TestValidateChainBuilding(t *testing.T) {
 		Order(1))
 	if listDef.StringList.MaxItems == nil || *listDef.StringList.MaxItems != 4 ||
 		len(listDef.StringList.Choices) != 2 ||
-		listDef.StringList.Choices[1].Icon != "star" ||
+		*listDef.StringList.Choices[1].Icon != "star" ||
 		listDef.StringList.AllowDuplicates == nil || !*listDef.StringList.AllowDuplicates ||
 		listDef.Order != 1 {
 		t.Fatal("stringlist chain did not apply its properties")
@@ -273,20 +277,20 @@ func TestEnumEmptyDefaultResolves(t *testing.T) {
 
 	// an empty default falls back to the first choice
 	first := registry.Register(Enum("test.a", "").AddChoice("y").AddChoice("z"))
-	if first.Enum.Default != "y" {
-		t.Errorf("empty default did not fall back to the first choice, got %q", first.Enum.Default)
+	if first.Enum.DefaultValue != "y" {
+		t.Errorf("empty default did not fall back to the first choice, got %q", first.Enum.DefaultValue)
 	}
 
 	// an empty default is kept when "" is itself a choice
 	empty := registry.Register(Enum("test.b", "").AddChoice("y").AddChoice(""))
-	if empty.Enum.Default != "" {
-		t.Errorf(`"" choice default was not kept, got %q`, empty.Enum.Default)
+	if empty.Enum.DefaultValue != "" {
+		t.Errorf(`"" choice default was not kept, got %q`, empty.Enum.DefaultValue)
 	}
 
 	// a non-empty default is kept
 	kept := registry.Register(Enum("test.c", "z").AddChoice("y").AddChoice("z"))
-	if kept.Enum.Default != "z" {
-		t.Errorf("non-empty default was changed, got %q", kept.Enum.Default)
+	if kept.Enum.DefaultValue != "z" {
+		t.Errorf("non-empty default was changed, got %q", kept.Enum.DefaultValue)
 	}
 }
 
@@ -295,16 +299,16 @@ func TestValidateDefinitionConstraints(t *testing.T) {
 	registry.RegisterGroup(Group("test"))
 	for name, run := range map[string]func(){
 		"no props": func() {
-			registry.Register(SettingsDefinition{ID: "test.a"})
+			registry.Register(Def{&pb.SettingsDefinition{Id: "test.a"}})
 		},
 		"double props": func() {
 			def := Bool("test.a", false)
-			def.Int = &IntProps{}
+			def.Int = &pb.IntProps{}
 			registry.Register(def)
 		},
 		"kind mismatch": func() {
 			def := Bool("test.a", false)
-			def.Kind = KindInt
+			def.Kind = pb.Kind_INT
 			registry.Register(def)
 		},
 		"max below min (int)": func() {
@@ -340,5 +344,115 @@ func TestValidateDefinitionConstraints(t *testing.T) {
 			}()
 			run()
 		})
+	}
+}
+
+func TestRegistryMerge(t *testing.T) {
+	t.Run("prefixes and auto creates groups", func(t *testing.T) {
+		registry := NewRegistry()
+		registry.RegisterGroup(Group("server"))
+
+		groups := []*pb.SettingsGroup{{Id: "cache", Order: 3}}
+		defs := []*pb.SettingsDefinition{Int("cache.size", 10).SettingsDefinition}
+
+		if err := registry.Merge("server.plugins.myplugin", Group("ignored").Icon("puzzle").Order(7), groups, defs); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		// the prefixed group chain exists, the plugin group carries its builder props
+		pluginGroup := registry.FindGroup("server.plugins.myplugin")
+		if pluginGroup == nil || pluginGroup.Icon == nil || *pluginGroup.Icon != "puzzle" || pluginGroup.Order != 7 {
+			t.Fatalf("plugin group = %+v", pluginGroup)
+		}
+		if registry.FindGroup("server.plugins") == nil {
+			t.Error("auto-created parent group missing")
+		}
+
+		// definitions are namespaced
+		def := registry.Find("server.plugins.myplugin.cache.size")
+		if def == nil || def.Int == nil || def.Int.DefaultValue != 10 {
+			t.Fatalf("merged definition = %+v", def)
+		}
+
+		// ...and nothing is registered at top level
+		if registry.Find("cache.size") != nil {
+			t.Error("definition leaked outside the namespace")
+		}
+	})
+
+	t.Run("atomic on error", func(t *testing.T) {
+		registry := NewRegistry()
+		registry.RegisterGroup(Group("server"))
+
+		groups := []*pb.SettingsGroup{{Id: "cache"}}
+		// this definition belongs to a group that was never registered
+		defs := []*pb.SettingsDefinition{
+			Int("cache.size", 10).SettingsDefinition,
+			Bool("other.orphan", true).SettingsDefinition,
+		}
+
+		if err := registry.Merge("server.plugins.bad", Group("x"), groups, defs); err == nil {
+			t.Fatal("expected an error for the orphaned definition")
+		}
+		if registry.FindGroup("server.plugins.bad") != nil || registry.FindGroup("server.plugins") != nil {
+			t.Error("groups leaked into the registry on failed merge")
+		}
+		if len(registry.All()) != 0 {
+			t.Error("definitions leaked into the registry on failed merge")
+		}
+	})
+
+	t.Run("rejects invalid prefixes", func(t *testing.T) {
+		registry := NewRegistry()
+		for _, prefix := range []string{"Server.x", "server..x", "1bad", ""} {
+			if err := registry.Merge(prefix, Group(prefix), nil, nil); err == nil {
+				t.Errorf("Merge(%q) accepted an invalid prefix", prefix)
+			}
+		}
+	})
+
+	t.Run("rejects duplicate IDs", func(t *testing.T) {
+		registry := NewRegistry()
+		registry.RegisterGroup(Group("server"))
+		groups := []*pb.SettingsGroup{{Id: "a"}}
+		defs := []*pb.SettingsDefinition{Bool("a.b", true).SettingsDefinition}
+		if err := registry.Merge("server.plugins.dupe", Group("x"), groups, defs); err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+		if err := registry.Merge("server.plugins.dupe", Group("x"), groups, defs); err == nil {
+			t.Error("expected duplicate plugin group error")
+		}
+		// a different plugin may use the same relative IDs thanks to namespacing
+		if err := registry.Merge("server.plugins.other", Group("x"), groups, defs); err != nil {
+			t.Fatalf("namespaced merge should not collide: %v", err)
+		}
+	})
+}
+
+func TestSettingsTracker(t *testing.T) {
+	tracker := NewSettingsTracker()
+	if _, ok := tracker.Get("x"); ok {
+		t.Error("empty tracker returned a value")
+	}
+
+	tracker.Update(map[string]string{"x": "true", "y": `"hi"`})
+	if got, _ := tracker.Get("x"); got != "true" {
+		t.Errorf("Get(x) = %q", got)
+	}
+	var out bool
+	if err := tracker.Decode("x", &out); err != nil || !out {
+		t.Errorf("Decode(x) = %v, %v", out, err)
+	}
+	if err := tracker.Decode("missing", &out); err == nil {
+		t.Error("Decode of missing setting did not error")
+	}
+	if len(tracker.All()) != 2 {
+		t.Errorf("All() = %v", tracker.All())
+	}
+
+	// update replaces the whole snapshot
+	tracker.Update(nil)
+	if len(tracker.All()) != 0 {
+		t.Errorf("snapshot not replaced, All() = %v", tracker.All())
 	}
 }

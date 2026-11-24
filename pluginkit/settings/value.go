@@ -1,4 +1,3 @@
-// Validation of setting values against their definitions.
 package settings
 
 import (
@@ -6,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+
+	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 )
 
 // Encode a value to the JSON text used for storage.
@@ -19,20 +20,20 @@ func Encode(value any) (string, error) {
 
 // Validates JSON-encoded text against the given setting definition.
 // Returns a re-[Encode]d value on success.
-func ValidateValue(def *SettingsDefinition, text string) (string, error) {
+func ValidateValue(def *pb.SettingsDefinition, text string) (string, error) {
 	if !json.Valid(json.RawMessage(text)) {
 		return "", errors.New("value is not valid JSON")
 	}
 
 	switch def.Kind {
-	case KindBool:
+	case pb.Kind_BOOL:
 		var value bool
 		if err := json.Unmarshal([]byte(text), &value); err != nil {
 			return "", errors.New("value must be a boolean")
 		}
 		return Encode(value)
 
-	case KindInt:
+	case pb.Kind_INT:
 		var value float64
 		if err := json.Unmarshal([]byte(text), &value); err != nil || value != float64(int64(value)) {
 			return "", errors.New("value must be an integer")
@@ -48,7 +49,7 @@ func ValidateValue(def *SettingsDefinition, text string) (string, error) {
 		}
 		return Encode(result)
 
-	case KindFloat:
+	case pb.Kind_FLOAT:
 		var value float64
 		if err := json.Unmarshal([]byte(text), &value); err != nil {
 			return "", errors.New("value must be a number")
@@ -63,17 +64,17 @@ func ValidateValue(def *SettingsDefinition, text string) (string, error) {
 		}
 		return Encode(value)
 
-	case KindString:
+	case pb.Kind_STRING:
 		var value string
 		if err := json.Unmarshal([]byte(text), &value); err != nil {
 			return "", errors.New("value must be a string")
 		}
-		if p := def.String; p != nil && p.MaxLength != nil && len(value) > *p.MaxLength {
+		if p := def.String_; p != nil && p.MaxLength != nil && len(value) > int(*p.MaxLength) {
 			return "", fmt.Errorf("value must be no more than %d characters", *p.MaxLength)
 		}
 		return Encode(value)
 
-	case KindEnum:
+	case pb.Kind_ENUM:
 		var value string
 		if err := json.Unmarshal([]byte(text), &value); err != nil {
 			return "", errors.New("value must be a string")
@@ -86,7 +87,7 @@ func ValidateValue(def *SettingsDefinition, text string) (string, error) {
 		}
 		return "", errors.New("value is not a valid choice")
 
-	case KindStringList:
+	case pb.Kind_STRINGLIST:
 		var value []string
 		if err := json.Unmarshal([]byte(text), &value); err != nil {
 			return "", errors.New("value must be an array of strings")
@@ -95,7 +96,7 @@ func ValidateValue(def *SettingsDefinition, text string) (string, error) {
 			value = []string{}
 		}
 		if p := def.StringList; p != nil {
-			if p.MaxItems != nil && len(value) > *p.MaxItems {
+			if p.MaxItems != nil && len(value) > int(*p.MaxItems) {
 				return "", fmt.Errorf("value must have no more than %d items", *p.MaxItems)
 			}
 			// duplicates are only allowed when enabled
@@ -108,12 +109,5 @@ func ValidateValue(def *SettingsDefinition, text string) (string, error) {
 		return Encode(value)
 	}
 
-	return "", fmt.Errorf("unknown setting kind: %s", def.Kind)
-}
-
-// Whether the list contains duplicate values.
-func hasDuplicates(values []string) bool {
-	sorted := slices.Clone(values)
-	slices.Sort(sorted)
-	return len(slices.Compact(sorted)) != len(values)
+	return "", fmt.Errorf("unknown setting kind: %s", kindName(def.Kind))
 }
