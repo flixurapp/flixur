@@ -307,14 +307,14 @@ func TestInitPluginSettingsRegistered(t *testing.T) {
 		t.Fatal("plugin was killed")
 	}
 
-	def := serverSettings.ServerRegistry.Find("server.plugins.settingsplugin.cache.enabled")
+	def := serverSettings.ServerRegistry.Find("plugins.settingsplugin.cache.enabled")
 	if def == nil || def.Bool == nil || !def.Bool.DefaultValue {
 		t.Fatalf("definition not namespaced correctly: %+v", def)
 	}
-	if serverSettings.ServerRegistry.FindGroup("server.plugins") == nil {
-		t.Error("auto-created server.plugins group missing")
+	if serverSettings.ServerRegistry.FindGroup("plugins") == nil {
+		t.Error("auto-created plugins group missing")
 	}
-	pluginGroup := serverSettings.ServerRegistry.FindGroup("server.plugins.settingsplugin")
+	pluginGroup := serverSettings.ServerRegistry.FindGroup("plugins.settingsplugin")
 	if pluginGroup == nil || pluginGroup.Icon == nil || *pluginGroup.Icon != "mdi:rock" {
 		t.Errorf("plugin group = %+v", pluginGroup)
 	}
@@ -371,7 +371,7 @@ func TestInitPluginSettingsValuePush(t *testing.T) {
 	// store a value for the plugin to receive
 	ctx := context.Background()
 	if _, err := client.ServerSetting.Create().
-		SetSettingID("server.plugins.valuesplugin.cache.size").
+		SetSettingID("plugins.valuesplugin.cache.size").
 		SetValue(serverSettings.SettingText{Raw: "42"}).
 		Save(ctx); err != nil {
 		t.Fatal(err)
@@ -385,7 +385,7 @@ func TestInitPluginSettingsValuePush(t *testing.T) {
 		t.Fatalf("expected 1 settings push, got %d", len(mock.updates))
 	}
 	snapshot := mock.updates[0]
-	if got := snapshot.Values["server.plugins.valuesplugin.cache.size"]; got != "42" {
+	if got := snapshot.Values["plugins.valuesplugin.cache.size"]; got != "42" {
 		t.Errorf("pushed values = %v", snapshot.Values)
 	}
 }

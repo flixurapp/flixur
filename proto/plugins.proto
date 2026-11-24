@@ -24,10 +24,10 @@ message InitRequest {}
 // The plugin's response to the init handshake.
 message InitResponse {
   // Settings groups registered by this plugin.
-  // IDs are relative to the plugin, the server keeps them under `server.plugins.<plugin id>`.
+  // IDs are relative to the plugin, the server keeps them under `plugins.<plugin id>`.
   repeated flixur.settings.SettingsGroup groups = 1;
   // Setting definitions registered by this plugin.
-  // IDs are relative to the plugin, the server keeps them under `server.plugins.<plugin id>`.
+  // IDs are relative to the plugin, the server keeps them under `plugins.<plugin id>`.
   repeated flixur.settings.SettingsDefinition definitions = 2;
 }
 

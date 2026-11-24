@@ -127,7 +127,7 @@ func TestServerSettingsDefinitions(t *testing.T) {
 
 	found := false
 	for _, def := range body.List {
-		if def.Id == "server.plugins.example.greeting.apiKey" {
+		if def.Id == "plugins.example.greeting.apiKey" {
 			found = true
 			// the kind round-trips as its string name
 			if def.Kind != pb.Kind_STRING {
@@ -147,7 +147,7 @@ func TestServerSettingsDefinitions(t *testing.T) {
 	for _, group := range body.Groups {
 		groupIDs[group.Id] = true
 	}
-	for _, want := range []string{"server", "server.plugins", "server.plugins.example", "server.plugins.example.greeting"} {
+	for _, want := range []string{"plugins", "plugins.example", "plugins.example.greeting"} {
 		if !groupIDs[want] {
 			t.Errorf("missing group %s in response", want)
 		}
@@ -312,7 +312,7 @@ func TestServerSettingChangeNotifiesPlugin(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	resp := api.Put("/admin/settings/values/server.plugins.example.greeting.apiKey",
+	resp := api.Put("/admin/settings/values/plugins.example.greeting.apiKey",
 		append(authHeaders(admin), map[string]any{"value": `"new-key"`})...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("put status = %d, body = %s", resp.Code, resp.Body.String())
@@ -322,7 +322,7 @@ func TestServerSettingChangeNotifiesPlugin(t *testing.T) {
 	if len(mock.updates) != 1 {
 		t.Fatalf("expected 1 settings push, got %d", len(mock.updates))
 	}
-	if got := mock.updates[0].Values["server.plugins.example.greeting.apiKey"]; got != `"new-key"` {
+	if got := mock.updates[0].Values["plugins.example.greeting.apiKey"]; got != `"new-key"` {
 		t.Errorf("pushed value = %q", got)
 	}
 }

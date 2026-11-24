@@ -118,10 +118,10 @@ func (*InitRequest) Descriptor() ([]byte, []int) {
 type InitResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Settings groups registered by this plugin.
-	// IDs are relative to the plugin, the server keeps them under `server.plugins.<plugin id>`.
+	// IDs are relative to the plugin, the server keeps them under `plugins.<plugin id>`.
 	Groups []*SettingsGroup `protobuf:"bytes,1,rep,name=groups,proto3" json:"groups,omitempty"`
 	// Setting definitions registered by this plugin.
-	// IDs are relative to the plugin, the server keeps them under `server.plugins.<plugin id>`.
+	// IDs are relative to the plugin, the server keeps them under `plugins.<plugin id>`.
 	Definitions   []*SettingsDefinition `protobuf:"bytes,2,rep,name=definitions,proto3" json:"definitions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

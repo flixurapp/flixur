@@ -7,16 +7,18 @@ import (
 )
 
 // Prefix all plugin settings are registered under.
-const PluginNamespacePrefix = "server.plugins"
+const PluginNamespacePrefix = "plugins"
 
 // Settings registry for server-scoped settings.
 // These settings are global to the server and include plugins.
 var ServerRegistry = NewServerRegistry()
 
-// Creates the registry for server settings, including its main group.
+// Creates the registry for server settings.
 func NewServerRegistry() *s.Registry {
 	reg := s.NewRegistry()
-	reg.RegisterGroup(s.Group("server").Icon("server").Order(1))
+
+	//TODO: add settings
+
 	return reg
 }
 
