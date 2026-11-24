@@ -75,7 +75,7 @@ func runServer() error {
 		if err != nil {
 			log.Err(err).Msg("Failed to resolve plugin directory.")
 		} else {
-			plugins.RegisterPlugins(pluginDir)
+			plugins.RegisterPlugins(pluginDir, client)
 		}
 		defer plugins.DestroyAllPlugins()
 

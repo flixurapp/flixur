@@ -78,16 +78,16 @@ func TestSettingsDefinitions(t *testing.T) {
 	// every registry definition must survive the JSON round-trip intact
 	byID := map[string]*settings.SettingsDefinition{}
 	for _, def := range body.List {
-		byID[def.ID] = def
+		byID[def.Id] = def
 	}
 	for _, want := range defs {
-		got := byID[want.ID]
+		got := byID[want.Id]
 		if got == nil {
-			t.Errorf("missing definition %s", want.ID)
+			t.Errorf("missing definition %s", want.Id)
 			continue
 		}
 		if !reflect.DeepEqual(got, want) {
-			t.Errorf("definition %s differs from registry:\n wire = %+v\n reg  = %+v", want.ID, got, want)
+			t.Errorf("definition %s differs from registry:\n wire = %+v\n reg  = %+v", want.Id, got, want)
 		}
 	}
 
@@ -98,11 +98,11 @@ func TestSettingsDefinitions(t *testing.T) {
 	}
 	respGroups := map[string]bool{}
 	for _, group := range body.Groups {
-		respGroups[group.ID] = true
+		respGroups[group.Id] = true
 	}
 	for _, want := range groups {
-		if !respGroups[want.ID] {
-			t.Errorf("missing group %s in the definitions response", want.ID)
+		if !respGroups[want.Id] {
+			t.Errorf("missing group %s in the definitions response", want.Id)
 		}
 	}
 }
@@ -228,7 +228,7 @@ func TestSettingsProfileValues(t *testing.T) {
 	profileID := profiles.List[0].ID
 
 	// set a bool override
-	resp = api.Put("/settings/profiles/"+profileID+"/values/"+boolDef.ID,
+	resp = api.Put("/settings/profiles/"+profileID+"/values/"+boolDef.Id,
 		append(authHeaders(token), map[string]any{"value": "false"})...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("put bool status = %d, body = %s", resp.Code, resp.Body.String())
@@ -241,12 +241,12 @@ func TestSettingsProfileValues(t *testing.T) {
 	// get values contains it
 	resp = api.Get("/settings/profiles/"+profileID+"/values", authHeaders(token)...)
 	values := decode[SettingValuesBody](t, resp)
-	if len(values.Values) != 1 || values.Values[boolDef.ID].Value != "false" {
+	if len(values.Values) != 1 || values.Values[boolDef.Id].Value != "false" {
 		t.Fatalf("values = %+v", values.Values)
 	}
 
 	// update overwrites
-	resp = api.Put("/settings/profiles/"+profileID+"/values/"+boolDef.ID,
+	resp = api.Put("/settings/profiles/"+profileID+"/values/"+boolDef.Id,
 		append(authHeaders(token), map[string]any{"value": "true"})...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("re-put bool status = %d", resp.Code)
@@ -257,14 +257,14 @@ func TestSettingsProfileValues(t *testing.T) {
 	}
 
 	// invalid value for the kind is rejected
-	resp = api.Put("/settings/profiles/"+profileID+"/values/"+boolDef.ID,
+	resp = api.Put("/settings/profiles/"+profileID+"/values/"+boolDef.Id,
 		append(authHeaders(token), map[string]any{"value": "\"nope\""})...)
 	if resp.Code != http.StatusBadRequest {
 		t.Errorf("invalid bool status = %d", resp.Code)
 	}
 
 	// out-of-bounds int is rejected
-	resp = api.Put("/settings/profiles/"+profileID+"/values/"+intDef.ID,
+	resp = api.Put("/settings/profiles/"+profileID+"/values/"+intDef.Id,
 		append(authHeaders(token), map[string]any{"value": fmt.Sprintf("%d", *intDef.Int.Max+1)})...)
 	if resp.Code != http.StatusBadRequest {
 		t.Errorf("out of bounds int status = %d", resp.Code)

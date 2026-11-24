@@ -354,7 +354,7 @@ func RegisterSettingsRoutes(reg APIRegistry) {
 		// validate value text
 		value, err := settings.ValidateValue(def, input.Body.Value)
 		if err != nil {
-			log.Debug().Err(err).Str("key", def.ID).Str("value", input.Body.Value).Msg("Failed to validate setting override value.")
+			log.Debug().Err(err).Str("key", def.Id).Str("value", input.Body.Value).Msg("Failed to validate setting override value.")
 			return nil, CreateAPIErrorDetail(CodeInvalidInput, "value")
 		}
 
