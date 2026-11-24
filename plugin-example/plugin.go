@@ -6,6 +6,7 @@ import (
 
 	"forge.xela.codes/xela/flixur/pluginkit"
 	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
+	"forge.xela.codes/xela/flixur/pluginkit/settings"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -15,8 +16,32 @@ import (
 var manifest embed.FS
 var Manifest = pluginkit.LoadPluginManifest(manifest)
 
+// registry for this plugin's server-side settings.
+var registry = settings.NewRegistry()
+
+// Tracks the latest values received from the server.
+var SettingValues = settings.NewSettingsTracker()
+
+func init() {
+	registry.RegisterGroup(settings.Group("greeting").Icon("mdi:hand-wave").Order(1))
+	registry.Register(settings.String("greeting.apiKey", "").Secret(true).Order(1))
+	registry.Register(settings.Int("greeting.greetings", 1).Min(1).Max(10).Order(2))
+}
+
 type Plugin struct {
 	pb.UnimplementedFlixurPluginServiceServer
+}
+
+func (p *Plugin) Init(ctx context.Context, req *pb.InitRequest) (*pb.InitResponse, error) {
+	log.Info().Msg("Server requested init handshake.")
+	return settings.Snapshot(registry), nil
+}
+
+func (p *Plugin) SettingsUpdate(ctx context.Context, req *pb.SettingsUpdateRequest) (*pb.SettingsUpdateResponse, error) {
+	SettingValues.Update(req.Values)
+	log.Info().Msg("Server settings changed, (re)starting client...")
+	// modify an API client or something here
+	return &pb.SettingsUpdateResponse{}, nil
 }
 
 func (p *Plugin) ArtistGet(ctx context.Context, req *pb.ArtistGetRequest) (*pb.ArtistGetResponse, error) {

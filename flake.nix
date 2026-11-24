@@ -242,6 +242,7 @@
               # `Feature_FEATURE_MUSIC_METADATA` => `Feature_MUSIC_METADATA`.
               enumNames = [
                 "Feature"
+                "Kind"
                 "AlbumType"
                 "TrackExplicitness"
               ];
