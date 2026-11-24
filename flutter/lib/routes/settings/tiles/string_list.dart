@@ -24,7 +24,7 @@ class const SettingsTileStringList(
     final props = def.stringList;
     final allowDuplicates = props?.allowDuplicates ?? false;
     final maxItems = props?.maxItems;
-    final choices = props?.choices?.toList() ?? const <ChoiceSpec>[];
+    final choices = props?.choices?.toList() ?? const <SettingsChoice>[];
 
     final expanded = useState(false);
     final items = useState<List<String>>(def.value<List<String>>());
@@ -202,7 +202,7 @@ class const SettingsTileStringList(
 /// A single reorderable list item row.
 class const _ItemRow(
   final String def,
-  final ChoiceSpec? spec,
+  final SettingsChoice? spec,
   final String value,
   final int index, {
   required final ValueNotifier<int?> dragging,

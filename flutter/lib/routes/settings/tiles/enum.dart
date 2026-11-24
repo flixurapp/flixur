@@ -42,7 +42,7 @@ class const SettingsTileEnum(
           ),
           dropdownMenuEntries: [
             for (final choice
-                in def.enum_?.choices?.toList() ?? const <ChoiceSpec>[])
+                in def.enum_?.choices?.toList() ?? const <SettingsChoice>[])
               DropdownMenuEntry(
                 value: choice.value,
                 label: SettingsTranslated.choiceName(def.id, choice.value),
@@ -62,7 +62,7 @@ class const SettingsTileEnum(
 }
 
 /// Dropdown entry label showing the title and description.
-class const _ChoiceLabel(final String id, final ChoiceSpec choice)
+class const _ChoiceLabel(final String id, final SettingsChoice choice)
     extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
