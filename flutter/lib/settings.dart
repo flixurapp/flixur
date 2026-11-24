@@ -287,7 +287,15 @@ abstract class Settings {
       );
       switch (response) {
         case ApiSuccess(:final data):
-          _storeValue(pending.profileID, pending.settingID, data);
+          // values pushed at their default drop the override
+          final found = definitionList
+              .where((d) => d.id == pending.settingID)
+              .toList();
+          if (found.isNotEmpty && pending.value == found.first.encodedDefault) {
+            _deleteValue(pending.profileID, pending.settingID);
+          } else {
+            _storeValue(pending.profileID, pending.settingID, data);
+          }
           _pendingItems.remove(pending);
         case ApiFailure():
           //TODO: add retry counter on this and stop after so many tries
@@ -323,6 +331,18 @@ abstract class Settings {
             changed.add(entry.key);
           }
         }
+        // drop local entries that are no longer stored on the server
+        for (final id in stored?.keys.toList() ?? const <String>[]) {
+          if (data.values.containsKey(id)) continue;
+          // keep entries that are still pending a push
+          if (_pendingItems.any(
+            (item) => item.profileID == profileID && item.settingID == id,
+          )) {
+            continue;
+          }
+          _deleteValue(profileID, id);
+          changed.add(id);
+        }
         _refreshOverrides();
         if (changed.isNotEmpty) _changes.add(.new(changed));
         return null;
@@ -343,6 +363,14 @@ abstract class Settings {
     // items are stored as $profileID$key.name.here
     unawaited(
       _box.put(_valuesDelimiter + profileID + _valuesDelimiter + id, value),
+    );
+  }
+
+  /// Deletes a locally stored value without notifying.
+  static void _deleteValue(String profileID, String id) {
+    _storedValues[profileID]?.remove(id);
+    unawaited(
+      _box.delete(_valuesDelimiter + profileID + _valuesDelimiter + id),
     );
   }
 
@@ -385,16 +413,21 @@ abstract class Settings {
     final encoded = _encode<T>(def, value);
     final updatedAt = DateTime.now().toUtc();
 
-    // store/update value locally
-    _storeValue(
-      targetProfileID,
-      id,
-      SettingValueEntry(
-        (b) => b
-          ..value = encoded
-          ..updatedAt = updatedAt,
-      ),
-    );
+    // values equal to the default drop the override
+    if (def.isDefault(value)) {
+      _deleteValue(targetProfileID, id);
+    } else {
+      // store/update value locally
+      _storeValue(
+        targetProfileID,
+        id,
+        SettingValueEntry(
+          (b) => b
+            ..value = encoded
+            ..updatedAt = updatedAt,
+        ),
+      );
+    }
     _refreshOverrides();
     _changes.add(.new([id]));
 
@@ -567,6 +600,9 @@ extension SettingsDefinitionHelpers on SettingsDefinition {
 
   /// Returns the default value of this definition. Always returns a value.
   T? getDefault<T>() => typedDefault() ?? _fallbackTypeValue<T>();
+
+  /// The encoded JSON text of this definition's default value.
+  String get encodedDefault => Settings._encode<dynamic>(this, rawDefault);
 
   /// Whether [value] equals this definition's default value.
   bool isDefault(Object? value) {

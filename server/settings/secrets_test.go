@@ -83,8 +83,8 @@ func TestCheckSecretKey(t *testing.T) {
 	}
 
 	// register a secret setting
-	ServerRegistry.RegisterGroup(plugsettings.Group("server.test"))
-	ServerRegistry.Register(plugsettings.String("server.test.secretCheck", "").Secret(true).Order(1))
+	ServerRegistry.RegisterGroup(plugsettings.Group("test"))
+	ServerRegistry.Register(plugsettings.String("test.secretCheck", "").Secret(true).Order(1))
 
 	// a missing key degrades to plaintext with a warning
 	setKey(t, "")

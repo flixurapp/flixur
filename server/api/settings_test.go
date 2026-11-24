@@ -230,33 +230,52 @@ func TestSettingsProfileValues(t *testing.T) {
 	profiles := decode[SettingsProfilesBody](t, resp)
 	profileID := profiles.List[0].ID
 
-	// set a bool override
+	// a bool override with a non-default value
+	nonDefault := !boolDef.Bool.DefaultValue
+	valueText := fmt.Sprintf("%v", nonDefault)
+	defaultText := fmt.Sprintf("%v", boolDef.Bool.DefaultValue)
+
 	resp = api.Put("/settings/profiles/"+profileID+"/values/"+boolDef.Id,
-		append(authHeaders(token), map[string]any{"value": "false"})...)
+		append(authHeaders(token), map[string]any{"value": valueText})...)
 	if resp.Code != http.StatusOK {
 		t.Fatalf("put bool status = %d, body = %s", resp.Code, resp.Body.String())
 	}
 	entry := decode[SettingValueEntry](t, resp)
-	if entry.Value != "false" || entry.UpdatedAt.IsZero() {
+	if entry.Value != valueText || entry.UpdatedAt.IsZero() {
 		t.Errorf("bool value entry = %+v", entry)
 	}
 
 	// get values contains it
 	resp = api.Get("/settings/profiles/"+profileID+"/values", authHeaders(token)...)
 	values := decode[SettingValuesBody](t, resp)
-	if len(values.Values) != 1 || values.Values[boolDef.Id].Value != "false" {
+	if len(values.Values) != 1 || values.Values[boolDef.Id].Value != valueText {
 		t.Fatalf("values = %+v", values.Values)
 	}
 
-	// update overwrites
+	// setting the default drops the override
 	resp = api.Put("/settings/profiles/"+profileID+"/values/"+boolDef.Id,
-		append(authHeaders(token), map[string]any{"value": "true"})...)
+		append(authHeaders(token), map[string]any{"value": defaultText})...)
 	if resp.Code != http.StatusOK {
-		t.Fatalf("re-put bool status = %d", resp.Code)
+		t.Fatalf("default put status = %d, body = %s", resp.Code, resp.Body.String())
+	}
+	entry = decode[SettingValueEntry](t, resp)
+	if entry.Value != defaultText || entry.UpdatedAt.IsZero() {
+		t.Errorf("default value entry = %+v", entry)
 	}
 	resp = api.Get("/settings/profiles/"+profileID+"/values", authHeaders(token)...)
-	if n := len(decode[SettingValuesBody](t, resp).Values); n != 1 {
-		t.Errorf("expected 1 override, got %d", n)
+	if n := len(decode[SettingValuesBody](t, resp).Values); n != 0 {
+		t.Errorf("expected no overrides after reset, got %d", n)
+	}
+
+	// resetting a setting without an override is a no-op
+	resp = api.Put("/settings/profiles/"+profileID+"/values/"+boolDef.Id,
+		append(authHeaders(token), map[string]any{"value": defaultText})...)
+	if resp.Code != http.StatusOK {
+		t.Fatalf("no-op default put status = %d, body = %s", resp.Code, resp.Body.String())
+	}
+	resp = api.Get("/settings/profiles/"+profileID+"/values", authHeaders(token)...)
+	if n := len(decode[SettingValuesBody](t, resp).Values); n != 0 {
+		t.Errorf("expected no overrides after no-op reset, got %d", n)
 	}
 
 	// invalid value for the kind is rejected

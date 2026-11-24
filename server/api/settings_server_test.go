@@ -158,10 +158,10 @@ func TestServerSettingValues(t *testing.T) {
 	api, _, admin, _ := setupServerSettingsTest(t)
 	resetServerRegistry(t)
 
-	// register test settings under the core group
-	settings.ServerRegistry.RegisterGroup(plugSettings.Group("server.test"))
-	boolDef := settings.ServerRegistry.Register(plugSettings.Bool("server.test.bool", false).Order(1))
-	intDef := settings.ServerRegistry.Register(plugSettings.Int("server.test.int", 0).Min(1).Max(10).Order(2))
+	// register test settings under a standalone group
+	settings.ServerRegistry.RegisterGroup(plugSettings.Group("test"))
+	boolDef := settings.ServerRegistry.Register(plugSettings.Bool("test.bool", false).Order(1))
+	intDef := settings.ServerRegistry.Register(plugSettings.Int("test.int", 5).Min(1).Max(10).Order(2))
 
 	// set a bool value
 	resp := api.Put("/admin/settings/values/"+boolDef.Id, append(authHeaders(admin), map[string]any{"value": "true"})...)
@@ -181,13 +181,52 @@ func TestServerSettingValues(t *testing.T) {
 	}
 
 	// update overwrites instead of duplicating
+	resp = api.Put("/admin/settings/values/"+intDef.Id, append(authHeaders(admin), map[string]any{"value": "7"})...)
+	if resp.Code != http.StatusOK {
+		t.Fatalf("int put status = %d, body = %s", resp.Code, resp.Body.String())
+	}
+	resp = api.Put("/admin/settings/values/"+intDef.Id, append(authHeaders(admin), map[string]any{"value": "6"})...)
+	if resp.Code != http.StatusOK {
+		t.Fatalf("int re-put status = %d", resp.Code)
+	}
+	resp = api.Get("/admin/settings/values", authHeaders(admin)...)
+	values = decode[SettingValuesBody](t, resp)
+	if len(values.Values) != 2 || values.Values[intDef.Id].Value != "6" {
+		t.Errorf("values after overwrite = %+v", values.Values)
+	}
+
+	// setting the default drops the override
 	resp = api.Put("/admin/settings/values/"+boolDef.Id, append(authHeaders(admin), map[string]any{"value": "false"})...)
 	if resp.Code != http.StatusOK {
-		t.Fatalf("re-put status = %d", resp.Code)
+		t.Fatalf("default put status = %d, body = %s", resp.Code, resp.Body.String())
+	}
+	entry = decode[SettingValueEntry](t, resp)
+	if entry.Value != "false" || entry.UpdatedAt.IsZero() {
+		t.Errorf("default entry = %+v", entry)
 	}
 	resp = api.Get("/admin/settings/values", authHeaders(admin)...)
 	if n := len(decode[SettingValuesBody](t, resp).Values); n != 1 {
-		t.Errorf("expected 1 stored value, got %d", n)
+		t.Errorf("expected 1 stored value after reset, got %d", n)
+	}
+
+	// resetting a setting without an override is a no-op
+	resp = api.Put("/admin/settings/values/"+boolDef.Id, append(authHeaders(admin), map[string]any{"value": "false"})...)
+	if resp.Code != http.StatusOK {
+		t.Fatalf("no-op default put status = %d, body = %s", resp.Code, resp.Body.String())
+	}
+	resp = api.Get("/admin/settings/values", authHeaders(admin)...)
+	if n := len(decode[SettingValuesBody](t, resp).Values); n != 1 {
+		t.Errorf("expected 1 stored value after no-op reset, got %d", n)
+	}
+
+	// setting the last remaining override to its default empties the table
+	resp = api.Put("/admin/settings/values/"+intDef.Id, append(authHeaders(admin), map[string]any{"value": "5"})...)
+	if resp.Code != http.StatusOK {
+		t.Fatalf("int default put status = %d, body = %s", resp.Code, resp.Body.String())
+	}
+	resp = api.Get("/admin/settings/values", authHeaders(admin)...)
+	if n := len(decode[SettingValuesBody](t, resp).Values); n != 0 {
+		t.Errorf("expected no stored values after full reset, got %d", n)
 	}
 
 	// invalid value for the kind is rejected
@@ -203,7 +242,7 @@ func TestServerSettingValues(t *testing.T) {
 	}
 
 	// unknown setting 404s
-	resp = api.Put("/admin/settings/values/server.unknown", append(authHeaders(admin), map[string]any{"value": "1"})...)
+	resp = api.Put("/admin/settings/values/test.unknown", append(authHeaders(admin), map[string]any{"value": "1"})...)
 	if resp.Code != http.StatusNotFound {
 		t.Errorf("unknown setting status = %d", resp.Code)
 	}
@@ -217,9 +256,9 @@ func TestServerSettingSecretStorage(t *testing.T) {
 	common.Config.SettingsKey = strings.Repeat("ab", 32)
 
 	// register two secret settings, one for each scenario
-	settings.ServerRegistry.RegisterGroup(plugSettings.Group("server.test"))
-	def := settings.ServerRegistry.Register(plugSettings.String("server.test.apiKey", "").Secret(true).Order(1))
-	fallbackDef := settings.ServerRegistry.Register(plugSettings.String("server.test.fallbackKey", "").Secret(true).Order(2))
+	settings.ServerRegistry.RegisterGroup(plugSettings.Group("test"))
+	def := settings.ServerRegistry.Register(plugSettings.String("test.apiKey", "").Secret(true).Order(1))
+	fallbackDef := settings.ServerRegistry.Register(plugSettings.String("test.fallbackKey", "").Secret(true).Order(2))
 
 	// the value comes back unmasked so it can be edited by clients
 	resp := api.Put("/admin/settings/values/"+def.Id, append(authHeaders(admin), map[string]any{"value": `"super-secret"`})...)

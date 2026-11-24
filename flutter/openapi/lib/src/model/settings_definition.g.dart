@@ -6,6 +6,10 @@ part of 'settings_definition.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+const SettingsDefinitionKindEnum _$settingsDefinitionKindEnum_float =
+    const SettingsDefinitionKindEnum._('float');
+const SettingsDefinitionKindEnum _$settingsDefinitionKindEnum_string =
+    const SettingsDefinitionKindEnum._('string');
 const SettingsDefinitionKindEnum _$settingsDefinitionKindEnum_enum_ =
     const SettingsDefinitionKindEnum._('enum_');
 const SettingsDefinitionKindEnum _$settingsDefinitionKindEnum_stringlist =
@@ -14,13 +18,13 @@ const SettingsDefinitionKindEnum _$settingsDefinitionKindEnum_bool_ =
     const SettingsDefinitionKindEnum._('bool_');
 const SettingsDefinitionKindEnum _$settingsDefinitionKindEnum_int_ =
     const SettingsDefinitionKindEnum._('int_');
-const SettingsDefinitionKindEnum _$settingsDefinitionKindEnum_float =
-    const SettingsDefinitionKindEnum._('float');
-const SettingsDefinitionKindEnum _$settingsDefinitionKindEnum_string =
-    const SettingsDefinitionKindEnum._('string');
 
 SettingsDefinitionKindEnum _$settingsDefinitionKindEnumValueOf(String name) {
   switch (name) {
+    case 'float':
+      return _$settingsDefinitionKindEnum_float;
+    case 'string':
+      return _$settingsDefinitionKindEnum_string;
     case 'enum_':
       return _$settingsDefinitionKindEnum_enum_;
     case 'stringlist':
@@ -29,10 +33,6 @@ SettingsDefinitionKindEnum _$settingsDefinitionKindEnumValueOf(String name) {
       return _$settingsDefinitionKindEnum_bool_;
     case 'int_':
       return _$settingsDefinitionKindEnum_int_;
-    case 'float':
-      return _$settingsDefinitionKindEnum_float;
-    case 'string':
-      return _$settingsDefinitionKindEnum_string;
     default:
       throw ArgumentError(name);
   }
@@ -40,12 +40,12 @@ SettingsDefinitionKindEnum _$settingsDefinitionKindEnumValueOf(String name) {
 
 final BuiltSet<SettingsDefinitionKindEnum> _$settingsDefinitionKindEnumValues =
     BuiltSet<SettingsDefinitionKindEnum>(const <SettingsDefinitionKindEnum>[
+  _$settingsDefinitionKindEnum_float,
+  _$settingsDefinitionKindEnum_string,
   _$settingsDefinitionKindEnum_enum_,
   _$settingsDefinitionKindEnum_stringlist,
   _$settingsDefinitionKindEnum_bool_,
   _$settingsDefinitionKindEnum_int_,
-  _$settingsDefinitionKindEnum_float,
-  _$settingsDefinitionKindEnum_string,
 ]);
 
 Serializer<SettingsDefinitionKindEnum> _$settingsDefinitionKindEnumSerializer =
@@ -54,20 +54,20 @@ Serializer<SettingsDefinitionKindEnum> _$settingsDefinitionKindEnumSerializer =
 class _$SettingsDefinitionKindEnumSerializer
     implements PrimitiveSerializer<SettingsDefinitionKindEnum> {
   static const Map<String, Object> _toWire = const <String, Object>{
+    'float': 'float',
+    'string': 'string',
     'enum_': 'enum',
     'stringlist': 'stringlist',
     'bool_': 'bool',
     'int_': 'int',
-    'float': 'float',
-    'string': 'string',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
+    'float': 'float',
+    'string': 'string',
     'enum': 'enum_',
     'stringlist': 'stringlist',
     'bool': 'bool_',
     'int': 'int_',
-    'float': 'float',
-    'string': 'string',
   };
 
   @override

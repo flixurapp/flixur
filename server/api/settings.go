@@ -360,6 +360,15 @@ func RegisterSettingsRoutes(reg APIRegistry) {
 			return nil, CreateAPIErrorDetail(CodeInvalidInput, "value")
 		}
 
+		// values equal to the default are not stored as overrides
+		if s.IsDefaultValue(def, value) {
+			entry, err := deleteProfileSettingValue(ctx, reg.DB, profile, input.SettingID, value)
+			if err != nil {
+				return nil, err
+			}
+			return CreateOutput(entry), nil
+		}
+
 		text := settings.SettingText{Raw: value, Secret: def.IsSecret()}
 
 		var entry *SettingValueEntry
@@ -404,4 +413,35 @@ func RegisterSettingsRoutes(reg APIRegistry) {
 
 		return CreateOutput(*entry), nil
 	})
+}
+
+// Deletes the override for a setting in a profile when its value matches the
+// definition's default. Returns the entry representing the updated value.
+func deleteProfileSettingValue(
+	ctx context.Context,
+	db *ent.Client,
+	profile *ent.SettingProfile,
+	settingID string,
+	value string,
+) (SettingValueEntry, error) {
+	entry := SettingValueEntry{Value: value, UpdatedAt: time.Now().UTC()}
+
+	// grab an existing override and drop it
+	existing, err := profile.QueryValues().
+		Where(settingvalue.SettingIDEQ(settingID)).
+		First(ctx)
+	switch {
+	case err == nil:
+		if err := db.SettingValue.DeleteOne(existing).Exec(ctx); err != nil {
+			log.Err(err).Msg("Failed to delete settings override.")
+			return entry, CreateAPIError(CodeDatabaseError)
+		}
+	case ent.IsNotFound(err):
+		// nothing to delete
+	default:
+		log.Err(err).Msg("Failed to read settings override from database.")
+		return entry, CreateAPIError(CodeDatabaseError)
+	}
+
+	return entry, nil
 }

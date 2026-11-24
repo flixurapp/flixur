@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"time"
 
 	"forge.xela.codes/xela/flixur/ent"
 	"forge.xela.codes/xela/flixur/ent/serversetting"
@@ -115,7 +116,20 @@ func dbSettingValues(ctx context.Context, db *ent.Client) (map[string]*SettingVa
 }
 
 // Stores a server setting override and returns its entry.
+// Values equal to the definition's default drop the override instead.
 func setServerSettingValue(ctx context.Context, db *ent.Client, def *pb.SettingsDefinition, value string) (*SettingValueEntry, error) {
+	// values equal to the default are not stored as overrides
+	if s.IsDefaultValue(def, value) {
+		if _, err := db.ServerSetting.Delete().
+			Where(serversetting.SettingIDEQ(def.Id)).
+			Exec(ctx); err != nil {
+			log.Err(err).Msg("Failed to delete server setting value.")
+			return nil, CreateAPIError(CodeDatabaseError)
+		}
+
+		return &SettingValueEntry{Value: value, UpdatedAt: time.Now().UTC()}, nil
+	}
+
 	text := settings.SettingText{Raw: value, Secret: def.IsSecret()}
 
 	// grab an existing value
