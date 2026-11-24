@@ -41,8 +41,11 @@ class const MainNavTop({super.key}) extends StatelessWidget {
           section: null,
           label: t.titlebar.logout,
           onPressed: () async {
+            final navContext =
+                router.routerDelegate.navigatorKey.currentContext;
+            if (navContext == null) return;
             final confirmed = await showConfirmDialog(
-              context,
+              navContext,
               message: t.titlebar.logout_confirmation,
             );
             if (confirmed) unawaited(Api.logout());
