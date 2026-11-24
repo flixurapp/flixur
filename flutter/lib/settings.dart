@@ -7,9 +7,9 @@ import "package:flixur/api.dart";
 import "package:flixur/gen/strings.g.dart";
 import "package:flixur/hooks.dart";
 import "package:flixur/storage.dart";
+import "package:flixur/ui/settings/values.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
-import "package:fuse_dart/fuse_dart.dart";
 import "package:hive_ce_flutter/hive_ce_flutter.dart";
 import "package:openapi/openapi.dart";
 
@@ -127,7 +127,6 @@ abstract class Settings {
       _storedValues[profileID]![settingID] = value;
     }
     _refreshOverrides();
-    _refreshSearchIndex();
 
     // watch for auth events
     Storage.watch(.sessionToken).listen((event) {
@@ -208,7 +207,6 @@ abstract class Settings {
         case ApiSuccess(:final data):
           definitions = data.list.toList();
           groups = data.groups.toList();
-          _refreshSearchIndex();
           // defaults may have changed, notify listeners
           _changes.add(.all());
 
@@ -396,12 +394,12 @@ abstract class Settings {
     final def = definition(id);
     if (def == null) return null;
     final override = overrides?[id];
-    if (override != null) return _decode<T>(def, override);
+    if (override != null) return decodeSettingValue<T>(def, override);
     return def.typedDefault<T>();
   }
 
   /// Always returns a value for a setting, even if it's not found.
-  static T getValue<T>(String id) => get<T>(id) ?? _fallbackTypeValue<T>();
+  static T getValue<T>(String id) => get<T>(id) ?? fallbackTypeValue<T>();
 
   /// Writes a typed value for a setting to [profileID] when given or current.
   /// Returns a boolean indicating success.
@@ -410,7 +408,7 @@ abstract class Settings {
     final targetProfileID = profileID ?? activeProfileID;
     if (def == null || targetProfileID == null) return false;
 
-    final encoded = _encode<T>(def, value);
+    final encoded = encodeSettingValue<T>(def, value);
     final updatedAt = DateTime.now().toUtc();
 
     // values equal to the default drop the override
@@ -449,32 +447,6 @@ abstract class Settings {
     return true;
   }
 
-  /// Decodes a JSON-encoded value text into the setting's type.
-  static T? _decode<T>(SettingsDefinition def, String text) {
-    final value = switch (def.kind) {
-      .bool_ => jsonDecode(text) as bool,
-      .int_ => (jsonDecode(text) as num).toInt(),
-      .float => (jsonDecode(text) as num).toDouble(),
-      .string || .enum_ => jsonDecode(text) as String,
-      .stringlist => [
-        for (final item in jsonDecode(text) as List) item as String,
-      ],
-      _ => null,
-    };
-    return value is T ? value : null;
-  }
-
-  /// Encodes a typed value into the setting's JSON value string.
-  static String _encode<T>(SettingsDefinition def, T value) =>
-      switch (def.kind) {
-        .bool_ => jsonEncode(value as bool),
-        .int_ => jsonEncode(value as num),
-        .float => jsonEncode(value as num),
-        .string || .enum_ => jsonEncode(value as String),
-        .stringlist => jsonEncode((value as List<String>).toList()),
-        _ => jsonEncode(value),
-      };
-
   /// Completely reset the settings manager. Used for logout.
   static Future<void> reset() async {
     definitions = groups = activeProfileID = overrides = null;
@@ -482,40 +454,8 @@ abstract class Settings {
     _storedValues.clear();
     await _box.deleteAll([_definitionsKey, _groupsKey, _pendingItemsKey]);
 
-    _refreshSearchIndex();
     _changes.add(.all());
   }
-
-  static Fuse<SettingsDefinition> searchIndex = .new(
-    const [],
-    options: .new(
-      includeScore: true,
-      useTokenSearch: true,
-      keys: <FuseKey<SettingsDefinition>>[
-        .new(
-          name: "title",
-          weight: 5,
-          getFn: (d) => SettingsTranslated.defName(d.id),
-        ),
-        .new(
-          name: "description",
-          weight: 4,
-          getFn: (d) => SettingsTranslated.defDescription(d.id),
-        ),
-        .new(name: "id", weight: 2, getFn: (d) => d.id),
-        .new(
-          name: "parents",
-          weight: 1,
-          // all of the group path segments joined into one string
-          getFn: (d) => SettingsTranslated.groupSegments(d.id).join("\n"),
-        ),
-      ],
-    ),
-  );
-
-  /// Refreshes the stored documents in [searchIndex].
-  static void _refreshSearchIndex() =>
-      searchIndex.setCollection(definitions ?? const []);
 }
 
 /// A settings change event.
@@ -565,20 +505,9 @@ String? settingIDParent(String id) {
   return dot <= 0 ? null : id.substring(0, dot);
 }
 
-/// Returns a fallback value for the given setting dart type.
-T _fallbackTypeValue<T>() {
-  if (T == bool) return false as T;
-  if (T == int) return 0 as T;
-  if (T == double) return 0.0 as T;
-  if (T == String) return "" as T;
-  if (T == List<String>) return List<String>.empty() as T;
-  throw UnsupportedError("no default value for the type $T");
-}
-
 extension SettingsDefinitionHelpers on SettingsDefinition {
   String get name => SettingsTranslated.defName(id);
   String get description => SettingsTranslated.defDescription(id);
-  T value<T>() => Settings.getValue<T>(id);
 
   /// The raw default value of this definition.
   Object? get rawDefault => switch (kind) {
@@ -599,10 +528,10 @@ extension SettingsDefinitionHelpers on SettingsDefinition {
   }
 
   /// Returns the default value of this definition. Always returns a value.
-  T? getDefault<T>() => typedDefault() ?? _fallbackTypeValue<T>();
+  T? getDefault<T>() => typedDefault() ?? fallbackTypeValue<T>();
 
   /// The encoded JSON text of this definition's default value.
-  String get encodedDefault => Settings._encode<dynamic>(this, rawDefault);
+  String get encodedDefault => encodeSettingValue<dynamic>(this, rawDefault);
 
   /// Whether [value] equals this definition's default value.
   bool isDefault(Object? value) {

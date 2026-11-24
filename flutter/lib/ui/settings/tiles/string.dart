@@ -2,11 +2,11 @@ import "dart:async";
 import "dart:math";
 
 import "package:flixur/hooks.dart";
-import "package:flixur/routes/settings/index.dart";
-import "package:flixur/routes/settings/tiles/common.dart";
-import "package:flixur/settings.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/inputs.dart";
+import "package:flixur/ui/settings/menu.dart";
+import "package:flixur/ui/settings/tiles/common.dart";
+import "package:flixur/ui/settings/values.dart";
 import "package:flixur/utils.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
@@ -14,7 +14,8 @@ import "package:openapi/openapi.dart";
 
 /// A string setting.
 class const SettingsTileString(
-  final SettingsDefinition def, {
+  final SettingsDefinition def,
+  final SettingsValues values, {
   final bool isSearching = false,
   super.key,
 }) extends HookWidget {
@@ -22,15 +23,17 @@ class const SettingsTileString(
   Widget build(BuildContext context) {
     final debouncer = useFlixurDebounced(flushOnDispose: true);
     final focus = useFocusNode();
-    final controller = useTextEditingController(text: def.value<String>());
+    final controller = useTextEditingController(
+      text: values.getValue<String>(def.id),
+    );
 
     /// if the "show" button was clicked on the obscured text
     final showObscured = useState(false);
 
     // keep the controller in sync when the setting changes elsewhere
-    final revision = useSettings([def.id]);
+    final revision = useSettingsChanges(values, [def.id]);
     useEffect(() {
-      final value = def.value<String>();
+      final value = values.getValue<String>(def.id);
       if (!focus.hasFocus && controller.text != value) controller.text = value;
       return null;
     }, [revision]);
@@ -89,11 +92,8 @@ class const SettingsTileString(
               decoration: decoration.copyWith(suffixIcon: suffixIcon),
               obscureText: obscured && !showObscured.value,
               onChanged: (value) {
-                final profileID = Settings.activeProfileID;
                 debouncer.run(
-                  () => unawaited(
-                    Settings.set<String>(def.id, value, profileID: profileID),
-                  ),
+                  () => unawaited(values.set<String>(def.id, value)),
                 );
               },
               // remove default character counter
@@ -109,13 +109,14 @@ class const SettingsTileString(
 
         return SettingsTileShell(
           def,
+          values,
           isSearching: isSearching,
           vertical: context.isLandscape
               ? SizedBox(
                   width: max(
                     200,
                     (constraints.maxWidth * 0.4) -
-                        SettingsView.paddingFor(
+                        SettingsMenu.paddingFor(
                           context,
                           isSearching ? null : def.id,
                         ),

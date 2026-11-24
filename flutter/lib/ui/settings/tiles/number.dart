@@ -2,10 +2,10 @@ import "dart:async";
 import "dart:math";
 
 import "package:flixur/hooks.dart";
-import "package:flixur/routes/settings/index.dart";
-import "package:flixur/routes/settings/tiles/common.dart";
-import "package:flixur/settings.dart";
 import "package:flixur/ui/inputs.dart";
+import "package:flixur/ui/settings/menu.dart";
+import "package:flixur/ui/settings/tiles/common.dart";
+import "package:flixur/ui/settings/values.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/services.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
@@ -45,7 +45,8 @@ NumProps numProps(SettingsDefinition def) {
 
 /// An int/float setting.
 class const SettingsTileNumber(
-  final SettingsDefinition def, {
+  final SettingsDefinition def,
+  final SettingsValues values, {
   final bool isSearching = false,
   super.key,
 }) extends HookWidget {
@@ -57,7 +58,7 @@ class const SettingsTileNumber(
     final debouncer = useFlixurDebounced(flushOnDispose: true);
     final focus = useFocusNode();
     final controller = useTextEditingController(
-      text: _format(def.value<num>(), isInt),
+      text: _format(values.getValue<num>(def.id), isInt),
     );
 
     /// local override so the slider and input follow eachother
@@ -69,10 +70,10 @@ class const SettingsTileNumber(
     final invalid = belowMin.value || aboveMax.value;
 
     // keep in sync with setting
-    final revision = useSettings([def.id]);
+    final revision = useSettingsChanges(values, [def.id]);
     useEffect(() {
       override.value = null;
-      final text = _format(def.value<num>(), isInt);
+      final text = _format(values.getValue<num>(def.id), isInt);
       if (!focus.hasFocus && controller.text != text) controller.text = text;
       return null;
     }, [revision]);
@@ -84,7 +85,7 @@ class const SettingsTileNumber(
         belowMin.value = false;
         aboveMax.value = false;
         override.value = null;
-        controller.text = _format(def.value<num>(), isInt);
+        controller.text = _format(values.getValue<num>(def.id), isInt);
       }
 
       focus.addListener(listener);
@@ -94,14 +95,9 @@ class const SettingsTileNumber(
     /// Queue a setting value change.
     void write(double value) {
       final cleaned = _clean(value);
-      final profileID = Settings.activeProfileID;
       debouncer.run(
         () => unawaited(
-          Settings.set<num>(
-            def.id,
-            isInt ? cleaned.round() : cleaned,
-            profileID: profileID,
-          ),
+          values.set<num>(def.id, isInt ? cleaned.round() : cleaned),
         ),
       );
     }
@@ -180,7 +176,7 @@ class const SettingsTileNumber(
       },
     );
 
-    final current = override.value ?? def.value<num>().toDouble();
+    final current = override.value ?? values.getValue<num>(def.id).toDouble();
     final slider = Slider(
       value: current.clamp(props.sliderMin, props.sliderMax),
       min: props.sliderMin,
@@ -201,13 +197,14 @@ class const SettingsTileNumber(
     return LayoutBuilder(
       builder: (context, constraints) => SettingsTileShell(
         def,
+        values,
         isSearching: isSearching,
         vertical: context.isLandscape
             ? SizedBox(
                 width: max(
                   200,
                   (constraints.maxWidth * 0.25) -
-                      SettingsView.paddingFor(
+                      SettingsMenu.paddingFor(
                         context,
                         isSearching ? null : def.id,
                       ),

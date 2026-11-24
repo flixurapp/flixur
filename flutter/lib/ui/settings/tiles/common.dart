@@ -1,14 +1,16 @@
 import "dart:math";
 
-import "package:flixur/routes/settings/index.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/ui/icons.dart";
+import "package:flixur/ui/settings/menu.dart";
+import "package:flixur/ui/settings/values.dart";
 import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
 class const SettingsTileShell(
-  final SettingsDefinition def, {
+  final SettingsDefinition def,
+  final SettingsValues values, {
 
   /// Content to either show in place of [trailing] on landscape layouts
   /// or after [content] on mobile.
@@ -29,9 +31,9 @@ class const SettingsTileShell(
   Widget build(BuildContext context) {
     final desc = Text(def.description.isNotEmpty ? def.description : def.id);
     final padLeft = isSearching
-        ? SettingsView.paddingFor(context)
-        : SettingsView.paddingFor(context, def.id);
-    final padRight = SettingsView.paddingFor(context);
+        ? SettingsMenu.paddingFor(context)
+        : SettingsMenu.paddingFor(context, def.id);
+    final padRight = SettingsMenu.paddingFor(context);
     final trailingWidget = context.isLandscape
         ? (vertical ?? trailing)
         : trailing;
@@ -48,10 +50,10 @@ class const SettingsTileShell(
           title: Row(
             spacing: 2,
             children: [
-              if (!def.isDefault(def.value()))
+              if (!def.isDefault(values.getValue(def.id)))
                 IconButton(
                   onPressed: () =>
-                      Settings.set(def.id, def.getDefault<dynamic>()),
+                      values.set(def.id, def.getDefault<dynamic>()),
                   icon: const Iconify("arrow-counter-clockwise"),
                   tooltip: t.routes.settings.reset_setting,
                   constraints: .tight(const .square(36)),
@@ -70,7 +72,7 @@ class const SettingsTileShell(
           ),
           isThreeLine: true,
           subtitle: Column(
-            spacing: SettingsView.paddingFor(context) * 0.75,
+            spacing: SettingsMenu.paddingFor(context) * 0.75,
             crossAxisAlignment: .start,
             children: [desc, ?content, if (!context.isLandscape) ?vertical],
           ),

@@ -22,7 +22,7 @@ class const SettingsViewHeader(
 }) extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    useSettings([]);
+    useSettings();
 
     final activeName = Settings.profile(Settings.activeProfileID ?? "")?.name;
     final profileController = useTextEditingController();

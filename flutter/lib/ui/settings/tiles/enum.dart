@@ -1,10 +1,10 @@
 import "dart:async";
 
-import "package:flixur/hooks.dart";
-import "package:flixur/routes/settings/tiles/common.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/ui/dropdowns.dart";
 import "package:flixur/ui/icons.dart";
+import "package:flixur/ui/settings/tiles/common.dart";
+import "package:flixur/ui/settings/values.dart";
 import "package:flixur/ui/theme.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
@@ -12,20 +12,27 @@ import "package:openapi/openapi.dart";
 
 /// An enum setting with fixed choices.
 class const SettingsTileEnum(
-  final SettingsDefinition def, {
+  final SettingsDefinition def,
+  final SettingsValues values, {
   final bool isSearching = false,
   super.key,
 }) extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useTextEditingController(
-      text: SettingsTranslated.choiceName(def.id, def.value<String>()),
+      text: SettingsTranslated.choiceName(
+        def.id,
+        values.getValue<String>(def.id),
+      ),
     );
 
     // keep controller in sync
-    final revision = useSettings([def.id]);
+    final revision = useSettingsChanges(values, [def.id]);
     useEffect(() {
-      final name = SettingsTranslated.choiceName(def.id, def.value<String>());
+      final name = SettingsTranslated.choiceName(
+        def.id,
+        values.getValue<String>(def.id),
+      );
       if (controller.text != name) controller.text = name;
       return null;
     }, [revision]);
@@ -33,12 +40,13 @@ class const SettingsTileEnum(
     return LayoutBuilder(
       builder: (context, constraints) => SettingsTileShell(
         def,
+        values,
         isSearching: isSearching,
         vertical: FlixurDropdownMenu<String>(
           controller: controller,
           initialSelection: SettingsTranslated.choiceName(
             def.id,
-            def.value<String>(),
+            values.getValue<String>(def.id),
           ),
           dropdownMenuEntries: [
             for (final choice
@@ -53,7 +61,7 @@ class const SettingsTileEnum(
               ),
           ],
           onSelected: (value) {
-            if (value != null) unawaited(Settings.set<String>(def.id, value));
+            if (value != null) unawaited(values.set<String>(def.id, value));
           },
         ),
       ),

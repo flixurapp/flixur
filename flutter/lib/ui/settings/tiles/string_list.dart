@@ -1,11 +1,11 @@
 import "dart:async";
 
-import "package:flixur/hooks.dart";
-import "package:flixur/routes/settings/tiles/common.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/ui/dropdowns.dart";
 import "package:flixur/ui/icons.dart";
 import "package:flixur/ui/inputs.dart";
+import "package:flixur/ui/settings/tiles/common.dart";
+import "package:flixur/ui/settings/values.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/rendering.dart";
@@ -15,7 +15,8 @@ import "package:openapi/openapi.dart";
 
 /// A stringlist setting.
 class const SettingsTileStringList(
-  final SettingsDefinition def, {
+  final SettingsDefinition def,
+  final SettingsValues values, {
   final bool isSearching = false,
   super.key,
 }) extends HookWidget {
@@ -27,7 +28,7 @@ class const SettingsTileStringList(
     final choices = props?.choices?.toList() ?? const <SettingsChoice>[];
 
     final expanded = useState(false);
-    final items = useState<List<String>>(def.value<List<String>>());
+    final items = useState<List<String>>(values.getValue<List<String>>(def.id));
     final duplicateError = useState(false);
     final dragging = useValueNotifier<int?>(null);
 
@@ -39,9 +40,9 @@ class const SettingsTileStringList(
 
     // keep in sync with setting
     // listen to all values here since we need profile changes for resets
-    final revision = useSettings();
+    final revision = useSettingsChanges(values);
     useEffect(() {
-      final value = def.value<List<String>>();
+      final value = values.getValue<List<String>>(def.id);
       if (!listEquals(items.value, value)) items.value = value;
       return null;
     }, [revision]);
@@ -51,10 +52,7 @@ class const SettingsTileStringList(
     /// Updates the local list and persists.
     void write(List<String> value) {
       items.value = value;
-      final profileID = Settings.activeProfileID;
-      unawaited(
-        Settings.set<List<String>>(def.id, value, profileID: profileID),
-      );
+      unawaited(values.set<List<String>>(def.id, value));
     }
 
     /// Tries to add [value], clearing controllers on success.
@@ -176,6 +174,7 @@ class const SettingsTileStringList(
         "${items.value.length}${maxItems == null ? "" : "/$maxItems"}";
     return SettingsTileShell(
       def,
+      values,
       isSearching: isSearching,
       content: Column(
         spacing: 8,
