@@ -9,6 +9,8 @@ import (
 	"forge.xela.codes/xela/flixur/ent/settingprofile"
 	"forge.xela.codes/xela/flixur/ent/settingvalue"
 	"forge.xela.codes/xela/flixur/ent/user"
+	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
+	s "forge.xela.codes/xela/flixur/pluginkit/settings"
 	"forge.xela.codes/xela/flixur/settings"
 	"github.com/cardinalby/hureg"
 	"github.com/cardinalby/hureg/pkg/huma/op_handler"
@@ -16,8 +18,8 @@ import (
 )
 
 type SettingsDefinitionsBody struct {
-	List   []*settings.SettingsDefinition `json:"list" nullable:"false"`
-	Groups []*settings.SettingsGroup      `json:"groups" nullable:"false"`
+	List   []*pb.SettingsDefinition `json:"list" nullable:"false"`
+	Groups []*pb.SettingsGroup      `json:"groups" nullable:"false"`
 }
 
 type SettingProfileBody struct {
@@ -352,7 +354,7 @@ func RegisterSettingsRoutes(reg APIRegistry) {
 			return nil, CreateAPIErrorDetail(CodeNotFound, "setting")
 		}
 		// validate value text
-		value, err := settings.ValidateValue(def, input.Body.Value)
+		value, err := s.ValidateValue(def, input.Body.Value)
 		if err != nil {
 			log.Debug().Err(err).Str("key", def.Id).Str("value", input.Body.Value).Msg("Failed to validate setting override value.")
 			return nil, CreateAPIErrorDetail(CodeInvalidInput, "value")

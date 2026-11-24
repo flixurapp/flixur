@@ -7,7 +7,7 @@ import s "forge.xela.codes/xela/flixur/pluginkit/settings"
 var ClientRegistry = newClientRegistry()
 
 // Creates the registry for client settings.
-func newClientRegistry() *Registry {
+func newClientRegistry() *s.Registry {
 	reg := s.NewRegistry()
 
 	//

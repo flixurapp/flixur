@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	pb "forge.xela.codes/xela/flixur/pluginkit/proto"
 	"forge.xela.codes/xela/flixur/settings"
 	"github.com/danielgtaylor/huma/v2/humatest"
 )
@@ -76,7 +77,7 @@ func TestSettingsDefinitions(t *testing.T) {
 	}
 
 	// every registry definition must survive the JSON round-trip intact
-	byID := map[string]*settings.SettingsDefinition{}
+	byID := map[string]*pb.SettingsDefinition{}
 	for _, def := range body.List {
 		byID[def.Id] = def
 	}
@@ -207,7 +208,7 @@ func TestSettingsProfileValues(t *testing.T) {
 
 	// search for a bool and a bounded int setting from the registry so this test
 	// doesn't depend on specific setting IDs or their bounds
-	var boolDef, intDef *settings.SettingsDefinition
+	var boolDef, intDef *pb.SettingsDefinition
 	for _, def := range settings.ClientRegistry.All() {
 		switch {
 		case def.Bool != nil && boolDef == nil:
