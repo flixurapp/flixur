@@ -64,6 +64,8 @@ type APIRoute struct {
 	NoSetup bool
 	// If true, endpoint will not require bearer token to be called.
 	NoAuth bool
+	// If true, endpoint will require the authorized user to be a server admin.
+	Admin bool
 }
 
 // Sets various properties on a given API generator and returns it.
@@ -119,6 +121,18 @@ func WithOptions(api hureg.APIGen, reg APIRegistry, opts APIRoute) hureg.APIGen 
 		})
 	}
 
+	// require an admin user, must run after the auth middleware
+	if opts.Admin {
+		middlewares = append(middlewares, func(ctx huma.Context, next func(huma.Context)) {
+			if user := GetAuthorizedUser(ctx.Context()); user == nil || !user.IsAdmin {
+				err := CreateAPIError(CodeForbidden)
+				huma.WriteErr(api.GetHumaAPI(), ctx, err.GetStatus(), err.Error())
+				return
+			}
+			next(ctx)
+		})
+	}
+
 	return api.
 		AddOpHandler(handlers...).
 		AddMiddlewares(middlewares...)
@@ -163,6 +177,7 @@ func RegisterAPI(router chi.Router, client *ent.Client) APIRegistry {
 		RegisterMusicArtistsRoutes(registry)
 		RegisterManageRoutes(registry)
 		RegisterSettingsRoutes(registry)
+		RegisterServerSettingsRoutes(registry)
 
 		//TODO:testing
 		/*
