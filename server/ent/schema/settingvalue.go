@@ -4,9 +4,12 @@ import (
 	"time"
 
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+
+	"forge.xela.codes/xela/flixur/settings"
 )
 
 // One setting's value override inside a SettingProfile.
@@ -19,9 +22,12 @@ func (SettingValue) Fields() []ent.Field {
 		field.String("setting_id").
 			NotEmpty().
 			Comment("Dotted ID of the setting this overrides."),
-		field.String("value").
-			NotEmpty().
-			Comment("JSON-encoded override value, typed to the actual setting."),
+		field.Other("value", settings.SettingText{}).
+			SchemaType(map[string]string{
+				dialect.SQLite:   "text",
+				dialect.Postgres: "text",
+			}).
+			Comment("JSON-encoded override value, typed to the actual setting. Encrypted if the setting is secret."),
 		field.Time("updated_at").
 			Default(time.Now).UpdateDefault(time.Now).
 			Comment("Timestamp this override was last written, used for cross-device sync."),

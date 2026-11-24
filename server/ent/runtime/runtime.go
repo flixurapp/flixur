@@ -77,10 +77,6 @@ func init() {
 	settingvalueDescSettingID := settingvalueFields[0].Descriptor()
 	// settingvalue.SettingIDValidator is a validator for the "setting_id" field. It is called by the builders before save.
 	settingvalue.SettingIDValidator = settingvalueDescSettingID.Validators[0].(func(string) error)
-	// settingvalueDescValue is the schema descriptor for value field.
-	settingvalueDescValue := settingvalueFields[1].Descriptor()
-	// settingvalue.ValueValidator is a validator for the "value" field. It is called by the builders before save.
-	settingvalue.ValueValidator = settingvalueDescValue.Validators[0].(func(string) error)
 	// settingvalueDescUpdatedAt is the schema descriptor for updated_at field.
 	settingvalueDescUpdatedAt := settingvalueFields[2].Descriptor()
 	// settingvalue.DefaultUpdatedAt holds the default value on creation for the updated_at field.

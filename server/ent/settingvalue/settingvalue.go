@@ -65,8 +65,6 @@ func ValidColumn(column string) bool {
 var (
 	// SettingIDValidator is a validator for the "setting_id" field. It is called by the builders before save.
 	SettingIDValidator func(string) error
-	// ValueValidator is a validator for the "value" field. It is called by the builders before save.
-	ValueValidator func(string) error
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
 	DefaultUpdatedAt func() time.Time
 	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.

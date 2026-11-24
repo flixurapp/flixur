@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"forge.xela.codes/xela/flixur/ent/settingprofile"
 	"forge.xela.codes/xela/flixur/ent/settingvalue"
+	"forge.xela.codes/xela/flixur/settings"
 )
 
 // SettingValue is the model entity for the SettingValue schema.
@@ -20,8 +21,8 @@ type SettingValue struct {
 	ID string `json:"id,omitempty"`
 	// Dotted ID of the setting this overrides.
 	SettingID string `json:"setting_id,omitempty"`
-	// JSON-encoded override value, typed to the actual setting.
-	Value string `json:"value,omitempty"`
+	// JSON-encoded override value, typed to the actual setting. Encrypted if the setting is secret.
+	Value settings.SettingText `json:"value,omitempty"`
 	// Timestamp this override was last written, used for cross-device sync.
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -56,7 +57,9 @@ func (*SettingValue) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case settingvalue.FieldID, settingvalue.FieldSettingID, settingvalue.FieldValue:
+		case settingvalue.FieldValue:
+			values[i] = new(settings.SettingText)
+		case settingvalue.FieldID, settingvalue.FieldSettingID:
 			values[i] = new(sql.NullString)
 		case settingvalue.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -90,10 +93,10 @@ func (_m *SettingValue) assignValues(columns []string, values []any) error {
 				_m.SettingID = value.String
 			}
 		case settingvalue.FieldValue:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*settings.SettingText); !ok {
 				return fmt.Errorf("unexpected type %T for field value", values[i])
-			} else if value.Valid {
-				_m.Value = value.String
+			} else if value != nil {
+				_m.Value = *value
 			}
 		case settingvalue.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -153,7 +156,7 @@ func (_m *SettingValue) String() string {
 	builder.WriteString(_m.SettingID)
 	builder.WriteString(", ")
 	builder.WriteString("value=")
-	builder.WriteString(_m.Value)
+	builder.WriteString(fmt.Sprintf("%v", _m.Value))
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))

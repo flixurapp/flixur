@@ -8,6 +8,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"forge.xela.codes/xela/flixur/ent/predicate"
+	"forge.xela.codes/xela/flixur/settings"
 )
 
 // ID filters vertices based on their ID field.
@@ -71,7 +72,7 @@ func SettingID(v string) predicate.SettingValue {
 }
 
 // Value applies equality check predicate on the "value" field. It's identical to ValueEQ.
-func Value(v string) predicate.SettingValue {
+func Value(v settings.SettingText) predicate.SettingValue {
 	return predicate.SettingValue(sql.FieldEQ(FieldValue, v))
 }
 
@@ -146,68 +147,43 @@ func SettingIDContainsFold(v string) predicate.SettingValue {
 }
 
 // ValueEQ applies the EQ predicate on the "value" field.
-func ValueEQ(v string) predicate.SettingValue {
+func ValueEQ(v settings.SettingText) predicate.SettingValue {
 	return predicate.SettingValue(sql.FieldEQ(FieldValue, v))
 }
 
 // ValueNEQ applies the NEQ predicate on the "value" field.
-func ValueNEQ(v string) predicate.SettingValue {
+func ValueNEQ(v settings.SettingText) predicate.SettingValue {
 	return predicate.SettingValue(sql.FieldNEQ(FieldValue, v))
 }
 
 // ValueIn applies the In predicate on the "value" field.
-func ValueIn(vs ...string) predicate.SettingValue {
+func ValueIn(vs ...settings.SettingText) predicate.SettingValue {
 	return predicate.SettingValue(sql.FieldIn(FieldValue, vs...))
 }
 
 // ValueNotIn applies the NotIn predicate on the "value" field.
-func ValueNotIn(vs ...string) predicate.SettingValue {
+func ValueNotIn(vs ...settings.SettingText) predicate.SettingValue {
 	return predicate.SettingValue(sql.FieldNotIn(FieldValue, vs...))
 }
 
 // ValueGT applies the GT predicate on the "value" field.
-func ValueGT(v string) predicate.SettingValue {
+func ValueGT(v settings.SettingText) predicate.SettingValue {
 	return predicate.SettingValue(sql.FieldGT(FieldValue, v))
 }
 
 // ValueGTE applies the GTE predicate on the "value" field.
-func ValueGTE(v string) predicate.SettingValue {
+func ValueGTE(v settings.SettingText) predicate.SettingValue {
 	return predicate.SettingValue(sql.FieldGTE(FieldValue, v))
 }
 
 // ValueLT applies the LT predicate on the "value" field.
-func ValueLT(v string) predicate.SettingValue {
+func ValueLT(v settings.SettingText) predicate.SettingValue {
 	return predicate.SettingValue(sql.FieldLT(FieldValue, v))
 }
 
 // ValueLTE applies the LTE predicate on the "value" field.
-func ValueLTE(v string) predicate.SettingValue {
+func ValueLTE(v settings.SettingText) predicate.SettingValue {
 	return predicate.SettingValue(sql.FieldLTE(FieldValue, v))
-}
-
-// ValueContains applies the Contains predicate on the "value" field.
-func ValueContains(v string) predicate.SettingValue {
-	return predicate.SettingValue(sql.FieldContains(FieldValue, v))
-}
-
-// ValueHasPrefix applies the HasPrefix predicate on the "value" field.
-func ValueHasPrefix(v string) predicate.SettingValue {
-	return predicate.SettingValue(sql.FieldHasPrefix(FieldValue, v))
-}
-
-// ValueHasSuffix applies the HasSuffix predicate on the "value" field.
-func ValueHasSuffix(v string) predicate.SettingValue {
-	return predicate.SettingValue(sql.FieldHasSuffix(FieldValue, v))
-}
-
-// ValueEqualFold applies the EqualFold predicate on the "value" field.
-func ValueEqualFold(v string) predicate.SettingValue {
-	return predicate.SettingValue(sql.FieldEqualFold(FieldValue, v))
-}
-
-// ValueContainsFold applies the ContainsFold predicate on the "value" field.
-func ValueContainsFold(v string) predicate.SettingValue {
-	return predicate.SettingValue(sql.FieldContainsFold(FieldValue, v))
 }
 
 // UpdatedAtEQ applies the EQ predicate on the "updated_at" field.

@@ -1023,7 +1023,7 @@ type SettingValueMutation struct {
 	typ            string
 	id             *string
 	setting_id     *string
-	value          *string
+	value          *settings.SettingText
 	updated_at     *time.Time
 	clearedFields  map[string]struct{}
 	profile        *string
@@ -1174,12 +1174,12 @@ func (m *SettingValueMutation) ResetSettingID() {
 }
 
 // SetValue sets the "value" field.
-func (m *SettingValueMutation) SetValue(s string) {
-	m.value = &s
+func (m *SettingValueMutation) SetValue(st settings.SettingText) {
+	m.value = &st
 }
 
 // Value returns the value of the "value" field in the mutation.
-func (m *SettingValueMutation) Value() (r string, exists bool) {
+func (m *SettingValueMutation) Value() (r settings.SettingText, exists bool) {
 	v := m.value
 	if v == nil {
 		return
@@ -1190,7 +1190,7 @@ func (m *SettingValueMutation) Value() (r string, exists bool) {
 // OldValue returns the old "value" field's value of the SettingValue entity.
 // If the SettingValue object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SettingValueMutation) OldValue(ctx context.Context) (v string, err error) {
+func (m *SettingValueMutation) OldValue(ctx context.Context) (v settings.SettingText, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldValue is only allowed on UpdateOne operations")
 	}
@@ -1374,7 +1374,7 @@ func (m *SettingValueMutation) SetField(name string, value ent.Value) error {
 		m.SetSettingID(v)
 		return nil
 	case settingvalue.FieldValue:
-		v, ok := value.(string)
+		v, ok := value.(settings.SettingText)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"forge.xela.codes/xela/flixur/ent/predicate"
 	"forge.xela.codes/xela/flixur/ent/settingvalue"
+	"forge.xela.codes/xela/flixur/settings"
 )
 
 // SettingValueUpdate is the builder for updating SettingValue entities.
@@ -43,13 +44,13 @@ func (_u *SettingValueUpdate) SetNillableSettingID(v *string) *SettingValueUpdat
 }
 
 // SetValue sets the "value" field.
-func (_u *SettingValueUpdate) SetValue(v string) *SettingValueUpdate {
+func (_u *SettingValueUpdate) SetValue(v settings.SettingText) *SettingValueUpdate {
 	_u.mutation.SetValue(v)
 	return _u
 }
 
 // SetNillableValue sets the "value" field if the given value is not nil.
-func (_u *SettingValueUpdate) SetNillableValue(v *string) *SettingValueUpdate {
+func (_u *SettingValueUpdate) SetNillableValue(v *settings.SettingText) *SettingValueUpdate {
 	if v != nil {
 		_u.SetValue(*v)
 	}
@@ -110,11 +111,6 @@ func (_u *SettingValueUpdate) check() error {
 			return &ValidationError{Name: "setting_id", err: fmt.Errorf(`ent: validator failed for field "SettingValue.setting_id": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Value(); ok {
-		if err := settingvalue.ValueValidator(v); err != nil {
-			return &ValidationError{Name: "value", err: fmt.Errorf(`ent: validator failed for field "SettingValue.value": %w`, err)}
-		}
-	}
 	if _u.mutation.ProfileCleared() && len(_u.mutation.ProfileIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "SettingValue.profile"`)
 	}
@@ -137,7 +133,7 @@ func (_u *SettingValueUpdate) sqlSave(ctx context.Context) (_node int, err error
 		_spec.SetField(settingvalue.FieldSettingID, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Value(); ok {
-		_spec.SetField(settingvalue.FieldValue, field.TypeString, value)
+		_spec.SetField(settingvalue.FieldValue, field.TypeOther, value)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(settingvalue.FieldUpdatedAt, field.TypeTime, value)
@@ -177,13 +173,13 @@ func (_u *SettingValueUpdateOne) SetNillableSettingID(v *string) *SettingValueUp
 }
 
 // SetValue sets the "value" field.
-func (_u *SettingValueUpdateOne) SetValue(v string) *SettingValueUpdateOne {
+func (_u *SettingValueUpdateOne) SetValue(v settings.SettingText) *SettingValueUpdateOne {
 	_u.mutation.SetValue(v)
 	return _u
 }
 
 // SetNillableValue sets the "value" field if the given value is not nil.
-func (_u *SettingValueUpdateOne) SetNillableValue(v *string) *SettingValueUpdateOne {
+func (_u *SettingValueUpdateOne) SetNillableValue(v *settings.SettingText) *SettingValueUpdateOne {
 	if v != nil {
 		_u.SetValue(*v)
 	}
@@ -257,11 +253,6 @@ func (_u *SettingValueUpdateOne) check() error {
 			return &ValidationError{Name: "setting_id", err: fmt.Errorf(`ent: validator failed for field "SettingValue.setting_id": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Value(); ok {
-		if err := settingvalue.ValueValidator(v); err != nil {
-			return &ValidationError{Name: "value", err: fmt.Errorf(`ent: validator failed for field "SettingValue.value": %w`, err)}
-		}
-	}
 	if _u.mutation.ProfileCleared() && len(_u.mutation.ProfileIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "SettingValue.profile"`)
 	}
@@ -301,7 +292,7 @@ func (_u *SettingValueUpdateOne) sqlSave(ctx context.Context) (_node *SettingVal
 		_spec.SetField(settingvalue.FieldSettingID, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Value(); ok {
-		_spec.SetField(settingvalue.FieldValue, field.TypeString, value)
+		_spec.SetField(settingvalue.FieldValue, field.TypeOther, value)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(settingvalue.FieldUpdatedAt, field.TypeTime, value)

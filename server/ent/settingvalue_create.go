@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"forge.xela.codes/xela/flixur/ent/settingprofile"
 	"forge.xela.codes/xela/flixur/ent/settingvalue"
+	"forge.xela.codes/xela/flixur/settings"
 )
 
 // SettingValueCreate is the builder for creating a SettingValue entity.
@@ -28,7 +29,7 @@ func (_c *SettingValueCreate) SetSettingID(v string) *SettingValueCreate {
 }
 
 // SetValue sets the "value" field.
-func (_c *SettingValueCreate) SetValue(v string) *SettingValueCreate {
+func (_c *SettingValueCreate) SetValue(v settings.SettingText) *SettingValueCreate {
 	_c.mutation.SetValue(v)
 	return _c
 }
@@ -130,11 +131,6 @@ func (_c *SettingValueCreate) check() error {
 	if _, ok := _c.mutation.Value(); !ok {
 		return &ValidationError{Name: "value", err: errors.New(`ent: missing required field "SettingValue.value"`)}
 	}
-	if v, ok := _c.mutation.Value(); ok {
-		if err := settingvalue.ValueValidator(v); err != nil {
-			return &ValidationError{Name: "value", err: fmt.Errorf(`ent: validator failed for field "SettingValue.value": %w`, err)}
-		}
-	}
 	if _, ok := _c.mutation.UpdatedAt(); !ok {
 		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "SettingValue.updated_at"`)}
 	}
@@ -181,7 +177,7 @@ func (_c *SettingValueCreate) createSpec() (*SettingValue, *sqlgraph.CreateSpec)
 		_node.SettingID = value
 	}
 	if value, ok := _c.mutation.Value(); ok {
-		_spec.SetField(settingvalue.FieldValue, field.TypeString, value)
+		_spec.SetField(settingvalue.FieldValue, field.TypeOther, value)
 		_node.Value = value
 	}
 	if value, ok := _c.mutation.UpdatedAt(); ok {

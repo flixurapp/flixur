@@ -60,7 +60,7 @@ var (
 	SettingValuesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true},
 		{Name: "setting_id", Type: field.TypeString},
-		{Name: "value", Type: field.TypeString},
+		{Name: "value", Type: field.TypeOther, SchemaType: map[string]string{"postgres": "text", "sqlite3": "text"}},
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "setting_profile_values", Type: field.TypeString},
 	}
