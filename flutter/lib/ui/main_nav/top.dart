@@ -3,6 +3,7 @@ import "dart:async";
 import "package:flixur/api.dart";
 import "package:flixur/router.dart" show router, testSetupRoute;
 import "package:flixur/settings.dart";
+import "package:flixur/storage.dart";
 import "package:flixur/titlebar.dart";
 import "package:flixur/ui/buttons.dart";
 import "package:flixur/ui/dialogs.dart";
@@ -12,12 +13,16 @@ import "package:flixur/ui/main_nav/rail.dart";
 import "package:flixur/utils.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/services.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
 import "package:window_manager/window_manager.dart";
 
-class const MainNavTop({super.key}) extends StatelessWidget {
+class const MainNavTop({super.key}) extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    useListenable(TitlebarManager.enabledNotifier);
+    useStream(useMemoized(() => Storage.watch(.sessionToken), const []));
+
     final colors = context.colors;
     final height = context.isLandscape ? 38.0 : 44.0;
 

@@ -13,7 +13,7 @@ abstract class TitlebarManager {
       !(kIsWeb || Platform.isAndroid || Platform.isIOS);
 
   /// Whether the title bar should be enabled.
-  static bool get shouldEnable => isSupported && _wasEnabled;
+  static bool get shouldEnable => isSupported && enabledNotifier.value;
 
   /// Width of the window resize edges.
   static const resizeEdgeSize = 8.0;
@@ -24,17 +24,21 @@ abstract class TitlebarManager {
     return WindowManager.instance.getCurrent();
   }
 
-  static bool _wasEnabled = false;
+  /// Whether the custom titlebar is currently enabled.
+  static final ValueNotifier<bool> enabledNotifier = .new(false);
 
   static Future<void> init() async {
     final window = getWindow();
     if (window == null) return;
-    // we only enable once because changing this while the app is open
-    // causes a lot of rendering issues
-    if (Settings.getValue<bool>("ui.window.useCustom")) {
-      _wasEnabled = true;
-      window.titleBarStyle = .hidden;
-    }
+
+    // apply the stored setting
+    _setEnabled(window, Settings.getValue<bool>("ui.window.useCustom"));
+
+    // try enable when the setting syncs from the server
+    Settings.watch(const ["ui.window.useCustom"]).listen((_) {
+      _setEnabled(window, Settings.getValue<bool>("ui.window.useCustom"));
+    });
+
     if (Settings.getValue<bool>("ui.window.startMaximized")) window.maximize();
 
     // keep the OS window title in sync with the main nav
@@ -48,6 +52,15 @@ abstract class TitlebarManager {
     WindowManager.instance.addListener(
       (event) => isMaximizedNotifier.value = window.isMaximized,
     );
+  }
+
+  /// Enables the custom titlebar when [enabled] and it isnt already.
+  /// We only ever enable because disabling while the app is open
+  /// causes a lot of rendering issues.
+  static void _setEnabled(Window window, bool enabled) {
+    if (!enabled || enabledNotifier.value) return;
+    enabledNotifier.value = true;
+    window.titleBarStyle = .hidden;
   }
 
   static void minimize() {
