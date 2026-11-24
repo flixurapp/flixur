@@ -21,7 +21,7 @@ func (d Def) setting() *pb.SettingsDefinition { return d.SettingsDefinition }
 
 // Registry holding the definitions and groups of a single setting scope.
 type Registry struct {
-	mu sync.RWMutex
+	mutex sync.RWMutex
 
 	definitions []*pb.SettingsDefinition
 	byID        map[string]*pb.SettingsDefinition
@@ -57,8 +57,8 @@ func (r *Registry) Register(builder SettingBuilder) *pb.SettingsDefinition {
 // Defines a new setting, returning any errors instead of panicking.
 // Groups must be registered BEFORE any settings inside of it are.
 func (r *Registry) Add(builder SettingBuilder) (*pb.SettingsDefinition, error) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
+	r.mutex.Lock()
+	defer r.mutex.Unlock()
 	return r.addDef(builder.setting())
 }
 
@@ -99,15 +99,15 @@ func (r *Registry) addDef(def *pb.SettingsDefinition) (*pb.SettingsDefinition, e
 
 // All definitions in the registry, ordered by registration.
 func (r *Registry) All() []*pb.SettingsDefinition {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
+	r.mutex.RLock()
+	defer r.mutex.RUnlock()
 	return r.definitions
 }
 
 // Find a definition by ID.
 func (r *Registry) Find(id string) *pb.SettingsDefinition {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
+	r.mutex.RLock()
+	defer r.mutex.RUnlock()
 	return r.byID[id]
 }
 
@@ -125,8 +125,8 @@ func (r *Registry) RegisterGroup(builder GroupSetting) *pb.SettingsGroup {
 // Registers a new settings group, returning any errors instead of panicking.
 // The parent of a nested group ID must already be registered.
 func (r *Registry) AddGroup(builder GroupSetting) (*pb.SettingsGroup, error) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
+	r.mutex.Lock()
+	defer r.mutex.Unlock()
 	return r.addGroup(builder.SettingsGroup)
 }
 
@@ -155,14 +155,14 @@ func (r *Registry) addGroup(group *pb.SettingsGroup) (*pb.SettingsGroup, error) 
 
 // All groups in the registry, ordered by registration.
 func (r *Registry) Groups() []*pb.SettingsGroup {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
+	r.mutex.RLock()
+	defer r.mutex.RUnlock()
 	return r.groups
 }
 
 // Find a group by ID.
 func (r *Registry) FindGroup(id string) *pb.SettingsGroup {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
+	r.mutex.RLock()
+	defer r.mutex.RUnlock()
 	return r.groupsByID[id]
 }
