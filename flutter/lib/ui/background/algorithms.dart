@@ -1,4 +1,5 @@
 import "package:adaptive_palette/adaptive_palette.dart";
+import "package:collection/collection.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/ui/background/colorgram.dart";
 import "package:flixur/ui/background/combined.dart";
@@ -23,7 +24,7 @@ enum BackgroundAlgorithm {
   /// Resolves the algorithm for the background setting value.
   /// Falls back to [BackgroundAlgorithm.d].
   static BackgroundAlgorithm fromSetting(String value) =>
-      values.whereFirstOrNull((algorithm) => algorithm.name == value) ?? d;
+      values.firstWhereOrNull((algorithm) => algorithm.name == value) ?? d;
 
   /// Builds the background for an artwork [provider].
   Widget build(ImageProvider provider) => SettingsListen(

@@ -153,8 +153,3 @@ extension ContextUtilsX on BuildContext {
   EdgeInsets get safeBottomPadding =>
       .only(bottom: MediaQuery.paddingOf(this).bottom);
 }
-
-extension IterablesX<E> on Iterable<E> {
-  /// Returns the first element via [where], or null if no elements were found.
-  E? whereFirstOrNull(bool Function(E) test) => where(test).firstOrNull;
-}

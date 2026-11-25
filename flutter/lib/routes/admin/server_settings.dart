@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:collection/collection.dart";
 import "package:flixur/api.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/ui/settings/values.dart";
@@ -130,5 +131,5 @@ class ServerSettingsValues extends SettingsValues {
 
   /// The definition for [id], null if unknown.
   SettingsDefinition? _definition(String id) =>
-      _definitions.whereFirstOrNull((item) => item.id == id);
+      _definitions.firstWhereOrNull((item) => item.id == id);
 }
