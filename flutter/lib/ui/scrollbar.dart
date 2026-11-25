@@ -1,7 +1,9 @@
+import "dart:async";
 import "dart:ui" show clampDouble, lerpDouble;
 
 import "package:flixur/titlebar.dart";
 import "package:flutter/gestures.dart";
+import "package:flutter/services.dart" show HapticFeedback;
 import "package:material_ui/material_ui.dart";
 
 /// App-wide scrollbar behavior.
@@ -121,6 +123,12 @@ class _AppScrollbarState extends RawScrollbarState<AppScrollbar> {
   }
 
   bool _dragIsActive = false;
+
+  @override
+  void handleThumbPress() {
+    super.handleThumbPress();
+    unawaited(HapticFeedback.lightImpact());
+  }
 
   @override
   void handleThumbPressStart(Offset localPosition) {
