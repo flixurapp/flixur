@@ -87,6 +87,9 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	/// en: 'Rename'
 	String get btn_rename => 'Rename';
 
+	/// en: 'Retry'
+	String get btn_retry => 'Retry';
+
 	/// en: 'Save'
 	String get btn_save => 'Save';
 
@@ -112,51 +115,9 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	String get password => 'Password';
 
 	late final Translations$routes$en routes = Translations$routes$en._(_root);
-	Map<String, String> get setting_choices => {
-		'ui.background.algorithm.a': 'Ice Cube',
-		'ui.background.algorithm.a.description': 'Blurred background that follows the shape of the cover.',
-		'ui.background.algorithm.b': 'Soda',
-		'ui.background.algorithm.b.description': 'Gradient sourced from the cover\'s more vibrant colors.',
-		'ui.background.algorithm.c': 'Milk',
-		'ui.background.algorithm.c.description': 'Gradient sourced from the cover\'s most common color.',
-		'ui.background.algorithm.d': 'Smoothie',
-		'ui.background.algorithm.d.description': 'Smooth blend of Milk and Soda.',
-		'ui.navigation.shownSections.activity': 'Activity',
-		'ui.navigation.shownSections.admin': 'Admin',
-		'ui.navigation.shownSections.downloads': 'Downloads',
-		'ui.navigation.shownSections.explore': 'Explore',
-		'ui.navigation.shownSections.home': 'Home',
-		'ui.navigation.shownSections.library': 'Library',
-		'ui.navigation.shownSections.search': 'Search',
-		'ui.navigation.shownSections.settings': 'Settings',
-	};
-	Map<String, String> get setting_definitions => {
-		'ui.background.algorithm': 'Algorithm',
-		'ui.background.algorithm.description': 'Algorithm to use for background effects.',
-		'ui.background.brightness': 'Brightness',
-		'ui.background.brightness.description': 'Change the brightness of the background. Higher numbers are brighter.',
-		'ui.library.cardsPerRow': 'Cards Per Row',
-		'ui.library.cardsPerRow.description': 'Maximum number of cards to show per row in library grids.',
-		'ui.navigation.bottomLabels': 'Bottom Nav Labels',
-		'ui.navigation.bottomLabels.description': 'Show text labels under the icons in the bottom navbar.',
-		'ui.navigation.railDefaultExpanded': 'Expand Nav Rail',
-		'ui.navigation.railDefaultExpanded.description': 'Whether the left navigation rail starts off expanded.',
-		'ui.navigation.shownSections': 'Navigation Sections',
-		'ui.navigation.shownSections.description': 'Choose which sections are shown in the main navigation.',
-		'ui.transparency': 'Transparency',
-		'ui.transparency.description': 'Relative transparency of the UI elements. Set to 1 for fully opaque.',
-		'ui.window.startMaximized': 'Start Maximized',
-		'ui.window.startMaximized.description': 'Open ${_root.app_name} maximized on launch.',
-		'ui.window.useCustom': 'Custom Titlebar',
-		'ui.window.useCustom.description': 'Whether to use the custom titlebar. ${_root.routes.settings.requires_restart_hint}',
-	};
-	Map<String, String> get setting_groups => {
-		'ui': 'User Interface',
-		'ui.background': 'Background',
-		'ui.library': 'Library',
-		'ui.navigation': 'Navigation',
-		'ui.window': 'Window',
-	};
+	late final Translations$setting_choices$en setting_choices = Translations$setting_choices$en._(_root);
+	late final Translations$setting_definitions$en setting_definitions = Translations$setting_definitions$en._(_root);
+	late final Translations$setting_groups$en setting_groups = Translations$setting_groups$en._(_root);
 	late final Translations$titlebar$en titlebar = Translations$titlebar$en._(_root);
 
 	/// en: 'Username'
@@ -204,9 +165,93 @@ class Translations$routes$en {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+	late final Translations$routes$admin$en admin = Translations$routes$admin$en._(_root);
 	late final Translations$routes$search$en search = Translations$routes$search$en._(_root);
 	late final Translations$routes$settings$en settings = Translations$routes$settings$en._(_root);
 	late final Translations$routes$startup$en startup = Translations$routes$startup$en._(_root);
+}
+
+// Path: setting_choices
+class Translations$setting_choices$en {
+	Translations$setting_choices$en._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	Map<String, String> get client => {
+		'ui.background.algorithm.a': 'Ice Cube',
+		'ui.background.algorithm.a.description': 'Blurred background that follows the shape of the cover.',
+		'ui.background.algorithm.b': 'Soda',
+		'ui.background.algorithm.b.description': 'Gradient sourced from the cover\'s more vibrant colors.',
+		'ui.background.algorithm.c': 'Milk',
+		'ui.background.algorithm.c.description': 'Gradient sourced from the cover\'s most common color.',
+		'ui.background.algorithm.d': 'Smoothie',
+		'ui.background.algorithm.d.description': 'Smooth blend of Milk and Soda.',
+		'ui.navigation.shownSections.activity': 'Activity',
+		'ui.navigation.shownSections.admin': 'Admin',
+		'ui.navigation.shownSections.downloads': 'Downloads',
+		'ui.navigation.shownSections.explore': 'Explore',
+		'ui.navigation.shownSections.home': 'Home',
+		'ui.navigation.shownSections.library': 'Library',
+		'ui.navigation.shownSections.search': 'Search',
+		'ui.navigation.shownSections.settings': 'Settings',
+	};
+	Map<String, String> get server => {
+		'testing.enum.extra_super_long_choice': 'Extra Super Long Choice',
+		'testing.enum.x': 'x',
+		'testing.enum.y': 'y',
+	};
+}
+
+// Path: setting_definitions
+class Translations$setting_definitions$en {
+	Translations$setting_definitions$en._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	Map<String, String> get client => {
+		'ui.background.algorithm': 'Algorithm',
+		'ui.background.algorithm.description': 'Algorithm to use for background effects.',
+		'ui.background.brightness': 'Brightness',
+		'ui.background.brightness.description': 'Change the brightness of the background. Higher numbers are brighter.',
+		'ui.library.cardsPerRow': 'Cards Per Row',
+		'ui.library.cardsPerRow.description': 'Maximum number of cards to show per row in library grids.',
+		'ui.navigation.bottomLabels': 'Bottom Nav Labels',
+		'ui.navigation.bottomLabels.description': 'Show text labels under the icons in the bottom navbar.',
+		'ui.navigation.railDefaultExpanded': 'Expand Nav Rail',
+		'ui.navigation.railDefaultExpanded.description': 'Whether the left navigation rail starts off expanded.',
+		'ui.navigation.shownSections': 'Navigation Sections',
+		'ui.navigation.shownSections.description': 'Choose which sections are shown in the main navigation.',
+		'ui.transparency': 'Transparency',
+		'ui.transparency.description': 'Relative transparency of the UI elements. Set to 1 for fully opaque.',
+		'ui.window.startMaximized': 'Start Maximized',
+		'ui.window.startMaximized.description': 'Open ${_root.app_name} maximized on launch.',
+		'ui.window.useCustom': 'Custom Titlebar',
+		'ui.window.useCustom.description': 'Whether to use the custom titlebar. ${_root.routes.settings.requires_restart_hint}',
+	};
+	Map<String, String> get server => {
+		'testing.float': 'Float Setting???',
+	};
+}
+
+// Path: setting_groups
+class Translations$setting_groups$en {
+	Translations$setting_groups$en._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	Map<String, String> get client => {
+		'ui': 'User Interface',
+		'ui.background': 'Background',
+		'ui.library': 'Library',
+		'ui.navigation': 'Navigation',
+		'ui.window': 'Window',
+	};
+	Map<String, String> get server => {
+		'plugins': 'Plugins',
+	};
 }
 
 // Path: titlebar
@@ -240,6 +285,18 @@ class Translations$titlebar$en {
 
 	/// en: 'Expand Navigation'
 	String get rail_expand => 'Expand Navigation';
+}
+
+// Path: routes.admin
+class Translations$routes$admin$en {
+	Translations$routes$admin$en._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Failed to load server settings.'
+	String get load_error => 'Failed to load server settings.';
 }
 
 // Path: routes.search
@@ -400,6 +457,7 @@ extension on Translations {
 			'btn_play' => 'Play',
 			'btn_remove' => 'Remove',
 			'btn_rename' => 'Rename',
+			'btn_retry' => 'Retry',
 			'btn_save' => 'Save',
 			'btn_select' => 'Select',
 			'btn_select_remove' => 'Deselect',
@@ -417,6 +475,7 @@ extension on Translations {
 			'navigation.section_titles.settings' => 'Settings',
 			'or_line' => 'OR',
 			'password' => 'Password',
+			'routes.admin.load_error' => 'Failed to load server settings.',
 			'routes.search.no_results' => 'No results',
 			'routes.search.search_hint' => 'Search...',
 			'routes.settings.create_rename_codes.CONFLICT' => 'Profile names must be unique!',
@@ -445,45 +504,50 @@ extension on Translations {
 			'routes.startup.setup.failed_codes."TOO_SHORT.password"' => 'Password must be at least 12 characters.',
 			'routes.startup.setup.failed_codes."TOO_SHORT.username"' => 'Username must be at least 2 characters.',
 			'routes.startup.setup.title' => 'Welcome to ${_root.app_name}!',
-			'setting_choices."ui.background.algorithm.a"' => 'Ice Cube',
-			'setting_choices."ui.background.algorithm.a.description"' => 'Blurred background that follows the shape of the cover.',
-			'setting_choices."ui.background.algorithm.b"' => 'Soda',
-			'setting_choices."ui.background.algorithm.b.description"' => 'Gradient sourced from the cover\'s more vibrant colors.',
-			'setting_choices."ui.background.algorithm.c"' => 'Milk',
-			'setting_choices."ui.background.algorithm.c.description"' => 'Gradient sourced from the cover\'s most common color.',
-			'setting_choices."ui.background.algorithm.d"' => 'Smoothie',
-			'setting_choices."ui.background.algorithm.d.description"' => 'Smooth blend of Milk and Soda.',
-			'setting_choices."ui.navigation.shownSections.activity"' => 'Activity',
-			'setting_choices."ui.navigation.shownSections.admin"' => 'Admin',
-			'setting_choices."ui.navigation.shownSections.downloads"' => 'Downloads',
-			'setting_choices."ui.navigation.shownSections.explore"' => 'Explore',
-			'setting_choices."ui.navigation.shownSections.home"' => 'Home',
-			'setting_choices."ui.navigation.shownSections.library"' => 'Library',
-			'setting_choices."ui.navigation.shownSections.search"' => 'Search',
-			'setting_choices."ui.navigation.shownSections.settings"' => 'Settings',
-			'setting_definitions."ui.background.algorithm"' => 'Algorithm',
-			'setting_definitions."ui.background.algorithm.description"' => 'Algorithm to use for background effects.',
-			'setting_definitions."ui.background.brightness"' => 'Brightness',
-			'setting_definitions."ui.background.brightness.description"' => 'Change the brightness of the background. Higher numbers are brighter.',
-			'setting_definitions."ui.library.cardsPerRow"' => 'Cards Per Row',
-			'setting_definitions."ui.library.cardsPerRow.description"' => 'Maximum number of cards to show per row in library grids.',
-			'setting_definitions."ui.navigation.bottomLabels"' => 'Bottom Nav Labels',
-			'setting_definitions."ui.navigation.bottomLabels.description"' => 'Show text labels under the icons in the bottom navbar.',
-			'setting_definitions."ui.navigation.railDefaultExpanded"' => 'Expand Nav Rail',
-			'setting_definitions."ui.navigation.railDefaultExpanded.description"' => 'Whether the left navigation rail starts off expanded.',
-			'setting_definitions."ui.navigation.shownSections"' => 'Navigation Sections',
-			'setting_definitions."ui.navigation.shownSections.description"' => 'Choose which sections are shown in the main navigation.',
-			'setting_definitions."ui.transparency"' => 'Transparency',
-			'setting_definitions."ui.transparency.description"' => 'Relative transparency of the UI elements. Set to 1 for fully opaque.',
-			'setting_definitions."ui.window.startMaximized"' => 'Start Maximized',
-			'setting_definitions."ui.window.startMaximized.description"' => 'Open ${_root.app_name} maximized on launch.',
-			'setting_definitions."ui.window.useCustom"' => 'Custom Titlebar',
-			'setting_definitions."ui.window.useCustom.description"' => 'Whether to use the custom titlebar. ${_root.routes.settings.requires_restart_hint}',
-			'setting_groups.ui' => 'User Interface',
-			'setting_groups."ui.background"' => 'Background',
-			'setting_groups."ui.library"' => 'Library',
-			'setting_groups."ui.navigation"' => 'Navigation',
-			'setting_groups."ui.window"' => 'Window',
+			'setting_choices.client."ui.background.algorithm.a"' => 'Ice Cube',
+			'setting_choices.client."ui.background.algorithm.a.description"' => 'Blurred background that follows the shape of the cover.',
+			'setting_choices.client."ui.background.algorithm.b"' => 'Soda',
+			'setting_choices.client."ui.background.algorithm.b.description"' => 'Gradient sourced from the cover\'s more vibrant colors.',
+			'setting_choices.client."ui.background.algorithm.c"' => 'Milk',
+			'setting_choices.client."ui.background.algorithm.c.description"' => 'Gradient sourced from the cover\'s most common color.',
+			'setting_choices.client."ui.background.algorithm.d"' => 'Smoothie',
+			'setting_choices.client."ui.background.algorithm.d.description"' => 'Smooth blend of Milk and Soda.',
+			'setting_choices.client."ui.navigation.shownSections.activity"' => 'Activity',
+			'setting_choices.client."ui.navigation.shownSections.admin"' => 'Admin',
+			'setting_choices.client."ui.navigation.shownSections.downloads"' => 'Downloads',
+			'setting_choices.client."ui.navigation.shownSections.explore"' => 'Explore',
+			'setting_choices.client."ui.navigation.shownSections.home"' => 'Home',
+			'setting_choices.client."ui.navigation.shownSections.library"' => 'Library',
+			'setting_choices.client."ui.navigation.shownSections.search"' => 'Search',
+			'setting_choices.client."ui.navigation.shownSections.settings"' => 'Settings',
+			'setting_choices.server."testing.enum.extra_super_long_choice"' => 'Extra Super Long Choice',
+			'setting_choices.server."testing.enum.x"' => 'x',
+			'setting_choices.server."testing.enum.y"' => 'y',
+			'setting_definitions.client."ui.background.algorithm"' => 'Algorithm',
+			'setting_definitions.client."ui.background.algorithm.description"' => 'Algorithm to use for background effects.',
+			'setting_definitions.client."ui.background.brightness"' => 'Brightness',
+			'setting_definitions.client."ui.background.brightness.description"' => 'Change the brightness of the background. Higher numbers are brighter.',
+			'setting_definitions.client."ui.library.cardsPerRow"' => 'Cards Per Row',
+			'setting_definitions.client."ui.library.cardsPerRow.description"' => 'Maximum number of cards to show per row in library grids.',
+			'setting_definitions.client."ui.navigation.bottomLabels"' => 'Bottom Nav Labels',
+			'setting_definitions.client."ui.navigation.bottomLabels.description"' => 'Show text labels under the icons in the bottom navbar.',
+			'setting_definitions.client."ui.navigation.railDefaultExpanded"' => 'Expand Nav Rail',
+			'setting_definitions.client."ui.navigation.railDefaultExpanded.description"' => 'Whether the left navigation rail starts off expanded.',
+			'setting_definitions.client."ui.navigation.shownSections"' => 'Navigation Sections',
+			'setting_definitions.client."ui.navigation.shownSections.description"' => 'Choose which sections are shown in the main navigation.',
+			'setting_definitions.client."ui.transparency"' => 'Transparency',
+			'setting_definitions.client."ui.transparency.description"' => 'Relative transparency of the UI elements. Set to 1 for fully opaque.',
+			'setting_definitions.client."ui.window.startMaximized"' => 'Start Maximized',
+			'setting_definitions.client."ui.window.startMaximized.description"' => 'Open ${_root.app_name} maximized on launch.',
+			'setting_definitions.client."ui.window.useCustom"' => 'Custom Titlebar',
+			'setting_definitions.client."ui.window.useCustom.description"' => 'Whether to use the custom titlebar. ${_root.routes.settings.requires_restart_hint}',
+			'setting_definitions.server."testing.float"' => 'Float Setting???',
+			'setting_groups.client.ui' => 'User Interface',
+			'setting_groups.client."ui.background"' => 'Background',
+			'setting_groups.client."ui.library"' => 'Library',
+			'setting_groups.client."ui.navigation"' => 'Navigation',
+			'setting_groups.client."ui.window"' => 'Window',
+			'setting_groups.server.plugins' => 'Plugins',
 			'titlebar.close' => 'Close',
 			'titlebar.logout' => 'Log Out',
 			'titlebar.logout_confirmation' => 'Are you sure that you want to log out?',
