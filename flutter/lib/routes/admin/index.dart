@@ -105,6 +105,7 @@ class const AdminView({super.key}) extends HookWidget {
               borderRadius: .zero,
             ),
           ),
+          focusNode: searchFocus,
         ),
         Expanded(child: body),
       ],
