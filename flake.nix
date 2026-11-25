@@ -160,7 +160,7 @@
                 ${setup}
                 repo_root="$(pwd)"
 
-                killport ${openapi-port}
+                killport ${openapi-port} || true
                 export FLIXUR_DEVELOPMENT_RUN_AS_GENERATOR=true
                 export FLIXUR_PORT=${openapi-port}
                 go run ./server &
