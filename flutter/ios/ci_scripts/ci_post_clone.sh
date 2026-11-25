@@ -12,7 +12,7 @@
 set -eu
 
 # Keep in sync with the flutter version from the flake devshell.
-FLUTTER_VERSION="3.47.4"
+FLUTTER_VERSION="3.50.14"
 
 REPO_DIR="${CI_PRIMARY_REPOSITORY_PATH:-${CI_WORKSPACE:?CI_WORKSPACE is not set}}"
 APP_DIR="$REPO_DIR/flutter"
