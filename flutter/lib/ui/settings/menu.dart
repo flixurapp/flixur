@@ -123,8 +123,8 @@ List<Widget> _renderGroup(
   // direct child settings
   final children = _sortSettings(
     [
-    for (final def in values.definitions)
-      if (parent != null && settingIDParent(def.id) == parent) def,
+      for (final def in values.definitions)
+        if (parent != null && settingIDParent(def.id) == parent) def,
     ],
     (d) => (
       d.id,
@@ -136,11 +136,11 @@ List<Widget> _renderGroup(
   // child groups
   final childGroups = _sortSettings(
     [
-    for (final group in values.groups)
-      if (parent == null
-          ? !group.id.contains(".")
-          : settingIDParent(group.id) == parent)
-        group,
+      for (final group in values.groups)
+        if (parent == null
+            ? !group.id.contains(".")
+            : settingIDParent(group.id) == parent)
+          group,
     ],
     (g) => (
       g.id,
