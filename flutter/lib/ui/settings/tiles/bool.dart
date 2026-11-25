@@ -2,6 +2,7 @@ import "dart:async";
 
 import "package:flixur/ui/settings/tiles/common.dart";
 import "package:flixur/ui/settings/values.dart";
+import "package:flutter_hooks/flutter_hooks.dart";
 import "package:material_ui/material_ui.dart";
 import "package:openapi/openapi.dart";
 
@@ -11,15 +12,29 @@ class const SettingsTileBool(
   final SettingsValues values, {
   final bool isSearching = false,
   super.key,
-}) extends StatelessWidget {
+}) extends HookWidget {
   @override
-  Widget build(BuildContext context) => SettingsTileShell(
-    def,
-    values,
-    isSearching: isSearching,
-    trailing: Switch(
-      value: values.getValue<bool>(def.id),
-      onChanged: (value) => unawaited(values.set<bool>(def.id, value)),
-    ),
-  );
+  Widget build(BuildContext context) {
+    final override = useState<bool?>(null);
+
+    // update with the setting
+    final revision = useSettingsChanges(values, [def.id]);
+    useEffect(() {
+      override.value = null;
+      return null;
+    }, [revision]);
+
+    return SettingsTileShell(
+      def,
+      values,
+      isSearching: isSearching,
+      trailing: Switch(
+        value: override.value ?? values.getValue<bool>(def.id),
+        onChanged: (value) {
+          override.value = value;
+          unawaited(values.set<bool>(def.id, value));
+        },
+      ),
+    );
+  }
 }
