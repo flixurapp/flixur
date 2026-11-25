@@ -47,7 +47,7 @@ abstract class SettingsDefinition
 
   @BuiltValueField(wireName: r'kind')
   SettingsDefinitionKindEnum get kind;
-  // enum kindEnum {  enum,  stringlist,  bool,  int,  float,  string,  };
+  // enum kindEnum {  bool,  int,  float,  string,  enum,  stringlist,  };
 
   @BuiltValueField(wireName: r'order')
   int get order;
@@ -265,12 +265,6 @@ class _$SettingsDefinitionSerializer
 }
 
 class SettingsDefinitionKindEnum extends EnumClass {
-  @BuiltValueEnumConst(wireName: r'enum')
-  static const SettingsDefinitionKindEnum enum_ =
-      _$settingsDefinitionKindEnum_enum_;
-  @BuiltValueEnumConst(wireName: r'stringlist')
-  static const SettingsDefinitionKindEnum stringlist =
-      _$settingsDefinitionKindEnum_stringlist;
   @BuiltValueEnumConst(wireName: r'bool')
   static const SettingsDefinitionKindEnum bool_ =
       _$settingsDefinitionKindEnum_bool_;
@@ -283,6 +277,12 @@ class SettingsDefinitionKindEnum extends EnumClass {
   @BuiltValueEnumConst(wireName: r'string')
   static const SettingsDefinitionKindEnum string =
       _$settingsDefinitionKindEnum_string;
+  @BuiltValueEnumConst(wireName: r'enum')
+  static const SettingsDefinitionKindEnum enum_ =
+      _$settingsDefinitionKindEnum_enum_;
+  @BuiltValueEnumConst(wireName: r'stringlist')
+  static const SettingsDefinitionKindEnum stringlist =
+      _$settingsDefinitionKindEnum_stringlist;
 
   static Serializer<SettingsDefinitionKindEnum> get serializer =>
       _$settingsDefinitionKindEnumSerializer;

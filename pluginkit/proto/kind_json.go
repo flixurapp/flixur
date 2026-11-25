@@ -2,12 +2,36 @@
 package proto
 
 import (
+	"cmp"
 	"encoding/json"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/danielgtaylor/huma/v2"
 )
+
+type kindPair struct {
+	num  int32
+	name string
+}
+
+// returns all valid kind IDs in order, excluding UNSPECIFIED.
+func kindIDs() []string {
+	pairs := make([]kindPair, 0, len(Kind_value))
+	for name, num := range Kind_value {
+		if name == "KIND_UNSPECIFIED" {
+			continue
+		}
+		pairs = append(pairs, kindPair{num: num, name: kindID(Kind(num))})
+	}
+	slices.SortFunc(pairs, func(a, b kindPair) int { return cmp.Compare(a.num, b.num) })
+	ids := make([]string, len(pairs))
+	for i, pair := range pairs {
+		ids[i] = pair.name
+	}
+	return ids
+}
 
 // Returns the JSON name of a kind.
 func kindID(kind Kind) string {
@@ -42,16 +66,14 @@ func (x *Kind) UnmarshalJSON(data []byte) error {
 
 // Tells huma that [Kind] is a proper enum.
 func (Kind) Schema(_ huma.Registry) *huma.Schema {
-	ids := make([]any, 0, len(Kind_value))
-	for name := range Kind_value {
-		if name == "KIND_UNSPECIFIED" {
-			continue
-		}
-		ids = append(ids, kindID(Kind(Kind_value[name])))
+	ids := kindIDs()
+	enum := make([]any, len(ids))
+	for i, id := range ids {
+		enum[i] = id
 	}
 	return &huma.Schema{
 		Type: huma.TypeString,
-		Enum: ids,
+		Enum: enum,
 	}
 }
 
