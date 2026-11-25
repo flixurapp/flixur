@@ -24,17 +24,14 @@ dependencies:
   flutter_secure_storage: ^11.2.0
   flutter_web_plugins:
     sdk: flutter
-  fuse_dart:
-    git:
-      url: https://github.com/itzTheMeow/fuse_dart.git
-      ref: c40a665d9960d6607b08745b68e1f72e933f280e
+  fuse_dart: ^2.0.1
   go_router: ^18.1.3
   hive_ce: ^2.23.3
   hive_ce_flutter: ^2.5.0
   iconify_design:
     git:
       url: https://github.com/itzTheMeow/iconify_design_flutter.git
-      ref: 3abf752d4ee351dad2e8ac746e27031500da94cf
+      ref: 722153c628a2bd8b7a9fd74f8f9a8010bd2704c5
   material_ui: ^1.10.0
   openapi:
     path: ./openapi

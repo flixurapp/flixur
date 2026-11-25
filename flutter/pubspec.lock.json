@@ -488,12 +488,11 @@
     "fuse_dart": {
       "dependency": "direct main",
       "description": {
-        "path": ".",
-        "ref": "c40a665d9960d6607b08745b68e1f72e933f280e",
-        "resolved-ref": "c40a665d9960d6607b08745b68e1f72e933f280e",
-        "url": "https://github.com/itzTheMeow/fuse_dart.git"
+        "name": "fuse_dart",
+        "sha256": "a4196373aa340196ad6b9c8a4ca2195dfc67a37bc9e41aa2442f30c818407622",
+        "url": "https://pub.dev"
       },
-      "source": "git",
+      "source": "hosted",
       "version": "2.0.1"
     },
     "glob": {
@@ -600,12 +599,12 @@
       "dependency": "direct main",
       "description": {
         "path": ".",
-        "ref": "3abf752d4ee351dad2e8ac746e27031500da94cf",
-        "resolved-ref": "3abf752d4ee351dad2e8ac746e27031500da94cf",
+        "ref": "722153c628a2bd8b7a9fd74f8f9a8010bd2704c5",
+        "resolved-ref": "722153c628a2bd8b7a9fd74f8f9a8010bd2704c5",
         "url": "https://github.com/itzTheMeow/iconify_design_flutter.git"
       },
       "source": "git",
-      "version": "1.0.2"
+      "version": "1.0.3"
     },
     "intl": {
       "dependency": "transitive",
