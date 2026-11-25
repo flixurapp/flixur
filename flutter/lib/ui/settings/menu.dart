@@ -50,8 +50,9 @@ class const _SearchResults(final SettingsValues values, final String query)
     extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final index = useMemoized(() => _buildSearchIndex(values.definitions), [
+    final index = useMemoized(() => _buildSearchIndex(values), [
       values.definitions,
+      values.isServer,
     ]);
     final results = useMemoized(() => index.search(query), [index, query]);
 
@@ -66,11 +67,9 @@ class const _SearchResults(final SettingsValues values, final String query)
   }
 }
 
-/// Builds a fuzzy search index for the given definitions.
-Fuse<SettingsDefinition> _buildSearchIndex(
-  List<SettingsDefinition> definitions,
-) => Fuse(
-  definitions,
+/// Builds a fuzzy search index for the given values' definitions.
+Fuse<SettingsDefinition> _buildSearchIndex(SettingsValues values) => Fuse(
+  values.definitions,
   options: .new(
     includeScore: true,
     useTokenSearch: true,
@@ -78,19 +77,24 @@ Fuse<SettingsDefinition> _buildSearchIndex(
       .new(
         name: "title",
         weight: 5,
-        getFn: (d) => SettingsTranslated.defName(d.id),
+        getFn: (d) =>
+            SettingsTranslated.defName(d.id, isServer: values.isServer),
       ),
       .new(
         name: "description",
         weight: 4,
-        getFn: (d) => SettingsTranslated.defDescription(d.id),
+        getFn: (d) =>
+            SettingsTranslated.defDescription(d.id, isServer: values.isServer),
       ),
       .new(name: "id", weight: 2, getFn: (d) => d.id),
       .new(
         name: "parents",
         weight: 1,
         // all of the group path segments joined into one string
-        getFn: (d) => SettingsTranslated.groupSegments(d.id).join("\n"),
+        getFn: (d) => SettingsTranslated.groupSegments(
+          d.id,
+          isServer: values.isServer,
+        ).join("\n"),
       ),
     ],
   ),
@@ -117,19 +121,33 @@ List<Widget> _renderGroup(
   String? parent,
 ) {
   // direct child settings
-  final children = _sortSettings([
+  final children = _sortSettings(
+    [
     for (final def in values.definitions)
       if (parent != null && settingIDParent(def.id) == parent) def,
-  ], (d) => (d.id, SettingsTranslated.defName(d.id), d.order));
+    ],
+    (d) => (
+      d.id,
+      SettingsTranslated.defName(d.id, isServer: values.isServer),
+      d.order,
+    ),
+  );
 
   // child groups
-  final childGroups = _sortSettings([
+  final childGroups = _sortSettings(
+    [
     for (final group in values.groups)
       if (parent == null
           ? !group.id.contains(".")
           : settingIDParent(group.id) == parent)
         group,
-  ], (g) => (g.id, SettingsTranslated.groupName(g.id), g.order));
+    ],
+    (g) => (
+      g.id,
+      SettingsTranslated.groupName(g.id, isServer: values.isServer),
+      g.order,
+    ),
+  );
 
   return [
     for (final def in children) ?_settingsTile(values, def),
@@ -170,7 +188,7 @@ class const _GroupTile(final SettingsValues values, final SettingsGroup group)
       ),
       leading: icon == null || icon.isEmpty ? null : Iconify(icon),
       title: Text(
-        SettingsTranslated.groupName(group.id),
+        SettingsTranslated.groupName(group.id, isServer: values.isServer),
         style: settingIDParent(group.id) == null
             ? const TextStyle(fontSize: 18, fontWeight: .w600)
             : null,

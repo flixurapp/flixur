@@ -29,7 +29,8 @@ class const SettingsTileShell(
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final desc = Text(def.description.isNotEmpty ? def.description : def.id);
+    final description = def.description(isServer: values.isServer);
+    final desc = Text(description.isNotEmpty ? description : def.id);
     final padLeft = isSearching
         ? SettingsMenu.paddingFor(context)
         : SettingsMenu.paddingFor(context, def.id);
@@ -62,10 +63,13 @@ class const SettingsTileShell(
                 child: Text(
                   isSearching
                       // use non-breaking spaces to force wrapping at divider
-                      ? SettingsTranslated.defSegments(def.id)
+                      ? SettingsTranslated.defSegments(
+                              def.id,
+                              isServer: values.isServer,
+                            )
                             .map((s) => s.replaceAll(" ", "\u00A0"))
                             .join("\u00A0> ")
-                      : def.name,
+                      : def.name(isServer: values.isServer),
                 ),
               ),
             ],

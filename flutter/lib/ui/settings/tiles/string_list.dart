@@ -92,6 +92,7 @@ class const SettingsTileStringList(
             specOf[value],
             value,
             index,
+            isServer: values.isServer,
             key: ValueKey("$index:$value"),
             dragging: dragging,
             onRemove: () => write([...items.value]..removeAt(index)),
@@ -114,7 +115,11 @@ class const SettingsTileStringList(
         for (final choice in availableChoices)
           DropdownMenuEntry(
             value: choice.value,
-            label: SettingsTranslated.choiceName(def.id, choice.value),
+            label: SettingsTranslated.choiceName(
+              def.id,
+              choice.value,
+              isServer: values.isServer,
+            ),
             leadingIcon: (choice.icon?.isNotEmpty ?? false)
                 ? Iconify(choice.icon!, size: 18)
                 : null,
@@ -204,6 +209,7 @@ class const _ItemRow(
   final SettingsChoice? spec,
   final String value,
   final int index, {
+  required final bool isServer,
   required final ValueNotifier<int?> dragging,
   required final VoidCallback onRemove,
   super.key,
@@ -215,7 +221,7 @@ class const _ItemRow(
     final choice = spec;
     final label = choice == null
         ? value
-        : SettingsTranslated.choiceName(def, choice.value);
+        : SettingsTranslated.choiceName(def, choice.value, isServer: isServer);
     final icon = choice?.icon;
 
     final row = ValueListenableBuilder(

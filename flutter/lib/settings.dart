@@ -506,8 +506,10 @@ String? settingIDParent(String id) {
 }
 
 extension SettingsDefinitionHelpers on SettingsDefinition {
-  String get name => SettingsTranslated.defName(id);
-  String get description => SettingsTranslated.defDescription(id);
+  String name({bool isServer = false}) =>
+      SettingsTranslated.defName(id, isServer: isServer);
+  String description({bool isServer = false}) =>
+      SettingsTranslated.defDescription(id, isServer: isServer);
 
   /// The raw default value of this definition.
   Object? get rawDefault => switch (kind) {
@@ -543,37 +545,57 @@ extension SettingsDefinitionHelpers on SettingsDefinition {
 
 abstract class SettingsTranslated {
   /// Translated name for a setting definition.
-  static String defName(String id) => t.setting_definitions[id] ?? id;
+  static String defName(String id, {bool isServer = false}) =>
+      switch (isServer) {
+        true => t.setting_definitions.server[id] ?? id,
+        false => t.setting_definitions.client[id] ?? id,
+      };
 
   /// Translated description for a setting definition, empty when missing.
-  static String defDescription(String id) =>
-      t.setting_definitions["$id.description"] ?? "";
+  static String defDescription(String id, {bool isServer = false}) =>
+      switch (isServer) {
+        true => t.setting_definitions.server["$id.description"] ?? "",
+        false => t.setting_definitions.client["$id.description"] ?? "",
+      };
 
   /// Translated display name for a setting choice.
-  static String choiceName(String id, String value) =>
-      t.setting_choices["$id.$value"] ?? value;
+  static String choiceName(String id, String value, {bool isServer = false}) =>
+      switch (isServer) {
+        true => t.setting_choices.server["$id.$value"] ?? value,
+        false => t.setting_choices.client["$id.$value"] ?? value,
+      };
 
   /// Translated description for a setting choice, empty when missing.
-  static String choiceDescription(String id, String value) =>
-      t.setting_choices["$id.$value.description"] ?? "";
+  static String choiceDescription(
+    String id,
+    String value, {
+    bool isServer = false,
+  }) => switch (isServer) {
+    true => t.setting_choices.server["$id.$value.description"] ?? "",
+    false => t.setting_choices.client["$id.$value.description"] ?? "",
+  };
 
   /// Translated name for a settings group.
-  static String groupName(String id) => t.setting_groups[id] ?? id;
+  static String groupName(String id, {bool isServer = false}) =>
+      switch (isServer) {
+        true => t.setting_groups.server[id] ?? id,
+        false => t.setting_groups.client[id] ?? id,
+      };
 
   /// Translated group-name segments for a setting ID, outermost first.
-  static List<String> groupSegments(String id) => [
+  static List<String> groupSegments(String id, {bool isServer = false}) => [
     for (
       var group = settingIDParent(id);
       group != null;
       group = settingIDParent(group)
     )
-      groupName(group),
+      groupName(group, isServer: isServer),
   ].reversed.toList();
 
   /// Translated title path for a setting ID, including the definition name.
-  static List<String> defSegments(String id) => [
-    ...groupSegments(id),
-    defName(id),
+  static List<String> defSegments(String id, {bool isServer = false}) => [
+    ...groupSegments(id, isServer: isServer),
+    defName(id, isServer: isServer),
   ];
 }
 

@@ -1,7 +1,7 @@
 import "dart:async";
 import "dart:convert";
 
-import "package:flixur/hooks.dart";
+import "package:flixur/hooks.dart" show useSettings;
 import "package:flixur/settings.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
 import "package:openapi/openapi.dart";
@@ -26,6 +26,9 @@ abstract class SettingsValues {
   /// Writes a typed value for a setting. Returns a boolean indicating success.
   Future<bool> set<T>(String id, T value);
 
+  /// Whether these settings are server-scoped for translations.
+  bool get isServer;
+
   /// Broadcast of changed setting IDs. An empty list means all settings.
   Stream<List<String>> get changes;
 }
@@ -45,6 +48,9 @@ class ClientSettingsValues extends SettingsValues {
   Future<bool> set<T>(String id, T value) => Settings.set<T>(id, value);
 
   @override
+  bool get isServer => false;
+
+  @override
   Stream<List<String>> get changes =>
       Settings.watch(const []).map((event) => event.ids);
 }
@@ -53,6 +59,7 @@ class ClientSettingsValues extends SettingsValues {
 /// See [useSettings]
 int useSettingsChanges(SettingsValues values, [List<String> ids = const []]) {
   final revision = useState(0);
+  final key = ids.join(",");
   useEffect(() {
     return values.changes
         .where(
@@ -60,7 +67,7 @@ int useSettingsChanges(SettingsValues values, [List<String> ids = const []]) {
         )
         .listen((_) => revision.value++)
         .cancel;
-  }, [values, ids]);
+  }, [values, key]);
   return revision.value;
 }
 

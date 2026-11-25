@@ -12,6 +12,9 @@ targets:
             - routes.settings.create_rename_codes
             - routes.startup.login.failed_codes
             - routes.startup.setup.failed_codes
-            - setting_choices
-            - setting_definitions
-            - setting_groups
+            - setting_choices.client
+            - setting_choices.server
+            - setting_definitions.client
+            - setting_definitions.server
+            - setting_groups.client
+            - setting_groups.server

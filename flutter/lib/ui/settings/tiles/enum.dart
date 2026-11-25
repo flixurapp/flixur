@@ -23,6 +23,7 @@ class const SettingsTileEnum(
       text: SettingsTranslated.choiceName(
         def.id,
         values.getValue<String>(def.id),
+        isServer: values.isServer,
       ),
     );
 
@@ -32,6 +33,7 @@ class const SettingsTileEnum(
       final name = SettingsTranslated.choiceName(
         def.id,
         values.getValue<String>(def.id),
+        isServer: values.isServer,
       );
       if (controller.text != name) controller.text = name;
       return null;
@@ -47,17 +49,26 @@ class const SettingsTileEnum(
           initialSelection: SettingsTranslated.choiceName(
             def.id,
             values.getValue<String>(def.id),
+            isServer: values.isServer,
           ),
           dropdownMenuEntries: [
             for (final choice
                 in def.enum_?.choices?.toList() ?? const <SettingsChoice>[])
               DropdownMenuEntry(
                 value: choice.value,
-                label: SettingsTranslated.choiceName(def.id, choice.value),
+                label: SettingsTranslated.choiceName(
+                  def.id,
+                  choice.value,
+                  isServer: values.isServer,
+                ),
                 leadingIcon: (choice.icon?.isNotEmpty ?? false)
                     ? Iconify(choice.icon!, size: 18)
                     : null,
-                labelWidget: _ChoiceLabel(def.id, choice),
+                labelWidget: _ChoiceLabel(
+                  def.id,
+                  choice,
+                  isServer: values.isServer,
+                ),
               ),
           ],
           onSelected: (value) {
@@ -70,13 +81,24 @@ class const SettingsTileEnum(
 }
 
 /// Dropdown entry label showing the title and description.
-class const _ChoiceLabel(final String id, final SettingsChoice choice)
-    extends StatelessWidget {
+class const _ChoiceLabel(
+  final String id,
+  final SettingsChoice choice, {
+  required final bool isServer,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final name = SettingsTranslated.choiceName(id, choice.value);
+    final name = SettingsTranslated.choiceName(
+      id,
+      choice.value,
+      isServer: isServer,
+    );
     final description = choice.hasDescription == true
-        ? SettingsTranslated.choiceDescription(id, choice.value)
+        ? SettingsTranslated.choiceDescription(
+            id,
+            choice.value,
+            isServer: isServer,
+          )
         : "";
 
     return Column(
