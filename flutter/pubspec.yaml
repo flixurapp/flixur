@@ -3,6 +3,7 @@ description: "A new Flutter project."
 publish_to: "none"
 version: 0.1.0+1
 
+# ! UPDATE FLUTTER_VERSION IN IOS CI SCRIPT
 environment:
   sdk: 3.14.0
 
