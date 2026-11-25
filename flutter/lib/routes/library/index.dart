@@ -53,6 +53,9 @@ class const LibraryView({super.key}) extends StatelessWidget {
             "https://i.scdn.co/image/ab67616d0000b2737f3c5b49e47932ef8c00ea17",
             "https://i.scdn.co/image/ab67616d0000b27393844705a9f375b857203617",
             "https://i.scdn.co/image/ab67616d0000b27388e3822cccfb8f2832c70c2e",
+            "https://i.scdn.co/image/ab67616d0000b273b281b9af1b16d6d1eca6667d",
+            "https://i.scdn.co/image/ab67616d0000b27342efb3f72e1eca30e7e72dec",
+            "https://i.scdn.co/image/ab67616d0000b273b6a36f9f6b443ea9590de20c",
           ].map((e) => AlbumCard(imageURL: e)),
           ...List.generate(100, (index) {
             return switch (index % 5) {
