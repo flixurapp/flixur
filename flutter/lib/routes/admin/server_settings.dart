@@ -4,7 +4,6 @@ import "package:collection/collection.dart";
 import "package:flixur/api.dart";
 import "package:flixur/settings.dart";
 import "package:flixur/ui/settings/values.dart";
-import "package:flixur/utils.dart";
 import "package:flutter/widgets.dart";
 import "package:openapi/openapi.dart";
 

@@ -4,7 +4,6 @@ import "package:flixur/settings.dart";
 import "package:flixur/ui/background/colorgram.dart";
 import "package:flixur/ui/background/combined.dart";
 import "package:flixur/ui/background/gradient/gradient.dart";
-import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
 
 /// Background color algorithms, names must match the setting.
