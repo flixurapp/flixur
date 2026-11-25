@@ -10,6 +10,8 @@ class const FlixurButton({
   final Color? tint,
   final Size? size,
   final double borderWidth = 0,
+  final BorderRadiusGeometry? borderRadius,
+  final EdgeInsetsGeometry? padding,
   super.key,
 }) extends StatelessWidget {
   @override
@@ -48,10 +50,10 @@ class const FlixurButton({
                   ),
                 ),
               )
-            : .all(const RoundedRectangleBorder()),
+            : .all(RoundedRectangleBorder(borderRadius: borderRadius ?? .zero)),
         surfaceTintColor: .all(tint),
         // custom size requires no padding, let the Row() center elements
-        padding: size != null ? .all(.zero) : null,
+        padding: size != null ? .all(.zero) : .all(padding),
         fixedSize: size != null ? .all(size) : null,
       ),
       child: Row(
@@ -61,4 +63,21 @@ class const FlixurButton({
       ),
     );
   }
+}
+
+/// A [FlixurButton] that is standalone from other UI elements.
+class const FlixurFloatingButton({
+  final VoidCallback? onPressed,
+  final Widget? icon,
+  final Widget? label,
+  super.key,
+}) extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => FlixurButton(
+    onPressed: onPressed,
+    icon: icon,
+    label: label,
+    borderRadius: .circular(6),
+    padding: const .symmetric(vertical: 14, horizontal: 14),
+  );
 }
