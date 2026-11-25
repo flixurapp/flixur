@@ -13,6 +13,10 @@ export "package:flixur/ui/responsiveness.dart";
 export "package:flixur/ui/theme.dart";
 export "package:go_router/go_router.dart";
 
+// ==============
+// = Singletons =
+// ==============
+
 /// Contains app/system information.
 abstract class AppInfo {
   static final _deviceInfo = DeviceInfoPlugin();
@@ -79,6 +83,10 @@ abstract class Images {
   static Image get logo => Image.asset("assets/logo.png", fit: .contain);
 }
 
+// ===========
+// = Classes =
+// ===========
+
 /// Cancels and restarts a timer on each [run] call.
 class Debounced({
   final Duration duration = defaultDuration,
@@ -121,11 +129,9 @@ class Debounced({
   }
 }
 
-extension ContextUtilsX on BuildContext {
-  /// Returns the bottom padding of this context's [MediaQuery].
-  EdgeInsets get safeBottomPadding =>
-      .only(bottom: MediaQuery.paddingOf(this).bottom);
-}
+// ===========
+// = Widgets =
+// ===========
 
 /// Conditionally wraps [child] using [wrapper] when [gate] is true.
 class const GatedWidget({
@@ -136,4 +142,19 @@ class const GatedWidget({
 }) extends StatelessWidget {
   @override
   Widget build(BuildContext context) => gate ? wrapper(child) : child;
+}
+
+// ==============
+// = Extensions =
+// ==============
+
+extension ContextUtilsX on BuildContext {
+  /// Returns the bottom padding of this context's [MediaQuery].
+  EdgeInsets get safeBottomPadding =>
+      .only(bottom: MediaQuery.paddingOf(this).bottom);
+}
+
+extension IterablesX<E> on Iterable<E> {
+  /// Returns the first element via [where], or null if no elements were found.
+  E? whereFirstOrNull(bool Function(E) test) => where(test).firstOrNull;
 }

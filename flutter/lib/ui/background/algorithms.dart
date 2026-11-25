@@ -3,6 +3,7 @@ import "package:flixur/settings.dart";
 import "package:flixur/ui/background/colorgram.dart";
 import "package:flixur/ui/background/combined.dart";
 import "package:flixur/ui/background/gradient/gradient.dart";
+import "package:flixur/utils.dart";
 import "package:material_ui/material_ui.dart";
 
 /// Background color algorithms, names must match the setting.
@@ -22,7 +23,7 @@ enum BackgroundAlgorithm {
   /// Resolves the algorithm for the background setting value.
   /// Falls back to [BackgroundAlgorithm.d].
   static BackgroundAlgorithm fromSetting(String value) =>
-      values.where((algorithm) => algorithm.name == value).firstOrNull ?? d;
+      values.whereFirstOrNull((algorithm) => algorithm.name == value) ?? d;
 
   /// Builds the background for an artwork [provider].
   Widget build(ImageProvider provider) => SettingsListen(

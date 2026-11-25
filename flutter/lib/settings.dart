@@ -3,6 +3,7 @@ import "dart:convert";
 import "dart:math";
 import "dart:ui";
 
+import "package:collection/collection.dart";
 import "package:flixur/api.dart";
 import "package:flixur/gen/strings.g.dart";
 import "package:flixur/hooks.dart";
@@ -65,11 +66,11 @@ abstract class Settings {
 
   /// Get a definition by ID.
   static SettingsDefinition? definition(String id) =>
-      definitions?.where((item) => item.id == id).firstOrNull;
+      definitions?.firstWhereOrNull((item) => item.id == id);
 
   /// Get a profile by ID.
   static SettingProfileBody? profile(String id) =>
-      profiles?.where((item) => item.id == id).firstOrNull;
+      profiles?.firstWhereOrNull((item) => item.id == id);
 
   /// Hive box to store settings/data.
   static late Box<dynamic> _box;
