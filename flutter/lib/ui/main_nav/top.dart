@@ -107,11 +107,17 @@ class const MainNavTop({super.key}) extends HookWidget {
                       if (moreMenuItems.isNotEmpty)
                         ValueListenableBuilder(
                           valueListenable: MainNavWrapper.activeSection,
-                          builder: (context, _, _) => ValueListenableBuilder(
-                            valueListenable: router.routeInformationProvider,
-                            builder: (context, location, _) {
+                          builder: (context, _, _) => ListenableBuilder(
+                            listenable: router.routerDelegate,
+                            builder: (context, _) {
                               // drop button on setup pages
-                              if (testSetupRoute(location.uri.path)) {
+                              if (testSetupRoute(
+                                router
+                                    .routerDelegate
+                                    .currentConfiguration
+                                    .uri
+                                    .path,
+                              )) {
                                 return const SizedBox.shrink();
                               }
 
